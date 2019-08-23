@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[rocketmq简介]]></title>
+    <url>%2Fmq%2Frocketmq-introduce%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>mq</category>
+        <category>rocketmq</category>
+      </categories>
+      <tags>
+        <tag>mq</tag>
+        <tag>rocketmq</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[kafka简介]]></title>
+    <url>%2Fmq%2Fkafka-introduce%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>mq</category>
+        <category>kafka</category>
+      </categories>
+      <tags>
+        <tag>mq</tag>
+        <tag>kafka</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[rabbitmq简介]]></title>
+    <url>%2Fmq%2Frabbitmq-introduce%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>mq</category>
+        <category>rabbitmq</category>
+      </categories>
+      <tags>
+        <tag>mq</tag>
+        <tag>rabbitmq</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[java异步回调demo]]></title>
+    <url>%2Fjava%2Fasync-callback-demo%2F</url>
+    <content type="text"><![CDATA[12345678910111213141516171819202122232425262728293031323334import java.util.concurrent.*;interface ICallback &#123; void getResult(int s);&#125;class Calc &#123; public void calc(int i, ICallback callback) throws Exception &#123; FutureTask&lt;Integer&gt; futureTask = new FutureTask&lt;Integer&gt;(new Callable&lt;Integer&gt;() &#123; @Override public Integer call() throws Exception &#123; int s = i * i; Thread.sleep(5000); System.out.println("do in future task. " + Thread.currentThread().getName()); callback.getResult(s); return s; &#125; &#125;); new Thread(futureTask).start(); &#125;&#125;public class App &#123; public static void main(String[] args) throws Exception &#123; ICallback callback = new ICallback() &#123; @Override public void getResult(int s) &#123; System.out.println(s); &#125; &#125;; new Calc().calc(1000, callback); System.out.println("do in main"); &#125;&#125;]]></content>
+      <categories>
+        <category>java</category>
+        <category>juc</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Callable</tag>
+        <tag>Callback</tag>
+        <tag>FutureTask</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <url>%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
+  </entry>
+</search>
