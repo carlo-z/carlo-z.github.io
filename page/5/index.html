@@ -281,6 +281,138 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/leetcode/h-index-ii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="0ms AC">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/h-index-ii/" itemprop="url">h index ii</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-03-27T22:41:01+08:00">
+                2016-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>算法：<br>url：<a href="https://leetcode.com/problems/h-index-ii/" target="_blank" rel="noopener">https://leetcode.com/problems/h-index-ii/</a></p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Given an array of citations sorted in ascending order (each citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.</span><br><span class="line"></span><br><span class="line">According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h citations each, and the other N − h papers have no more than h citations each."</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span>:</span><br><span class="line"></span><br><span class="line">Input: citations = [0,1,3,5,6]</span><br><span class="line"><span class="selector-tag">Output</span>: 3 </span><br><span class="line"><span class="selector-tag">Explanation</span>: <span class="selector-attr">[0,1,3,5,6]</span> <span class="selector-tag">means</span> <span class="selector-tag">the</span> <span class="selector-tag">researcher</span> <span class="selector-tag">has</span> 5 <span class="selector-tag">papers</span> <span class="selector-tag">in</span> <span class="selector-tag">total</span> <span class="selector-tag">and</span> <span class="selector-tag">each</span> <span class="selector-tag">of</span> <span class="selector-tag">them</span> <span class="selector-tag">had</span> </span><br><span class="line">             <span class="selector-tag">received</span> 0, 1, 3, 5, 6 <span class="selector-tag">citations</span> <span class="selector-tag">respectively</span>. </span><br><span class="line">             <span class="selector-tag">Since</span> <span class="selector-tag">the</span> <span class="selector-tag">researcher</span> <span class="selector-tag">has</span> 3 <span class="selector-tag">papers</span> <span class="selector-tag">with</span> <span class="selector-tag">at</span> <span class="selector-tag">least</span> 3 <span class="selector-tag">citations</span> <span class="selector-tag">each</span> <span class="selector-tag">and</span> <span class="selector-tag">the</span> <span class="selector-tag">remaining</span> </span><br><span class="line">             <span class="selector-tag">two</span> <span class="selector-tag">with</span> <span class="selector-tag">no</span> <span class="selector-tag">more</span> <span class="selector-tag">than</span> 3 <span class="selector-tag">citations</span> <span class="selector-tag">each</span>, <span class="selector-tag">her</span> <span class="selector-tag">h-index</span> <span class="selector-tag">is</span> 3.</span><br><span class="line"><span class="selector-tag">Note</span>:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">If</span> <span class="selector-tag">there</span> <span class="selector-tag">are</span> <span class="selector-tag">several</span> <span class="selector-tag">possible</span> <span class="selector-tag">values</span> <span class="selector-tag">for</span> <span class="selector-tag">h</span>, <span class="selector-tag">the</span> <span class="selector-tag">maximum</span> <span class="selector-tag">one</span> <span class="selector-tag">is</span> <span class="selector-tag">taken</span> <span class="selector-tag">as</span> <span class="selector-tag">the</span> <span class="selector-tag">h-index</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Follow</span> <span class="selector-tag">up</span>:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">This</span> <span class="selector-tag">is</span> <span class="selector-tag">a</span> <span class="selector-tag">follow</span> <span class="selector-tag">up</span> <span class="selector-tag">problem</span> <span class="selector-tag">to</span> <span class="selector-tag">H-Index</span>, <span class="selector-tag">where</span> <span class="selector-tag">citations</span> <span class="selector-tag">is</span> <span class="selector-tag">now</span> <span class="selector-tag">guaranteed</span> <span class="selector-tag">to</span> <span class="selector-tag">be</span> <span class="selector-tag">sorted</span> <span class="selector-tag">in</span> <span class="selector-tag">ascending</span> <span class="selector-tag">order</span>.</span><br><span class="line"><span class="selector-tag">Could</span> <span class="selector-tag">you</span> <span class="selector-tag">solve</span> <span class="selector-tag">it</span> <span class="selector-tag">in</span> <span class="selector-tag">logarithmic</span> <span class="selector-tag">time</span> <span class="selector-tag">complexity</span>?</span><br></pre></td></tr></table></figure>
+
+<h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>[0,1,3,5,6]</p>
+<p>数组长度 n，存在一个元素 h， 使得 n 中有 h个元素 大于等于h， 其他 （n-h）个元素 &lt; h；</p>
+<p>求h？</p>
+<p>数组是有序的 递增数组</p>
+<p>遍历 arr，存在 arr[i], 使得  n-i == arr[i]</p>
+<h2 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hIndex</span><span class="params">(<span class="keyword">int</span>[] citations)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=citations.length-<span class="number">1</span>; i&gt;=<span class="number">0</span>; --i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(citations[i] == citations.length-i) &#123;</span><br><span class="line">                <span class="keyword">return</span> citations[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hIndex</span><span class="params">(<span class="keyword">int</span>[] citations)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> l = <span class="number">1</span>, r = citations.length;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(l &lt;= r)&#123;</span><br><span class="line">            <span class="keyword">int</span> m = l + ((r - l)&gt;&gt;<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">int</span> p = citations[citations.length - m];</span><br><span class="line">            <span class="keyword">if</span>(m == p)&#123;</span><br><span class="line">                <span class="keyword">return</span> m;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(m &gt; p)&#123;</span><br><span class="line">                r = m - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                ans = Math.max(ans, m);</span><br><span class="line">                l = m + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/leetcode/binary-tree-right-side-view/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1017,7 +1149,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1039,7 +1171,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

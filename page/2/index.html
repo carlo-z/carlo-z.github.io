@@ -281,6 +281,253 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/elasticsearch/5-1-Elasticsearch集群入门-索引管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="0ms AC">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/5-1-Elasticsearch集群入门-索引管理/" itemprop="url">5.1、Elasticsearch集群入门 —— 索引管理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-13T00:01:00+08:00">
+                2019-03-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>5.1.1、新建索引</p>
+<p>5.1.2、更新副本数</p>
+<p>5.1.3、设置索引的读写权限</p>
+<p>5.1.4、查看索引</p>
+<p>5.1.5、删除索引</p>
+<p>5.1.6、索引的打开和关闭</p>
+<p>5.1.7、复制索引</p>
+<p>5.1.8、收缩索引</p>
+<p>5.1.9、索引别名</p>
+<p>-—————————————-</p>
+<p><strong>5.1.1、新建索引</strong></p>
+<p>索引名称 不能有大写字母</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152505.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152512.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152520.png" alt></p>
+<p>使用Kibana的DevTools工具进行</p>
+<p>创建索引：</p>
+<p>PUT test</p>
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"acknowledged"</span> : <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"shards_acknowledged"</span> : <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"index"</span> : <span class="string">"test"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>并且不能重复创建</p>
+<p>-————————————</p>
+<p>创建 5个分片，3个副本的索引：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT test</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"settings"</span>: &#123;</span><br><span class="line">​    "number_of_shards": 5,</span><br><span class="line">​    "number_of_replicas": 2</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​     </p>
+<h1 id="5-1-2、更新副本数"><a href="#5-1-2、更新副本数" class="headerlink" title="5.1.2、更新副本数"></a>5.1.2、更新副本数</h1><p>ES 支持修改已存在索引的副本数，如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT test/_settings</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"number_of_replicas"</span>: <span class="number">3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>响应：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"acknowledged"</span> : <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​         </p>
+<h1 id="5-1-3、设置索引的读写权限"><a href="#5-1-3、设置索引的读写权限" class="headerlink" title="5.1.3、设置索引的读写权限"></a>5.1.3、设置索引的读写权限</h1><p>“blocks.read_only”: false ———— 当前索引只读，不允许写和更新</p>
+<p>“blocks.read”: true ———— 禁止读</p>
+<p>“blocks.write”: true ———— 禁止写</p>
+<p>示例</p>
+<p>设置禁止写</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT test/_settings</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"blocks.write"</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>尝试写入</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT test/article/1</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"tile"</span>: <span class="string">"Java 虚拟机"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回错误</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152745.png" alt></p>
+<p>重新设置允许写</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT test/_settings</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"blocks.write"</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再试尝试写入， 写入成功：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152823.png" alt></p>
+<p>​     </p>
+<h1 id="5-1-4、查看索引"><a href="#5-1-4、查看索引" class="headerlink" title="5.1.4、查看索引"></a>5.1.4、查看索引</h1><p>GET test/_settings</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152838.png" alt></p>
+<p>查看多个索引：GET test,girl/_settings</p>
+<p>查看所有索引：GET _all/_settings</p>
+<p>​       </p>
+<h1 id="5-1-5、删除索引"><a href="#5-1-5、删除索引" class="headerlink" title="5.1.5、删除索引"></a>5.1.5、删除索引</h1><p>DELETE test2</p>
+<p>响应表示成功：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"acknowledged"</span> : <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>删除不存在的索引会报错：404</p>
+<p>​     </p>
+<h1 id="5-1-6、索引的打开和关闭"><a href="#5-1-6、索引的打开和关闭" class="headerlink" title="5.1.6、索引的打开和关闭"></a>5.1.6、索引的打开和关闭</h1><p>一个关闭了的索引，基本不占用系统资源；</p>
+<ul>
+<li>POST test/<em>close ———— 关闭 test 索引</em></li>
+<li>_POST test,girl/_close ———— 关闭 多个索引</li>
+<li>POST _all/_close ———— 关闭所有索引</li>
+<li>POST test*/_close ———— 关闭test开头的索引</li>
+</ul>
+<p>​     </p>
+<h1 id="5-1-7、复制索引"><a href="#5-1-7、复制索引" class="headerlink" title="5.1.7、复制索引"></a>5.1.7、复制索引</h1><p>_redinx操作， 把文档 从 源索引 复制到 目标索引，但目标索引的分片数、副本数需要单独设置。</p>
+<p>全量复制：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">POST _reindex</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"source"</span>: &#123;<span class="attr">"index"</span>: <span class="string">"test"</span>&#125;,</span><br><span class="line">  <span class="attr">"dest"</span>: &#123;<span class="attr">"index"</span>: <span class="string">"girl"</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把 test 索引下，type为article下，title中含有关键字 java的文档，复制到 girl 索引中：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">POST _reindex</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"source"</span>: &#123;</span><br><span class="line">    <span class="attr">"index"</span>: <span class="string">"test"</span>,</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"article"</span>,</span><br><span class="line">    <span class="attr">"query"</span>: &#123;</span><br><span class="line">      <span class="attr">"term"</span>: &#123;</span><br><span class="line">        <span class="attr">"FIELD"</span>: &#123;</span><br><span class="line">          <span class="attr">"title"</span>: <span class="string">"java"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"dest"</span>: &#123;<span class="attr">"index"</span>: <span class="string">"girl"</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​     </p>
+<h1 id="5-1-8、收缩索引"><a href="#5-1-8、收缩索引" class="headerlink" title="5.1.8、收缩索引"></a>5.1.8、收缩索引</h1><p>一个索引分片初始化以后无法再做修改，但可以使用shrink index AP提供的分片数机制，把一个索引变成更少的索引。</p>
+<p>收缩以后的分片数 是 原始分片数的因子；比如 8个 可以收缩成 4,2,1；7,11只能收缩成1个；</p>
+<p>​       </p>
+<h1 id="5-1-9、索引别名"><a href="#5-1-9、索引别名" class="headerlink" title="5.1.9、索引别名"></a>5.1.9、索引别名</h1><p>给一个索引 起另一个名字</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /_aliases</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"actions"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"add"</span>: &#123;</span><br><span class="line">        <span class="attr">"index"</span>: <span class="string">"test"</span>,</span><br><span class="line">        <span class="attr">"alias"</span>: <span class="string">"alias_test"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153059.png" alt></p>
+<p>移除别名</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /_aliases</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"actions"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"remove"</span>: &#123;</span><br><span class="line">        <span class="attr">"index"</span>: <span class="string">"test"</span>,</span><br><span class="line">        <span class="attr">"alias"</span>: <span class="string">"alias_test"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看索引的别名</p>
+<p>GET /test/_alias</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153128.png" alt></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET /test/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"analyzer"</span>:<span class="string">"ik_smart"</span>,</span><br><span class="line">  <span class="attr">"text"</span>:<span class="string">"洪荒之力"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/elasticsearch/4-5-Elasticsearch-Head集群操作管理工具/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2060,182 +2307,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/elasticsearch/3-2-Lucene文件检索实战-架构设计/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="0ms AC">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/3-2-Lucene文件检索实战-架构设计/" itemprop="url">3.2、Lucene文件检索实战 —— 架构设计</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-08T00:02:00+08:00">
-                2019-03-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<ol>
-<li><p>文档存储系统 —— 存储了不同类型的文件；</p>
-<p>后台 —— 提取出 文件名 和 文档内容；</p>
-<p>Lucene —— 使用Lucune对 文件名 和 文档内容 进行索引；</p>
-<p>前端 —— 对用户提供查询接口；</p>
-</li>
-</ol>
-<p>   检索过程 —— 用户提交关键词，检索索引库， 返回匹配文档至前端页面</p>
-<ol start="2">
-<li><p>能够下载检索到的文件；</p>
-</li>
-<li><p>能够实现关键字的高亮；</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132346.png" alt></p>
-</li>
-</ol>
-<p>工具准备：</p>
-<ol>
-<li>使用 Tika 完成信息抽取；</li>
-<li>使用 Lucene 构建索引；</li>
-<li>使用 JSP页面 给用户提供查询接口；</li>
-<li>使用 Servlet 完成搜索；</li>
-</ol>
-<p>构建类似百度文库的小型文件检索系统</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2286,7 +2357,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -2308,7 +2379,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
