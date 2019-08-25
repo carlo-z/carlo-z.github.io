@@ -1138,141 +1138,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/leetcode/recover-binary-search-tree/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="0ms AC">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/leetcode/recover-binary-search-tree/" itemprop="url">Recover Binary Search Tree</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-04-03T00:05:58+08:00">
-                2016-04-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>算法：二叉搜索树， 深度优先搜索</p>
-<p>url：<a href="https://leetcode.com/problems/recover-binary-search-tree/" target="_blank" rel="noopener">https://leetcode.com/problems/recover-binary-search-tree/</a></p>
-<p>题目</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">99. <span class="selector-tag">Recover</span> <span class="selector-tag">Binary</span> <span class="selector-tag">Search</span> <span class="selector-tag">Tree</span></span><br><span class="line"><span class="selector-tag">Two</span> <span class="selector-tag">elements</span> <span class="selector-tag">of</span> <span class="selector-tag">a</span> <span class="selector-tag">binary</span> <span class="selector-tag">search</span> <span class="selector-tag">tree</span> (<span class="selector-tag">BST</span>) <span class="selector-tag">are</span> <span class="selector-tag">swapped</span> <span class="selector-tag">by</span> <span class="selector-tag">mistake</span>.</span><br><span class="line"><span class="selector-tag">Recover</span> <span class="selector-tag">the</span> <span class="selector-tag">tree</span> <span class="selector-tag">without</span> <span class="selector-tag">changing</span> <span class="selector-tag">its</span> <span class="selector-tag">structure</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span> 1:</span><br><span class="line"><span class="selector-tag">Input</span>: <span class="selector-attr">[1,3,null,null,2]</span></span><br><span class="line">   1</span><br><span class="line">  /</span><br><span class="line"> 3</span><br><span class="line">  \</span><br><span class="line">   2</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-attr">[3,1,null,null,2]</span></span><br><span class="line">   3</span><br><span class="line">  /</span><br><span class="line"> 1</span><br><span class="line">  \</span><br><span class="line">   2</span><br><span class="line"><span class="selector-tag">Example</span> 2:</span><br><span class="line"><span class="selector-tag">Input</span>: <span class="selector-attr">[3,1,4,null,null,2]</span></span><br><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">1   4</span><br><span class="line">   /</span><br><span class="line">  2</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-attr">[2,1,4,null,null,3]</span></span><br><span class="line">  2</span><br><span class="line"> / \</span><br><span class="line">1   4</span><br><span class="line">   /</span><br><span class="line">  3</span><br><span class="line"><span class="selector-tag">Follow</span> <span class="selector-tag">up</span>:</span><br><span class="line"><span class="selector-tag">A</span> <span class="selector-tag">solution</span> <span class="selector-tag">using</span> <span class="selector-tag">O</span>(<span class="selector-tag">n</span>) <span class="selector-tag">space</span> <span class="selector-tag">is</span> <span class="selector-tag">pretty</span> <span class="selector-tag">straight</span> <span class="selector-tag">forward</span>.</span><br><span class="line"><span class="selector-tag">Could</span> <span class="selector-tag">you</span> <span class="selector-tag">devise</span> <span class="selector-tag">a</span> <span class="selector-tag">constant</span> <span class="selector-tag">space</span> <span class="selector-tag">solution</span>?</span><br></pre></td></tr></table></figure>
-
-<p>分析</p>
-<ol>
-<li>要求，不改变现有树结构的前提，使数恢复为二叉搜索树；</li>
-<li>使用DFS便利二叉树，凡是 不符合规则的节点都标记出来；</li>
-<li>中序遍历，遍历结果有序，无序的节点就是 不合格的节点</li>
-</ol>
-<p>Java解法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    TreeNode pre;</span><br><span class="line">    TreeNode first, second;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">recoverTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        pre = <span class="keyword">new</span> TreeNode(Integer.MIN_VALUE);</span><br><span class="line">        inorder(root);</span><br><span class="line">        swap(first, second);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inorder</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">null</span> == root) <span class="keyword">return</span>;</span><br><span class="line">        inorder(root.left);</span><br><span class="line">        <span class="keyword">if</span>(pre.val &gt;= root.val &amp;&amp; pre.val != Integer.MIN_VALUE) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">null</span> == first) first = pre;</span><br><span class="line">            second = root;</span><br><span class="line">        &#125;</span><br><span class="line">        pre = root;</span><br><span class="line">        inorder(root.right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(TreeNode node1, TreeNode node2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = node1.val;</span><br><span class="line">        node1.val = node2.val;</span><br><span class="line">        node2.val = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TreeNode <span class="title">stringToTreeNode</span><span class="params">(String input)</span> </span>&#123;</span><br><span class="line">        input = input.trim();</span><br><span class="line">        input = input.substring(<span class="number">1</span>, input.length() - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (input.length() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        String[] parts = input.split(<span class="string">","</span>);</span><br><span class="line">        String item = parts[<span class="number">0</span>];</span><br><span class="line">        TreeNode root = <span class="keyword">new</span> TreeNode(Integer.parseInt(item));</span><br><span class="line">        Queue&lt;TreeNode&gt; nodeQueue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        nodeQueue.add(root);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(!nodeQueue.isEmpty()) &#123;</span><br><span class="line">            TreeNode node = nodeQueue.remove();</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (index == parts.length) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            item = parts[index++];</span><br><span class="line">            item = item.trim();</span><br><span class="line">            <span class="keyword">if</span> (!item.equals(<span class="string">"null"</span>)) &#123;</span><br><span class="line">                <span class="keyword">int</span> leftNumber = Integer.parseInt(item);</span><br><span class="line">                node.left = <span class="keyword">new</span> TreeNode(leftNumber);</span><br><span class="line">                nodeQueue.add(node.left);</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (index == parts.length) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            item = parts[index++];</span><br><span class="line">            item = item.trim();</span><br><span class="line">            <span class="keyword">if</span> (!item.equals(<span class="string">"null"</span>)) &#123;</span><br><span class="line">                <span class="keyword">int</span> rightNumber = Integer.parseInt(item);</span><br><span class="line">                node.right = <span class="keyword">new</span> TreeNode(rightNumber);</span><br><span class="line">                nodeQueue.add(node.right);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">treeNodeToString</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"[]"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        String output = <span class="string">""</span>;</span><br><span class="line">        Queue&lt;TreeNode&gt; nodeQueue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        nodeQueue.add(root);</span><br><span class="line">        <span class="keyword">while</span>(!nodeQueue.isEmpty()) &#123;</span><br><span class="line">            TreeNode node = nodeQueue.remove();</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">              output += <span class="string">"null, "</span>;</span><br><span class="line">              <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            output += String.valueOf(node.val) + <span class="string">", "</span>;</span><br><span class="line">            nodeQueue.add(node.left);</span><br><span class="line">            nodeQueue.add(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"["</span> + output.substring(<span class="number">0</span>, output.length() - <span class="number">2</span>) + <span class="string">"]"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        String line;</span><br><span class="line">        <span class="keyword">while</span> ((line = in.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            TreeNode root = stringToTreeNode(line);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">new</span> Solution().recoverTree(root);</span><br><span class="line">            String out = treeNodeToString(root);</span><br><span class="line">            </span><br><span class="line">            System.out.print(out);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Python解法</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/leetcode/reverse-linked-list/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1361,6 +1226,141 @@
 </blockquote>
 <p>Java解法</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    Node next;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> d)</span> </span>&#123; <span class="keyword">this</span>.val = d; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">reverse</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">        Node pre = node;</span><br><span class="line">        Node cur = node.next;</span><br><span class="line">        node.next = <span class="keyword">null</span>;</span><br><span class="line">        Node tmp;</span><br><span class="line">        <span class="keyword">while</span>(cur!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            tmp = cur.next;</span><br><span class="line">            cur.next = pre;</span><br><span class="line">            pre = cur;</span><br><span class="line">            cur = tmp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pre;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">reverseByK</span><span class="params">(Node node, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        Node tmp = node;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;k &amp;&amp; tmp != <span class="keyword">null</span>; i++) &#123;</span><br><span class="line">            tmp = tmp.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (tmp == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125;</span><br><span class="line">        Node childList = tmp.next;</span><br><span class="line">        tmp.next = <span class="keyword">null</span>;</span><br><span class="line">        Node retNode = reverse(node);</span><br><span class="line">        Node newChildNode = reverseByK(childList, k);</span><br><span class="line">        node.next = newChildNode;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> retNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Node link = <span class="keyword">null</span>;</span><br><span class="line">        Node tmp = link;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;<span class="number">9</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">null</span> == tmp) &#123;</span><br><span class="line">            	tmp = <span class="keyword">new</span> Node(i);</span><br><span class="line">            	link = tmp;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            	tmp.next = <span class="keyword">new</span> Node(i);</span><br><span class="line">            	tmp = tmp.next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Solution solution = <span class="keyword">new</span> Solution();</span><br><span class="line">        link = solution.reverse(solution.reverseByK(solution.reverse(link), <span class="number">3</span>));</span><br><span class="line">        <span class="keyword">while</span>(link!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.print(link.val + <span class="string">" "</span>);</span><br><span class="line">            link = link.next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Python解法</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/leetcode/recover-binary-search-tree/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="0ms AC">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/recover-binary-search-tree/" itemprop="url">Recover Binary Search Tree</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-04-03T00:05:58+08:00">
+                2016-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>算法：二叉搜索树， 深度优先搜索</p>
+<p>url：<a href="https://leetcode.com/problems/recover-binary-search-tree/" target="_blank" rel="noopener">https://leetcode.com/problems/recover-binary-search-tree/</a></p>
+<p>题目</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">99. <span class="selector-tag">Recover</span> <span class="selector-tag">Binary</span> <span class="selector-tag">Search</span> <span class="selector-tag">Tree</span></span><br><span class="line"><span class="selector-tag">Two</span> <span class="selector-tag">elements</span> <span class="selector-tag">of</span> <span class="selector-tag">a</span> <span class="selector-tag">binary</span> <span class="selector-tag">search</span> <span class="selector-tag">tree</span> (<span class="selector-tag">BST</span>) <span class="selector-tag">are</span> <span class="selector-tag">swapped</span> <span class="selector-tag">by</span> <span class="selector-tag">mistake</span>.</span><br><span class="line"><span class="selector-tag">Recover</span> <span class="selector-tag">the</span> <span class="selector-tag">tree</span> <span class="selector-tag">without</span> <span class="selector-tag">changing</span> <span class="selector-tag">its</span> <span class="selector-tag">structure</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span> 1:</span><br><span class="line"><span class="selector-tag">Input</span>: <span class="selector-attr">[1,3,null,null,2]</span></span><br><span class="line">   1</span><br><span class="line">  /</span><br><span class="line"> 3</span><br><span class="line">  \</span><br><span class="line">   2</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-attr">[3,1,null,null,2]</span></span><br><span class="line">   3</span><br><span class="line">  /</span><br><span class="line"> 1</span><br><span class="line">  \</span><br><span class="line">   2</span><br><span class="line"><span class="selector-tag">Example</span> 2:</span><br><span class="line"><span class="selector-tag">Input</span>: <span class="selector-attr">[3,1,4,null,null,2]</span></span><br><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">1   4</span><br><span class="line">   /</span><br><span class="line">  2</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-attr">[2,1,4,null,null,3]</span></span><br><span class="line">  2</span><br><span class="line"> / \</span><br><span class="line">1   4</span><br><span class="line">   /</span><br><span class="line">  3</span><br><span class="line"><span class="selector-tag">Follow</span> <span class="selector-tag">up</span>:</span><br><span class="line"><span class="selector-tag">A</span> <span class="selector-tag">solution</span> <span class="selector-tag">using</span> <span class="selector-tag">O</span>(<span class="selector-tag">n</span>) <span class="selector-tag">space</span> <span class="selector-tag">is</span> <span class="selector-tag">pretty</span> <span class="selector-tag">straight</span> <span class="selector-tag">forward</span>.</span><br><span class="line"><span class="selector-tag">Could</span> <span class="selector-tag">you</span> <span class="selector-tag">devise</span> <span class="selector-tag">a</span> <span class="selector-tag">constant</span> <span class="selector-tag">space</span> <span class="selector-tag">solution</span>?</span><br></pre></td></tr></table></figure>
+
+<p>分析</p>
+<ol>
+<li>要求，不改变现有树结构的前提，使数恢复为二叉搜索树；</li>
+<li>使用DFS便利二叉树，凡是 不符合规则的节点都标记出来；</li>
+<li>中序遍历，遍历结果有序，无序的节点就是 不合格的节点</li>
+</ol>
+<p>Java解法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    TreeNode pre;</span><br><span class="line">    TreeNode first, second;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">recoverTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        pre = <span class="keyword">new</span> TreeNode(Integer.MIN_VALUE);</span><br><span class="line">        inorder(root);</span><br><span class="line">        swap(first, second);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inorder</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">null</span> == root) <span class="keyword">return</span>;</span><br><span class="line">        inorder(root.left);</span><br><span class="line">        <span class="keyword">if</span>(pre.val &gt;= root.val &amp;&amp; pre.val != Integer.MIN_VALUE) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">null</span> == first) first = pre;</span><br><span class="line">            second = root;</span><br><span class="line">        &#125;</span><br><span class="line">        pre = root;</span><br><span class="line">        inorder(root.right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(TreeNode node1, TreeNode node2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = node1.val;</span><br><span class="line">        node1.val = node2.val;</span><br><span class="line">        node2.val = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TreeNode <span class="title">stringToTreeNode</span><span class="params">(String input)</span> </span>&#123;</span><br><span class="line">        input = input.trim();</span><br><span class="line">        input = input.substring(<span class="number">1</span>, input.length() - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (input.length() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        String[] parts = input.split(<span class="string">","</span>);</span><br><span class="line">        String item = parts[<span class="number">0</span>];</span><br><span class="line">        TreeNode root = <span class="keyword">new</span> TreeNode(Integer.parseInt(item));</span><br><span class="line">        Queue&lt;TreeNode&gt; nodeQueue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        nodeQueue.add(root);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(!nodeQueue.isEmpty()) &#123;</span><br><span class="line">            TreeNode node = nodeQueue.remove();</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (index == parts.length) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            item = parts[index++];</span><br><span class="line">            item = item.trim();</span><br><span class="line">            <span class="keyword">if</span> (!item.equals(<span class="string">"null"</span>)) &#123;</span><br><span class="line">                <span class="keyword">int</span> leftNumber = Integer.parseInt(item);</span><br><span class="line">                node.left = <span class="keyword">new</span> TreeNode(leftNumber);</span><br><span class="line">                nodeQueue.add(node.left);</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (index == parts.length) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            item = parts[index++];</span><br><span class="line">            item = item.trim();</span><br><span class="line">            <span class="keyword">if</span> (!item.equals(<span class="string">"null"</span>)) &#123;</span><br><span class="line">                <span class="keyword">int</span> rightNumber = Integer.parseInt(item);</span><br><span class="line">                node.right = <span class="keyword">new</span> TreeNode(rightNumber);</span><br><span class="line">                nodeQueue.add(node.right);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">treeNodeToString</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"[]"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        String output = <span class="string">""</span>;</span><br><span class="line">        Queue&lt;TreeNode&gt; nodeQueue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        nodeQueue.add(root);</span><br><span class="line">        <span class="keyword">while</span>(!nodeQueue.isEmpty()) &#123;</span><br><span class="line">            TreeNode node = nodeQueue.remove();</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">              output += <span class="string">"null, "</span>;</span><br><span class="line">              <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            output += String.valueOf(node.val) + <span class="string">", "</span>;</span><br><span class="line">            nodeQueue.add(node.left);</span><br><span class="line">            nodeQueue.add(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"["</span> + output.substring(<span class="number">0</span>, output.length() - <span class="number">2</span>) + <span class="string">"]"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        String line;</span><br><span class="line">        <span class="keyword">while</span> ((line = in.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            TreeNode root = stringToTreeNode(line);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">new</span> Solution().recoverTree(root);</span><br><span class="line">            String out = treeNodeToString(root);</span><br><span class="line">            </span><br><span class="line">            System.out.print(out);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>Python解法</p>
 
@@ -1727,7 +1727,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
