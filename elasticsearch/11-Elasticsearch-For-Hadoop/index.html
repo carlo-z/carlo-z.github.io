@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="elasticsearch,hadoop,hdfs,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="11.1、单机版Hadoop安装 11.2、ES-Hadoop安装 11.3、从 HDFS 到 Elasticsearch 11.4、从Elasticsearch 到 HDFS -—————————————————– 11.1、单机版Hadoop安装hadoop分为 单机模式、伪分布式模式、完全分布式模式 1、ssh免密登录  vi /etc/ssh/ssh_config 文件尾添加： 12St">
+<meta name="keywords" content="elasticsearch,hadoop,hdfs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="11、Elasticsearch For Hadoop">
+<meta property="og:url" content="https://carloz.gitee.io/elasticsearch/11-Elasticsearch-For-Hadoop/index.html">
+<meta property="og:site_name" content="0ms AC">
+<meta property="og:description" content="11.1、单机版Hadoop安装 11.2、ES-Hadoop安装 11.3、从 HDFS 到 Elasticsearch 11.4、从Elasticsearch 到 HDFS -—————————————————– 11.1、单机版Hadoop安装hadoop分为 单机模式、伪分布式模式、完全分布式模式 1、ssh免密登录  vi /etc/ssh/ssh_config 文件尾添加： 12St">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160237.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160318.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160340.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160510.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160517.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160545.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160606.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160658.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160712.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160740.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160832.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160957.png">
+<meta property="og:image" content="c:%5CUsers%5CCarloZ%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1566720615487.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161036.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161119.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161138.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161209.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161225.png">
+<meta property="og:updated_time" content="2019-08-25T08:14:56.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="11、Elasticsearch For Hadoop">
+<meta name="twitter:description" content="11.1、单机版Hadoop安装 11.2、ES-Hadoop安装 11.3、从 HDFS 到 Elasticsearch 11.4、从Elasticsearch 到 HDFS -—————————————————– 11.1、单机版Hadoop安装hadoop分为 单机模式、伪分布式模式、完全分布式模式 1、ssh免密登录  vi /etc/ssh/ssh_config 文件尾添加： 12St">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160237.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carloz.gitee.io/elasticsearch/11-Elasticsearch-For-Hadoop/">
+
+
+
+
+
+  <title>11、Elasticsearch For Hadoop | 0ms AC</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">0ms AC</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            Search
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/elasticsearch/11-Elasticsearch-For-Hadoop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="0ms AC">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">11、Elasticsearch For Hadoop</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-06-10T00:01:00+08:00">
+                2019-06-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>11.1、单机版Hadoop安装</p>
+<p>11.2、ES-Hadoop安装</p>
+<p>11.3、从 HDFS 到 Elasticsearch</p>
+<p>11.4、从Elasticsearch 到 HDFS</p>
+<p>-—————————————————–</p>
+<h1 id="11-1、单机版Hadoop安装"><a href="#11-1、单机版Hadoop安装" class="headerlink" title="11.1、单机版Hadoop安装"></a>11.1、单机版Hadoop安装</h1><p>hadoop分为 单机模式、伪分布式模式、完全分布式模式</p>
+<h4 id="1、ssh免密登录"><a href="#1、ssh免密登录" class="headerlink" title="1、ssh免密登录"></a>1、ssh免密登录</h4><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160237.png" alt></p>
+<p>vi /etc/ssh/ssh_config</p>
+<p>文件尾添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">StrictHostKeyChecking no</span><br><span class="line">UserKnownHostsFile /dev/null</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160318.png" alt></p>
+<h4 id="2、hadoop下载安装"><a href="#2、hadoop下载安装" class="headerlink" title="2、hadoop下载安装"></a>2、hadoop下载安装</h4><p>[root@localhost data]# mkdir -p /data/hadoop</p>
+<p>[root@localhost data]# cd /data/hadoop</p>
+<p>[root@localhost hadoop]# wget <a href="http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz" target="_blank" rel="noopener">http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz</a></p>
+<h4 id="3、haoop-单机模式"><a href="#3、haoop-单机模式" class="headerlink" title="3、haoop 单机模式"></a>3、haoop 单机模式</h4><p>[root@localhost hadoop]# tar -zxf hadoop-2.7.7.tar.gz</p>
+<p>[root@localhost hadoop]# mkdir input</p>
+<p>[root@localhost hadoop]# echo “hello world” &gt; input/file1.txt</p>
+<p>[root@localhost hadoop]# echo “hello hadoop” &gt; input/file2.txt</p>
+<p>[root@localhost hadoop]# ./hadoop-2.7.7/bin/hadoop jar ./hadoop-2.7.7/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.7.jar wordcount /data/hadoop/input/ /data/hadoop/output</p>
+<p>[root@localhost hadoop]# cat output/part-r-00000</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160340.png" alt></p>
+<h4 id="4、hadoop-伪分布式模式"><a href="#4、hadoop-伪分布式模式" class="headerlink" title="4、hadoop 伪分布式模式"></a>4、hadoop 伪分布式模式</h4><p>[root@localhost hadoop]# vi hadoop-2.7.7/etc/hadoop/hadoop-env.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">修改JAVA_HOME 为：</span><br><span class="line">export JAVA_HOME=/data/tools/jdk1.8.0_65</span><br><span class="line"></span><br><span class="line">export HADOOP_OPTS="$HADOOP_OPTS -Djava.net.preferIPv4Stack=true"</span><br><span class="line">改为：</span><br><span class="line">export HADOOP_OPTS="$HADOOP_OPTS -Djava.net.preferIPv4Stack=true -Djava.security.krb5.realm= -Djava.security.krb5.kdc="</span><br></pre></td></tr></table></figure>
+
+<p>[root@localhost hadoop]# mkdir -p /data/hadoop/hdfs/tmp</p>
+<p>[root@localhost hadoop]# vi hadoop-2.7.7/etc/hadoop/core-site.xml</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="selector-tag">configuration</span>&gt;</span><br><span class="line">        &lt;<span class="selector-tag">property</span>&gt;</span><br><span class="line">                &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</span><br><span class="line">                &lt;value&gt;/data/hadoop/hdfs/tmp&lt;/value&gt;</span><br><span class="line">                &lt;description&gt;A base for other temporary directories&lt;/description&gt;</span><br><span class="line">        &lt;/property&gt;</span><br><span class="line">        &lt;<span class="selector-tag">property</span>&gt;</span><br><span class="line">                &lt;name&gt;fs.default.name&lt;/name&gt;</span><br><span class="line">                &lt;value&gt;hdfs://localhost:9000&lt;/value&gt;</span><br><span class="line">        &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>hadoop.tmp.dir 可以自定义；</p>
+<p>fs.default.name 保存了NameNode的位置，HDFS和MapReduce组件都需要用到它；</p>
+<p>[root@localhost hadoop]# vi hadoop-2.7.7/etc/hadoop/mapred-site.xml.template</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="selector-tag">configuration</span>&gt;</span><br><span class="line">        &lt;<span class="selector-tag">property</span>&gt;</span><br><span class="line">                &lt;name&gt;mapred.job.tracker&lt;/name&gt;</span><br><span class="line">                &lt;value&gt;localhost:9010&lt;/value&gt;</span><br><span class="line">        &lt;/property&gt;</span><br><span class="line">&lt;<span class="selector-tag">tconfiguration</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>mapred.job.tracker 保存JobTracker的位置，只有MapReduce需要知道；</p>
+<p>[root@localhost hadoop]# vi hadoop-2.7.7/etc/hadoop/hdfs-site.xml</p>
+<p>配置HDFS数据库的复制次数：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;<span class="selector-tag">configuration</span>&gt;</span><br><span class="line">        &lt;<span class="selector-tag">property</span>&gt;</span><br><span class="line">                &lt;name&gt;dfs.replication&lt;/name&gt;</span><br><span class="line">                &lt;value&gt;1&lt;/value&gt;</span><br><span class="line">        &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>以上就配置完了，接下来格式化 namenode：</p>
+<p>[root@localhost hadoop]# ./hadoop-2.7.7/bin/hadoop namenode -format</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160510.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160517.png" alt></p>
+<p>启动hadoop：</p>
+<p>[root@localhost hadoop]# ./hadoop-2.7.7/sbin/start-all.sh </p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160545.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160606.png" alt></p>
+<p>启动成功；</p>
+<p>添加hadoop到环境变量：</p>
+<p>[root@localhost hadoop-2.7.7]# vi /etc/profile</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_HOME=/data/hadoop/hadoop-2.7.7</span><br><span class="line">export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin</span><br></pre></td></tr></table></figure>
+
+<p>[root@localhost hadoop-2.7.7]# source /etc/profile</p>
+<h4 id="5、HDFS常用操作"><a href="#5、HDFS常用操作" class="headerlink" title="5、HDFS常用操作"></a>5、HDFS常用操作</h4><p>开放 50070 端口</p>
+<p>[root@localhost hadoop-2.7.7]# firewall-cmd –permanent –add-port=50070/tcp</p>
+<p>success</p>
+<p>[root@localhost hadoop-2.7.7]# firewall-cmd –reload</p>
+<p>success</p>
+<p>[root@localhost hadoop-2.7.7]# firewall-cmd –query-port=50070/tcp</p>
+<p>yes</p>
+<p>访问hdfs：<a href="http://172.18.1.51:50070/" target="_blank" rel="noopener">http://172.18.1.51:50070/</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160658.png" alt></p>
+<p>[root@localhost hadoop]# hadoop fs -ls /</p>
+<p>[root@localhost hadoop]# hadoop fs -mkdir /work</p>
+<p>[root@localhost hadoop]# touch aa.txt</p>
+<p>[root@localhost hadoop]# hadoop fs -put aa.txt /work</p>
+<p>[root@localhost hadoop]# hadoop fs -test -e /work/aa.txt</p>
+<p>[root@localhost hadoop]# echo $?</p>
+<p>0</p>
+<p>[root@localhost hadoop]# echo “hello hdfs” &gt; aa.txt </p>
+<p>[root@localhost hadoop]# hadoop fs -appendToFile aa.txt /work/aa.txt</p>
+<p>[root@localhost hadoop]# hadoop fs -cat /work/aa.txt</p>
+<p>hello hdfs</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160712.png" alt></p>
+<p>[root@localhost hadoop]# hadoop fs -rm /work/aa.txt</p>
+<p>19/06/10 05:04:30 INFO fs.TrashPolicyDefault: Namenode trash configuration: Deletion interval = 0 minutes, Emptier interval = 0 minutes.</p>
+<p>Deleted /work/aa.txt</p>
+<p>[root@localhost hadoop]# hadoop fs -rmr /work/a</p>
+<p>rmr: DEPRECATED: Please use ‘rm -r’ instead.</p>
+<p>rmr: `/work/a’: No such file or directory</p>
+<p>[root@localhost hadoop]# hadoop dfsadmin -report</p>
+<p>[root@localhost hadoop]# </p>
+<p>​     </p>
+<h1 id="11-2、引入ES-Hadoop依赖"><a href="#11-2、引入ES-Hadoop依赖" class="headerlink" title="11.2、引入ES-Hadoop依赖"></a>11.2、引入ES-Hadoop依赖</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160740.png" alt></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.elasticsearch<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>elasticsearch<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>7.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.elasticsearch.client<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>elasticsearch-rest-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>7.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.elasticsearch.client<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>elasticsearch-rest-high-level-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>7.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.elasticsearch<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>elasticsearch-hadoop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>7.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.7.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>hadoop-mapreduce-client-common<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.7.7<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​           </p>
+<h1 id="11-3、从-HDFS-到-Elasticsearch"><a href="#11-3、从-HDFS-到-Elasticsearch" class="headerlink" title="11.3、从 HDFS 到 Elasticsearch"></a>11.3、从 HDFS 到 Elasticsearch</h1><p>准备json文档，上传到HDFS中</p>
+<p>vi blog.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"id"</span>:<span class="number">5</span>,<span class="attr">"title"</span>:<span class="string">"JavaScript高级程序设计"</span>,<span class="attr">"language"</span>:<span class="string">"javascript"</span>,<span class="attr">"author"</span>:<span class="string">"NicholasC.Zakas"</span>,<span class="attr">"price"</span>:<span class="number">66.4</span>,<span class="attr">"publish_time"</span>:<span class="string">"2012-03-02"</span>,<span class="attr">"desc"</span>:<span class="string">"JavaScript技术经典名著。"</span>&#125;</span><br><span class="line">&#123;<span class="attr">"id"</span>:<span class="number">3</span>,<span class="attr">"title"</span>:<span class="string">"Python科学计算"</span>,<span class="attr">"language"</span>:<span class="string">"python"</span>,<span class="attr">"author"</span>:<span class="string">"张若愚"</span>,<span class="attr">"price"</span>:<span class="number">81.4</span>,<span class="attr">"publish_time"</span>:<span class="string">"2014-01-02"</span>,<span class="attr">"desc"</span>:<span class="string">"零基础学python，光盘中坐着度假开发winPython运行环境，涵盖了Python各个扩展库。"</span>&#125;</span><br><span class="line">&#123;<span class="attr">"id"</span>:<span class="number">4</span>,<span class="attr">"title"</span>:<span class="string">"Python基础教程"</span>,<span class="attr">"language"</span>:<span class="string">"python"</span>,<span class="attr">"author"</span>:<span class="string">"Helant"</span>,<span class="attr">"price"</span>:<span class="number">54.5</span>,<span class="attr">"publish_time"</span>:<span class="string">"2014-03-02"</span>,<span class="attr">"desc"</span>:<span class="string">"经典的python入门教程，层次鲜明，结构严谨，内容详实。"</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>[root@localhost hadoop]# hadoop fs -put blog.json /work <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160832.png" alt></p>
+<p>编写代码，从 hdfs 读取数据，写入到 Elasticsearch：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.eshdoop;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.NullWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.TextInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.util.GenericOptionsParser;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.hadoop.mr.EsOutputFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 读取 HDFS 上的内容然后写入 Elasticsearch</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HdfsToEs</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">		String[] otherArgs = <span class="keyword">new</span> GenericOptionsParser(conf, args).getRemainingArgs();</span><br><span class="line">		conf.setBoolean(<span class="string">"mapred.map.tasks.speculative.execution"</span>, <span class="keyword">false</span>);</span><br><span class="line">		conf.setBoolean(<span class="string">"mapred.reduce.tasks.speculative.execution"</span>, <span class="keyword">false</span>);</span><br><span class="line">		conf.set(<span class="string">"es.nodes"</span>, <span class="string">"10.10.139.42"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.port"</span>, <span class="string">"9200"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.nodes.wan.only"</span>, <span class="string">"true"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.resource"</span>, <span class="string">"blog/_doc"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.mapping.id"</span>, <span class="string">"id"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.input.json"</span>, <span class="string">"yes"</span>);</span><br><span class="line">		Job job = Job.getInstance(conf, <span class="string">"EmrToES"</span>);</span><br><span class="line">		job.setJarByClass(HdfsToEs.class);</span><br><span class="line">		job.setMapperClass(MyMapper.class);</span><br><span class="line">		job.setInputFormatClass(TextInputFormat.class);</span><br><span class="line">		job.setOutputFormatClass(EsOutputFormat.class);</span><br><span class="line">		job.setMapOutputKeyClass(NullWritable.class);</span><br><span class="line">		job.setMapOutputValueClass(Text.class);</span><br><span class="line">		FileInputFormat.setInputPaths(job, <span class="keyword">new</span> Path(otherArgs[<span class="number">0</span>]));</span><br><span class="line">		System.exit(job.waitForCompletion(<span class="keyword">true</span>) ? <span class="number">0</span> : <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">Object</span>, <span class="title">Text</span>, <span class="title">NullWritable</span>, <span class="title">Text</span>&gt; </span>&#123;</span><br><span class="line">		<span class="keyword">private</span> Text line = <span class="keyword">new</span> Text();</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(Object key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (value.getLength() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">				line.set(value);</span><br><span class="line">				context.write(NullWritable.get(), line);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>pom中指定主类：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">archive</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">manifest</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>com.learn.eshdoop.HdfsToEs<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">archive</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-shade-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span><span class="tag">&lt;<span class="name">goal</span>&gt;</span>shade<span class="tag">&lt;/<span class="name">goal</span>&gt;</span><span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">transformers</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">transformer</span> <span class="attr">implementation</span>=<span class="string">"org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"</span>&gt;</span></span><br><span class="line">                                <span class="tag">&lt;<span class="name">mainClass</span>&gt;</span>com.learn.eshdoop.HdfsToEs<span class="tag">&lt;/<span class="name">mainClass</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;/<span class="name">transformer</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">transformer</span> <span class="attr">implementation</span>=<span class="string">"org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;/<span class="name">transformer</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">transformers</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>运行：mvn clean package 生成对应的jar 包</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825160957.png" alt></p>
+<p> [root@localhost hadoop]# mv es-hadoop-learn-1.0-SNAPSHOT-jar-with-dependencies.jar HdfsToEs.jar</p>
+<p>[root@localhost hadoop]# hadoop jar HdfsToEs.jar /work/blog.json</p>
+<p> <img src="C:%5CUsers%5CCarloZ%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1566720615487.png" alt="1566720615487"></p>
+<p>在Kibana 中 查看</p>
+<p>GET blog/_mapping</p>
+<p>GET blog/_search</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161036.png" alt></p>
+<h1 id="11-4、从Elasticsearch-到-HDFS"><a href="#11-4、从Elasticsearch-到-HDFS" class="headerlink" title="11.4、从Elasticsearch 到 HDFS"></a>11.4、从Elasticsearch 到 HDFS</h1><h4 id="1、将索引-blog-保存到-hdfs"><a href="#1、将索引-blog-保存到-hdfs" class="headerlink" title="1、将索引 blog 保存到 hdfs"></a>1、将索引 blog 保存到 hdfs</h4><p>添加Java类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.eshdoop;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.NullWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Writable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.util.GenericOptionsParser;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.hadoop.mr.EsInputFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询 Elasticsearch 索引然后将结果写入 HDFS</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EsToHdfs</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">		String[] otherArgs = <span class="keyword">new</span> GenericOptionsParser(conf, args).getRemainingArgs();</span><br><span class="line">		conf.set(<span class="string">"es.nodes"</span>, <span class="string">"10.10.139.42"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.port"</span>, <span class="string">"9200"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.resource"</span>, <span class="string">"blog/_doc"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.output.json"</span>, <span class="string">"true"</span>);</span><br><span class="line">		Job job = Job.getInstance(conf, <span class="string">"hadoop es write test"</span>);</span><br><span class="line">		job.setMapperClass(MyMapper.class);</span><br><span class="line">		job.setNumReduceTasks(<span class="number">1</span>);</span><br><span class="line">		job.setMapOutputKeyClass(NullWritable.class);</span><br><span class="line">		job.setMapOutputValueClass(Text.class);</span><br><span class="line">		job.setInputFormatClass(EsInputFormat.class);</span><br><span class="line">		FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(otherArgs[<span class="number">0</span>]));</span><br><span class="line">		job.waitForCompletion(<span class="keyword">true</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">Writable</span>, <span class="title">Writable</span>, <span class="title">NullWritable</span>, <span class="title">Text</span>&gt; </span>&#123;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(Writable key, Writable value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">			Text text = <span class="keyword">new</span> Text();</span><br><span class="line">			text.set(value.toString());</span><br><span class="line">			context.write(NullWritable.get(), text);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改pom.xml中的主类为：com.learn.eshdoop.EsToHdfs。</p>
+<p>mvn clean package 重新打包</p>
+<p>上传以后执行：</p>
+<p>[root@localhost hadoop]# mv es-hadoop-learn-1.0-SNAPSHOT-jar-with-dependencies.jar EsIndexToHdfs.jar</p>
+<p>[root@localhost hadoop]# hadoop jar EsIndexToHdfs.jar /work/blog_mapping</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161119.png" alt></p>
+<p>[root@localhost hadoop]# hadoop fs -cat /work/blog_mapping/part-r-00000</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161138.png" alt></p>
+<h4 id="2、将带条件查询-blog-的-数据-保存到-hdfs"><a href="#2、将带条件查询-blog-的-数据-保存到-hdfs" class="headerlink" title="2、将带条件查询 blog 的 数据 保存到 hdfs"></a>2、将带条件查询 blog 的 数据 保存到 hdfs</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.eshdoop;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.NullWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Writable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.util.GenericOptionsParser;</span><br><span class="line"><span class="keyword">import</span> org.elasticsearch.hadoop.mr.EsInputFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查询 Elasticsearch 数据 然后将结果写入 HDFS</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EsQueryToHdfs</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">		String[] otherArgs = <span class="keyword">new</span> GenericOptionsParser(conf, args).getRemainingArgs();</span><br><span class="line">		conf.set(<span class="string">"es.nodes"</span>, <span class="string">"10.10.139.42"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.port"</span>, <span class="string">"9200"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.resource"</span>, <span class="string">"blog/_doc"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.output.json"</span>, <span class="string">"true"</span>);</span><br><span class="line">		conf.set(<span class="string">"es.query"</span>, <span class="string">"?q=title:python"</span>);</span><br><span class="line">		Job job = Job.getInstance(conf, <span class="string">"query es to HDFS"</span>);</span><br><span class="line">		job.setMapperClass(EsToHdfs.MyMapper.class);</span><br><span class="line">		job.setNumReduceTasks(<span class="number">1</span>);</span><br><span class="line">		job.setMapOutputKeyClass(NullWritable.class);</span><br><span class="line">		job.setMapOutputValueClass(Text.class);</span><br><span class="line">		job.setInputFormatClass(EsInputFormat.class);</span><br><span class="line">		FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(otherArgs[<span class="number">0</span>]));</span><br><span class="line">		job.waitForCompletion(<span class="keyword">true</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">Writable</span>, <span class="title">Writable</span>, <span class="title">NullWritable</span>, <span class="title">Text</span>&gt; </span>&#123;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(Writable key, Writable value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">			Text text = <span class="keyword">new</span> Text();</span><br><span class="line">			text.set(value.toString());</span><br><span class="line">			context.write(NullWritable.get(), text);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在pom.xml中修改主类名称为：com.learn.eshdoop.EsQueryToHdfs；</p>
+<p>mvn clean package 重新打包，然后上传；</p>
+<p>[root@localhost hadoop]# mv es-hadoop-learn-1.0-SNAPSHOT-jar-with-dependencies.jar EsQueryToHdfs.jar</p>
+<p>[root@localhost hadoop]# hadoop jar EsQueryToHdfs.jar /work/EsQueryToHdfs</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161209.png" alt></p>
+<p>[root@localhost hadoop]# hadoop fs -cat /work/EsQueryToHdfs/part-r-00000</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825161225.png" alt></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a>
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+            <a href="/tags/hdfs/" rel="tag"># hdfs</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/elasticsearch/ELK单节点系统构建/" rel="next" title="ELK单节点系统构建">
+                <i class="fa fa-chevron-left"></i> ELK单节点系统构建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/os/computer-network/linux模拟网络延迟-网络丢包-网络中断/" rel="prev" title="linux 模拟  网络延迟、网络丢包、网络中断">
+                linux 模拟  网络延迟、网络丢包、网络中断 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#11-1、单机版Hadoop安装"><span class="nav-number">1.</span> <span class="nav-text">11.1、单机版Hadoop安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、ssh免密登录"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1、ssh免密登录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、hadoop下载安装"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">2、hadoop下载安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、haoop-单机模式"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">3、haoop 单机模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、hadoop-伪分布式模式"><span class="nav-number">1.0.0.4.</span> <span class="nav-text">4、hadoop 伪分布式模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、HDFS常用操作"><span class="nav-number">1.0.0.5.</span> <span class="nav-text">5、HDFS常用操作</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#11-2、引入ES-Hadoop依赖"><span class="nav-number">2.</span> <span class="nav-text">11.2、引入ES-Hadoop依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-3、从-HDFS-到-Elasticsearch"><span class="nav-number">3.</span> <span class="nav-text">11.3、从 HDFS 到 Elasticsearch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-4、从Elasticsearch-到-HDFS"><span class="nav-number">4.</span> <span class="nav-text">11.4、从Elasticsearch 到 HDFS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、将索引-blog-保存到-hdfs"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">1、将索引 blog 保存到 hdfs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、将带条件查询-blog-的-数据-保存到-hdfs"><span class="nav-number">4.0.0.2.</span> <span class="nav-text">2、将带条件查询 blog 的 数据 保存到 hdfs</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
