@@ -314,6 +314,456 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/6-1-Elasticsearch搜索详解-索机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/6-1-Elasticsearch搜索详解-索机制/" itemprop="url">6.1、ES搜索详解 —— 搜索机制</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-15T00:01:00+08:00">
+                2019-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>本章参考文档：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-percolate-query.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-percolate-query.html</a><br>注意文档对应的Elasticsearch版本</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154850.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154858.png" alt></p>
+<p>索引过程：</p>
+<p>第2象限 有 原始文档；</p>
+<p>Elasticsearch 保存 文档的原始内容 和 对应的倒排序索引文件；</p>
+<p>搜索过程：</p>
+<p>在 倒排索引文件 维护的 倒排记录表 找 关键词 对应的 文档集合，然后做评分、排序、高亮，将结果返回给用户；</p>
+<p>过滤机制：</p>
+<p>根据条件对文档进行过滤，不计算评分；</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">DELETE</span> <span class="selector-tag">books</span></span><br><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">books</span></span><br><span class="line">&#123;</span><br><span class="line">  "settings": &#123;</span><br><span class="line">    "<span class="selector-tag">number_of_replicas</span>": 1,</span><br><span class="line">    "<span class="selector-tag">number_of_shards</span>": 3</span><br><span class="line">  &#125;,</span><br><span class="line">  "<span class="selector-tag">mappings</span>": &#123;</span><br><span class="line">    "properties": &#123;</span><br><span class="line">      "<span class="selector-tag">id</span>": &#123;</span><br><span class="line">        "type": "long"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">title</span>": &#123;</span><br><span class="line">        "type": "text",</span><br><span class="line">        "<span class="selector-tag">analyzer</span>": "<span class="selector-tag">ik_max_word</span>"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">language</span>": &#123;</span><br><span class="line">        "type": "keyword"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">author</span>": &#123;</span><br><span class="line">        "type": "keyword"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">price</span>": &#123;</span><br><span class="line">        "type": "double"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">publish_time</span>": &#123;</span><br><span class="line">        "type": "date",</span><br><span class="line">        "<span class="selector-tag">format</span>": "<span class="selector-tag">yyyy-MM-dd</span>"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">desc</span>": &#123;</span><br><span class="line">        "type": "text",</span><br><span class="line">        "<span class="selector-tag">analyzer</span>": "<span class="selector-tag">ik_max_word</span>"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  "id":1,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"Java</span>编程思想",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"Java"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "<span class="selector-tag">Bruce</span> <span class="selector-tag">Eckel</span>",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:70.20</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2017-01-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"Java</span>学习必读经典，殿堂级著作！赢得全球程序员的广泛赞誉。"</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/2</span><br><span class="line">&#123;</span><br><span class="line">  "id":2,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"Java</span>程序性能优化",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"Java"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "葛一鸣",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:46.50</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2012-08-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"Java</span>程序更快，更稳定。深入剖析软件设计层面、代码层面、<span class="selector-tag">JVM</span>层面的优化方法。"</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/3</span><br><span class="line">&#123;</span><br><span class="line">  "id":3,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"Python</span>科学计算",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"python"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "张若愚",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:81.40</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2014-01-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"</span>零基础学<span class="selector-tag">python</span>， 光盘中坐着度假开发<span class="selector-tag">winPython</span>运行环境，涵盖了<span class="selector-tag">Python</span>各个扩展库。"</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/4</span><br><span class="line">&#123;</span><br><span class="line">  "id":4,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"Python</span>基础教程",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"python"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "<span class="selector-tag">Helant</span>",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:54.50</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2014-03-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"</span>经典的<span class="selector-tag">python</span>入门教程，层次鲜明，结构严谨，内容详实。"</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/5</span><br><span class="line">&#123;</span><br><span class="line">  "id":5,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"JavaScript</span>高级程序设计",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"javascript"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "<span class="selector-tag">Nicholas</span> <span class="selector-tag">C</span>. <span class="selector-tag">Zakas</span>",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:66.40</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2012-03-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"JavaScript</span> 技术经典名著。"</span><br><span class="line">&#125;</span><br><span class="line">GET books/_mapping</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">match_all</span>搜索,简化语法：</span><br><span class="line">GET books/_search</span><br><span class="line"><span class="selector-tag">term</span> <span class="selector-tag">query</span> 搜索：</span><br><span class="line">GET books/_search</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "<span class="selector-tag">term</span>": &#123;</span><br><span class="line">      "title": "思想"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据量很大的情况下，需要分页：</p>
+<p>from：开始位置</p>
+<p>size：返回文档最大数量</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET books/_search</span><br><span class="line">&#123;</span><br><span class="line">  "from": 1,</span><br><span class="line">  "<span class="selector-tag">size</span>": 2,</span><br><span class="line">  "<span class="selector-tag">query</span>": &#123;</span><br><span class="line">    "term": &#123;</span><br><span class="line">      "<span class="selector-tag">title</span>": "<span class="selector-tag">java</span>"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最小评分过滤机制：</p>
+<p>相关文档很多的情况下，相关性比较低的文档可以过滤掉</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825155004.png" alt></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET books/_search</span><br><span class="line">&#123;</span><br><span class="line">  "min_score": 0.6,</span><br><span class="line">  "<span class="selector-tag">query</span>": &#123;</span><br><span class="line">    "term": &#123;</span><br><span class="line">      "<span class="selector-tag">title</span>": "<span class="selector-tag">java</span>"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825155024.png" alt></p>
+<p>高亮查询关键字：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET books/_search</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "<span class="selector-tag">term</span>": &#123;</span><br><span class="line">      "title": "java"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  "<span class="selector-tag">highlight</span>": &#123;</span><br><span class="line">    "fields": &#123;</span><br><span class="line">      "<span class="selector-tag">title</span>": &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825155056.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/distribution/distributed-consensus-algorithm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/distribution/distributed-consensus-algorithm/" itemprop="url">分布式共识算法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-15T00:00:00+08:00">
+                2019-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/distributed/" itemprop="url" rel="index">
+                    <span itemprop="name">distributed</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="一、Paxos协议"><a href="#一、Paxos协议" class="headerlink" title="一、Paxos协议"></a>一、Paxos协议</h1><h3 id="1、拜占庭将军问题"><a href="#1、拜占庭将军问题" class="headerlink" title="1、拜占庭将军问题"></a>1、拜占庭将军问题</h3><br>
+
+<h3 id="2、提出问题"><a href="#2、提出问题" class="headerlink" title="2、提出问题"></a>2、提出问题</h3><br>
+
+<h3 id="3、故事背景"><a href="#3、故事背景" class="headerlink" title="3、故事背景"></a>3、故事背景</h3><br>
+
+<h3 id="4、Paxos算法"><a href="#4、Paxos算法" class="headerlink" title="4、Paxos算法"></a>4、Paxos算法</h3><h4 id="4-1、基本定义"><a href="#4-1、基本定义" class="headerlink" title="4.1、基本定义"></a>4.1、基本定义</h4><br>
+
+<h4 id="4-2、算法详解"><a href="#4-2、算法详解" class="headerlink" title="4.2、算法详解"></a>4.2、算法详解</h4><p>Paxos算法有两个阶段</p>
+<ul>
+<li>Prepare阶段（第一阶段）</li>
+<li>Accept阶段（第二阶段）</li>
+</ul>
+<h5 id="1-、第一阶段"><a href="#1-、第一阶段" class="headerlink" title="1)、第一阶段"></a>1)、第一阶段</h5><ol>
+<li>Proposer希望议案V。首先发出Prepare请求至大多数Acceptor。Prepare请求内容为序列号K；</li>
+<li>Acceptor收到Prepare请求为编号K后，检查自己手里是否有处理过Prepare请求；</li>
+<li>如果Acceptor没有接受过任何Prepare请求，那么用OK来回复Proposer，代表Acceptor必须接受收到的第一个议案；</li>
+<li>否则，如果Acceptor之前接受过任何Prepare请求（如：MaxN），那么比较议案编号，如果K&lt;MaxN，则用reject或者error回复Proposer；</li>
+<li>如果K&gt;=MaxN，那么检查之前是否有批准的议案，如果没有则用OK来回复Proposer，并记录K；</li>
+<li>如果K&gt;=MaxN，那么检查之前是否有批准的议案，如果有则回复批准的议案编号和议案内容（如：&lt;AcceptN, AcceptV&gt;， AcceptN为批准的议案编号，AcceptV为批准的议案内容）。</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315202153.png" alt></p>
+<h5 id="2-、第二阶段"><a href="#2-、第二阶段" class="headerlink" title="2)、第二阶段"></a>2)、第二阶段</h5><ol>
+<li>Proposer收到过半Acceptor发来的回复，回复都是OK，且没有附带任何批准过的议案编号和议案内容。那么Proposer继续提交批准请求，不过此时会连议案编号K和议案内容V一起提交（&lt;K, V&gt;这种数据形式）</li>
+<li>Proposer收到过半Acceptor发来的回复，回复都是OK，且附带批准过的议案编号和议案内容（&lt;pok，议案编号，议案内容&gt;）。那么Proposer找到所有回复中<u><strong>AcceptN最大</strong></u>的那个AccpetV（假设为&lt;pok，AcceptNx，AcceptVx&gt;）作为提交批准请求（请求为&lt;K，AcceptVx&gt;）发送给Acceptor。</li>
+<li>Proposer没有收到过半Acceptor发来的回复，则修改议案编号K为Kx，并将编号重新发送给Acceptors（重复Prepare阶段的过程）</li>
+<li>Acceptor收到Proposer发来的Accept请求，如果编号K&lt;MaxN则不回应或者reject。</li>
+<li>Acceptor收到Proposer发来的Accept请求，如果编号K&gt;=MaxN则批准该议案，并设置手里批准的议案为&lt;K，接受议案的编号，接受议案的内容&gt;，回复Proposer。</li>
+<li>经过一段时间Proposer对比手里收到的Accept回复，如果超过半数，则结束流程（代表议案被批准），同时通知Leaner可以学习议案。</li>
+<li>经过一段时间Proposer对比手里收到的Accept回复，如果未超过半数，则修改议案编号重新进入Prepare阶段。</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315210019.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315210641.png" alt></p>
+<br>
+
+<h3 id="5、Paxos流程图"><a href="#5、Paxos流程图" class="headerlink" title="5、Paxos流程图"></a>5、Paxos流程图</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315202245.png" alt></p>
+<br>
+
+<h1 id="二、ZAB协议"><a href="#二、ZAB协议" class="headerlink" title="二、ZAB协议"></a>二、ZAB协议</h1><p>zookeeper 的 leader 选举采用了 ZAB协议，消息广播的时候没有采用ZAB协议</p>
+<p>ZooKeeper并没有完全采用Paxos算法，而是使用了一种称之为ZooKeeper Atomic Broadcast（ZAB，ZooKeeper原子广播协议）的协议作为其数据一致性的核心算法。</p>
+<p>ZAB协议并不像Paxos算法那样，是一种通用的分布式一致性算法，它是一种特别为ZooKeeper设计的崩溃恢复的原子消息广播算法。ZooKeeper采用一个单一的主进程接受并处理客户端的所有事务请求，并将服务器数据的状态变更以事务Proposal的形式广播到所有的副本进程上去。</p>
+<p>ZAB协议包含两种基本的模式：</p>
+<ul>
+<li>崩溃恢复</li>
+<li>消息广播</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315211924.png" alt></p>
+<p>ZAB协议包含三个阶段：</p>
+<ul>
+<li><p>阶段1：发现（Leader选举过程）</p>
+</li>
+<li><p>阶段2：同步（数据同步过程）</p>
+</li>
+<li><p>阶段3：广播（正式接受请求过程）</p>
+</li>
+</ul>
+<p>当整个服务框架在启动过程中，或是当 Leader 服务器出现网络中断、崩溃退出与重启等异常情况时， ZAB 协议就会进入恢复模式并选举产生新的 Leader 服务器。当选举产生了新的Leader 服务器同时集群中已经有过半的机器与该 Leader 服务器完成了状态同步之后，ZAB 协议就会退出恢复模式。</p>
+<p>当集群中已经有过半的 Follower 服务器完成了和 Leader 服务器的状态同步，那么整个服务框架就可以进入消息广播模式了。当一台同样遵守 ZAB 协议的服务器启动后加入到集群中时，如果此时集群中已经存在一个 Leader 服务器在负责进行消息广播 ， 那么新加入的服务器就会自觉地进入数据恢复模式：找到 Leader 所在的服务器，并与其进行数据同步，然后一起参与到消息广播流程中去。</p>
+<p><strong>org.apache.zookeeper.server.quorum.QuorumPeer.ServerState</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ServerState &#123;</span><br><span class="line">   LOOKING, FOLLOWING, LEADING, OBSERVING;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="1、崩溃恢复"><a href="#1、崩溃恢复" class="headerlink" title="1、崩溃恢复"></a>1、崩溃恢复</h3><p>当整个服务器在启动过程中，或者当Leader服务器出现网络中断、崩溃退出与重启等异常情况时，ZAB协议就会进入恢复模式并通过选举产生新的Leader服务器。</p>
+<ul>
+<li>当选举产生了新的Leader服务器，同时集群中已经有过半机器与该Leader服务器完成状态同步之后，ZAB协议就会退出恢复模式。这里的状态同步指的就是数据同步，用来保证集群中存在过半的机器能够和Leader服务器的数据保持一致。</li>
+<li>当集群中有过半的Follower服务器完成和Leader服务器的同步，那么整个服务器集群就可以进入消息广播模式。</li>
+<li>当新的机器加入集群，由于集群已经存在一个Leader，那么新加入的机器会进入数据同步模式，即找到Leader服务器，并与其进行数据同步。</li>
+<li>当Leader崩溃退出或者重启，或者及集群中不存在过半的服务器可以和Leader保持正常通信，那么在开始新一轮事务操作前所有机器会使用崩溃恢复协议来达到一个一致性的状态。</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315211802.png" alt></p>
+<p>ZAB协议规定了如果一个事务Proposal在一台机器上被处理成功，那么应该在所有的机器上都被处理成功，哪怕机器出现故障崩溃。 </p>
+<ol>
+<li>每个Server会发出一个投票，第一次都是投自己。投票信息：（myid，ZXID）</li>
+<li>收集来自各个服务器的投票</li>
+<li>处理投票并重新投票，处理逻辑：优先比较ZXID，然后比较myid</li>
+<li>统计投票，只要超过半数的机器接收到同样的投票信息，就可以确定Leader</li>
+<li>改变服务器状态 </li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 选票和服务器的当前选票进行对比</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">totalOrderPredicate</span><span class="params">(<span class="keyword">long</span> newId, <span class="keyword">long</span> newZxid, <span class="keyword">long</span> newEpoch, <span class="keyword">long</span> curId, <span class="keyword">long</span> curZxid, <span class="keyword">long</span> curEpoch)</span> </span>&#123;</span><br><span class="line">    LOG.debug(<span class="string">"id: "</span> + newId + <span class="string">", proposed id: "</span> + curId + <span class="string">", zxid: 0x"</span> +</span><br><span class="line">              Long.toHexString(newZxid) + <span class="string">", proposed zxid: 0x"</span> + Long.toHexString(curZxid));</span><br><span class="line">    <span class="keyword">if</span>(self.getQuorumVerifier().getWeight(newId) == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 以下三种情况成立，则返回true:</span></span><br><span class="line"><span class="comment">     * 1- 新epoch更大</span></span><br><span class="line"><span class="comment">     * 2- 新epoch与当前epoch相同，但新zxid更大</span></span><br><span class="line"><span class="comment">     * 3- 新epoch与当前epoch相同，新zxid与当前zxid相同，但是服务器id更高。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">return</span> ((newEpoch &gt; curEpoch) || </span><br><span class="line">            ((newEpoch == curEpoch) &amp;&amp;</span><br><span class="line">             ((newZxid &gt; curZxid) || ((newZxid == curZxid) &amp;&amp; (newId &gt; curId)))));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="2、消息广播"><a href="#2、消息广播" class="headerlink" title="2、消息广播"></a>2、消息广播</h3><p>消息广播类似于一个2PC提交过程。根据客户端的事务请求，Leader服务器会为其生成对应的事务投票（即Proposal）并将其发送给集群中其他服务器，然后在分表搜集各自的选票，最后进行事务提交。</p>
+<p>与2PC不同的是，ZAB协议没有中断逻辑（所有Follower要么对Leader提成的事务Ack，要么就不回应），而且当过半的Follower服务器反馈Ack之后就开始提交事务，不用等待所有Follower都反馈。</p>
+<p>整个消息广播协议是基于FIFO特性的TCP协议来进行网络通信，因此能够很容易地保证消息广播过程中消息接受与发送的顺序性。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315212126.png" alt></p>
+<ol>
+<li>Leader接收到消息请求后，将消息赋予一个全局唯一的64位自增id，叫做：Zxid，通过zxid的大小比较即可实现因果有序这一特性。</li>
+<li>Leader通过先进先出队列(通过 TCP 协议来实现，以此实现了全局有序这一特性)将带有zxid的消息作为一个提案(Proposal)分发给所有Follower。</li>
+<li>当Follower接收到Proposal，先将Proposal写到硬盘，写硬盘成功后再向Leader回一个ACK。</li>
+<li>当Leader接收到合法数量的ACKs后，Leader就向所有Follower发送COMMIT命令，同时会在本地执行该消息。</li>
+<li>当Follower收到消息的COMMIT命令时，就会执行该消息。</li>
+</ol>
+<br>
+
+<h3 id="3、数据同步"><a href="#3、数据同步" class="headerlink" title="3、数据同步"></a>3、数据同步</h3><p>整个集群完成Leader选举后，Learner会向Leader进行注册，当Learner向Leader完成注册后，就进入数据同步环节，同步过程就是Leader将那些没有在Learner服务器上提交过的事务请求同步给Learner服务器。</p>
+<h4 id="3-1、直接差异化同步"><a href="#3-1、直接差异化同步" class="headerlink" title="3.1、直接差异化同步"></a>3.1、直接差异化同步</h4><p>举例，某个时刻Leader服务器的事务队列对应的ZXID依次是：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0x200000001</span><br><span class="line">0x200000002</span><br><span class="line">0x200000003</span><br><span class="line">0x200000004</span><br><span class="line">0x200000005</span><br></pre></td></tr></table></figure>
+
+<p>而需要数据同步的服务器最后处理的ZXID为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x200000003</span><br></pre></td></tr></table></figure>
+
+<p>这种场景就执行“直接差异化同步”，Leader会依次将<strong>0x200000004，0x200000005</strong>同步给服务器，同步过程中顺序如下：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315212355.png" alt></p>
+<h4 id="3-2、先回滚再差异化同步"><a href="#3-2、先回滚再差异化同步" class="headerlink" title="3.2、先回滚再差异化同步"></a>3.2、先回滚再差异化同步</h4><p>假如在ZooKeeper集群中有A、B、C三台服务器，B当选为Leader服务器。</p>
+<p>某个时刻，B正要处理一个ZXID=0x200000003的事务，并且已经将该事务写入到B服务器的本地的事务日志中，就在B要发送给其他Follower A、C机器进行同步的时候，B服务器挂了，Proposal并没有发送出去，而此时此时ZooKeeper会进行新一轮选举。假设A当选为新的Leader服务器对外进行工作，客户端又提交了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0x300000001</span><br><span class="line">0x300000002</span><br></pre></td></tr></table></figure>
+
+<p>而此时之前的奔溃的B服务器再次启动，并开始进行数据同步。</p>
+<p>因为B之前为Leader，故它的本地日志中事务编号为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x200000001</span><br><span class="line">0x200000002</span><br><span class="line">0x200000003</span><br></pre></td></tr></table></figure>
+
+<p>而A、C的本地日志中的事务编号为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0x200000001</span><br><span class="line">0x200000002</span><br><span class="line">0x300000001</span><br><span class="line">0x300000002</span><br></pre></td></tr></table></figure>
+
+<p>这时候就需要A服务器对数据进行回滚之后再同步，这个就称之为“先回滚再差异化同步”</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315212507.png" alt></p>
+<h4 id="3-3、仅回滚同步"><a href="#3-3、仅回滚同步" class="headerlink" title="3.3、仅回滚同步"></a>3.3、仅回滚同步</h4><p>先回滚再差异化的特殊模式。</p>
+<h4 id="3-4、全量同步"><a href="#3-4、全量同步" class="headerlink" title="3.4、全量同步"></a>3.4、全量同步</h4><p>如：新加入的Follower服务器。</p>
+<br>
+
+<h1 id="三、Raft协议"><a href="#三、Raft协议" class="headerlink" title="三、Raft协议"></a>三、Raft协议</h1><br>
+
+<h1 id="四、Gossip协议"><a href="#四、Gossip协议" class="headerlink" title="四、Gossip协议"></a>四、Gossip协议</h1><br>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/5-3-Elasticsearch集群入门-映射详解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2207,371 +2657,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-8-Lucene文件检索实战-结果展示/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/3-8-Lucene文件检索实战-结果展示/" itemprop="url">3.8、Lucene文件检索实战 —— 结果展示</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-10T00:07:00+08:00">
-                2019-03-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>1、引入 Thymeleaf 模板引擎</p>
-<p>2、定义搜索结果 —— result.html</p>
-<p>3、调试搜索结果页面</p>
-<p>4、点击文件名下载文件</p>
-<p>-———————————-</p>
-<p>代码仓库：<a href="https://gitee.com/carloz/lucene-learn.git" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn.git</a></p>
-<p><a href="https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch</a></p>
-<p>-———————————-</p>
-<p>工程结构</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133713.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133747.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133801.png" alt></p>
-<p>​    </p>
-<h1 id="1、引入-Thymeleaf-模板引擎"><a href="#1、引入-Thymeleaf-模板引擎" class="headerlink" title="1、引入 Thymeleaf 模板引擎"></a>1、引入 Thymeleaf 模板引擎</h1><p>1、pom.xml 中引入依赖：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">​	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">​	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>2、application.properties 添加 Thymeleaf 配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spring.thymeleaf.mode=HTML5</span><br><span class="line">spring.thymeleaf.encoding=UTF-8</span><br><span class="line">spring.thymeleaf.content-type=text/html</span><br><span class="line">spring.thymeleaf.cache=false</span><br><span class="line">spring.thymeleaf.prefix=classpath:/templates/</span><br></pre></td></tr></table></figure>
-
-<p>​       </p>
-<h1 id="2、定义搜索结果-——-result-html"><a href="#2、定义搜索结果-——-result-html" class="headerlink" title="2、定义搜索结果 —— result.html"></a>2、定义搜索结果 —— result.html</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns:th</span>=<span class="string">"http://www.thymeleaf.org"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"content-type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=UTF-8"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>搜索结果<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/base.css"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/page_search_result.css"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/moudle_g_search_bar.css"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrap"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"main clearfix"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"header"</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"search_result_panel"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content_top"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"g_search_bar"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"display: inline-block"</span>&gt;</span></span><br><span class="line">                        &amp;nbsp;&amp;nbsp;&amp;nbsp;<span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">"文件检索"</span> <span class="attr">src</span>=<span class="string">"images/logo.png"</span> <span class="attr">width</span>=<span class="string">"40px"</span> <span class="attr">height</span>=<span class="string">"35px"</span>/&gt;</span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"display: inline-block"</span> &gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"search_form"</span> <span class="attr">action</span>=<span class="string">"/search"</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">"search_text"</span> <span class="attr">name</span>=<span class="string">"keywords"</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:value</span>=<span class="string">"$&#123;keywords&#125;"</span> /&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">"btn_submit"</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"搜索"</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"clear"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content_left"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"result_item_article"</span> <span class="attr">style</span>=<span class="string">"display: none;"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">h3</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>coding的最新相关信息<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">li</span>&gt;</span>最新更新：2015-4-3 2:25<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">li</span>&gt;</span>122人赞同<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">li</span>&gt;</span>44人反对<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"article_body"</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">""</span> <span class="attr">src</span>=<span class="string">"http://p.blog.csdn.net/images/p_blog_csdn_net/sealyao/594039/o_clip_image001_thumb.jpg"</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span>&gt;</span>哈哈哈哈哈哈嘎嘎嘎嘎嘎嘎哈哈哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"article_label"</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">span</span>&gt;</span>标签：<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>ide<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>coding<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>ide<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>coding<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>ide<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"result_item_article"</span> <span class="attr">th:each</span>=<span class="string">"resultItem:$&#123;resultList&#125;"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">h3</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">"@&#123;'/download?fileName='+$&#123;resultItem.filename&#125;&#125;"</span></span></span><br><span class="line"><span class="tag">                           <span class="attr">th:utext</span>=<span class="string">"$&#123;resultItem.title&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"article_body"</span> <span class="attr">th:utext</span>=<span class="string">"$&#123;resultItem.content&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"article_label"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">th:if</span>=<span class="string">"$&#123;null == resultList || 0 == resultList.size()&#125;"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>没有搜索到相关数据 (;-_-)ᴇᴍᴍᴍ<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content_right"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"clear"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"refer_link"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"page_index"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">th:include</span>=<span class="string">"footer"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>​      </p>
-<h1 id="3、调试搜索结果页面"><a href="#3、调试搜索结果页面" class="headerlink" title="3、调试搜索结果页面"></a>3、调试搜索结果页面</h1><p>定义url：search</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> keywords</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 搜索结果页面</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/search"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">searchFile</span><span class="params">(String keywords, Model model)</span> </span>&#123;</span><br><span class="line">	String indexPathStr = <span class="string">"indexdir"</span>;</span><br><span class="line">	ArrayList&lt;FileModel&gt; hitsList = getTopDoc(keywords, indexPathStr, <span class="number">100</span>);</span><br><span class="line">	log.info(keywords + <span class="string">"：共搜到："</span> + hitsList.size() + <span class="string">" 条数据！"</span>);</span><br><span class="line">	model.addAttribute(<span class="string">"keywords"</span>, keywords);</span><br><span class="line">	model.addAttribute(<span class="string">"resultList"</span>, hitsList);</span><br><span class="line">	<span class="keyword">return</span> <span class="string">"result"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>访问它：</p>
-<p><a href="http://localhost:18080/search?keywords=无人驾驶" target="_blank" rel="noopener">http://localhost:18080/search?keywords=%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133940.png" alt></p>
-<p><a href="http://localhost:18080/search?keywords=负责" target="_blank" rel="noopener">http://localhost:18080/search?keywords=%E8%B4%9F%E8%B4%A3</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133954.png" alt></p>
-<p>​      </p>
-<h1 id="4、点击文件名下载文件"><a href="#4、点击文件名下载文件" class="headerlink" title="4、点击文件名下载文件"></a>4、点击文件名下载文件</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucenefilesearch.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.FileSystemResource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.*;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.Charset;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 文件下载</span></span><br><span class="line"><span class="comment"> * 访问：http://localhost:18080/download?fileName=Mycat-config.xml</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileDownloadServletController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/download"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> ResponseEntity&lt;FileSystemResource&gt; <span class="title">downloadFile</span><span class="params">(String fileName)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		String filePath = <span class="string">"files/"</span> + fileName;</span><br><span class="line">		File file = <span class="keyword">new</span> File(filePath);</span><br><span class="line">		log.info(<span class="string">"download path:"</span> + file.getPath());</span><br><span class="line">		FileSystemResource fileSystemResource = <span class="keyword">new</span> FileSystemResource(file);</span><br><span class="line">		HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</span><br><span class="line">		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);</span><br><span class="line">		headers.setContentLength(file.length());</span><br><span class="line">		headers.setCacheControl(CacheControl.noStore());</span><br><span class="line">		headers.setContentDisposition(</span><br><span class="line">				ContentDisposition.builder(<span class="string">"attachment"</span>)</span><br><span class="line">				.filename(fileName, Charset.forName(<span class="string">"UTF-8"</span>))</span><br><span class="line">				.size(file.length())</span><br><span class="line">				.build()</span><br><span class="line">		);</span><br><span class="line">		<span class="keyword">return</span> ResponseEntity.ok()</span><br><span class="line">				.headers(headers)</span><br><span class="line">				.body(fileSystemResource);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>访问：<a href="http://localhost:18080/download?fileName=Mycat-config.xml" target="_blank" rel="noopener">http://localhost:18080/download?fileName=Mycat-config.xml</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825134035.png" alt></p>
-<p> <a href="http://localhost:18080/download?fileName=session共享版上线（第二版）.pptx" target="_blank" rel="noopener">http://localhost:18080/download?fileName=session共享版上线（第二版）.pptx</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825134053.png" alt></p>
-<p>控制台输出：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825134109.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-7-Lucene文件检索实战-文件检索/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/3-7-Lucene文件检索实战-文件检索/" itemprop="url">3.7、Lucene文件检索实战 —— 文件检索</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-10T00:06:00+08:00">
-                2019-03-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>1、根据索引查找文件</p>
-<p>2、搜索结果调试</p>
-<p>3、整个文件如下</p>
-<p>-———————————-</p>
-<p>代码仓库：<a href="https://gitee.com/carloz/lucene-learn.git" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn.git</a></p>
-<p><a href="https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch</a></p>
-<p>-———————————-</p>
-<h1 id="1、根据索引查找文件"><a href="#1、根据索引查找文件" class="headerlink" title="1、根据索引查找文件"></a>1、根据索引查找文件</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> keywords     用户输入的 关键词</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> indexPathStr 索引路径</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> N            结果条数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 在索引中搜索 关键词，返回前N条结果</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ArrayList&lt;FileModel&gt; <span class="title">getTopDoc</span><span class="params">(String keywords, String indexPathStr, <span class="keyword">int</span> N)</span> </span>&#123;</span><br><span class="line">		ArrayList&lt;FileModel&gt; hitsList = <span class="keyword">new</span> ArrayList&lt;FileModel&gt;();</span><br><span class="line">		<span class="comment">// 检索域</span></span><br><span class="line">		String[] fields = &#123;<span class="string">"title"</span>, <span class="string">"content"</span>&#125;;</span><br><span class="line">		Path indexPath = Paths.get(indexPathStr);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">			IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">			IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">			Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>);</span><br><span class="line">			MultiFieldQueryParser parser = <span class="keyword">new</span> MultiFieldQueryParser(fields, analyzer);</span><br><span class="line">			<span class="comment">// 查询字符串</span></span><br><span class="line">			Query query = parser.parse(keywords);</span><br><span class="line">			TopDocs topDocs = searcher.search(query, N);</span><br><span class="line">			<span class="comment">// 定制高亮标签</span></span><br><span class="line">			SimpleHTMLFormatter htmlFormatter = <span class="keyword">new</span> SimpleHTMLFormatter(<span class="string">"&lt;span style=\"color:red;\"&gt;"</span>, <span class="string">"&lt;/span&gt;"</span>);</span><br><span class="line">			QueryScorer scoreTitle = <span class="keyword">new</span> QueryScorer(query, fields[<span class="number">0</span>]);</span><br><span class="line">			Highlighter hlTitle = <span class="keyword">new</span> Highlighter(htmlFormatter, scoreTitle);</span><br><span class="line">			QueryScorer scoreContent = <span class="keyword">new</span> QueryScorer(query, fields[<span class="number">1</span>]);</span><br><span class="line">			Highlighter hlContent = <span class="keyword">new</span> Highlighter(htmlFormatter, scoreContent);</span><br><span class="line"></span><br><span class="line">			TopDocs hits = searcher.search(query, <span class="number">100</span>);</span><br><span class="line">			<span class="keyword">for</span> (ScoreDoc sd : topDocs.scoreDocs) &#123;</span><br><span class="line">				Document doc = searcher.doc(sd.doc);</span><br><span class="line">				String title = doc.get(<span class="string">"title"</span>);</span><br><span class="line">				String content = doc.get(<span class="string">"content"</span>);</span><br><span class="line">				TokenStream tokenStream = TokenSources.getAnyTokenStream(</span><br><span class="line">						searcher.getIndexReader(), sd.doc, fields[<span class="number">0</span>], <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>));</span><br><span class="line">				Fragmenter fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scoreTitle);</span><br><span class="line">				hlTitle.setTextFragmenter(fragmenter);</span><br><span class="line">				String hlTitleStr = hlTitle.getBestFragment(tokenStream, title); <span class="comment">// 获取高亮的片段，可以对其数量进行限制</span></span><br><span class="line"></span><br><span class="line">				tokenStream = TokenSources.getAnyTokenStream(</span><br><span class="line">						searcher.getIndexReader(), sd.doc, fields[<span class="number">1</span>], <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>));</span><br><span class="line">				fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scoreContent);</span><br><span class="line">				String hlContentStr = hlContent.getBestFragment(tokenStream, content); <span class="comment">// 获取高亮的片段，可以对其数量进行限制</span></span><br><span class="line"></span><br><span class="line">				FileModel fileModel = <span class="keyword">new</span> FileModel(</span><br><span class="line">						RegexHtml.delHtmlTag(title),</span><br><span class="line">						hlTitleStr != <span class="keyword">null</span> ? hlTitleStr : title,</span><br><span class="line">						hlContentStr != <span class="keyword">null</span> ? hlContentStr : content);</span><br><span class="line">				hitsList.add(fileModel);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			reader.close();</span><br><span class="line">			directory.close();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> hitsList;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    </p>
-<h1 id="2、搜索结果调试"><a href="#2、搜索结果调试" class="headerlink" title="2、搜索结果调试"></a>2、搜索结果调试</h1><p>定义接口 search-list 用于调试数据</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> keywords</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 搜索数据调试</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/search-list"</span>)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ArrayList&lt;FileModel&gt; <span class="title">searchFileList</span><span class="params">(String keywords)</span> </span>&#123;</span><br><span class="line">	String indexPathStr = <span class="string">"indexdir"</span>;</span><br><span class="line">	ArrayList&lt;FileModel&gt; hitsList = getTopDoc(keywords, indexPathStr, <span class="number">100</span>);</span><br><span class="line">	log.info(<span class="string">"共搜到："</span> + hitsList.size() + <span class="string">" 条数据！"</span>);</span><br><span class="line">	<span class="keyword">return</span> hitsList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><a href="http://localhost:18080/search-list?keywords=session" target="_blank" rel="noopener">http://localhost:18080/search-list?keywords=session</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133537.png" alt></p>
-<p>​    </p>
-<h1 id="3、整个文件如下"><a href="#3、整个文件如下" class="headerlink" title="3、整个文件如下"></a>3、整个文件如下</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucenefilesearch.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucenefilesearch.model.FileModel;</span><br><span class="line"><span class="keyword">import</span> com.learn.lucenefilesearch.service.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> com.learn.lucenefilesearch.service.RegexHtml;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.MultiFieldQueryParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.IndexSearcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.Query;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.ScoreDoc;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TopDocs;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.highlight.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.ui.Model;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SearchFileController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"index"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> keywords</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 搜索数据调试</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/search-list"</span>)</span><br><span class="line">	<span class="meta">@ResponseBody</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> ArrayList&lt;FileModel&gt; <span class="title">searchFileList</span><span class="params">(String keywords)</span> </span>&#123;</span><br><span class="line">		String indexPathStr = <span class="string">"indexdir"</span>;</span><br><span class="line">		ArrayList&lt;FileModel&gt; hitsList = getTopDoc(keywords, indexPathStr, <span class="number">100</span>);</span><br><span class="line">		log.info(<span class="string">"共搜到："</span> + hitsList.size() + <span class="string">" 条数据！"</span>);</span><br><span class="line">		<span class="keyword">return</span> hitsList;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> keywords     用户输入的 关键词</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> indexPathStr 索引路径</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> N            结果条数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 在索引中搜索 关键词，返回前N条结果</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ArrayList&lt;FileModel&gt; <span class="title">getTopDoc</span><span class="params">(String keywords, String indexPathStr, <span class="keyword">int</span> N)</span> </span>&#123;</span><br><span class="line">		ArrayList&lt;FileModel&gt; hitsList = <span class="keyword">new</span> ArrayList&lt;FileModel&gt;();</span><br><span class="line">		<span class="comment">// 检索域</span></span><br><span class="line">		String[] fields = &#123;<span class="string">"title"</span>, <span class="string">"content"</span>&#125;;</span><br><span class="line">		Path indexPath = Paths.get(indexPathStr);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">			IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">			IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">			Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>);</span><br><span class="line">			MultiFieldQueryParser parser = <span class="keyword">new</span> MultiFieldQueryParser(fields, analyzer);</span><br><span class="line">			<span class="comment">// 查询字符串</span></span><br><span class="line">			Query query = parser.parse(keywords);</span><br><span class="line">			TopDocs topDocs = searcher.search(query, N);</span><br><span class="line">			<span class="comment">// 定制高亮标签</span></span><br><span class="line">			SimpleHTMLFormatter htmlFormatter = <span class="keyword">new</span> SimpleHTMLFormatter(<span class="string">"&lt;span style=\"color:red;\"&gt;"</span>, <span class="string">"&lt;/span&gt;"</span>);</span><br><span class="line">			QueryScorer scoreTitle = <span class="keyword">new</span> QueryScorer(query, fields[<span class="number">0</span>]);</span><br><span class="line">			Highlighter hlTitle = <span class="keyword">new</span> Highlighter(htmlFormatter, scoreTitle);</span><br><span class="line">			QueryScorer scoreContent = <span class="keyword">new</span> QueryScorer(query, fields[<span class="number">1</span>]);</span><br><span class="line">			Highlighter hlContent = <span class="keyword">new</span> Highlighter(htmlFormatter, scoreContent);</span><br><span class="line"></span><br><span class="line">			TopDocs hits = searcher.search(query, <span class="number">100</span>);</span><br><span class="line">			<span class="keyword">for</span> (ScoreDoc sd : topDocs.scoreDocs) &#123;</span><br><span class="line">				Document doc = searcher.doc(sd.doc);</span><br><span class="line">				String title = doc.get(<span class="string">"title"</span>);</span><br><span class="line">				String content = doc.get(<span class="string">"content"</span>);</span><br><span class="line">				TokenStream tokenStream = TokenSources.getAnyTokenStream(</span><br><span class="line">						searcher.getIndexReader(), sd.doc, fields[<span class="number">0</span>], <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>));</span><br><span class="line">				Fragmenter fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scoreTitle);</span><br><span class="line">				hlTitle.setTextFragmenter(fragmenter);</span><br><span class="line">				String hlTitleStr = hlTitle.getBestFragment(tokenStream, title); <span class="comment">// 获取高亮的片段，可以对其数量进行限制</span></span><br><span class="line"></span><br><span class="line">				tokenStream = TokenSources.getAnyTokenStream(</span><br><span class="line">						searcher.getIndexReader(), sd.doc, fields[<span class="number">1</span>], <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>));</span><br><span class="line">				fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scoreContent);</span><br><span class="line">				String hlContentStr = hlContent.getBestFragment(tokenStream, content); <span class="comment">// 获取高亮的片段，可以对其数量进行限制</span></span><br><span class="line"></span><br><span class="line">				FileModel fileModel = <span class="keyword">new</span> FileModel(</span><br><span class="line">						RegexHtml.delHtmlTag(title),</span><br><span class="line">						hlTitleStr != <span class="keyword">null</span> ? hlTitleStr : title,</span><br><span class="line">						hlContentStr != <span class="keyword">null</span> ? hlContentStr : content);</span><br><span class="line">				hitsList.add(fileModel);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			reader.close();</span><br><span class="line">			directory.close();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> hitsList;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2622,7 +2707,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -314,6 +314,371 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-8-Lucene文件检索实战-结果展示/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/3-8-Lucene文件检索实战-结果展示/" itemprop="url">3.8、Lucene文件检索实战 —— 结果展示</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-10T00:07:00+08:00">
+                2019-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>1、引入 Thymeleaf 模板引擎</p>
+<p>2、定义搜索结果 —— result.html</p>
+<p>3、调试搜索结果页面</p>
+<p>4、点击文件名下载文件</p>
+<p>-———————————-</p>
+<p>代码仓库：<a href="https://gitee.com/carloz/lucene-learn.git" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn.git</a></p>
+<p><a href="https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch</a></p>
+<p>-———————————-</p>
+<p>工程结构</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133713.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133747.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133801.png" alt></p>
+<p>​    </p>
+<h1 id="1、引入-Thymeleaf-模板引擎"><a href="#1、引入-Thymeleaf-模板引擎" class="headerlink" title="1、引入 Thymeleaf 模板引擎"></a>1、引入 Thymeleaf 模板引擎</h1><p>1、pom.xml 中引入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">​	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">​	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>2、application.properties 添加 Thymeleaf 配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spring.thymeleaf.mode=HTML5</span><br><span class="line">spring.thymeleaf.encoding=UTF-8</span><br><span class="line">spring.thymeleaf.content-type=text/html</span><br><span class="line">spring.thymeleaf.cache=false</span><br><span class="line">spring.thymeleaf.prefix=classpath:/templates/</span><br></pre></td></tr></table></figure>
+
+<p>​       </p>
+<h1 id="2、定义搜索结果-——-result-html"><a href="#2、定义搜索结果-——-result-html" class="headerlink" title="2、定义搜索结果 —— result.html"></a>2、定义搜索结果 —— result.html</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns:th</span>=<span class="string">"http://www.thymeleaf.org"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"content-type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=UTF-8"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>搜索结果<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/base.css"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/page_search_result.css"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"css/moudle_g_search_bar.css"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrap"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"main clearfix"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"header"</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"search_result_panel"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content_top"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"g_search_bar"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"display: inline-block"</span>&gt;</span></span><br><span class="line">                        &amp;nbsp;&amp;nbsp;&amp;nbsp;<span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">"文件检索"</span> <span class="attr">src</span>=<span class="string">"images/logo.png"</span> <span class="attr">width</span>=<span class="string">"40px"</span> <span class="attr">height</span>=<span class="string">"35px"</span>/&gt;</span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"display: inline-block"</span> &gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"search_form"</span> <span class="attr">action</span>=<span class="string">"/search"</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">"search_text"</span> <span class="attr">name</span>=<span class="string">"keywords"</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">th:value</span>=<span class="string">"$&#123;keywords&#125;"</span> /&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">"btn_submit"</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"搜索"</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"clear"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content_left"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"result_item_article"</span> <span class="attr">style</span>=<span class="string">"display: none;"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">h3</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>coding的最新相关信息<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">li</span>&gt;</span>最新更新：2015-4-3 2:25<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">li</span>&gt;</span>122人赞同<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">li</span>&gt;</span>44人反对<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"article_body"</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">""</span> <span class="attr">src</span>=<span class="string">"http://p.blog.csdn.net/images/p_blog_csdn_net/sealyao/594039/o_clip_image001_thumb.jpg"</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span>&gt;</span>哈哈哈哈哈哈嘎嘎嘎嘎嘎嘎哈哈哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈嘎嘎嘎嘎嘎哈哈哈哈<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"article_label"</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">span</span>&gt;</span>标签：<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>ide<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>coding<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>ide<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>coding<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>ide<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"result_item_article"</span> <span class="attr">th:each</span>=<span class="string">"resultItem:$&#123;resultList&#125;"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">h3</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">"@&#123;'/download?fileName='+$&#123;resultItem.filename&#125;&#125;"</span></span></span><br><span class="line"><span class="tag">                           <span class="attr">th:utext</span>=<span class="string">"$&#123;resultItem.title&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"article_body"</span> <span class="attr">th:utext</span>=<span class="string">"$&#123;resultItem.content&#125;"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"article_label"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">th:if</span>=<span class="string">"$&#123;null == resultList || 0 == resultList.size()&#125;"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>没有搜索到相关数据 (;-_-)ᴇᴍᴍᴍ<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"content_right"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"clear"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"refer_link"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"page_index"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">th:include</span>=<span class="string">"footer"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>​      </p>
+<h1 id="3、调试搜索结果页面"><a href="#3、调试搜索结果页面" class="headerlink" title="3、调试搜索结果页面"></a>3、调试搜索结果页面</h1><p>定义url：search</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> keywords</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 搜索结果页面</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/search"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">searchFile</span><span class="params">(String keywords, Model model)</span> </span>&#123;</span><br><span class="line">	String indexPathStr = <span class="string">"indexdir"</span>;</span><br><span class="line">	ArrayList&lt;FileModel&gt; hitsList = getTopDoc(keywords, indexPathStr, <span class="number">100</span>);</span><br><span class="line">	log.info(keywords + <span class="string">"：共搜到："</span> + hitsList.size() + <span class="string">" 条数据！"</span>);</span><br><span class="line">	model.addAttribute(<span class="string">"keywords"</span>, keywords);</span><br><span class="line">	model.addAttribute(<span class="string">"resultList"</span>, hitsList);</span><br><span class="line">	<span class="keyword">return</span> <span class="string">"result"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问它：</p>
+<p><a href="http://localhost:18080/search?keywords=无人驾驶" target="_blank" rel="noopener">http://localhost:18080/search?keywords=%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133940.png" alt></p>
+<p><a href="http://localhost:18080/search?keywords=负责" target="_blank" rel="noopener">http://localhost:18080/search?keywords=%E8%B4%9F%E8%B4%A3</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133954.png" alt></p>
+<p>​      </p>
+<h1 id="4、点击文件名下载文件"><a href="#4、点击文件名下载文件" class="headerlink" title="4、点击文件名下载文件"></a>4、点击文件名下载文件</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucenefilesearch.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.FileSystemResource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.*;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.Charset;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 文件下载</span></span><br><span class="line"><span class="comment"> * 访问：http://localhost:18080/download?fileName=Mycat-config.xml</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileDownloadServletController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/download"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> ResponseEntity&lt;FileSystemResource&gt; <span class="title">downloadFile</span><span class="params">(String fileName)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		String filePath = <span class="string">"files/"</span> + fileName;</span><br><span class="line">		File file = <span class="keyword">new</span> File(filePath);</span><br><span class="line">		log.info(<span class="string">"download path:"</span> + file.getPath());</span><br><span class="line">		FileSystemResource fileSystemResource = <span class="keyword">new</span> FileSystemResource(file);</span><br><span class="line">		HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</span><br><span class="line">		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);</span><br><span class="line">		headers.setContentLength(file.length());</span><br><span class="line">		headers.setCacheControl(CacheControl.noStore());</span><br><span class="line">		headers.setContentDisposition(</span><br><span class="line">				ContentDisposition.builder(<span class="string">"attachment"</span>)</span><br><span class="line">				.filename(fileName, Charset.forName(<span class="string">"UTF-8"</span>))</span><br><span class="line">				.size(file.length())</span><br><span class="line">				.build()</span><br><span class="line">		);</span><br><span class="line">		<span class="keyword">return</span> ResponseEntity.ok()</span><br><span class="line">				.headers(headers)</span><br><span class="line">				.body(fileSystemResource);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问：<a href="http://localhost:18080/download?fileName=Mycat-config.xml" target="_blank" rel="noopener">http://localhost:18080/download?fileName=Mycat-config.xml</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825134035.png" alt></p>
+<p> <a href="http://localhost:18080/download?fileName=session共享版上线（第二版）.pptx" target="_blank" rel="noopener">http://localhost:18080/download?fileName=session共享版上线（第二版）.pptx</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825134053.png" alt></p>
+<p>控制台输出：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825134109.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-7-Lucene文件检索实战-文件检索/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/3-7-Lucene文件检索实战-文件检索/" itemprop="url">3.7、Lucene文件检索实战 —— 文件检索</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-10T00:06:00+08:00">
+                2019-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>1、根据索引查找文件</p>
+<p>2、搜索结果调试</p>
+<p>3、整个文件如下</p>
+<p>-———————————-</p>
+<p>代码仓库：<a href="https://gitee.com/carloz/lucene-learn.git" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn.git</a></p>
+<p><a href="https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch</a></p>
+<p>-———————————-</p>
+<h1 id="1、根据索引查找文件"><a href="#1、根据索引查找文件" class="headerlink" title="1、根据索引查找文件"></a>1、根据索引查找文件</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> keywords     用户输入的 关键词</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> indexPathStr 索引路径</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> N            结果条数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 在索引中搜索 关键词，返回前N条结果</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ArrayList&lt;FileModel&gt; <span class="title">getTopDoc</span><span class="params">(String keywords, String indexPathStr, <span class="keyword">int</span> N)</span> </span>&#123;</span><br><span class="line">		ArrayList&lt;FileModel&gt; hitsList = <span class="keyword">new</span> ArrayList&lt;FileModel&gt;();</span><br><span class="line">		<span class="comment">// 检索域</span></span><br><span class="line">		String[] fields = &#123;<span class="string">"title"</span>, <span class="string">"content"</span>&#125;;</span><br><span class="line">		Path indexPath = Paths.get(indexPathStr);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">			IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">			IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">			Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>);</span><br><span class="line">			MultiFieldQueryParser parser = <span class="keyword">new</span> MultiFieldQueryParser(fields, analyzer);</span><br><span class="line">			<span class="comment">// 查询字符串</span></span><br><span class="line">			Query query = parser.parse(keywords);</span><br><span class="line">			TopDocs topDocs = searcher.search(query, N);</span><br><span class="line">			<span class="comment">// 定制高亮标签</span></span><br><span class="line">			SimpleHTMLFormatter htmlFormatter = <span class="keyword">new</span> SimpleHTMLFormatter(<span class="string">"&lt;span style=\"color:red;\"&gt;"</span>, <span class="string">"&lt;/span&gt;"</span>);</span><br><span class="line">			QueryScorer scoreTitle = <span class="keyword">new</span> QueryScorer(query, fields[<span class="number">0</span>]);</span><br><span class="line">			Highlighter hlTitle = <span class="keyword">new</span> Highlighter(htmlFormatter, scoreTitle);</span><br><span class="line">			QueryScorer scoreContent = <span class="keyword">new</span> QueryScorer(query, fields[<span class="number">1</span>]);</span><br><span class="line">			Highlighter hlContent = <span class="keyword">new</span> Highlighter(htmlFormatter, scoreContent);</span><br><span class="line"></span><br><span class="line">			TopDocs hits = searcher.search(query, <span class="number">100</span>);</span><br><span class="line">			<span class="keyword">for</span> (ScoreDoc sd : topDocs.scoreDocs) &#123;</span><br><span class="line">				Document doc = searcher.doc(sd.doc);</span><br><span class="line">				String title = doc.get(<span class="string">"title"</span>);</span><br><span class="line">				String content = doc.get(<span class="string">"content"</span>);</span><br><span class="line">				TokenStream tokenStream = TokenSources.getAnyTokenStream(</span><br><span class="line">						searcher.getIndexReader(), sd.doc, fields[<span class="number">0</span>], <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>));</span><br><span class="line">				Fragmenter fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scoreTitle);</span><br><span class="line">				hlTitle.setTextFragmenter(fragmenter);</span><br><span class="line">				String hlTitleStr = hlTitle.getBestFragment(tokenStream, title); <span class="comment">// 获取高亮的片段，可以对其数量进行限制</span></span><br><span class="line"></span><br><span class="line">				tokenStream = TokenSources.getAnyTokenStream(</span><br><span class="line">						searcher.getIndexReader(), sd.doc, fields[<span class="number">1</span>], <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>));</span><br><span class="line">				fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scoreContent);</span><br><span class="line">				String hlContentStr = hlContent.getBestFragment(tokenStream, content); <span class="comment">// 获取高亮的片段，可以对其数量进行限制</span></span><br><span class="line"></span><br><span class="line">				FileModel fileModel = <span class="keyword">new</span> FileModel(</span><br><span class="line">						RegexHtml.delHtmlTag(title),</span><br><span class="line">						hlTitleStr != <span class="keyword">null</span> ? hlTitleStr : title,</span><br><span class="line">						hlContentStr != <span class="keyword">null</span> ? hlContentStr : content);</span><br><span class="line">				hitsList.add(fileModel);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			reader.close();</span><br><span class="line">			directory.close();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> hitsList;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<h1 id="2、搜索结果调试"><a href="#2、搜索结果调试" class="headerlink" title="2、搜索结果调试"></a>2、搜索结果调试</h1><p>定义接口 search-list 用于调试数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> keywords</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 搜索数据调试</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/search-list"</span>)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ArrayList&lt;FileModel&gt; <span class="title">searchFileList</span><span class="params">(String keywords)</span> </span>&#123;</span><br><span class="line">	String indexPathStr = <span class="string">"indexdir"</span>;</span><br><span class="line">	ArrayList&lt;FileModel&gt; hitsList = getTopDoc(keywords, indexPathStr, <span class="number">100</span>);</span><br><span class="line">	log.info(<span class="string">"共搜到："</span> + hitsList.size() + <span class="string">" 条数据！"</span>);</span><br><span class="line">	<span class="keyword">return</span> hitsList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="http://localhost:18080/search-list?keywords=session" target="_blank" rel="noopener">http://localhost:18080/search-list?keywords=session</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133537.png" alt></p>
+<p>​    </p>
+<h1 id="3、整个文件如下"><a href="#3、整个文件如下" class="headerlink" title="3、整个文件如下"></a>3、整个文件如下</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucenefilesearch.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucenefilesearch.model.FileModel;</span><br><span class="line"><span class="keyword">import</span> com.learn.lucenefilesearch.service.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> com.learn.lucenefilesearch.service.RegexHtml;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.MultiFieldQueryParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.IndexSearcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.Query;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.ScoreDoc;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TopDocs;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.highlight.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.ui.Model;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SearchFileController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"index"</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> keywords</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 搜索数据调试</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/search-list"</span>)</span><br><span class="line">	<span class="meta">@ResponseBody</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> ArrayList&lt;FileModel&gt; <span class="title">searchFileList</span><span class="params">(String keywords)</span> </span>&#123;</span><br><span class="line">		String indexPathStr = <span class="string">"indexdir"</span>;</span><br><span class="line">		ArrayList&lt;FileModel&gt; hitsList = getTopDoc(keywords, indexPathStr, <span class="number">100</span>);</span><br><span class="line">		log.info(<span class="string">"共搜到："</span> + hitsList.size() + <span class="string">" 条数据！"</span>);</span><br><span class="line">		<span class="keyword">return</span> hitsList;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> keywords     用户输入的 关键词</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> indexPathStr 索引路径</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> N            结果条数</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 在索引中搜索 关键词，返回前N条结果</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ArrayList&lt;FileModel&gt; <span class="title">getTopDoc</span><span class="params">(String keywords, String indexPathStr, <span class="keyword">int</span> N)</span> </span>&#123;</span><br><span class="line">		ArrayList&lt;FileModel&gt; hitsList = <span class="keyword">new</span> ArrayList&lt;FileModel&gt;();</span><br><span class="line">		<span class="comment">// 检索域</span></span><br><span class="line">		String[] fields = &#123;<span class="string">"title"</span>, <span class="string">"content"</span>&#125;;</span><br><span class="line">		Path indexPath = Paths.get(indexPathStr);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">			IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">			IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">			Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>);</span><br><span class="line">			MultiFieldQueryParser parser = <span class="keyword">new</span> MultiFieldQueryParser(fields, analyzer);</span><br><span class="line">			<span class="comment">// 查询字符串</span></span><br><span class="line">			Query query = parser.parse(keywords);</span><br><span class="line">			TopDocs topDocs = searcher.search(query, N);</span><br><span class="line">			<span class="comment">// 定制高亮标签</span></span><br><span class="line">			SimpleHTMLFormatter htmlFormatter = <span class="keyword">new</span> SimpleHTMLFormatter(<span class="string">"&lt;span style=\"color:red;\"&gt;"</span>, <span class="string">"&lt;/span&gt;"</span>);</span><br><span class="line">			QueryScorer scoreTitle = <span class="keyword">new</span> QueryScorer(query, fields[<span class="number">0</span>]);</span><br><span class="line">			Highlighter hlTitle = <span class="keyword">new</span> Highlighter(htmlFormatter, scoreTitle);</span><br><span class="line">			QueryScorer scoreContent = <span class="keyword">new</span> QueryScorer(query, fields[<span class="number">1</span>]);</span><br><span class="line">			Highlighter hlContent = <span class="keyword">new</span> Highlighter(htmlFormatter, scoreContent);</span><br><span class="line"></span><br><span class="line">			TopDocs hits = searcher.search(query, <span class="number">100</span>);</span><br><span class="line">			<span class="keyword">for</span> (ScoreDoc sd : topDocs.scoreDocs) &#123;</span><br><span class="line">				Document doc = searcher.doc(sd.doc);</span><br><span class="line">				String title = doc.get(<span class="string">"title"</span>);</span><br><span class="line">				String content = doc.get(<span class="string">"content"</span>);</span><br><span class="line">				TokenStream tokenStream = TokenSources.getAnyTokenStream(</span><br><span class="line">						searcher.getIndexReader(), sd.doc, fields[<span class="number">0</span>], <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>));</span><br><span class="line">				Fragmenter fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scoreTitle);</span><br><span class="line">				hlTitle.setTextFragmenter(fragmenter);</span><br><span class="line">				String hlTitleStr = hlTitle.getBestFragment(tokenStream, title); <span class="comment">// 获取高亮的片段，可以对其数量进行限制</span></span><br><span class="line"></span><br><span class="line">				tokenStream = TokenSources.getAnyTokenStream(</span><br><span class="line">						searcher.getIndexReader(), sd.doc, fields[<span class="number">1</span>], <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>));</span><br><span class="line">				fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scoreContent);</span><br><span class="line">				String hlContentStr = hlContent.getBestFragment(tokenStream, content); <span class="comment">// 获取高亮的片段，可以对其数量进行限制</span></span><br><span class="line"></span><br><span class="line">				FileModel fileModel = <span class="keyword">new</span> FileModel(</span><br><span class="line">						RegexHtml.delHtmlTag(title),</span><br><span class="line">						hlTitleStr != <span class="keyword">null</span> ? hlTitleStr : title,</span><br><span class="line">						hlContentStr != <span class="keyword">null</span> ? hlContentStr : content);</span><br><span class="line">				hitsList.add(fileModel);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			reader.close();</span><br><span class="line">			directory.close();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> hitsList;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-6-Lucene文件检索实战-查询界面/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1785,405 +2150,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/english/word-38000/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/english/word-38000/" itemprop="url">宋维钢38000词汇速记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-03T00:00:00+08:00">
-                2019-03-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-
-<h1 id="人群一：学生【中高考，大学生，考研生】"><a href="#人群一：学生【中高考，大学生，考研生】" class="headerlink" title="人群一：学生【中高考，大学生，考研生】"></a>人群一：学生【中高考，大学生，考研生】</h1><h3 id="1、中高考【应对考试】"><a href="#1、中高考【应对考试】" class="headerlink" title="1、中高考【应对考试】"></a>1、中高考【应对考试】</h3><p>时间规划：每周2小时词汇速记【每次上课30分钟即可】</p>
-<p>学习策略：1~300词根是中高考的核心</p>
-<p>学习顺序：</p>
-<p>① 词根词缀完全默写：汉语意思完全掌握【结合词元理解词根】</p>
-<p>② 总结：根据每个词根下历次进行重复的词缀统计</p>
-<p>③ 熟记核心词：模仿老师的教学笔记，尝试通过词根词缀拆分核心词，之后根据核心词的含义和词性</p>
-<p>④ 根据教学内容：准确划分思维导图【不需要增加汉语意思】</p>
-<p>⑤ 读单词必须依据音标：学音标没有为什么，只有是什么</p>
-<h3 id="2、大学生【口语和应用为主】"><a href="#2、大学生【口语和应用为主】" class="headerlink" title="2、大学生【口语和应用为主】"></a>2、大学生【口语和应用为主】</h3><p>学习强度：每周至少3小时词汇速记【3节课】</p>
-<p>学习策略：</p>
-<p>① 思维导图务必采用软件制作</p>
-<p>② 单词的发音务必及时掌握</p>
-<p>③ 要在固定的英语文章当中刻意寻找刻意拆分的单词</p>
-<p>④ 针对考研学生：所有的考研历年真题都是拆分单词的核心试题，最好通过<u><strong>词源网站</strong></u>的<u><strong>英文解释</strong></u>来加深考研词汇的印象。abbreviate 查词元 -&gt; 拆单词：ab-brev-i-ate</p>
-<p>考研单词很多词频都在10000~20000之间 = 400 词根</p>
-<h1 id="人群二：职场人士-——-学习顺序同上（中高考）"><a href="#人群二：职场人士-——-学习顺序同上（中高考）" class="headerlink" title="人群二：职场人士 —— 学习顺序同上（中高考）"></a>人群二：职场人士 —— 学习顺序同上（中高考）</h1><p>时间规划：一周零碎时间学习</p>
-<p>模式一（特别忙）：</p>
-<ul>
-<li>每天中午20分钟 —— 一周保证2节课</li>
-<li>每天速记笔记，完成作业的时间 —— 睡前30分钟</li>
-</ul>
-<p>模式二：</p>
-<ul>
-<li>选择周六日的时间，一天一节课，课后1小时完成作业</li>
-</ul>
-<h1 id="人群三：完全出于兴趣，自我提升，没有压力"><a href="#人群三：完全出于兴趣，自我提升，没有压力" class="headerlink" title="人群三：完全出于兴趣，自我提升，没有压力"></a>人群三：完全出于兴趣，自我提升，没有压力</h1><p>① 通过枚举和BBC类型的纪录片 学习词根和词缀。凡是出现再片中的词根都是高频词根</p>
-<p>② 每周的学习频率至少保持在2~4节课</p>
-<h1 id="人群四：出国人群"><a href="#人群四：出国人群" class="headerlink" title="人群四：出国人群"></a>人群四：出国人群</h1><p>学习策略</p>
-<p>① 强度：</p>
-<ul>
-<li><p>如果在国外的学生，每天务必学习单词1小时</p>
-</li>
-<li><p>如果实在国内备战的学生：雅思托福的准备时间：3~6个月（不能再长）</p>
-</li>
-<li><p>单词速记要求一周之内：</p>
-<ul>
-<li>5节课 + 作业（每个词根化思维导图）+ 真题答案单词的拆分</li>
-<li>替换高级词汇： difficult  = complicated</li>
-</ul>
-</li>
-</ul>
-<p>② </p>
-<p>上课听讲 - 记笔记， 下课回放 看三轮</p>
-<p>每节作业保质量，课后作业要自觉；</p>
-<p>分布考查要自信，分级练习要坚持；</p>
-<p>思维导图是核心</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-4-Lucene索引详解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/2-4-Lucene索引详解/" itemprop="url">2.4、Lucene索引详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-02T00:04:00+08:00">
-                2019-03-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p>2.4.1、Lucene 字段类型</p>
-<p>2.4.2、索引文档示例</p>
-<p>2.4.3、在Luke中查看索引</p>
-<p>2.4.4、索引的删除</p>
-<p>2.4.5 索引的更新</p>
-<p>-———————————————–</p>
-<p>上一节 介绍完了 Lucene 分词器，这节介绍 Lucene 是如何索引文档的。</p>
-<p>​    </p>
-<h1 id="2-4-1、Lucene-字段类型"><a href="#2-4-1、Lucene-字段类型" class="headerlink" title="2.4.1、Lucene 字段类型"></a>2.4.1、Lucene 字段类型</h1><p>文档：文档是 Lucene索引的基本单位；</p>
-<p>字段：比文档更小的单位，字段是文档的一部分；</p>
-<p>​            每个字段 由 3部分组成：名称（name），类型（type），取值（value）；</p>
-<p>​            字段的取值（value）一般为：文本、二进制、数值</p>
-<p>Lucene的主要字段类型：</p>
-<ul>
-<li>TextField：字段内容 -&gt; 索引并词条化 -&gt; 不保存 词向量 -&gt; 整篇文档的body字段，常用TextField进行索引；</li>
-<li>StringField：只 索引 -&gt; 不词条化 -&gt; 不保存 词向量；</li>
-<li>IntPoint：适合 int类型 的索引；</li>
-<li>LongPoint：适合 long类型的 索引；</li>
-<li>FloatPoint： </li>
-<li>DoublePoint：</li>
-<li>SortedDocValuesField：存储值为 文本内容的 DocValue字段，且需要 按值排序；</li>
-<li>SortedSetDocValuesField：多值域为 DocValue字段，值为文本内容，且 需要 按值分组、聚合；</li>
-<li>NumbericDocValuesField： DocValue为（int，long，float，double）</li>
-<li>SortedNumbericDocValuesField：需要排序的 （int，long，float，double）</li>
-<li>SortedField：索引 保存字段值，不进行其他操作</li>
-</ul>
-<p>Lucene 使用 倒排索引 快速搜索  &lt;===&gt;  建立 词项和文档id的关系映射；</p>
-<p>搜索过程：</p>
-<p>​    通过 类似hash算法 -&gt; 定位到 搜索关键词 -&gt; 读取文档id集合</p>
-<p>上述过程的缺陷：</p>
-<p>​            当我们需要对数据做 聚合操作，排序、分组时，Lucene会提取所有出现在文档集合中的排序字段，再次构建一个排好序的文件集合；这个过程全部在内存中进行，如果数据量巨大，会造成 内存溢出 和 性能缓慢；</p>
-<p>Lucene 4.X 之后出现了 DocValues，DocValues是 Lucene 构建索引时，额外建立的一个有序的基于 document =&gt; field/value 的映射列表。</p>
-<p>​    </p>
-<h1 id="2-4-2、索引文档示例"><a href="#2-4-2、索引文档示例" class="headerlink" title="2.4.2、索引文档示例"></a>2.4.2、索引文档示例</h1><p>代表新闻的实例类 News.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.index;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 代表新闻的实例类 News.java</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">News</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> id;</span><br><span class="line">	<span class="keyword">private</span> String title;</span><br><span class="line">	<span class="keyword">private</span> String content;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> reply;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">News</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">News</span><span class="params">(<span class="keyword">int</span> id, String title, String content, <span class="keyword">int</span> reply)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>();</span><br><span class="line">		<span class="keyword">this</span>.id = id;</span><br><span class="line">		<span class="keyword">this</span>.title = title;</span><br><span class="line">		<span class="keyword">this</span>.content = content;</span><br><span class="line">		<span class="keyword">this</span>.reply = reply;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> id;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.id = id;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getTitle</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> title;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setTitle</span><span class="params">(String title)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.title = title;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getContent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> content;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContent</span><span class="params">(String content)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.content = content;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getReply</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> reply;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setReply</span><span class="params">(<span class="keyword">int</span> reply)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.reply = reply;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建索引文件的CreateIndex.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.index;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexOptions;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriter;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriterConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Files;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 创建索引</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateIndex</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 创建 3 个News对象</span></span><br><span class="line">		News news1 = <span class="keyword">new</span> News();</span><br><span class="line">		news1.setId(<span class="number">1</span>);</span><br><span class="line">		news1.setTitle(<span class="string">"习近平会见美国总统奥巴马，学习国外经验"</span>);</span><br><span class="line">		news1.setContent(<span class="string">"国家主席习近平9月3日在杭州西湖宾馆会见前来出席二十国集团领导人杭州峰会的美国总统奥巴马"</span>);</span><br><span class="line">		news1.setReply(<span class="number">672</span>);</span><br><span class="line"></span><br><span class="line">		News news2 = <span class="keyword">new</span> News();</span><br><span class="line">		news2.setId(<span class="number">2</span>);</span><br><span class="line">		news2.setTitle(<span class="string">"北大迎4380名新生，农村学生700多人今年最多"</span>);</span><br><span class="line">		news2.setContent(<span class="string">"昨天，北京大学迎来4380名来自全国各地及数十个国家的本科新生。其中，农村学生工700余名，为今年最多..."</span>);</span><br><span class="line">		news2.setReply(<span class="number">995</span>);</span><br><span class="line"></span><br><span class="line">		News news3 = <span class="keyword">new</span> News();</span><br><span class="line">		news3.setId(<span class="number">3</span>);</span><br><span class="line">		news3.setTitle(<span class="string">"特朗普宣誓（Donald Trump）就任美国第45任总统"</span>);</span><br><span class="line">		news3.setContent(<span class="string">"当地时机1月20日，唐纳德·特朗普在美国国会宣誓就职，正式成为美国第45任总统。"</span>);</span><br><span class="line">		news3.setReply(<span class="number">1872</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 创建IK分词器</span></span><br><span class="line">		Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x();</span><br><span class="line">		IndexWriterConfig iwc = <span class="keyword">new</span> IndexWriterConfig(analyzer);</span><br><span class="line">		iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE);</span><br><span class="line">		Directory directory = <span class="keyword">null</span>;</span><br><span class="line">		IndexWriter indexWriter = <span class="keyword">null</span>;</span><br><span class="line">		<span class="comment">// 索引目录</span></span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		<span class="comment">// 开始时间</span></span><br><span class="line">		Date start = <span class="keyword">new</span> Date();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (!Files.isReadable(indexPath)) &#123;</span><br><span class="line">				System.out.println(<span class="string">"Document directory '"</span> + indexPath.toAbsolutePath() + <span class="string">"' is not readable! please check"</span>);</span><br><span class="line">				System.exit(<span class="number">1</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			directory = FSDirectory.open(indexPath);</span><br><span class="line">			indexWriter = <span class="keyword">new</span> IndexWriter(directory, iwc);</span><br><span class="line">			<span class="comment">// 设置新闻ID 索引 并存储</span></span><br><span class="line">			FieldType idType = <span class="keyword">new</span> FieldType();</span><br><span class="line">			idType.setIndexOptions(IndexOptions.DOCS);</span><br><span class="line">			idType.setStored(<span class="keyword">true</span>);</span><br><span class="line">			<span class="comment">// 设置新闻标题索引文档，词项频率，位移信息，和偏移量，存储并词条化</span></span><br><span class="line">			FieldType titleType = <span class="keyword">new</span> FieldType();</span><br><span class="line">			titleType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);</span><br><span class="line">			titleType.setStored(<span class="keyword">true</span>);</span><br><span class="line">			titleType.setTokenized(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">			FieldType contentType = <span class="keyword">new</span> FieldType();</span><br><span class="line">			contentType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);</span><br><span class="line">			contentType.setStored(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setTokenized(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setStoreTermVectors(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setStoreTermVectorPositions(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setStoreTermVectorOffsets(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setStoreTermVectorPayloads(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">			Document doc1 = <span class="keyword">new</span> Document();</span><br><span class="line">			doc1.add(<span class="keyword">new</span> Field(<span class="string">"id"</span>, String.valueOf(news1.getId()), idType));</span><br><span class="line">			doc1.add(<span class="keyword">new</span> Field(<span class="string">"title"</span>, news1.getTitle(), titleType));</span><br><span class="line">			doc1.add(<span class="keyword">new</span> Field(<span class="string">"content"</span>, news1.getContent(), contentType));</span><br><span class="line">			doc1.add(<span class="keyword">new</span> IntPoint(<span class="string">"reply"</span>, news1.getReply()));</span><br><span class="line">			doc1.add(<span class="keyword">new</span> StoredField(<span class="string">"reply_display"</span>, news1.getReply()));</span><br><span class="line"></span><br><span class="line">			Document doc2 = <span class="keyword">new</span> Document();</span><br><span class="line">			doc2.add(<span class="keyword">new</span> Field(<span class="string">"id"</span>, String.valueOf(news2.getId()), idType));</span><br><span class="line">			doc2.add(<span class="keyword">new</span> Field(<span class="string">"title"</span>, news2.getTitle(), titleType));</span><br><span class="line">			doc2.add(<span class="keyword">new</span> Field(<span class="string">"content"</span>, news2.getContent(), contentType));</span><br><span class="line">			doc2.add(<span class="keyword">new</span> IntPoint(<span class="string">"reply"</span>, news2.getReply()));</span><br><span class="line">			doc2.add(<span class="keyword">new</span> StoredField(<span class="string">"reply_display"</span>, news2.getReply()));</span><br><span class="line"></span><br><span class="line">			Document doc3 = <span class="keyword">new</span> Document();</span><br><span class="line">			doc3.add(<span class="keyword">new</span> Field(<span class="string">"id"</span>, String.valueOf(news3.getId()), idType));</span><br><span class="line">			doc3.add(<span class="keyword">new</span> Field(<span class="string">"title"</span>, news3.getTitle(), titleType));</span><br><span class="line">			doc3.add(<span class="keyword">new</span> Field(<span class="string">"content"</span>, news3.getContent(), contentType));</span><br><span class="line">			doc3.add(<span class="keyword">new</span> IntPoint(<span class="string">"reply"</span>, news3.getReply()));</span><br><span class="line">			doc3.add(<span class="keyword">new</span> StoredField(<span class="string">"reply_display"</span>, news3.getReply()));</span><br><span class="line"></span><br><span class="line">			indexWriter.addDocument(doc1);</span><br><span class="line">			indexWriter.addDocument(doc2);</span><br><span class="line">			indexWriter.addDocument(doc3);</span><br><span class="line">			indexWriter.commit();</span><br><span class="line">			indexWriter.close();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		Date end = <span class="keyword">new</span> Date();</span><br><span class="line">		System.out.println(<span class="string">"索引文档用时："</span> + (end.getTime() - start.getTime()) + <span class="string">" milliseconds."</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125006.png" alt></p>
-<p>生成对应的索引文件</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125020.png" alt></p>
-<p>​    </p>
-<h1 id="2-4-3、在Luke中查看索引"><a href="#2-4-3、在Luke中查看索引" class="headerlink" title="2.4.3、在Luke中查看索引"></a>2.4.3、在Luke中查看索引</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125050.png" alt></p>
-<p>打开索引文件目录：D:\java\oschina\lucene-learn\lucene-chapter2\indexdir</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125129.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125141.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125157.png" alt></p>
-<p>​    </p>
-<h1 id="2-4-4、索引的删除"><a href="#2-4-4、索引的删除" class="headerlink" title="2.4.4、索引的删除"></a>2.4.4、索引的删除</h1><p>索引同样存在 CRUD 操作</p>
-<p>本节演示 根据 Term 来删除点单个或多个Document，删除 title 中 包含关键词“美国”的文档。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.index;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriter;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriterConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Term;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 删除索引</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeleteIndex</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 删除 title 中含有关键字“美国”的文档</span></span><br><span class="line">		deleteDoc(<span class="string">"title"</span>, <span class="string">"美国"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deleteDoc</span><span class="params">(String field, String key)</span> </span>&#123;</span><br><span class="line">		Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x();</span><br><span class="line">		IndexWriterConfig indexWriterConfig = <span class="keyword">new</span> IndexWriterConfig(analyzer);</span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			directory = FSDirectory.open(indexPath);</span><br><span class="line">			IndexWriter indexWriter = <span class="keyword">new</span> IndexWriter(directory, indexWriterConfig);</span><br><span class="line">			indexWriter.deleteDocuments(<span class="keyword">new</span> Term(field, key));</span><br><span class="line">			indexWriter.commit();</span><br><span class="line">			indexWriter.close();</span><br><span class="line">			System.out.println(<span class="string">"删除完成"</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125231.png" alt></p>
-<p>除此之外，IndexWriter还提供了以下方法：</p>
-<ul>
-<li>DeleteDocuments(Query query)：根据Query条件来删除单个或多个Document。</li>
-<li>DeleteDocuments(Query[] queries)：根据Query条件来删除单个或多个Document。</li>
-<li>DeleteDocuments(Term term)：根据Term条件来删除单个或多个Document。</li>
-<li>DeleteDocuments(Term[] terms)：根据Term条件来删除单个或多个Document。</li>
-<li>DeleteAll()：删除所有的Document。</li>
-</ul>
-<p>使用IndexWriter进行Document删除操作时，文档并不会立即被删除，而是把这个删除动作缓存起来，当IndexWriter.Commit() 或 IndexWriter.Close()时，删除操作才会真正执行。</p>
-<p>​    </p>
-<p>使用Luke <strong>重新打开</strong> 索引之后，只剩下了一个索引文档：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125255.png" alt></p>
-<p>​    </p>
-<h1 id="2-4-5-索引的更新"><a href="#2-4-5-索引的更新" class="headerlink" title="2.4.5 索引的更新"></a>2.4.5 索引的更新</h1><p>本质：先删除索引，再建立新的文档。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.index;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Field;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.FieldType;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexOptions;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriter;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriterConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Term;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 更新索引</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UpdateIndex</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x();</span><br><span class="line">		IndexWriterConfig indexWriterConfig = <span class="keyword">new</span> IndexWriterConfig(analyzer);</span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			directory = FSDirectory.open(indexPath);</span><br><span class="line">			IndexWriter indexWriter = <span class="keyword">new</span> IndexWriter(directory, indexWriterConfig);</span><br><span class="line">			Document doc = <span class="keyword">new</span> Document();</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 设置新闻ID 索引 并存储</span></span><br><span class="line">			FieldType idType = <span class="keyword">new</span> FieldType();</span><br><span class="line">			idType.setIndexOptions(IndexOptions.DOCS);</span><br><span class="line">			idType.setStored(<span class="keyword">true</span>);</span><br><span class="line">			<span class="comment">// 设置新闻标题索引文档，词项频率，位移信息，和偏移量，存储并词条化</span></span><br><span class="line">			FieldType titleType = <span class="keyword">new</span> FieldType();</span><br><span class="line">			titleType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);</span><br><span class="line">			titleType.setStored(<span class="keyword">true</span>);</span><br><span class="line">			titleType.setTokenized(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">			FieldType contentType = <span class="keyword">new</span> FieldType();</span><br><span class="line">			contentType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);</span><br><span class="line">			contentType.setStored(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setTokenized(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setStoreTermVectors(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setStoreTermVectorPositions(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setStoreTermVectorOffsets(<span class="keyword">true</span>);</span><br><span class="line">			contentType.setStoreTermVectorPayloads(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">			doc.add(<span class="keyword">new</span> Field(<span class="string">"id"</span>, <span class="string">"2"</span>, idType));</span><br><span class="line">			doc.add(<span class="keyword">new</span> Field(<span class="string">"title"</span>, <span class="string">"北大迎4380名新生"</span>, titleType));</span><br><span class="line">			doc.add(<span class="keyword">new</span> Field(<span class="string">"content"</span>, <span class="string">"昨天，北京大学迎来4380名来自全国各地及数十个国家的本科新生。其中，农村学生工700余名，为今年最多..."</span>, contentType));</span><br><span class="line">			indexWriter.updateDocument(<span class="keyword">new</span> Term(<span class="string">"title"</span>, <span class="string">"北大"</span>), doc);</span><br><span class="line">			indexWriter.commit();</span><br><span class="line">			indexWriter.close();</span><br><span class="line">			System.out.println(<span class="string">"更新完成"</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125332.png" alt></p>
-<p>修改前： <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125350.png" alt></p>
-<p>修改后： <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125404.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2234,7 +2200,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="linux 机器TraceRoute 实现原理Traceroute是用来侦测主机到目的主机之间所经路由情况的重要工具。   从源地址发出一个UDP探测包到目的地址，并将TTL设置为1； 到达路由器时，将TTL减1； 当TTL变为0时，包被丢弃，路由器向源地址发回一个ICMP超时通知（ICMP Time Exceeded Message），内含发送IP包的源地址，IP包的所有内容及路由器的IP">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ping通tcp不通">
+<meta property="og:url" content="https://carlo-z.com/computer-network/traceroute-icmp-and-tcp/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="linux 机器TraceRoute 实现原理Traceroute是用来侦测主机到目的主机之间所经路由情况的重要工具。   从源地址发出一个UDP探测包到目的地址，并将TTL设置为1； 到达路由器时，将TTL减1； 当TTL变为0时，包被丢弃，路由器向源地址发回一个ICMP超时通知（ICMP Time Exceeded Message），内含发送IP包的源地址，IP包的所有内容及路由器的IP">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200322010041.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200322003733.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200322010343.png">
+<meta property="og:updated_time" content="2020-04-01T06:38:54.695Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ping通tcp不通">
+<meta name="twitter:description" content="linux 机器TraceRoute 实现原理Traceroute是用来侦测主机到目的主机之间所经路由情况的重要工具。   从源地址发出一个UDP探测包到目的地址，并将TTL设置为1； 到达路由器时，将TTL减1； 当TTL变为0时，包被丢弃，路由器向源地址发回一个ICMP超时通知（ICMP Time Exceeded Message），内含发送IP包的源地址，IP包的所有内容及路由器的IP">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200322010041.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/computer-network/traceroute-icmp-and-tcp/">
+
+
+
+
+
+  <title>ping通tcp不通 | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/traceroute-icmp-and-tcp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ping通tcp不通</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-21T23:08:22+08:00">
+                2020-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<h1 id="linux-机器"><a href="#linux-机器" class="headerlink" title="linux 机器"></a>linux 机器</h1><h2 id="TraceRoute-实现原理"><a href="#TraceRoute-实现原理" class="headerlink" title="TraceRoute 实现原理"></a>TraceRoute 实现原理</h2><p>Traceroute是用来侦测主机到目的主机之间所经路由情况的重要工具。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200322010041.png" alt></p>
+<ol>
+<li>从源地址发出一个UDP探测包到目的地址，并将TTL设置为1；</li>
+<li>到达路由器时，将TTL减1；</li>
+<li>当TTL变为0时，包被丢弃，路由器向源地址发回一个ICMP超时通知（ICMP Time Exceeded Message），内含发送IP包的源地址，IP包的所有内容及路由器的IP地址；</li>
+<li>当源地址收到该ICMP包时，显示这一跳路由信息；</li>
+<li>重复1～5，并每次设置TTL加1；</li>
+<li>直至目标地址收到探测数据包，并返回端口不可达通知（ICMP Port Unreachable）；</li>
+<li>当源地址收到ICMP Port Unreachable包时停止traceroute。</li>
+</ol>
+<blockquote>
+<ol>
+<li>Linux和Mac OS等系统使用UDP包进行探测，目标端口号默认为33434，每次探测目标端口号加1。Traceroute故意使用了一个大于 30000 的目标端口号，以保证目标地址收到数据包后能够返回一个“端口不可达”的 ICMP 报文，于是源地址就可将端口不可达报文当作跟踪结束的标志。</li>
+<li>Traceroute每跳默认发送3个探测包（发包的数量可通过-q进行设置），探测包的返回会受到网络情况的影响。如果防火墙封掉了ICMP的返回信息，那么相应的延时位置会以*显示。如果某台网关阻塞或者某台DNS出现问题，那么相应行的延时会变长。可以加-n 参数来避免DNS解析，以IP格式输出数据。</li>
+<li>每个探测包都有唯一的标识号，使得Traceroute能够识别返回的包。UDP数据包使用递增的目标端口号进行标识。</li>
+</ol>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200322003733.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">traceroute [-n] -T -p &lt;目标端口号&gt; Host</span><br></pre></td></tr></table></figure>
+
+<p><strong>参数说明</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">traceroute [-46dFITUnreAV] [-f first_ttl] [-g gate,...]</span><br><span class="line">        [-i device] [-m max_ttl] [-p port] [-s src_addr]</span><br><span class="line">        [-q nqueries] [-N squeries] [-t tos]</span><br><span class="line">        [-l flow_label] [-w waittime] [-z sendwait] [-UL] [-D]</span><br><span class="line">        [-P proto] [--sport=port] [-M method] [-O mod_options]</span><br><span class="line">        [--mtu] [--back]</span><br><span class="line">        host [packet_len]</span><br><span class="line">traceroute6  [options]</span><br><span class="line">       </span><br><span class="line">Host 目标服务器域名或 IP。</span><br><span class="line">-4, -6 指定使用 IPv4 or IPv6</span><br><span class="line">-I 使用icmp探测</span><br><span class="line">-T 通过 TCP 探测</span><br><span class="line">-n 直接使用 IP 地址而非主机名称（禁用 DNS 反查）。</span><br><span class="line">-p port</span><br><span class="line">   对于UDP跟踪，指定将使用的目标端口基traceroute（目标端口号将由每个探测递增）。</span><br><span class="line">   对于ICMP跟踪，指定初始ICMP序列值（也由每个探测递增）。</span><br><span class="line">   对于TCP和其他端口，只指定要连接的（常量）目标端口。</span><br><span class="line">-r 绕过常规路由表，直接发送到连接网络上的主机。如果主机不在直接连接的网络上，则返回错误。此选项可用于通过没有路由的接口ping本地主机。</span><br><span class="line">-m max_ttl 默认最多30跳</span><br><span class="line">-w waittime 每一跳最多等待多长时间，默认5秒</span><br><span class="line">-g gateway 指定包出口网关</span><br><span class="line">-i interface 指定网卡名</span><br><span class="line">-s source_addr 指定源ip（必须是某个网卡ip）</span><br><span class="line">-z sendwait 指定每一跳的时间间隔（默认0）</span><br><span class="line">-e, --extensions 显示ICMP扩展（rfc4884）。一般形式是类/类型：后跟十六进制转储。MPLS（rfc4950）以如下形式显示：MPLS:L=label，E=exp_use，S=stack_bottom，T=TTL（更多由/）分隔的对象。</span><br><span class="line">-A 在路由注册表中执行路径查找，并在相应地址后直接打印结果。</span><br><span class="line">-q num, 每个网关发送num个数据包</span><br><span class="line"></span><br><span class="line">-------------</span><br><span class="line">--sport=port 选择一个源端口</span><br><span class="line">--fwmark=mark 设置一个防火墙标记</span><br><span class="line">-U, --udp 使用udp协议探测目标端口</span><br><span class="line">-UL, 使用 UDPLITE 进行探测</span><br><span class="line">-D, 使用DCCP（数据包拥塞控制协议）请求进行探测</span><br><span class="line">-P protocol，使用指定协议的原始数据包进行跟踪路由。默认协议是253</span><br><span class="line">--mtu 路径MTU是指一条因特网传输路径中，从源地址到目的地址所经过的“路径”上的所有IP跳的最大传输单元的最小值。或者从另外一个角度来看，就是无需进行分片处理就能穿过这条“路径”的最大传输单元的最大值。</span><br><span class="line">--back 响应包可能与探测包路径不同，打印响应包的跳数</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">更多关于 traceroute 的用法，您可以通过man帮助查阅。</span><br></pre></td></tr></table></figure>
+
+<p>异常节点判定方法：如果相关端口在某一跳被阻断，则其后各跳均不会返回数据。据此就可以判定出异常节点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@10-1-53-21 ~]# traceroute -n -T -p 443 183.3.217.36</span><br><span class="line">traceroute to 183.3.217.36 (183.3.217.36), 30 hops max, 60 byte packets</span><br><span class="line"> 1  172.23.0.43  0.099 ms  0.051 ms  0.035 ms</span><br><span class="line"> 2  172.23.0.254  4.176 ms  4.487 ms  4.789 ms</span><br><span class="line"> 3  10.1.255.6  0.307 ms  0.425 ms  0.420 ms</span><br><span class="line"> 4  122.115.48.65  3.080 ms  3.535 ms  3.806 ms</span><br><span class="line"> 5  10.78.3.5  6.626 ms  7.133 ms  7.533 ms</span><br><span class="line"> 6  172.16.0.1  1.333 ms  1.355 ms  1.454 ms</span><br><span class="line"> 7  219.142.20.49  1.731 ms  1.738 ms  1.690 ms</span><br><span class="line"> 8  * * *</span><br><span class="line"> 9  * * *</span><br><span class="line">10  219.141.152.53  2.621 ms * *</span><br><span class="line">11  * * *</span><br><span class="line">12  * 119.147.222.122  42.294 ms 119.147.220.74  39.959 ms</span><br><span class="line">13  113.106.51.70  39.030 ms  38.859 ms 113.106.51.86  35.560 ms</span><br><span class="line">14  113.106.52.134  39.720 ms  40.552 ms  41.223 ms</span><br><span class="line">15  183.3.217.36  34.676 ms  36.169 ms  36.221 ms</span><br><span class="line">16  * * *</span><br><span class="line">17  * * *</span><br><span class="line">18  183.3.217.36  38.777 ms  39.290 ms  39.291 ms</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[root@10-1-53-21 ~]# traceroute -n -T -p 443 183.3.217.36</span><br><span class="line">traceroute to 183.3.217.36 (183.3.217.36), 30 hops max, 60 byte packets</span><br><span class="line"> 1  172.23.0.43  0.127 ms  0.101 ms  0.084 ms</span><br><span class="line"> 2  172.23.0.254  5.911 ms  7.257 ms  7.248 ms</span><br><span class="line"> 3  10.1.255.6  0.451 ms  0.441 ms  0.426 ms</span><br><span class="line"> 4  122.115.48.65  3.120 ms  3.574 ms  3.813 ms</span><br><span class="line"> 5  10.78.3.5  6.859 ms  7.208 ms  7.575 ms</span><br><span class="line"> 6  172.16.0.1  1.258 ms  1.364 ms  1.429 ms</span><br><span class="line"> 7  219.142.20.49  10.966 ms  10.785 ms  10.764 ms</span><br><span class="line"> 8  * * *</span><br><span class="line"> 9  * * *</span><br><span class="line">10  219.141.152.61  3.043 ms 219.141.152.65  6.084 ms *</span><br><span class="line">11  * * *</span><br><span class="line">12  * * *</span><br><span class="line">13  113.106.51.86  36.000 ms  35.589 ms 113.106.51.82  36.043 ms</span><br><span class="line">14  113.106.52.130  41.988 ms 113.106.52.134  38.881 ms  39.337 ms</span><br><span class="line">15  183.3.217.36  35.303 ms  36.716 ms  36.751 ms</span><br><span class="line">16  * * *</span><br><span class="line">17  * * *</span><br><span class="line">18  * * *</span><br><span class="line">19  * * *</span><br><span class="line">20  * * *</span><br><span class="line">21  * * *</span><br><span class="line">22  * * *</span><br><span class="line">23  * * *</span><br><span class="line">24  * * *</span><br><span class="line">25  * * *</span><br><span class="line">26  * * *</span><br><span class="line">27  * * *</span><br><span class="line">28  * * *</span><br><span class="line">29  * * *</span><br><span class="line">30  * * *</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">yum install -y sshpass</span><br><span class="line"></span><br><span class="line">nc 183.3.217.36 443</span><br><span class="line">nc -vz jzjyszdx01.jzsec.com 443</span><br><span class="line">nc -vz 183.3.217.36 443</span><br><span class="line">traceroute 183.3.217.36</span><br><span class="line">ping 183.3.217.36</span><br><span class="line">sshpass -p 'sdfsfsdfsgg' ssh root@10.198.45.139</span><br><span class="line">sshpass -p 'sdfsfsdfsgg' ssh root@10.198.45.141</span><br><span class="line">traceroute -n -T -p 443 183.3.217.36</span><br><span class="line">traceroute -4nTe -p 443 -m 40 183.3.217.36</span><br><span class="line">traceroute -4nIe -m 40 183.3.217.36</span><br><span class="line">traceroute -4nUe -p 443 -m 40 183.3.217.36</span><br><span class="line">traceroute -4nTe -m 40 -p 22 10.198.45.139</span><br><span class="line"></span><br><span class="line">nc 112.95.153.36 443</span><br><span class="line">nc -vz jzjyszlt01.jzsec.com 443</span><br><span class="line">nc -vz 112.95.153.36 443</span><br><span class="line">traceroute -m 40 112.95.153.36</span><br><span class="line">traceroute -n -T -p 443 112.95.153.36</span><br><span class="line">traceroute -4nTe -p 443 -m 40 112.95.153.36</span><br><span class="line">sshpass -p 'sdfsfsdfsgg' ssh root@10.198.45.140</span><br><span class="line">sshpass -p 'sdfsfsdfsgg' ssh root@10.198.45.142</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@10-1-53-21 ~]# nc 183.3.217.36 443</span><br><span class="line">123ewq</span><br><span class="line">[root@10-1-53-21 ~]# netstat -atn | grep "ES" | grep 183.3.217.36</span><br><span class="line">[root@10-1-53-21 ~]# netstat -atn | grep "ES" | grep 112.95.153.36</span><br><span class="line">[root@10-198-45-139 ~]# tcpdump 'tcp and src 122.115.48.123 and dst port 443 and (((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) &lt; 20)' -XX</span><br><span class="line">[root@10-198-45-139 ~]# tcpdump 'tcp and src 43.227.140.124 and dst port 443 and (((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) &lt; 20)' -XX</span><br><span class="line">tcpdump 'tcp and dst port 443 and (0 &lt; ((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2))) and (((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) &lt; 20)' -XX</span><br></pre></td></tr></table></figure>
+
+<h1 id="windows-机器"><a href="#windows-机器" class="headerlink" title="windows 机器"></a>windows 机器</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tracetcp &lt;目标服务器域名或 IP&gt;:&lt;待探测端口号&gt;</span><br></pre></td></tr></table></figure>
+
+<p>异常节点判定方法：如果相关端口在某一跳被阻断，则其后各跳均不会返回数据。据此就可以判定出异常节点</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200322010343.png" alt></p>
+<h2 id="Tracert实现原理"><a href="#Tracert实现原理" class="headerlink" title="Tracert实现原理"></a>Tracert实现原理</h2><ol>
+<li><p>从源地址发出一个ICMP请求回显（ICMP Echo Request）数据包到目的地址，并将TTL设置为1；</p>
+</li>
+<li><p>到达路由器时，将TTL减1；</p>
+</li>
+<li><p>当TTL变为0时，包被丢弃，路由器向源地址发回一个ICMP超时通知（ICMP Time Exceeded Message），内含发送IP包的源地址，IP包的所有内容及路由器的IP地址；</p>
+</li>
+<li><p>当源地址收到该ICMP包时，显示这一跳路由信息；</p>
+</li>
+<li><p>重复1～5，并每次设置TTL加1；</p>
+</li>
+<li><p>直至目标地址收到探测数据包，并返回ICMP回应答复（ICMPEcho Reply）；</p>
+</li>
+<li><p>当源地址收到ICMP Echo Reply包时停止tracert。</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>注：</strong></p>
+<p>1.Windows系统使用ICMP请求回显（ICMP Echo Request）数据包进行探测，源地址以目的地址返回的ICMP回应答复（ICMP Echo Reply）作为跟踪结束标志。</p>
+<p>2.Traceroute每跳默认发送3个探测包。在未能到达路由器或未返回ICMP超时通知的情况下，相应的延时位置会以*显示。</p>
+<p>3.每个探测包都有唯一的标识号，ICMP数据包使用seq进行标识。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/distribution/rpc/rpc-core-principle/" rel="next" title="RPC核心原理和实战 —— 基础篇">
+                <i class="fa fa-chevron-left"></i> RPC核心原理和实战 —— 基础篇
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/computer-network/tcpdump-tcp-3-and-4/" rel="prev" title="TCP三次握手与Tcpdump抓包分析过程">
+                TCP三次握手与Tcpdump抓包分析过程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#linux-机器"><span class="nav-text">linux 机器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TraceRoute-实现原理"><span class="nav-text">TraceRoute 实现原理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#windows-机器"><span class="nav-text">windows 机器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tracert实现原理"><span class="nav-text">Tracert实现原理</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -314,154 +314,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-reverse-proxy-tcp-and-udp/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/nginx/nginx-reverse-proxy-tcp-and-udp/" itemprop="url">nginx 转发 tcp/udp</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
-                2016-02-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">nginx</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<blockquote>
-<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
-<p><a href="https://www.cnblogs.com/gongjingyun123--/p/11424424.html" target="_blank" rel="noopener">Nginx四层负载均衡</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-vmstat/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -630,6 +482,448 @@
 <p>关于内存的使用情况还可以结ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的内存的使用情况,和那些进程在占用大量的内存.一般情况下，如果内存的占用率比较高,但是,CPU的占用很低的时候,可以考虑是有很多的应用程序占用了内存没有释放,但是,并没有占用CPU时间,可以考虑应用程序,对于未占用CPU时间和一些后台的程序,释放内存的占用。</p>
 <br>
 
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-keepalived/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-keepalived/" itemprop="url">Nginx+keepalived双机热备（主从模式）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-reverse-proxy-http/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-reverse-proxy-http/" itemprop="url">Nginx+keepalived双机热备（主从模式）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-reverse-proxy-tcp-and-udp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-reverse-proxy-tcp-and-udp/" itemprop="url">nginx 转发 tcp/udp</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
+<p><a href="https://www.cnblogs.com/gongjingyun123--/p/11424424.html" target="_blank" rel="noopener">Nginx四层负载均衡</a></p>
+</blockquote>
 
           
         
@@ -1205,192 +1499,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-htop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-monitor-htop/" itemprop="url">linux htop详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
-                2016-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-<p>htop是Linux系统下一个基本文本模式的、交互式的进程查看器，主要用于控制台或shell中，可以替代top；</p>
-<p>htop和top对比：</p>
-<ul>
-<li>两者相比起来，top比较繁琐</li>
-<li>默认支持图形界面的鼠标操作</li>
-<li>可以横向或纵向滚动浏览进程列表，以便看到所有的进程和完整的命令行</li>
-<li>杀进程时不需要输入进程号等</li>
-</ul>
-<br>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install htop</span><br></pre></td></tr></table></figure>
-
-<h3 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release.noarch</span><br><span class="line">yum -y install htop</span><br></pre></td></tr></table></figure>
-
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1、安装gcc、内核库依赖库</span><br><span class="line">yum install -y gcc ncurses-deve</span><br><span class="line">2、下载源码</span><br><span class="line">wget http://sourceforge.net/projects/htop/files/latest/download</span><br><span class="line">3、解压并进入htop-1.0.2目录</span><br><span class="line">tar -zxf download</span><br><span class="line">cd htop-1.0.2</span><br><span class="line">4、编译安装(执行./configure如果执行报错 configure: error: You may want to use --disable-unicode or install libncursesw，表明缺少lib 包，安装lib包：yum install ncurses-devel -y)</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">5、验证</span><br><span class="line">htop</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108135551.png" alt></p>
-<h1 id="字段含义"><a href="#字段含义" class="headerlink" title="字段含义"></a>字段含义</h1><ul>
-<li>PID：进行的标识号</li>
-<li>USER：运行此进程的用户</li>
-<li>PRI：进程的优先级</li>
-<li>NI：进程的优先级别值，默认的为0，可以进行调整</li>
-<li>VIRT：进程占用的虚拟内存值</li>
-<li>RES：进程占用的物理内存值</li>
-<li>SHR：进程占用的共享内存值</li>
-<li>S：进程的运行状况，R表示正在运行、S表示休眠，等待唤醒、Z表示僵死状态</li>
-<li>%CPU：该进程占用的CPU使用率</li>
-<li>%MEM：该进程占用的物理内存和总内存的百分比</li>
-<li>TIME+：该进程启动后占用的总的CPU时间</li>
-<li>COMMAND：进程启动的启动命令名称</li>
-</ul>
-<br>
-
-<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop [OPTIONS]</span><br></pre></td></tr></table></figure>
-
-<h1 id="htop常用功能键"><a href="#htop常用功能键" class="headerlink" title="htop常用功能键"></a>htop常用功能键</h1><p>F1 : 查看htop使用说明<br>F2 : 设置<br>F3 : 搜索进程<br>F4 : 过滤器，按关键字搜索<br>F5 : 显示树形结构<br>F6 : 选择排序方式<br>F7 : 减少nice值，这样就可以提高对应进程的优先级<br>F8 : 增加nice值，这样可以降低对应进程的优先级<br>F9 : 杀掉选中的进程<br>F10 : 退出htop</p>
-<p>/ : 搜索字符<br>h : 显示帮助<br>l ：显示进程打开的文件: 如果安装了lsof，按此键可以显示进程所打开的文件<br>u ：显示所有用户，并可以选择某一特定用户的进程<br>s : 将调用strace追踪进程的系统调用<br>t : 显示树形结构</p>
-<p>H ：显示/隐藏用户线程<br>I ：倒转排序顺序<br>K ：显示/隐藏内核线程<br>M ：按内存占用排序<br>P ：按CPU排序<br>T ：按运行时间排序</p>
-<p>上下键或PgUP, PgDn : 移动选中进程<br>左右键或Home, End : 移动列表<br>Space(空格) : 标记/取消标记一个进程。命令可以作用于多个进程，例如 “kill”，将应用于所有已标记</p>
-<br>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-atop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1493,7 +1601,7 @@
 <p> 注意：所有的信息都是反映过去10s的状态信息</p>
 <br>
 
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">1.官网：http://www.atoptool.nl/downloadatop.php找下载链接</span></span><br><span class="line"><span class="meta">#</span><span class="bash">2.下载解压编译</span></span><br><span class="line">wget http://www.atoptool.nl/download/atop-2.2-3.tar.gz</span><br><span class="line">tar xvf atop-2.2-3.tar.gz</span><br><span class="line">cd atop-2.2-3</span><br><span class="line">make prefix=/usr/local/atop install</span><br><span class="line"><span class="meta">#</span><span class="bash">3.（报错rawlog.c:154:18: fatal error: zlib.h: No such file or directory，yum -y install zlib未解决，因为只安装lib没有头文件，提示需要zlib头文件）</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash">4.解决方案：标准安装zlib</span></span><br><span class="line"><span class="meta">#</span><span class="bash">官网: http://www.zlib.net/</span></span><br><span class="line"><span class="meta">#</span><span class="bash">找下载链接：http://zlib.net/zlib-1.2.8.tar.gz 或者：http://iweb.dl.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz</span></span><br><span class="line">cd ../</span><br><span class="line">wget http://zlib.net/zlib-1.2.8.tar.gz</span><br><span class="line">tar xzf zlib-1.2.8.tar.gz</span><br><span class="line">cd zlib-1.2.8</span><br><span class="line"><span class="meta">#</span><span class="bash">创建动态库</span></span><br><span class="line">./configure --shared</span><br><span class="line">make test</span><br><span class="line">make install</span><br><span class="line">cp zutil.h /usr/local/include</span><br><span class="line">cp zutil.c /usr/local/include</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash">5.重新编译</span></span><br><span class="line">cd atop-2.2-3</span><br><span class="line">make clean</span><br><span class="line">make install</span><br><span class="line"><span class="meta">#</span><span class="bash">提示Choose either <span class="string">'make systemdinstall'</span> or <span class="string">'make sysvinstall'</span> <span class="comment">#关于采用哪种方式安装可以参考这里：http://www.linuxdiyf.com/linux/10711.html</span></span></span><br><span class="line">make systemdimstall</span><br><span class="line"><span class="meta">#</span><span class="bash">6.运行</span></span><br><span class="line">atop</span><br><span class="line"><span class="meta">#</span><span class="bash">7.退出</span></span><br><span class="line">q</span><br><span class="line">参考：http://my.oschina.net/nox/blog/221014</span><br><span class="line">http://blog.sina.com.cn/s/blog_714dacd10102v6et.html</span><br></pre></td></tr></table></figure>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>1.官网：http://www.atoptool.nl/downloadatop.php找下载链接</span><br><span class="line"><span class="meta">#</span>2.下载解压编译</span><br><span class="line">wget http://www.atoptool.nl/download/atop-2.2-3.tar.gz</span><br><span class="line">tar xvf atop-2.2-3.tar.gz</span><br><span class="line">cd atop-2.2-3</span><br><span class="line">make prefix=/usr/local/atop install</span><br><span class="line"><span class="meta">#</span>3.（报错rawlog.c:154:18: fatal error: zlib.h: No such file or directory，yum -y install zlib未解决，因为只安装lib没有头文件，提示需要zlib头文件）</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>4.解决方案：标准安装zlib</span><br><span class="line"><span class="meta">#</span>官网: http://www.zlib.net/</span><br><span class="line"><span class="meta">#</span>找下载链接：http://zlib.net/zlib-1.2.8.tar.gz 或者：http://iweb.dl.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz</span><br><span class="line">cd ../</span><br><span class="line">wget http://zlib.net/zlib-1.2.8.tar.gz</span><br><span class="line">tar xzf zlib-1.2.8.tar.gz</span><br><span class="line">cd zlib-1.2.8</span><br><span class="line"><span class="meta">#</span>创建动态库</span><br><span class="line">./configure --shared</span><br><span class="line">make test</span><br><span class="line">make install</span><br><span class="line">cp zutil.h /usr/local/include</span><br><span class="line">cp zutil.c /usr/local/include</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>5.重新编译</span><br><span class="line">cd atop-2.2-3</span><br><span class="line">make clean</span><br><span class="line">make install</span><br><span class="line"><span class="meta">#</span>提示Choose either 'make systemdinstall' or 'make sysvinstall' #关于采用哪种方式安装可以参考这里：http://www.linuxdiyf.com/linux/10711.html</span><br><span class="line">make systemdimstall</span><br><span class="line"><span class="meta">#</span>6.运行</span><br><span class="line">atop</span><br><span class="line"><span class="meta">#</span>7.退出</span><br><span class="line">q</span><br><span class="line">参考：http://my.oschina.net/nox/blog/221014</span><br><span class="line">http://blog.sina.com.cn/s/blog_714dacd10102v6et.html</span><br></pre></td></tr></table></figure>
 
 <br>
 
@@ -1703,6 +1811,192 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-htop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-monitor-htop/" itemprop="url">linux htop详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
+                2016-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+<p>htop是Linux系统下一个基本文本模式的、交互式的进程查看器，主要用于控制台或shell中，可以替代top；</p>
+<p>htop和top对比：</p>
+<ul>
+<li>两者相比起来，top比较繁琐</li>
+<li>默认支持图形界面的鼠标操作</li>
+<li>可以横向或纵向滚动浏览进程列表，以便看到所有的进程和完整的命令行</li>
+<li>杀进程时不需要输入进程号等</li>
+</ul>
+<br>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install htop</span><br></pre></td></tr></table></figure>
+
+<h3 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release.noarch</span><br><span class="line">yum -y install htop</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1、安装gcc、内核库依赖库</span><br><span class="line">yum install -y gcc ncurses-deve</span><br><span class="line">2、下载源码</span><br><span class="line">wget http://sourceforge.net/projects/htop/files/latest/download</span><br><span class="line">3、解压并进入htop-1.0.2目录</span><br><span class="line">tar -zxf download</span><br><span class="line">cd htop-1.0.2</span><br><span class="line">4、编译安装(执行./configure如果执行报错 configure: error: You may want to use --disable-unicode or install libncursesw，表明缺少lib 包，安装lib包：yum install ncurses-devel -y)</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">5、验证</span><br><span class="line">htop</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108135551.png" alt></p>
+<h1 id="字段含义"><a href="#字段含义" class="headerlink" title="字段含义"></a>字段含义</h1><ul>
+<li>PID：进行的标识号</li>
+<li>USER：运行此进程的用户</li>
+<li>PRI：进程的优先级</li>
+<li>NI：进程的优先级别值，默认的为0，可以进行调整</li>
+<li>VIRT：进程占用的虚拟内存值</li>
+<li>RES：进程占用的物理内存值</li>
+<li>SHR：进程占用的共享内存值</li>
+<li>S：进程的运行状况，R表示正在运行、S表示休眠，等待唤醒、Z表示僵死状态</li>
+<li>%CPU：该进程占用的CPU使用率</li>
+<li>%MEM：该进程占用的物理内存和总内存的百分比</li>
+<li>TIME+：该进程启动后占用的总的CPU时间</li>
+<li>COMMAND：进程启动的启动命令名称</li>
+</ul>
+<br>
+
+<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop [OPTIONS]</span><br></pre></td></tr></table></figure>
+
+<h1 id="htop常用功能键"><a href="#htop常用功能键" class="headerlink" title="htop常用功能键"></a>htop常用功能键</h1><p>F1 : 查看htop使用说明<br>F2 : 设置<br>F3 : 搜索进程<br>F4 : 过滤器，按关键字搜索<br>F5 : 显示树形结构<br>F6 : 选择排序方式<br>F7 : 减少nice值，这样就可以提高对应进程的优先级<br>F8 : 增加nice值，这样可以降低对应进程的优先级<br>F9 : 杀掉选中的进程<br>F10 : 退出htop</p>
+<p>/ : 搜索字符<br>h : 显示帮助<br>l ：显示进程打开的文件: 如果安装了lsof，按此键可以显示进程所打开的文件<br>u ：显示所有用户，并可以选择某一特定用户的进程<br>s : 将调用strace追踪进程的系统调用<br>t : 显示树形结构</p>
+<p>H ：显示/隐藏用户线程<br>I ：倒转排序顺序<br>K ：显示/隐藏内核线程<br>M ：按内存占用排序<br>P ：按CPU排序<br>T ：按运行时间排序</p>
+<p>上下键或PgUP, PgDn : 移动选中进程<br>左右键或Home, End : 移动列表<br>Space(空格) : 标记/取消标记一个进程。命令可以作用于多个进程，例如 “kill”，将应用于所有已标记</p>
+<br>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-iftop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1833,329 +2127,8 @@
 
 <br>
 
-<h1 id="操作命令"><a href="#操作命令" class="headerlink" title="操作命令"></a>操作命令</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">h：切换是否显示帮助;</span><br><span class="line">n：切换显示本机的IP或主机名;</span><br><span class="line">s：切换是否显示本机的host信息;</span><br><span class="line">d：切换是否显示远端目标主机的host信息;</span><br><span class="line">t：切换显示格式为2行/1行/只显示发送流量/只显示接收流量;</span><br><span class="line">N：切换显示端口号或端口服务名称;</span><br><span class="line">S：切换是否显示本机的端口信息;</span><br><span class="line">D：切换是否显示远端目标主机的端口信息;</span><br><span class="line">p：切换是否显示端口信息;</span><br><span class="line">P：切换暂停/继续显示;</span><br><span class="line">b：切换是否显示平均流量图形条;</span><br><span class="line">B：切换计算2秒或10秒或40秒内的平均流量;</span><br><span class="line">T：切换是否显示每个连接的总流量;</span><br><span class="line">l：打开屏幕过滤功能，输入要过滤的字符，比如ip,按回车后，屏幕就只显示这个IP相关的流量信息;</span><br><span class="line">L：切换显示画面上边的刻度;刻度不同，流量图形条会有变化;</span><br><span class="line">j：或按k可以向上或向下滚动屏幕显示的连接记录;</span><br><span class="line">1：或2或3可以根据右侧显示的三列流量数据进行排序;</span><br><span class="line">&lt;：根据左边的本机名或IP排序;</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">：根据远端目标主机的主机名或IP排序;</span></span><br><span class="line">o：切换是否固定只显示当前的连接;</span><br><span class="line">f：可以编辑过滤代码；</span><br><span class="line">!：可以使用shell命令；</span><br><span class="line">q：退出监控；</span><br></pre></td></tr></table></figure>
+<h1 id="操作命令"><a href="#操作命令" class="headerlink" title="操作命令"></a>操作命令</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">h：切换是否显示帮助;</span><br><span class="line">n：切换显示本机的IP或主机名;</span><br><span class="line">s：切换是否显示本机的host信息;</span><br><span class="line">d：切换是否显示远端目标主机的host信息;</span><br><span class="line">t：切换显示格式为2行/1行/只显示发送流量/只显示接收流量;</span><br><span class="line">N：切换显示端口号或端口服务名称;</span><br><span class="line">S：切换是否显示本机的端口信息;</span><br><span class="line">D：切换是否显示远端目标主机的端口信息;</span><br><span class="line">p：切换是否显示端口信息;</span><br><span class="line">P：切换暂停/继续显示;</span><br><span class="line">b：切换是否显示平均流量图形条;</span><br><span class="line">B：切换计算2秒或10秒或40秒内的平均流量;</span><br><span class="line">T：切换是否显示每个连接的总流量;</span><br><span class="line">l：打开屏幕过滤功能，输入要过滤的字符，比如ip,按回车后，屏幕就只显示这个IP相关的流量信息;</span><br><span class="line">L：切换显示画面上边的刻度;刻度不同，流量图形条会有变化;</span><br><span class="line">j：或按k可以向上或向下滚动屏幕显示的连接记录;</span><br><span class="line">1：或2或3可以根据右侧显示的三列流量数据进行排序;</span><br><span class="line">&lt;：根据左边的本机名或IP排序;</span><br><span class="line"><span class="meta">&gt;</span>：根据远端目标主机的主机名或IP排序;</span><br><span class="line">o：切换是否固定只显示当前的连接;</span><br><span class="line">f：可以编辑过滤代码；</span><br><span class="line">!：可以使用shell命令；</span><br><span class="line">q：退出监控；</span><br></pre></td></tr></table></figure>
 
-<br>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-iotop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-monitor-iotop/" itemprop="url">linux iotop详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
-                2016-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-
-<p><strong>iotop命令</strong> 是一个用来监视磁盘I/O使用状况的top类工具。iotop具有与top相似的UI，其中包括PID、用户、I/O、进程等相关信息。Linux下的IO统计工具如iostat，nmon等大多数是只能统计到per设备的读写情况，如果你想知道每个进程是如何使用IO的就比较麻烦，使用iotop命令可以很方便的查看。</p>
-<p>iotop使用Python语言编写而成，要求Python2.5（及以上版本）和Linux kernel2.6.20（及以上版本）。iotop提供有源代码及rpm包，可从其官方主页下载。</p>
-<br>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p><strong>Ubuntu</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install iotop</span><br></pre></td></tr></table></figure>
-
-<p><strong>CentOS</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install iotop -y</span><br></pre></td></tr></table></figure>
-
-<p><strong>编译安装</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget http://guichaz.free.fr/iotop/files/iotop-0.4.4.tar.gz    </span><br><span class="line">tar zxf iotop-0.4.4.tar.gz    </span><br><span class="line">python setup.py build    </span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">iotop [OPTIONS]</span><br><span class="line"></span><br><span class="line">-o：只显示有io操作的进程</span><br><span class="line">-p PID：监控的进程pid。</span><br><span class="line">-u USER：监控的进程用户。</span><br><span class="line"></span><br><span class="line">-b：批量显示，无交互，主要用作记录到文件。</span><br><span class="line">-n NUM：显示NUM次，主要用于非交互式模式。</span><br><span class="line">-d SEC：间隔SEC秒显示一次。</span><br></pre></td></tr></table></figure>
-
-<h1 id="iotop常用快捷键"><a href="#iotop常用快捷键" class="headerlink" title="iotop常用快捷键"></a>iotop常用快捷键</h1><ol>
-<li>左右箭头：改变排序方式，默认是按IO排序。</li>
-<li>r：改变排序顺序。</li>
-<li>o：只显示有IO输出的进程。</li>
-<li>p：进程/线程的显示方式的切换。</li>
-<li>a：显示累积使用量。</li>
-<li>q：退出。</li>
-</ol>
-<br>
-
-<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>直接执行iotop就可以看到效果了：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iotop</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108103813.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/architecture/esb/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/architecture/esb/" itemprop="url">ESB架构</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-05T00:00:00+08:00">
-                2016-01-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/architecture/" itemprop="url" rel="index">
-                    <span itemprop="name">architecture</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
 <br>
 
 
@@ -2243,7 +2216,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

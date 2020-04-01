@@ -421,9 +421,9 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">408</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">400</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
 <p>命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> awk <span class="string">'&#123;arr[$1]+=1&#125;END&#123;for(i in arr)print i,arr[i]&#125;'</span> filename.txt</span></span><br><span class="line">408 6</span><br><span class="line">400 6</span><br><span class="line">499 172</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> awk '&#123;arr[$1]+=1&#125;END&#123;for(i in arr)print i,arr[i]&#125;' filename.txt</span><br><span class="line">408 6</span><br><span class="line">400 6</span><br><span class="line">499 172</span><br></pre></td></tr></table></figure>
 
-<h1 id="awk-使用-if-条件过滤"><a href="#awk-使用-if-条件过滤" class="headerlink" title="awk 使用 if 条件过滤"></a>awk 使用 if 条件过滤</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> grep <span class="string">'2020:09'</span> nginx-access.log* | grep -v <span class="string">'DNSPod'</span> | awk <span class="string">'&#123; if($9&gt;=400&amp;&amp;$9&lt;500) print $9 &#125;'</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="awk-使用-if-条件过滤"><a href="#awk-使用-if-条件过滤" class="headerlink" title="awk 使用 if 条件过滤"></a>awk 使用 if 条件过滤</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> grep '2020:09' nginx-access.log* | grep -v 'DNSPod' | awk '&#123; if($9&gt;=400&amp;&amp;$9&lt;500) print $9 &#125;'</span><br></pre></td></tr></table></figure>
 
 
       
@@ -549,7 +549,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

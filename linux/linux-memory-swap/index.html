@@ -403,7 +403,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost swap]# swapon /usr/swap/swapfile1</span><br></pre></td></tr></table></figure>
 
 <p>6、若要想使开机时自启用，则需修改文件/etc/fstab中的swap行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost swap]# vi /etc/fstab</span><br><span class="line">/usr/swap/swapfile1      swap                    swap    defaults        0 0</span><br><span class="line"><span class="meta">#</span><span class="bash">加入此行，重启系统。</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost swap]# vi /etc/fstab</span><br><span class="line">/usr/swap/swapfile1      swap                    swap    defaults        0 0</span><br><span class="line"><span class="meta">#</span>加入此行，重启系统。</span><br></pre></td></tr></table></figure>
 
 <p>7、回收swap空间</p>
 <p> 如果不再使用，可以卸载该swap空间 </p>
@@ -537,7 +537,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -314,6 +314,645 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-shell-awk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-shell-awk/" itemprop="url">linux awk</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-11T00:00:00+08:00">
+                2019-02-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/shell/" itemprop="url" rel="index">
+                    <span itemprop="name">shell</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="awk-实现类似-group-by功能"><a href="#awk-实现类似-group-by功能" class="headerlink" title="awk 实现类似 group by功能"></a>awk 实现类似 group by功能</h1><p>文件（filename.txt）内容</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">408</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">400</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">499</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> awk '&#123;arr[$1]+=1&#125;END&#123;for(i in arr)print i,arr[i]&#125;' filename.txt</span><br><span class="line">408 6</span><br><span class="line">400 6</span><br><span class="line">499 172</span><br></pre></td></tr></table></figure>
+
+<h1 id="awk-使用-if-条件过滤"><a href="#awk-使用-if-条件过滤" class="headerlink" title="awk 使用 if 条件过滤"></a>awk 使用 if 条件过滤</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> grep '2020:09' nginx-access.log* | grep -v 'DNSPod' | awk '&#123; if($9&gt;=400&amp;&amp;$9&lt;500) print $9 &#125;'</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/jvm/jvm-yunxi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/java/jvm/jvm-yunxi/" itemprop="url">JVM基础</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-11T00:00:00+08:00">
+                2019-02-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/jvm/" itemprop="url" rel="index">
+                    <span itemprop="name">jvm</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<ol>
+<li>class类文件结构</li>
+<li>类加载机制</li>
+<li></li>
+<li>jvm运行时数据区</li>
+</ol>
+<h1 id="一、Class文件结构"><a href="#一、Class文件结构" class="headerlink" title="一、Class文件结构"></a>一、Class文件结构</h1><h1 id="二、类加载机制"><a href="#二、类加载机制" class="headerlink" title="二、类加载机制"></a>二、类加载机制</h1><p>class的声明周期</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200211201839.png" alt></p>
+<h3 id="1、加载"><a href="#1、加载" class="headerlink" title="1、加载"></a>1、加载</h3><p>1、根据全限定名获取二进制字节流</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Class.forName(<span class="string">"com.mysql.jdbc.Driver"</span>);</span><br><span class="line"></span><br><span class="line">Applet : 通过网络读取 <span class="class"><span class="keyword">class</span>文件</span></span><br></pre></td></tr></table></figure>
+
+<p>2、把字节流代表的静态存储结构（class文件） 转化为 方法区的运行时数据结构</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200211202954.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200211203111.png" alt></p>
+<p>3、Java堆上生成一个代表该类的对象</p>
+<p>​     Class 类 ==&gt; 元数据区（方法区）==&gt; 蓝图</p>
+<p>​    Object对象 ==&gt; 根据蓝图做成的 成品 Kclass</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200211204635.png" alt></p>
+<h3 id="2、验证"><a href="#2、验证" class="headerlink" title="2、验证"></a>2、验证</h3><p>1、魔数：cafebabe</p>
+<p>2、主版本号、次版本号</p>
+<p>3、常量池：常量池里的常量是否有不被支持的类型</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200211205152.png" alt></p>
+<p>4、验证常量池中的值是否存在</p>
+<h3 id="3、准备"><a href="#3、准备" class="headerlink" title="3、准备"></a>3、准备</h3><p>准备阶段是准备内存的过程，初始化为0</p>
+<h3 id="4、解析"><a href="#4、解析" class="headerlink" title="4、解析"></a>4、解析</h3><h3 id="5、初始化"><a href="#5、初始化" class="headerlink" title="5、初始化"></a>5、初始化</h3><p>jdk编译默认添加构造函数</p>
+<p>clinit class init: 类的初始化</p>
+<p>有static 变量 才有 clinit</p>
+<p>clinit 父类 静态变量， 父类静态块，子类静态变量，子类静态块</p>
+<p>init():V 父类的变量初始化，父类的构造方法，</p>
+<h3 id="6、使用"><a href="#6、使用" class="headerlink" title="6、使用"></a>6、使用</h3><h3 id="7、卸载"><a href="#7、卸载" class="headerlink" title="7、卸载"></a>7、卸载</h3><h1 id="三、类加载器"><a href="#三、类加载器" class="headerlink" title="三、类加载器"></a>三、类加载器</h1><h3 id="8、ClassLoader"><a href="#8、ClassLoader" class="headerlink" title="8、ClassLoader"></a>8、ClassLoader</h3><p>类加载器的默认机制：双亲委派机制</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</span><br><span class="line">    <span class="keyword">throws</span> ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">        <span class="comment">// First, check if the class has already been loaded</span></span><br><span class="line">        Class&lt;?&gt; c = findLoadedClass(name);</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    c = findBootstrapClassOrNull(name);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">                <span class="comment">// ClassNotFoundException thrown if class not found</span></span><br><span class="line">                <span class="comment">// from the non-null parent class loader</span></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">// If still not found, then invoke findClass in order</span></span><br><span class="line">                <span class="comment">// to find the class.</span></span><br><span class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</span><br><span class="line">                c = findClass(name);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// this is the defining class loader; record the stats</span></span><br><span class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</span><br><span class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</span><br><span class="line">                sun.misc.PerfCounter.getFindClasses().increment();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">            resolveClass(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C:/Program Files/Java/jdk1.8.0_60/jre/lib/rt.jar!/sun/misc/Launcher.class</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200214212027.png" alt></p>
+<p>BootstrapClassLoader 加载 System.getProperty(“sun.boot.class.path”); 路径下的class</p>
+<p>ExtClassLoader 加载 System.getProperty(“java.ext.dirs”); 路径下的class</p>
+<p>AppClassLoader 加载 System.getProperty(“java.class.path”); 路径下的class</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200214212641.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200214213721.png" alt></p>
+<p>使用双亲委派的原因：</p>
+<blockquote>
+<p>保护jdk的基类</p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200214220254.png" alt></p>
+<h3 id="9、Tomcat打破了双亲委派机制"><a href="#9、Tomcat打破了双亲委派机制" class="headerlink" title="9、Tomcat打破了双亲委派机制"></a>9、Tomcat打破了双亲委派机制</h3><p>自定义类加载器，重写 loadClass，就能打破双亲委派</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200214214445.png" alt></p>
+<p>判断两个Class是否相等，</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200214215418.png" alt></p>
+<p>false，false，true，false</p>
+<p>即使是同一个class文件，使用不同的ClassLoader加载进来，那么它就是不同的 class</p>
+<h3 id="9、Class-forName"><a href="#9、Class-forName" class="headerlink" title="9、Class.forName"></a>9、Class.forName</h3><h1 id="四、JVM运行时数据区"><a href="#四、JVM运行时数据区" class="headerlink" title="四、JVM运行时数据区"></a>四、JVM运行时数据区</h1><p>JVM运行时数据结构</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200214220345.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200211202502.png" alt></p>
+<h3 id="1、方法区（元空间）"><a href="#1、方法区（元空间）" class="headerlink" title="1、方法区（元空间）"></a>1、方法区（元空间）</h3><p>各个线程的共享存储区域，用于存储：</p>
+<ol>
+<li>已被虚拟机加载的类信息</li>
+<li>常量 final</li>
+<li>静态变量 static</li>
+<li>即时编译器编译后的代码</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216202407.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216203402.png" alt></p>
+<p>热点代码：代码段被反复调用次数超过阈值（10000）。基于采样 和 计数</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216204412.png" alt></p>
+<p>会出现的异常：OutOfMemory。原因：常量池撑爆</p>
+<p>CPU</p>
+<ol>
+<li>操作栈</li>
+<li>操作寄存器</li>
+</ol>
+<h3 id="2、栈和栈帧"><a href="#2、栈和栈帧" class="headerlink" title="2、栈和栈帧"></a>2、栈和栈帧</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216215635.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216215243.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216211722.png" alt></p>
+<h4 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h4><p><u><strong>局部变量表</strong></u>(本地变量表)</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216212125.png" alt></p>
+<p>原子性协议：32位的机器（一个slot可以存放一个32位以内的数据类型），long是在并发更新的时候不是线程安全的</p>
+<p>long、double 分为两个连续的slot空间，高低位存储</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216212709.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216212902.png" alt></p>
+<p>在32位机器上会跳出循环，在64位机器上不会</p>
+<p><u><strong>操作数栈</strong></u></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216215056.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216214925.png" alt></p>
+<p><u><strong>动态连接</strong></u></p>
+<p>类似于 “多态，反射”，只有在运行时才能 把 <code>符号引用 --&gt; 直接引用</code></p>
+<p>其他大多数情况，在解释时 就确定了 <code>符号引用 --&gt; 直接引用</code></p>
+<p><u><strong>方法返回连接</strong></u></p>
+<p><u><strong>帧数据区</strong></u></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216215843.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216215929.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216220430.png" alt></p>
+<p>false，true</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216221024.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216221105.png" alt></p>
+<p>栈默认大小：-Xss108K； </p>
+<p>栈的调用深度 由 栈帧的大小 和 栈的大小 共同决定；栈帧大小不是确定的，所以栈的深度也是动态的</p>
+<h3 id="3、程序计数器"><a href="#3、程序计数器" class="headerlink" title="3、程序计数器"></a>3、程序计数器</h3><p>每条机器指令都有自己的地址</p>
+<ol>
+<li><p>CPU从指令寄存器中获取要执行的指令，获取完后，清空指令寄存器；</p>
+</li>
+<li><p>程序计数器中存放下一条要执行的指令地址，指令寄存器为空后，将自己指向的指令放入指令寄存器中，同时，自己指向下一条指令；</p>
+</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200216222435.png" alt></p>
+<h1 id="五、字节码执行引擎"><a href="#五、字节码执行引擎" class="headerlink" title="五、字节码执行引擎"></a>五、字节码执行引擎</h1><p>函数如何调用</p>
+<p>符号引用 –&gt; 直接引用</p>
+<p>重写，重载</p>
+<p>方法调用：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200218205629.png" alt></p>
+<h3 id="1、静态分派"><a href="#1、静态分派" class="headerlink" title="1、静态分派"></a>1、静态分派</h3><p>函数调用，对应的字节码指令：</p>
+<p>0xb6    invokevirtual            调用实例方法</p>
+<p>0xb7    invokespecial            调用超类构建方法, 实例初始化方法, 私有方法</p>
+<p>0xb8    invokestatic            调用静态方法</p>
+<p>0xb9    invokeinterface    调用接口方法</p>
+<p>0xba    invokedynamic    调用动态方法</p>
+<p>在编译期确定，并且是根据静态类型来确定函数调用版本。可以反编译class文件，看到实际调用方法。</p>
+<p>函数overload</p>
+<h3 id="2、动态分派"><a href="#2、动态分派" class="headerlink" title="2、动态分派"></a>2、动态分派</h3><p>不是根据静态类型来确定，而是在运行时根据实际类型来确定函数的版本</p>
+<p>函数override</p>
+<p>方法表</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200218212119.png" alt></p>
+<p>虚拟机动态分配机制</p>
+<p>虚方法表（vtable）存在方法区上</p>
+<h4 id="单分派与多分派"><a href="#单分派与多分派" class="headerlink" title="单分派与多分派"></a>单分派与多分派</h4><p>静态多分派（方法重载），动态单分派（方法重写）</p>
+<h3 id="3、字节码"><a href="#3、字节码" class="headerlink" title="3、字节码"></a>3、字节码</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200218213426.png" alt></p>
+<h4 id="操作码"><a href="#操作码" class="headerlink" title="操作码"></a>操作码</h4><p>iload</p>
+<p>istore</p>
+<p>iadd</p>
+<p>isub</p>
+<p>imul</p>
+<p>idiv</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200218214350.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200218214409.png" alt></p>
+<h4 id="操作数"><a href="#操作数" class="headerlink" title="操作数"></a>操作数</h4><h1 id="六、垃圾回收"><a href="#六、垃圾回收" class="headerlink" title="六、垃圾回收"></a>六、垃圾回收</h1><p>垃圾回收：方法区 和 堆区 空间不够用，OutOfMemoryError</p>
+<p>加载类：空间不够用（类信息）</p>
+<p>堆区：空间不够用（分配实例）</p>
+<h3 id="垃圾回收的要点知识"><a href="#垃圾回收的要点知识" class="headerlink" title="垃圾回收的要点知识"></a>垃圾回收的要点知识</h3><h4 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h4><p>给对象添加一个引用计数器。每当有一个地方引用这个对象，这个计数器就加1；每当引用失效，这个计数器就减1；当计数器为0的时候就代表该对象不能再被使用；</p>
+<h4 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200218215610.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200218215546.png" alt></p>
+<h4 id="GC-Root对象"><a href="#GC-Root对象" class="headerlink" title="GC Root对象"></a>GC Root对象</h4><ul>
+<li><p>虚拟机栈（栈帧中的本地变量表）中引用的对象；</p>
+</li>
+<li><p>方法区中 类静态属性引用的对象；</p>
+</li>
+<li><p>方法区中常量引用的对象；</p>
+</li>
+<li><p>本地方法栈JNI（即一般说的Native方法）引用的对象；</p>
+</li>
+</ul>
+<p>GC关心的东西：这块数据是不是一个指针</p>
+<h4 id="对象的生命周期"><a href="#对象的生命周期" class="headerlink" title="对象的生命周期"></a>对象的生命周期</h4><blockquote>
+<p>在<code>Java</code>中，对象的生命周期包括以下几个阶段：</p>
+<ol>
+<li>创建阶段(<code>Created</code>)</li>
+<li>应用阶段(<code>In Use</code>)</li>
+<li>不可见阶段(<code>Invisible</code>)</li>
+<li>不可达阶段(<code>Unreachable</code>)</li>
+<li>收集阶段(<code>Collected</code>)</li>
+<li>终结阶段(<code>Finalized</code>)</li>
+<li>对象空间重分配阶段(<code>De-allocated</code>)</li>
+</ol>
+</blockquote>
+<h4 id="四种引用"><a href="#四种引用" class="headerlink" title="四种引用"></a>四种引用</h4><p>1)、强引用</p>
+<p>类似 <code>Object a = new Object();</code>只要强引用存在，垃圾收集器永远不会回收它</p>
+<p>jvm 在内存不够时，会抛出OutOfMemory</p>
+<p>使用完以后<code>a = null;</code>才会被回收</p>
+<blockquote>
+<p>强引用是使用最普遍的引用。如果一个对象具有强引用，那垃圾收器绝不会回收它。当内存空间不足，Java虚拟机宁愿抛出<code>OutOfM moryError</code>错误，使程序异常终止，也不会靠随意回收具有强引用 对象来解决内存不足的问题</p>
+</blockquote>
+<p>2)、软引用SoftReference</p>
+<blockquote>
+<p>软引用是用来描述一些还有用但并非必须的对象。对于软引用关联着的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围进行第二次回收。如果这次回收还没有足够的内存，才会抛出内存溢出异常</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="keyword">new</span> Object();</span><br><span class="line">SoftReference softRef = <span class="keyword">new</span> SoftReference(obj); <span class="comment">// 将软引用指向 Object实例</span></span><br><span class="line">obj = <span class="keyword">null</span>; <span class="comment">// 结束 obj 对 Object实例的强引用</span></span><br><span class="line">Object anotherRef = (Object) softRef.get(); <span class="comment">// 重新将 anotherRef 强引用指向 Object实例</span></span><br></pre></td></tr></table></figure>
+
+<p>3)、弱引用 WeekReference</p>
+<blockquote>
+<p>弱引用也是用来描述非必须对象的，他的强度比软引用更弱一些，被弱引用关联的对象，在垃圾回收时，如果这个对象只被弱引用关联（没有任何强引用关联他），那么这个对象就会被回收。</p>
+</blockquote>
+<p>4)、虚引用 PhanReference</p>
+<blockquote>
+<p>一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来获取一个对象的实例。为一个对象设置虚引用关联的唯一目的就是能在这个对象被收集器回收时收到一个系统通知。虚引用和弱引用对关联对象的回收都不会产生影响，如果只有虚引用活着弱引用关联着对象，那么这个对象就会被回收。它们的不同之处在于弱引用的<code>get</code>方法，虚引用的<code>get</code>方法始终返回<code>null</code>,弱引用可以使用<code>ReferenceQueue</code>,虚引用必须配合<code>ReferenceQueue</code>使用。</p>
+<p><code>jdk</code>中直接内存的回收就用到虚引用，由于<code>jvm</code>自动内存管理的范围是堆内存，而直接内存是在堆内存之外（其实是内存映射文件，自行去理解虚拟内存空间的相关概念），所以直接内存的分配和回收都是有<code>Unsafe</code>类去操作，<code>java</code>在申请一块直接内存之后，会在堆内存分配一个对象保存这个堆外内存的引用，这个对象被垃圾收集器管理，一旦这个对象被回收，相应的用户线程会收到通知并对直接内存进行清理工作。</p>
+</blockquote>
+<p>GC最重要的几件事</p>
+<p>1、哪些内存要回收？ </p>
+<p>   GCRoot 里面没有引用的对象</p>
+<p>​    代码不断变化，如果让GC Root不变 =&gt; stop the world</p>
+<p>2、什么时候回收 </p>
+<p>安全点</p>
+<p>3、如何回收</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221220739.png" alt></p>
+<p>oopMap 存 对象位置，类型</p>
+<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><p><code>System.gc();</code> 手动执行垃圾回收。程序告诉GC收集器执行回收动作，不过到底什么时候执行GC</p>
+<p>属于FullGC</p>
+<p>有哪些缺陷？ STW（stop the world）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="标记清除算法"><a href="#标记清除算法" class="headerlink" title="标记清除算法"></a>标记清除算法</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221210846.png" alt></p>
+<p>分为两个阶段 “标记” 和 “清除”，首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象；</p>
+<p>两个不足：</p>
+<ul>
+<li><p>一个是效率问题，标记和清除效率都不高</p>
+</li>
+<li><p>另一个是空间问题，标记清除之后产生大量不连续的内存碎片</p>
+</li>
+</ul>
+<h4 id="标记整理算法"><a href="#标记整理算法" class="headerlink" title="标记整理算法"></a>标记整理算法</h4><p>标记阶段仍然和标记清除算法一样，</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221211606.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221211415.png" alt></p>
+<h4 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h4><p>效率最高</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221211639.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221211650.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221211758.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221211836.png" alt></p>
+<p>MinorGC：Eden-&gt; S0/S1</p>
+<p>MajorGC：Old区 内部收集算法</p>
+<p>FullGC：Eden + S0/S1 -&gt; Old，永久代回收，都是FullGC</p>
+<p>现在商业虚拟机的垃圾收集都采用“分代收集算法”。不同分区使用不同的收集算法，达到最高的使用几率</p>
+<h4 id="安全点Safepoint"><a href="#安全点Safepoint" class="headerlink" title="安全点Safepoint"></a>安全点Safepoint</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223201232.png" alt></p>
+<p>safeRegion</p>
+<p>oopMap</p>
+<h3 id="JDK垃圾回收器"><a href="#JDK垃圾回收器" class="headerlink" title="JDK垃圾回收器"></a>JDK垃圾回收器</h3><p>-XX:+Use[Name]]GC</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223204546.png" alt></p>
+<h4 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h4><p>开启参数： <code>-XX:+UseSerialGC</code></p>
+<p>复制算法</p>
+<blockquote>
+<p>单线程的收集器，它的“单线程”的意义并不仅仅说明它会使用一个CPU或者一条收集线程去完成垃圾收集工作，最重要的是在它进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束</p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223203331.png" alt></p>
+<h4 id="SerialOld收集器"><a href="#SerialOld收集器" class="headerlink" title="SerialOld收集器"></a>SerialOld收集器</h4><p>复制算法</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223211524.png" alt></p>
+<h4 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h4><p>开启参数：<code>-XX:UseParNewGC</code></p>
+<p>复制算法</p>
+<blockquote>
+<p>Serial收集器的多线程版本，除了使用多条线程进行垃圾收集之外，其他行为包括Serial收集器可用的所有控制参数，收集算法，STW，对象分配规则，回收策略 与 Serial收集器完全一样</p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200221221101.png" alt></p>
+<h4 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h4><p>开启参数：<code>-XX:UseParallelGC</code></p>
+<p>3个参数选一个设置即可</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223205239.png" alt></p>
+<h4 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223211657.png" alt></p>
+<h4 id="Concurrent-Mark-Sweep收集器"><a href="#Concurrent-Mark-Sweep收集器" class="headerlink" title="Concurrent Mark Sweep收集器"></a>Concurrent Mark Sweep收集器</h4><p>开启参数：<code>-XX:ConcMarkSweepGC</code></p>
+<p>标记清除算法</p>
+<p>优点：减小停顿时间，提高用户体验</p>
+<p>缺陷：</p>
+<ol>
+<li>对CPU特别敏感，cpu越少对程序影响越大。CMS默认的回收线程数 = (cpu核心数量 + 3)/4，进一法</li>
+<li>CMS 和 浮动垃圾，标记和清理阶段，用户线程仍在运行<br><code>-XX:CMSInitatingOccupancyFraction=68</code>，当老年代达到68%时，判断（100-68）的空间是否够用户线程使用：如果够则触发CMS垃圾回收；如果剩余内存不够用户线程运行，则会抛出<code>Concurrent Mode Failure</code>错误，触发SerialOld回收（停顿时间过长）</li>
+<li>碎片整理 — FullGC<br><code>-XX:UseCMSCompactAtFullCollection</code>整理<br>碎片整理过程没法并发，通过SerialOld进行</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223201359.png" alt></p>
+<h4 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223214650.png" alt></p>
+<p>Humongous：超大对象</p>
+<p>G1最大可使用32G</p>
+<p>整体上看是 标记整理算法，局部是复制算法</p>
+<p>MaxGCPauseMillis 最大GC停顿时间</p>
+<p>RememberSet</p>
+<p>开启参数：<code>-XX:+UseG1GC</code></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200223220047.png" alt></p>
+<h3 id="垃圾回收机制"><a href="#垃圾回收机制" class="headerlink" title="垃圾回收机制"></a>垃圾回收机制</h3><h4 id="空间担保"><a href="#空间担保" class="headerlink" title="空间担保"></a>空间担保</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200225221209.png" alt></p>
+<h4 id="FullGC的触发条件"><a href="#FullGC的触发条件" class="headerlink" title="FullGC的触发条件"></a>FullGC的触发条件</h4><h1 id="七、jvm性能调优"><a href="#七、jvm性能调优" class="headerlink" title="七、jvm性能调优"></a>七、jvm性能调优</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228201140.png" alt></p>
+<h3 id="jps"><a href="#jps" class="headerlink" title="jps"></a>jps</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jps -mlv</span><br></pre></td></tr></table></figure>
+
+<h3 id="jstat"><a href="#jstat" class="headerlink" title="jstat"></a>jstat</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228201823.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">jstat -class pid x y</span><br><span class="line">jstat -compiler pid x y</span><br><span class="line">jstat -gc pid x y</span><br><span class="line">S0C		S0 Capacity S0容量大小</span><br><span class="line">S1C		S1 Capacity S1容量大小</span><br><span class="line">S0U		S0 Used S0已使用容量大小</span><br><span class="line">S1U		S1 Used S1已使用容量大小</span><br><span class="line">EC		Eden Capacity Eden容量大小</span><br><span class="line">EU		Eden Used Eden已使用容量大小</span><br><span class="line">OC		Old Capacity Old容量大小</span><br><span class="line">OU		Old Used Old已使用容量大小</span><br><span class="line">MC		Metaspace Capacity Metaspace容量大小</span><br><span class="line">MU		Metaspace Capacity Metaspace已使用空间大小</span><br><span class="line">CCSC	压缩类 容量大小</span><br><span class="line">CCSU	压缩类 已使用容量大小</span><br><span class="line">YGC		YoungGC 次数</span><br><span class="line">YGCT	YoungGC 累计时间</span><br><span class="line">FGC		FullGC 次数</span><br><span class="line">FGCT	FullGC 累计时间</span><br><span class="line">GCT		GC 时间</span><br><span class="line"></span><br><span class="line">jstat -gccapacity pid x y</span><br><span class="line">NGCMN 	（New Generation Capacity min）新生代最小容量</span><br><span class="line">NGCMX</span><br><span class="line">NGC		（New Generation Capacity）当前新生代容量</span><br><span class="line">OGCMN</span><br><span class="line">OGCMX</span><br><span class="line">OGC		（Old Generation Capacity）当前老年代容量</span><br><span class="line">OC		（Old Generation Capacity）老年代大小</span><br><span class="line"></span><br><span class="line">MCMN	（Metaspace Generation Capacity）当前元空间最小</span><br><span class="line">MCMX</span><br><span class="line"></span><br><span class="line">jstat -gcnew pid x y</span><br><span class="line">TT		Tenuring</span><br><span class="line">MTT		</span><br><span class="line">DC		</span><br><span class="line"></span><br><span class="line">jstat -gcold pid x y</span><br><span class="line">PC		Perm Capacity</span><br><span class="line">PU		Perm Used</span><br><span class="line"></span><br><span class="line">jstat -gcoldcapacity pid x y</span><br><span class="line"></span><br><span class="line">jstat -gcmetacapacity pid x y</span><br><span class="line"></span><br><span class="line">jstat -gcutil pid x y</span><br><span class="line">jstat -gccause pid x y</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228205945.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228205932.png" alt></p>
+<p>打印GC失败原因</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jstat -gccause pid x y</span><br><span class="line">LGCC		Last Gc Cause 最后一次GC原因</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228210046.png" alt></p>
+<h3 id="jinfo"><a href="#jinfo" class="headerlink" title="jinfo"></a>jinfo</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228210940.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jinfo -flag pid</span><br><span class="line">jinfo -flag +PrintGCDetails pid  如果程序运行时没有打印gc日志，可以指定打印</span><br><span class="line">jinfo -flag -PrintGCDetails pid  如果程序运行时已经打印了gc日志，可以禁止打印</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228211111.png" alt></p>
+<p>jvm标准参数</p>
+<p>java -help, 不会随着jdk版本变化</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228211922.png" alt></p>
+<p>jvm非标准参数</p>
+<p>java -X</p>
+<p>java -XX</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228211858.png" alt></p>
+<h3 id="jmap"><a href="#jmap" class="headerlink" title="jmap"></a>jmap</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228212226.png" alt></p>
+<p>jmap -histo:live pid</p>
+<p>jmap pid &gt; pid.hprof</p>
+<h3 id="jstack"><a href="#jstack" class="headerlink" title="jstack"></a>jstack</h3><p>jstack pid</p>
+<h4 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228214118.png" alt></p>
+<h4 id="基础线程"><a href="#基础线程" class="headerlink" title="基础线程"></a>基础线程</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228214805.png" alt></p>
+<p>Finalizer线程  finaliner() 放在一个FQueue里，有一个守护线程负责清理FQueue中的</p>
+<p>Monitor Ctrl-Break  监听Ctrl+C 中断任务</p>
+<p>Attach Listener 接收外部命令，执行该命令</p>
+<p>Signal Dispatcher  分发外部命令</p>
+<p>Reference Handler 处理引用线程（软引用/弱引用/虚引用）的垃圾回收问题</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228215721.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228215353.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200228215534.png" alt></p>
+<h3 id="实现调优"><a href="#实现调优" class="headerlink" title="实现调优"></a>实现调优</h3><h3 id="调优的原则"><a href="#调优的原则" class="headerlink" title="调优的原则"></a>调优的原则</h3><ol>
+<li>合理编写代码<br>文件句柄<br>网络</li>
+<li>合理利用硬件资源</li>
+<li>合理的进行调优</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200301204631.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200301205317.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200301210332.png" alt></p>
+<p>终极规则：降低FGC的频次，减少GC的时间</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200301214132.png" alt></p>
+<p>大对象导出</p>
+<ul>
+<li>百万级</li>
+<li>7~8W记录</li>
+<li>result</li>
+<li>for() =&gt; 本地没有测试</li>
+</ul>
+<p>慢sql</p>
+<ul>
+<li>tomcat  每隔三个月必然爆一次，tomcat有非常多的hprof， -XX:HeapDumpOnOutOfMemoryError</li>
+<li>32G</li>
+<li>重启工程师</li>
+<li>数据库设计有问题</li>
+<li>一张表：上千万，更多， -&gt; 分库<pre><code>分表
+冷热数据
+很多冗余（空间换时间）</code></pre></li>
+<li>日志：亿</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rocketmq/3-rocketmq-producer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2333,729 +2972,6 @@ clientId 格式：客户端IP@instanceName（@unitName）</code></pre></li>
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/mysql-innodb-locking-and-transaction-model/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/mysql/mysql-innodb-locking-and-transaction-model/" itemprop="url">mysql 锁和事务模型</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-18T00:00:00+08:00">
-                2018-12-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="一、Locking-锁"><a href="#一、Locking-锁" class="headerlink" title="一、Locking 锁"></a>一、Locking 锁</h1><h3 id="1、锁分类"><a href="#1、锁分类" class="headerlink" title="1、锁分类"></a>1、锁分类</h3><h4 id="1-1、共享锁和独占锁"><a href="#1-1、共享锁和独占锁" class="headerlink" title="1.1、共享锁和独占锁"></a>1.1、共享锁和独占锁</h4><p>InnoDB实现了两种标准行级锁，一种是共享锁 (<strong><em>shared locks，S锁</em></strong>)，另一种是独占锁，或者叫排它锁 (<strong><em>exclusive locks，X锁</em></strong>)。</p>
-<p>共享锁：允许 事务 持有 read 一行 的锁；</p>
-<p>独占锁：允许 事务 持有 update 或 delete 一行的锁；</p>
-<p><u><strong>S锁</strong></u></p>
-<p>如果事务T1持有了行r上的<code>S锁</code>，则其他事务可以同时持有行r的<code>S锁</code>，但是不能对行r加<code>X锁</code>。</p>
-<p><u><strong>X锁</strong></u></p>
-<p>如果事务T1持有了行r上的<code>X锁</code>，则其他任何事务不能持有行r的<code>X锁</code>，必须等待T1在行r上的<code>X锁</code>释放。</p>
-<p>如果事务T1在行r上保持<code>S锁</code>，则另一个事务T2对行r的锁的请求按如下方式处理：</p>
-<ul>
-<li>T2可以同时持有S锁</li>
-<li>T2如果想在行r上获取<code>X锁</code>，必须等待其他事务对该行添加的<code>S锁</code>或<code>X锁</code>的释放。</li>
-</ul>
-<br>
-
-<h4 id="1-2、Intention-Locks-意向锁"><a href="#1-2、Intention-Locks-意向锁" class="headerlink" title="1.2、Intention Locks 意向锁"></a>1.2、Intention Locks 意向锁</h4><p>​        InnoDB 支持 多颗粒度加锁，允许 行锁 和 表锁 共存。例如， <a href="https://dev.mysql.com/doc/refman/5.6/en/lock-tables.html" target="_blank" rel="noopener"><code>LOCK TABLES ... WRITE</code></a> 就是在指定表上加独占锁。为了支持多颗粒度加锁，InnoDB设计了 意向锁。意向锁 是 一种 表级锁，用来 指示 一个事务对表中的一行数据需要加 哪种类型（<code>shared 或 exclusive</code>）的锁。</p>
-<p>意向锁有两种：</p>
-<ul>
-<li><p><code>intention shared lock (IS)</code>意向共享锁：表示 一个事务 倾向于 对一行数据 使用共享锁；在 transaction 获取一个 共享锁（S） 之前 必须先获得一个 IS 锁；</p>
-</li>
-<li><p><code>intention exclusive lock (IX)</code>意向独占锁：表示 一个事务 倾向于 对一行数据 使用独占锁；在 transaction 获取一个 独占锁（X） 之前 必须先获得一个 IX 锁；</p>
-</li>
-</ul>
-<p>例如：<a href="https://dev.mysql.com/doc/refman/5.6/en/select.html" target="_blank" rel="noopener"><code>SELECT ... LOCK IN SHARE MODE</code></a>  使用的就是 IS 锁， <a href="https://dev.mysql.com/doc/refman/5.6/en/select.html" target="_blank" rel="noopener"><code>SELECT ... FOR UPDATE</code></a> 使用的是 IX 锁；</p>
-<br>
-
-<h4 id="1-3、锁的兼容性"><a href="#1-3、锁的兼容性" class="headerlink" title="1.3、锁的兼容性"></a>1.3、锁的兼容性</h4><p>锁的兼容矩阵如下：</p>
-<table>
-<thead>
-<tr>
-<th align="left">—</th>
-<th align="center">排它锁(X)</th>
-<th align="center">意向排它锁(IX)</th>
-<th align="center">共享锁(S)</th>
-<th align="center">意向共享锁(IS)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">排它锁(X)</td>
-<td align="center">N</td>
-<td align="center">N</td>
-<td align="center">N</td>
-<td align="center">N</td>
-</tr>
-<tr>
-<td align="left">意向排它锁(IX)</td>
-<td align="center">N</td>
-<td align="center">OK</td>
-<td align="center">N</td>
-<td align="center">OK</td>
-</tr>
-<tr>
-<td align="left">共享锁(S)</td>
-<td align="center">N</td>
-<td align="center">N</td>
-<td align="center">OK</td>
-<td align="center">OK</td>
-</tr>
-<tr>
-<td align="left">意向共享锁(IS)</td>
-<td align="center">N</td>
-<td align="center">OK</td>
-<td align="center">OK</td>
-<td align="center">OK</td>
-</tr>
-</tbody></table>
-<p>按照上面的兼容性，如果不同事务之间的锁兼容，则当前加锁事务可以持有锁，如果有冲突则会等待其他事务的锁释放。</p>
-<p><strong>如果一个事务请求锁时，请求的锁与已经持有的锁冲突而无法获取时，互相等待就可能会产生死锁。</strong></p>
-<p>意向锁不会阻止除了全表锁定请求之外的任何锁请求。<br>意向锁的主要目的是显示事务正在锁定某行或者正意图锁定某行。</p>
-<br>
-
-<h3 id="2、InnoDB-中的锁"><a href="#2、InnoDB-中的锁" class="headerlink" title="2、InnoDB 中的锁"></a>2、InnoDB 中的锁</h3><h4 id="2-1、准备工作"><a href="#2-1、准备工作" class="headerlink" title="2.1、准备工作"></a>2.1、准备工作</h4><p>示例的基础是一个只有两列的数据库表。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> create database test;</span><br><span class="line"><span class="meta">mysql&gt;</span> use test;</span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span> CREATE TABLE test (</span><br><span class="line">id int(11) NOT NULL,</span><br><span class="line">code int(11) NOT NULL, </span><br><span class="line">PRIMARY KEY(id), </span><br><span class="line">KEY (code)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4; </span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span> INSERT INTO test(id,code) values(1,1),(10,10);</span><br></pre></td></tr></table></figure>
-
-<p>数据表<code>test</code>只有两列，<code>id</code>是主键索引，<code>code</code>是普通的索引(注意，一定不要是唯一索引)，并初始化了两条记录，分别是(1,1),(10,10)。<br>这样，我们验证唯一键索引就可以使用id列，验证普通索引(非唯一键二级索引)时就使用code列。</p>
-<h4 id="2-2、查看锁状态的方法"><a href="#2-2、查看锁状态的方法" class="headerlink" title="2.2、查看锁状态的方法"></a>2.2、查看锁状态的方法</h4><p>要看到锁的情况，必须<u><strong>手动开启多个事务</strong></u>，其中一些锁的状态的查看则必须使锁处于<code>waiting</code>状态，这样才能在mysql的引擎状态日志中看到。</p>
-<p>命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> show engine innodb status;</span><br></pre></td></tr></table></figure>
-
-<p>这条命令能显示最近几个事务的状态、查询和写入情况等信息。当出现死锁时，命令能给出最近的死锁明细。</p>
-<h4 id="2-3、Record-Locks-记录锁"><a href="#2-3、Record-Locks-记录锁" class="headerlink" title="2.3、Record Locks 记录锁"></a>2.3、Record Locks 记录锁</h4><p><code>record lock</code> 是 对 index record 加锁的一种锁。例如 <code>SELECT c1 FROM t WHERE c1 = 10 FOR UPDATE;</code> 阻止其他事务 插入、更新、删除 <code>t.c1=10</code> 的行；</p>
-<p>record lock 总是对 index 加锁，即使表没有定义任何索引。在这种情况下 InnoDB 会添加一个隐藏主键；</p>
-<blockquote>
-<h4 id="查看记录锁"><a href="#查看记录锁" class="headerlink" title="查看记录锁"></a>查看记录锁</h4><p>开启第一个事务，不提交，测试完之后回滚。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; mysql&gt; start transaction;</span><br><span class="line">&gt; Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">&gt; </span><br><span class="line">&gt; mysql&gt; update test set id=2 where id=1;</span><br><span class="line">&gt; Query OK, 1 row affected (0.00 sec)</span><br><span class="line">&gt; Rows matched: 1  Changed: 1  Warnings: 0</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>事务加锁情况</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; mysql&gt; show engine innodb status\G;</span><br><span class="line">&gt; ... </span><br><span class="line">&gt; ------------</span><br><span class="line">&gt; TRANSACTIONS</span><br><span class="line">&gt; ------------</span><br><span class="line">&gt; ---TRANSACTION 366811, ACTIVE 690 sec</span><br><span class="line">&gt; 2 lock struct(s), heap size 1136, 1 row lock(s), undo log entries 2</span><br><span class="line">&gt; MySQL thread id 785, OS thread handle 123145432457216, query id 729076 localhost 127.0.0.1 root</span><br><span class="line">&gt; ...</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>可以看到有一行被加了锁。由之前对锁的描述可以推测出，update语句给<code>id=1</code>这一行上加了一个<code>X锁</code>。</p>
-<blockquote>
-<p>注意：X锁广义上是一种抽象意义的排它锁，即锁一般分为<code>X模式</code>和<code>S模式</code>，狭义上指row或者index上的锁，而Record锁是索引上的锁。<br>为了不修改数据，可以用<code>select ... for update</code>语句，加锁行为和<code>update</code>、<code>delete</code>是一样的，<code>insert</code>加锁机制较为复杂，后面的章节会提到。</p>
-</blockquote>
-<p>第一个事务保持原状，不要提交或者回滚，现在开启第二个事务。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; mysql&gt; start transaction;</span><br><span class="line">&gt; Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">&gt; </span><br><span class="line">&gt; mysql&gt; update test set id=3 where id=1;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>执行<code>update</code>时，sql语句的执行被阻塞了。查看下事务状态:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt; mysql&gt; show engine innodb status\G;</span><br><span class="line">&gt; ...</span><br><span class="line">&gt; ------- TRX HAS BEEN WAITING 4 SEC FOR THIS LOCK TO BE GRANTED:</span><br><span class="line">&gt; RECORD LOCKS space id 62 page no 3 n bits 72 index PRIMARY of table `test`.`test` trx id 366820 lock_mode X locks rec but not gap waiting</span><br><span class="line">&gt; Record lock, heap no 2 PHYSICAL RECORD: n_fields 3; compact format; info bits 32</span><br><span class="line">&gt;  0: len 8; hex 0000000000000001; asc         ;;</span><br><span class="line">&gt;  1: len 6; hex 0000000598e3; asc       ;;</span><br><span class="line">&gt;  2: len 7; hex 7e000001a80896; asc ~      ;;</span><br><span class="line">&gt; </span><br><span class="line">&gt; ------------------</span><br><span class="line">&gt; ...</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>喜闻乐见，我们看到了这个锁的状态。状态标题是’事务正在等待获取锁’，描述中的<code>lock_mode X locks rec but not gap</code>就是本章节中的record记录锁，直译一下’X锁模式锁住了记录’。后面还有一句<code>but not gap</code>意思是只对record本身加锁，并不对间隙加锁，间隙锁的叙述见下一个章节。</p>
-</blockquote>
-<br>
-
-<h4 id="2-4、Gap-Locks-间隙锁"><a href="#2-4、Gap-Locks-间隙锁" class="headerlink" title="2.4、Gap Locks 间隙锁"></a>2.4、Gap Locks 间隙锁</h4><p>​    <code>gap lock</code> 作用在索引记录之间的间隔，又或者作用在第一个索引之前，最后一个索引之后的间隙。不包括索引本身。例如，<code>SELECT c1 FROM t WHERE c1 BETWEEN 10 and 20 FOR UPDATE;</code>这条语句阻止其他事务插入10和20之间的数字，无论这个数字是否存在。<code>gap lock</code> 是性能和并发权衡的产物，只存在于部分事务隔离级别。</p>
-<p><code>SELECT * FROM child WHERE id = 100;</code> </p>
-<ul>
-<li>如果id本身是唯一索引，那么 gap lock 是不生效的；</li>
-<li>如果 id 和 其他的列 组成的联合索引是 唯一索引， 那么 gap lock 是生效的，锁定了 <code>child[100][x] ~ child[100][y]</code> 之间的记录； </li>
-<li>如果 id 上 没有加索引 或者 不是唯一索引，gap lock 生效；</li>
-</ul>
-<p>简单来说就是 <u><strong>gap lock 锁定的是一个范围（0~N条记录），而不是单条记录</strong></u>；</p>
-<p>​    InnoDB中的Gap锁是“纯粹的抑制性锁”，这意味着它们的<u><strong>唯一目的</strong></u>是<u><strong>防止其他事务插入到Gap中</strong></u>。间隙锁可以共存。一个事务所采取的间隙锁并不会阻止另一个事务对同一间隙采取间隙锁。共享锁和独占锁之间没有区别。它们彼此不冲突，并且执行相同的功能。</p>
-<p>禁用gap lock：</p>
-<ul>
-<li>将 隔离级别 设为 <code>READ COMMITTED</code> ；</li>
-<li>启用 innodb_locks_unsafe_for_binlog</li>
-</ul>
-<br>
-
-<blockquote>
-<h4 id="查看间隙锁"><a href="#查看间隙锁" class="headerlink" title="查看间隙锁"></a>查看间隙锁</h4><p>按照官方文档，<code>where</code>子句查询条件是唯一键且指定了值时，只有record锁，没有gap锁。<br>如果<code>where</code>语句指定了范围，gap锁是存在的。<br>这里只测试验证一下当指定非唯一键索引的时候，gap锁的位置，按照文档的说法，会锁定当前索引及索引之前的间隙。(<strong><em>指定了非唯一键索引,例如code=10，间隙锁仍然存在\</em></strong>)</p>
-<p>开启第一个事务，锁定一条非唯一的普通索引记录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;mysql&gt; start transaction;</span><br><span class="line">&gt;Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">&gt;</span><br><span class="line">&gt;mysql&gt; select * from test where code = 10 for update;</span><br><span class="line">&gt;+----+------+</span><br><span class="line">&gt;| id | code |</span><br><span class="line">&gt;+----+------+</span><br><span class="line">&gt;| 10 |   10 |</span><br><span class="line">&gt;+----+------+</span><br><span class="line">&gt;1 row in set (0.00 sec)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>由于预存了两条数据，row(1,1)和row(10,10)，此时这个间隙应该是`1。我们先插入row(2,2)来验证下gap锁的存在，再插入row(0,0)来验证gap的边界。</p>
-<blockquote>
-<p>按照间隙锁的官方文档定义，<code>select * from test where code = 10 for update;</code>会锁定<code>code=10</code>这个索引，并且会锁定<code>code&lt;10</code>的间隙。</p>
-</blockquote>
-<p>开启第二个事务，在<code>code=10</code>之前的间隙中插入一条数据，看下这条数据是否能够插入。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;mysql&gt; start transaction;</span><br><span class="line">&gt;Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">&gt;</span><br><span class="line">&gt;mysql&gt; insert into test values(2,2);</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>插入的时候，执行被阻塞，查看引擎状态：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&gt;mysql&gt; show engine innodb status\G;</span><br><span class="line">&gt;...</span><br><span class="line">&gt;---TRANSACTION 366864, ACTIVE 5 sec inserting</span><br><span class="line">&gt;mysql tables in use 1, locked 1</span><br><span class="line">&gt;LOCK WAIT 2 lock struct(s), heap size 1136, 1 row lock(s), undo log entries 1</span><br><span class="line">&gt;MySQL thread id 793, OS thread handle 123145434963968, query id 730065 localhost 127.0.0.1 root update</span><br><span class="line">&gt;insert into test values(2,2)</span><br><span class="line">&gt;------- TRX HAS BEEN WAITING 5 SEC FOR THIS LOCK TO BE GRANTED:</span><br><span class="line">&gt;RECORD LOCKS space id 63 page no 4 n bits 72 index code of table `test`.`test` trx id 366864 lock_mode X locks gap before rec insert intention waiting</span><br><span class="line">&gt;Record lock, heap no 3 PHYSICAL RECORD: n_fields 2; compact format; info bits 0</span><br><span class="line">&gt; 0: len 8; hex 800000000000000a; asc         ;;</span><br><span class="line">&gt; 1: len 8; hex 000000000000000a; asc         ;;</span><br><span class="line">&gt;</span><br><span class="line">&gt;------------------</span><br><span class="line">&gt;...</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>插入语句被阻塞了，<code>lock_mode X locks gap before rec</code>，由于第一个事务锁住了1到10之间的gap，需要等待获取锁之后才能插入。</p>
-<p>如果再开启一个事务，插入(0,0)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;mysql&gt; start transaction;</span><br><span class="line">&gt;mysql&gt; insert into test values(0,0);</span><br><span class="line">&gt;Query OK, 1 row affected (0.00 sec)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>可以看到：<strong><em>指定的非唯一建索引的gap锁的边界是当前索引到上一个索引之间的gap\</em></strong>。</p>
-<p>最后给出锁定区间的示例,首先插入一条记录(5,5)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;mysql&gt; insert into test values(5,5);</span><br><span class="line">&gt;Query OK, 1 row affected (0.00 sec)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>开启第一个事务:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt;mysql&gt; start transaction;</span><br><span class="line">&gt;Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">&gt;</span><br><span class="line">&gt;mysql&gt; select * from test where code between 1 and 10 for update;</span><br><span class="line">&gt;+----+------+</span><br><span class="line">&gt;| id | code |</span><br><span class="line">&gt;+----+------+</span><br><span class="line">&gt;|  1 |    1 |</span><br><span class="line">&gt;|  5 |    5 |</span><br><span class="line">&gt;| 10 |   10 |</span><br><span class="line">&gt;+----+------+</span><br><span class="line">&gt;3 rows in set (0.00 sec)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>第二个事务，试图去更新code=5的行：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;mysql&gt; begin;</span><br><span class="line">&gt;Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">&gt;</span><br><span class="line">&gt;mysql&gt; update test set code=4 where code=5;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>执行到这里，如果第一个事务不提交或者回滚的话，第二个事务一直等待直至mysql中设定的超时时间。</p>
-</blockquote>
-<br>
-
-<h4 id="2-5、Next-Key-Locks"><a href="#2-5、Next-Key-Locks" class="headerlink" title="2.5、Next-Key Locks"></a>2.5、Next-Key Locks</h4><p>Next-key 锁实际上是Record锁和gap锁的组合。Next-key锁是在 下一个索引记录本身 和 索引之前的gap 加上S锁或是X锁(如果是读就加上S锁，如果是写就加X锁)。</p>
-<p>​    默认情况下，InnoDB的事务隔离级别为RR，系统参数 <code>innodb_locks_unsafe_for_binlog</code> 的值为<code>false</code>。InnoDB使用next-key锁对索引进行扫描和搜索，这样就读取不到幻象行，避免了<code>幻读</code>的发生。</p>
-<blockquote>
-<p>幻读是指在同一事务下，连续执行两次同样的SQL语句，第二次的SQL语句可能会返回之前不存在的行。</p>
-</blockquote>
-<p>​    当查询的索引是唯一索引时，Next-key lock会进行优化，降级为Record Lock，此时Next-key lock仅仅作用在索引本身，而不会作用于gap和下一个索引上。</p>
-<br>
-
-<blockquote>
-<h4 id="查看Next-key锁"><a href="#查看Next-key锁" class="headerlink" title="查看Next-key锁"></a>查看Next-key锁</h4><h5 id="Next-key锁的作用范围"><a href="#Next-key锁的作用范围" class="headerlink" title="Next-key锁的作用范围"></a>Next-key锁的作用范围</h5><p>如上述例子，数据表<code>test</code>初始化了row(1,1),row(10,10)，然后插入了row(5,5)。数据表如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; mysql&gt; select * from test;</span><br><span class="line">&gt; +----+------+</span><br><span class="line">&gt; | id | code |</span><br><span class="line">&gt; +----+------+</span><br><span class="line">&gt; |  1 |    1 |</span><br><span class="line">&gt; |  5 |    5 |</span><br><span class="line">&gt; | 10 |   10 |</span><br><span class="line">&gt; +----+------+</span><br><span class="line">&gt; 3 rows in set (0.00 sec)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>由于<code>id</code>是主键、唯一索引，mysql会做优化，因此使用<code>code</code>这个非唯一键的二级索引来举例说明。</p>
-<p>对于<code>code</code>，可能的next-key锁的范围是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; (-∞,1]</span><br><span class="line">&gt; (1,5]</span><br><span class="line">&gt; (5,10]</span><br><span class="line">&gt; (10,+∞)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>开启第一个事务，在<code>code=5</code>的索引上请求更新:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; mysql&gt; start transaction;</span><br><span class="line">&gt; Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">&gt; </span><br><span class="line">&gt; mysql&gt; select * from test where code=5 for update;</span><br><span class="line">&gt; +----+------+</span><br><span class="line">&gt; | id | code |</span><br><span class="line">&gt; +----+------+</span><br><span class="line">&gt; |  5 |    5 |</span><br><span class="line">&gt; +----+------+</span><br><span class="line">&gt; 1 row in set (8.81 sec)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p>之前在gap锁的章节中介绍了，<code>code=5 for update</code>会在<code>code=5</code>的索引上加一个record锁，还会在1&lt;gap&lt;5的间隙上加gap锁。现在不再验证，直接插入一条(8,8)：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; mysql&gt; start transaction;</span><br><span class="line">&gt; Query OK, 0 rows affected (0.00 sec)</span><br><span class="line">&gt; mysql&gt; insert into test values(8,8);</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<blockquote>
-<p><code>insert</code>处于等待执行的状态，这就是<code>next-key锁</code>生效而导致的结果。第一个事务，锁定了区间(1,5]，由于RR的隔离级别下<code>next-key锁</code>处于开启生效状态，又锁定了(5,10]区间。所以插入SQL语句的执行被阻塞。</p>
-<blockquote>
-<p>解释：在这种情况下，被锁定的区域是<code>code=5</code>前一个索引到它的间隙，以及next-key的区域。<code>code=5 for update</code>对索引的锁定用区间表示，gap锁锁定了(1,5)，record锁锁定了{5}索引记录，next-key锁锁住了(5,10]，也就是说整个(1,10]的区间被锁定了。由于是<code>for update</code>，所以这里的锁都是X锁，因此阻止了其他事务中带有冲突锁定的操作执行。</p>
-</blockquote>
-<p>如果我们在第一个事务中，执行了<code>code &gt; 8 for update</code>，在扫描过程中，找到了<code>code=10</code>，此时就会锁住10之前的间隙(5到10之间的gap)，10本身(record)，和10之后的间隙(next-key)。此时另一个事务插入(6,6),(9,9)和(11,11)都是不被允许的，只有在前一个索引5及5之前的索引和间隙才能执行插入(更新和删除也会被阻塞)。</p>
-</blockquote>
-<br>
-
-<h4 id="2-6、Insert-Intention-Locks"><a href="#2-6、Insert-Intention-Locks" class="headerlink" title="2.6、Insert Intention Locks"></a>2.6、Insert Intention Locks</h4><p>插入意向锁在行插入之前由INSERT设置一种间隙锁，是意向排它锁的一种。<br>在多事务同时写入不同数据至同一索引间隙的时，不会发生锁等待，事务之间互相不影响其他事务的完成，这和间隙锁的定义是一致的。</p>
-<p>假设一个记录索引包含4和7，其他不同的事务分别插入5和6，此时只要行不冲突，插入意向锁不会互相等待，可以直接获取。参照锁兼容/冲突矩阵。<br>插入意向锁的例子不再列举，可以查看gap锁的第一个例子。</p>
-<br>
-
-<h4 id="2-7、AUTO-INC-Locks"><a href="#2-7、AUTO-INC-Locks" class="headerlink" title="2.7、AUTO-INC Locks"></a>2.7、AUTO-INC Locks</h4><p>​    auto-inc lock 是一种特殊的表级锁。如果一个事务正在向表中插入值，那么任何其他事务都必须等待，以便由第一个事务插入的行接收连续的主键值。</p>
-<p>​    我们一般把主键设置为<code>AUTO_INCREMENT</code>的列，默认情况下这个字段的值为0，InnoDB会在<code>AUTO_INCREMENT</code>修饰下的数据列所关联的索引末尾设置独占锁。在访问自增计数器时，InnoDB使用自增锁，但是锁定仅仅持续到当前SQL语句的末尾，而不是整个事务的结束，毕竟自增锁是表级别的锁，如果长期锁定会大大降低数据库的性能。由于是表锁，在使用期间，其他会话无法插入表中。</p>
-<br>
-
-
-
-<h1 id="二、不同sql语句设置的锁"><a href="#二、不同sql语句设置的锁" class="headerlink" title="二、不同sql语句设置的锁"></a>二、不同sql语句设置的锁</h1><p>​    如果一个SQL语句要对二级索引(非主键索引)设置X模式的Record锁，InnoDB还会检索出相应的聚簇索引(主键索引)并对它们设置锁定。</p>
-<h3 id="1、-SELECT-…-FROM…不加锁"><a href="#1、-SELECT-…-FROM…不加锁" class="headerlink" title="1、 SELECT … FROM…不加锁"></a>1、 SELECT … FROM…不加锁</h3><p><code>SELECT ... FROM</code>是快照读取，除了<strong><code>SERIALIZABLE</code></strong>的事务隔离级别，该SQL语句执行时不会加任何锁。</p>
-<p><strong><code>SERIALIZABLE</code></strong>级别下，<code>SELECT</code>语句的执行会在遇到的索引记录上设置S模式的next-key锁。但是对于唯一索引，只锁定索引记录，而不会锁定gap。</p>
-<br>
-
-<h3 id="2、-UPDATE系列"><a href="#2、-UPDATE系列" class="headerlink" title="2、 UPDATE系列"></a>2、 UPDATE系列</h3><p>S锁读取(<code>SELECT ... LOCK IN SHARE MODE</code>)，X锁读取(<code>SELECT ... FOR UPDATE</code>)、更新<code>UPDATE</code>和删除<code>DELETE</code>这四类语句，采用的锁取决于搜索条件中使用的索引类型。</p>
-<ul>
-<li>如果使用唯一索引，InnoDB仅锁定索引记录本身，不锁定间隙。</li>
-<li>如果使用非唯一索引，或者未命中索引，InnoDB使用间隙锁或者next-key锁来锁定索引范围，这样就可以阻止其他事务插入锁定范围。</li>
-</ul>
-<br>
-
-<h4 id="2-1、-UPDATE语句"><a href="#2-1、-UPDATE语句" class="headerlink" title="2.1、 UPDATE语句"></a>2.1、 UPDATE语句</h4><p><code>UPDATE ... WHERE ...</code>在搜索遇到的每条记录上设置一个独占的next-key锁，如果是唯一索引只锁定记录。<br>当<code>UPDATE</code>修改聚簇索引时，将对受影响的二级索引采用隐式锁，隐式锁是在索引中对二级索引的记录逻辑加锁，实际上不产生锁对象，不占用内存空间。</p>
-<blockquote>
-<p>​    例如 <code>update test set code=100 where id=10;</code> 执行的时候 <code>code=10</code> 的索引(code是二级索引，见文中给出的建表语句)会被加隐式锁，只有隐式锁产生冲突时才会变成显式锁(如S锁、X锁)。即此时另一个事务也去更新 <code>id=10</code> 这条记录，隐式锁就会升级为显示锁。<br>​    这样做的好处是降低了锁的开销。</p>
-</blockquote>
-<p><code>UPDATE</code>可能会导致新的普通索引的插入。当新的索引插入之前，会首先执行一次<strong><em>重复索引检查</em></strong>。在重复检查和插入时，更新操作会对受影响的二级索引记录采用共享锁定(S锁)。</p>
-<br>
-
-<h4 id="2-2、-DELETE语句"><a href="#2-2、-DELETE语句" class="headerlink" title="2.2、 DELETE语句"></a>2.2、 DELETE语句</h4><p><code>DELETE FROM ... WHERE ...</code>在搜索遇到的每条记录上设置一个独占的next-key锁,如果是唯一索引只锁定记录。</p>
-<br>
-
-<h3 id="3、-INSERT"><a href="#3、-INSERT" class="headerlink" title="3、 INSERT"></a>3、 INSERT</h3><p><code>INSERT</code>区别于UPDATE系列单独列出，是因为它的处理方式较为特别。</p>
-<p>插入行之前，会设置一种插入意向锁，插入意向锁表示插入的意图。如果其它事务在 <strong><em>要插入的位置</em></strong> 上设置了X锁，则无法获取插入意向锁，插入操作也因此阻塞。</p>
-<p><code>INSERT</code>在插入的行上设置X锁。该锁是一个Record锁，并不是next-key锁，即只锁定记录本身，不锁定间隙，因此不会阻止其他 session 在这行记录前的间隙中插入新的记录。</p>
-<br>
-
-<h1 id="三、Deadlocks-死锁"><a href="#三、Deadlocks-死锁" class="headerlink" title="三、Deadlocks 死锁"></a>三、Deadlocks 死锁</h1><p>​    <u><strong>死锁</strong></u>是指由于每个事务都持有对方需要的锁而无法进行其他事务的情况。因为这两个事务都在等待资源变得可用，所以都不会释放它持有的锁。</p>
-<h3 id="1、死锁示例"><a href="#1、死锁示例" class="headerlink" title="1、死锁示例"></a>1、死锁示例</h3><p>该示例涉及两个客户端A和B。</p>
-<p>首先，客户端A创建一个包含一行的表，然后开始事务。在事务中，A通过<code>S</code>在共享模式下选择该行来获得对该行的 锁定：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> CREATE TABLE t (i INT) ENGINE = InnoDB;</span><br><span class="line">Query OK, 0 rows affected (1.07 sec)</span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span> INSERT INTO t (i) VALUES(1);</span><br><span class="line">Query OK, 1 row affected (0.09 sec)</span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span> START TRANSACTION;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT * FROM t WHERE i = 1 LOCK IN SHARE MODE;</span><br><span class="line">+------+</span><br><span class="line">| i    |</span><br><span class="line">+------+</span><br><span class="line">|    1 |</span><br><span class="line">+------+</span><br></pre></td></tr></table></figure>
-
-<p>接下来，客户端B开始事务并尝试从表中删除该行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> START TRANSACTION;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line"><span class="meta">mysql&gt;</span> DELETE FROM t WHERE i = 1;</span><br></pre></td></tr></table></figure>
-
-<p>删除操作需要一个<code>X</code>锁。无法授予该<code>S</code>锁，因为它与客户端A持有的锁不兼容 ，因此该请求进入针对行和客户端B块的锁请求队列中。</p>
-<p>最后，客户端A还尝试从表中删除该行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> DELETE FROM t WHERE i = 1;</span><br><span class="line">ERROR 1213 (40001): Deadlock found when trying to get lock;</span><br><span class="line">try restarting transaction</span><br></pre></td></tr></table></figure>
-
-<p>此处发生死锁是因为客户端A需要 <code>X</code>锁才能删除该行。但是，不能授予该锁定请求，因为客户端B已经有一个<code>X</code>锁定请求，并且正在等待客户端A释放其<code>S</code>锁定。由于B事先要求锁，所以<code>S</code>A持有的锁也不能 升级 <code>X</code>为<code>X</code>锁。结果， <code>InnoDB</code>为其中一个客户端生成错误并释放其锁。客户端返回此错误：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ERROR 1213 (40001): Deadlock found when trying to get lock;</span><br><span class="line">try restarting transaction</span><br></pre></td></tr></table></figure>
-
-<p>届时，可以授予对另一个客户端的锁定请求，并从表中删除该行。</p>
-<br>
-
-<h3 id="2、死锁检测和回滚"><a href="#2、死锁检测和回滚" class="headerlink" title="2、死锁检测和回滚"></a>2、死锁检测和回滚</h3><p>​        <code>InnoDB</code>自动检测事务 <a href="https://dev.mysql.com/doc/refman/5.6/en/glossary.html#glos_deadlock" target="_blank" rel="noopener">死锁</a>并回滚一个或多个事务以打破死锁。 <code>InnoDB</code>尝试选择要回滚的小事务，其中事务的大小由插入，更新或删除的行数确定。</p>
-<p>​        如果死锁无法检测，通过设置 innodb_lock_wait_timeout 来解决；</p>
-<p>​        如果 一个事务被完整的会滚，那么它所持有的所有锁都会被释放；但如果由于出错仅仅一条sql被会滚，那么某些锁可能不会被释放；这是因为 InnoDB存储行锁的格式 无法确定后续的锁会被哪些sql持有；</p>
-<ul>
-<li><p>要查看InnoDB用户事务中的最后一个死锁，请使用SHOW ENGINE INNODB STATUS命令。</p>
-</li>
-<li><p>如果频繁出现死锁，则说明事务结构或应用程序错误处理存在问题，请在innodb_print_all_deadlocks 启用该设置的情况下运行，以 将有关所有死锁的信息打印到 mysqld错误日志中</p>
-</li>
-</ul>
-<br>
-
-<h3 id="3、如何最小化并处理死锁"><a href="#3、如何最小化并处理死锁" class="headerlink" title="3、如何最小化并处理死锁"></a>3、如何最小化并处理死锁</h3><p><code>InnoDB</code>使用自动行级锁定。即使在仅插入或 删除 单行的事务中，也可能会遇到死锁。这是因为这些操作并不是真正的“ 原子 ”操作。它们会自动对插入或删除的行的（可能是多个）索引记录设置锁定。</p>
-<p>您可以使用以下技术来处理死锁并减少发生死锁的可能性：</p>
-<ul>
-<li><p>在任何时候，发出 <a href="https://dev.mysql.com/doc/refman/5.6/en/show-engine.html" target="_blank" rel="noopener"><code>SHOW ENGINE INNODB STATUS</code></a>命令以确定最近死锁的原因。这可以帮助您调整应用程序以避免死锁。</p>
-</li>
-<li><p>如果频繁出现死锁警告引起关注，请通过启用<a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-parameters.html#sysvar_innodb_print_all_deadlocks" target="_blank" rel="noopener"><code>innodb_print_all_deadlocks</code></a> 配置选项来收集更广泛的调试信息 。有关每个死锁的信息，而不仅仅是最新的死锁，都记录在MySQL <a href="https://dev.mysql.com/doc/refman/5.6/en/glossary.html#glos_error_log" target="_blank" rel="noopener">错误日志中</a>。完成调试后，请禁用此选项。</p>
-</li>
-<li><p>如果由于死锁而失败，请始终准备重新发出事务。死锁并不危险。请再试一次。</p>
-</li>
-<li><p>保持交易小巧且持续时间短，以使交易不易发生冲突。</p>
-</li>
-<li><p>进行一系列相关更改后立即提交事务，以减少冲突的发生。特别是，不要长时间未提交事务而使交互式 <a href="https://dev.mysql.com/doc/refman/5.6/en/mysql.html" target="_blank" rel="noopener"><strong>mysql</strong></a>会话保持打开状态。</p>
-</li>
-<li><p>如果您使用<a href="https://dev.mysql.com/doc/refman/5.6/en/glossary.html#glos_locking_read" target="_blank" rel="noopener">锁定读取</a>（<a href="https://dev.mysql.com/doc/refman/5.6/en/select.html" target="_blank" rel="noopener"><code>SELECT ... FOR UPDATE</code></a>或 <code>SELECT ... LOCK IN SHARE MODE</code>），请尝试使用较低的隔离级别，例如 <a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-transaction-isolation-levels.html#isolevel_read-committed" target="_blank" rel="noopener"><code>READ COMMITTED</code></a>。</p>
-</li>
-<li><p>修改事务中的多个表或同一表中的不同行集时，每次都要以一致的顺序执行这些操作。然后，事务形成定义明确的队列，并且不会死锁。例如，组织数据库操作到功能在应用程序中，或调用存储程序，而不是编码的多个相似序列 <code>INSERT</code>，<code>UPDATE</code>以及 <code>DELETE</code>在不同的地方语句。</p>
-</li>
-<li><p>将选择好的索引添加到表中。然后，您的查询需要扫描更少的索引记录，并因此设置更少的锁。使用<a href="https://dev.mysql.com/doc/refman/5.6/en/explain.html" target="_blank" rel="noopener"><code>EXPLAIN SELECT</code></a>以确定哪些索引MySQL认为最适合您的查询。</p>
-</li>
-<li><p>使用较少的锁定。如果你能负担得起，以允许 <a href="https://dev.mysql.com/doc/refman/5.6/en/select.html" target="_blank" rel="noopener"><code>SELECT</code></a>从一个旧的快照返回数据，不要添加条款<code>FOR UPDATE</code>或<code>LOCK IN SHARE MODE</code>给它。在<a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-transaction-isolation-levels.html#isolevel_read-committed" target="_blank" rel="noopener"><code>READ COMMITTED</code></a>这里使用隔离级别是件好事，因为同一事务中的每个一致性读取均从其自己的新快照读取。</p>
-</li>
-<li><p>如果没有其他帮助，请使用表级锁序列化事务。<a href="https://dev.mysql.com/doc/refman/5.6/en/lock-tables.html" target="_blank" rel="noopener"><code>LOCK TABLES</code></a>与事务表（例如<code>InnoDB</code> 表）一起使用的正确方法 是，以<code>SET autocommit = 0</code>（not <a href="https://dev.mysql.com/doc/refman/5.6/en/commit.html" target="_blank" rel="noopener"><code>START TRANSACTION</code></a>）后跟来开始事务，直到明确提交事务后才<a href="https://dev.mysql.com/doc/refman/5.6/en/lock-tables.html" target="_blank" rel="noopener"><code>LOCK TABLES</code></a>调用 <a href="https://dev.mysql.com/doc/refman/5.6/en/lock-tables.html" target="_blank" rel="noopener"><code>UNLOCK TABLES</code></a>。例如，如果您需要写表 <code>t1</code>和从表中读取数据 <code>t2</code>，则可以执行以下操作：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> autocommit=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">LOCK</span> <span class="keyword">TABLES</span> t1 WRITE, t2 <span class="keyword">READ</span>, ...;... <span class="keyword">do</span> something <span class="keyword">with</span> <span class="keyword">tables</span> t1 <span class="keyword">and</span> t2 here ...</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br><span class="line"><span class="keyword">UNLOCK</span> <span class="keyword">TABLES</span>;</span><br></pre></td></tr></table></figure>
-
-<p>表级锁可防止对表的并发更新，从而避免死锁，但代价是对繁忙系统的响应速度较慢。</p>
-</li>
-<li><p>序列化事务的另一种方法是创建一个仅包含一行的辅助“ 信号量 ”表。在访问其他表之前，让每个事务更新该行。这样，所有事务都以串行方式发生。请注意，<code>InnoDB</code> 在这种情况下，即时死锁检测算法也适用，因为序列化锁是行级锁。对于MySQL表级锁，必须使用超时方法来解决死锁。</p>
-</li>
-</ul>
-<br>
-
-
-
-<h1 id="四、Transaction-Model-事务模型"><a href="#四、Transaction-Model-事务模型" class="headerlink" title="四、Transaction Model 事务模型"></a>四、Transaction Model 事务模型</h1><p>​    InnoDB 的事务模型 的目标是 将 <code>multi-versioning</code> 和<code>two-phase locking</code> 的最佳属性结合起来。默认情况下 InnoDB 的查询以 <u><strong>“非锁定一致性读” 和 行级锁</strong></u> 的方式运行。</p>
-<h3 id="1、autocommit-commit-rollback"><a href="#1、autocommit-commit-rollback" class="headerlink" title="1、autocommit, commit, rollback"></a>1、autocommit, commit, rollback</h3><p>​    在 InnoDB 中 所有的 用户操作都包裹在事务中；如果 启用了 autocommit，那么每条语句都是一个事务；默认情况下，每创建一个session，autocommit 都是启用的；如果SQL语句正确执行，那么就会自动条，否则会滚之前的操作，然后报错；</p>
-<p>在 autocommit 情况下 如果 想把多条语句包裹在一个事务里，则需要如下格式：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">START TRANSACTION;</span><br><span class="line">SELECT @A:=SUM(salary) FROM table1 WHERE type=1;</span><br><span class="line">UPDATE table2 SET summary=@A WHERE type=1;</span><br><span class="line">COMMIT;</span><br><span class="line"><span class="meta">#</span> 不想提交，则执行 ROLLBACK;</span><br></pre></td></tr></table></figure>
-
-<p>禁用 autocommit：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET autocommit=0;</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="2、存在的问题"><a href="#2、存在的问题" class="headerlink" title="2、存在的问题"></a>2、存在的问题</h3><p>​        平常开发过程中免不了对数据库的操作，并且还会有多个线程同时开启事务后对数据库进行访问，那此时不可避免就会出现多个线程之间交叉访问而导致数据的不一致，通过对数据库的隔离级别进行设置可以保证各线程数据获取的准确性。</p>
-<p>在介绍隔离级别之前先要弄清楚数据库在并发事务下会出现的一些状态：</p>
-<h4 id="1-、脏读"><a href="#1-、脏读" class="headerlink" title="1)、脏读"></a>1)、脏读</h4><p>脏读就是一个事务读取了另外一个事务未提交的数据。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122164157.png" alt></p>
-<p>事务2读取了事务1未提交的数据。</p>
-<h4 id="2-、不可重复读"><a href="#2-、不可重复读" class="headerlink" title="2)、不可重复读"></a>2)、不可重复读</h4><p>在同一事务中，两次读取同一数据，得到内容不同</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122164449.png" alt></p>
-<p>例如事务1读取了某个数据，然后事务2更新了这个数据并提交，然后事务1又来读取了一次，那这两次读取的结果就会不一样。</p>
-<h4 id="3-、幻读"><a href="#3-、幻读" class="headerlink" title="3)、幻读"></a>3)、幻读</h4><p>在一个事务的两次查询中数据记录数不一致，例如有一个事务1查询了几列数据，而事务2在此时插入了新的几列数据，事务1在接下来的查询中，就会发现有几列数据是它先前所没有的。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122164614.png" alt></p>
-<p> 不可重复读是针对于多次读取同一条数据出现不同结果，幻读是多次读取而产生的记录数不一样 </p>
-<br>
-
-<h3 id="3、隔离级别（Isolation）"><a href="#3、隔离级别（Isolation）" class="headerlink" title="3、隔离级别（Isolation）"></a>3、隔离级别（Isolation）</h3><p>​    Isolation 是 ACID 中的 I；Isolation 是在多个事务同时进行更改和执行查询时，对性能与可靠性、一致性和结果再现性之间的平衡进行微调的设定。</p>
-<p>​    InnoDB 提供了 4 种隔离级别：<a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-transaction-isolation-levels.html#isolevel_read-uncommitted" target="_blank" rel="noopener"><code>READ UNCOMMITTED</code></a>, <a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-transaction-isolation-levels.html#isolevel_read-committed" target="_blank" rel="noopener"><code>READ COMMITTED</code></a>, <a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-transaction-isolation-levels.html#isolevel_repeatable-read" target="_blank" rel="noopener"><code>REPEATABLE READ</code></a>, 和 <a href="https://dev.mysql.com/doc/refman/5.6/en/innodb-transaction-isolation-levels.html#isolevel_serializable" target="_blank" rel="noopener"><code>SERIALIZABLE</code></a>。默认的 隔离级别是 REPEATABLE READ。</p>
-<p>​    InnoDB 使用不同的锁策略 来实现隔离级别。<code>REPEATABLE READ</code> 用来操作重要的数据，保证 ACID；如果使用 <code>READ UNCOMMITTED</code> 或<code>READ COMMITTED</code> 可以降低锁的开销；<code>SERIALIZABLE</code>是一种比 <code>SERIALIZABLE</code>更严格的规则，一般用在专门的场景，比如 XA事务 或者 解决并发问题和死锁。</p>
-<h4 id="1-、read-uncommitted"><a href="#1-、read-uncommitted" class="headerlink" title="1)、read uncommitted"></a>1)、read uncommitted</h4><p>可以看到未提交的数据（脏读），举个例子：别人说的话你都相信了，但是可能他只是说说，并不实际做。</p>
-<h4 id="2-、read-committed"><a href="#2-、read-committed" class="headerlink" title="2)、read committed"></a>2)、read committed</h4><p>读取提交的数据。但是，可能多次读取的数据结果不一致（不可重复读，幻读）。用读写的观点就是：读取的行数据，可以写。</p>
-<h4 id="3-、repeatable-read-默认"><a href="#3-、repeatable-read-默认" class="headerlink" title="3)、repeatable read(默认)"></a>3)、repeatable read(默认)</h4><p>可以重复读取，但有幻读。读写观点：读取的数据行不可写，但是可以往表中新增数据。在MySQL中，其他事务新增的数据，看不到，不会产生幻读。采用多版本并发控制（MVCC）机制解决幻读问题。</p>
-<h4 id="4-、serializable"><a href="#4-、serializable" class="headerlink" title="4)、serializable"></a>4)、serializable</h4><p>可读，不可写。像java中的锁，写数据必须等待另一个事务结束。</p>
-<br>
-
-<h3 id="4、查看隔离级别"><a href="#4、查看隔离级别" class="headerlink" title="4、查看隔离级别"></a>4、查看隔离级别</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 1.查看当前会话隔离级别</span></span><br><span class="line"><span class="keyword">select</span> @@tx_isolation;</span><br><span class="line"><span class="comment">-- 查看系统当前隔离级别</span></span><br><span class="line"><span class="keyword">select</span> @@global.tx_isolation;</span><br></pre></td></tr></table></figure>
-
-<p>设置隔离级别</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 设置当前会话隔离级别</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">session</span> <span class="keyword">transaction</span> isolatin <span class="keyword">level</span> repeatable <span class="keyword">read</span>;</span><br><span class="line"><span class="comment">-- 设置系统当前隔离级别</span></span><br><span class="line"><span class="keyword">set</span> <span class="keyword">global</span> <span class="keyword">transaction</span> <span class="keyword">isolation</span> <span class="keyword">level</span> repeatable <span class="keyword">read</span>;</span><br><span class="line"><span class="keyword">set</span> tx_isolation=<span class="string">'read-uncommitted'</span>;</span><br><span class="line"><span class="keyword">set</span> tx_isolation=<span class="string">'read-committed'</span>;</span><br><span class="line"><span class="keyword">set</span> tx_isolation=<span class="string">'repeatable-read'</span>;</span><br><span class="line"><span class="keyword">set</span> tx_isolation=<span class="string">'serializable'</span>;</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="五、隔离级别实现原理"><a href="#五、隔离级别实现原理" class="headerlink" title="五、隔离级别实现原理"></a>五、隔离级别实现原理</h1><h2 id="1、MVCC"><a href="#1、MVCC" class="headerlink" title="1、MVCC"></a>1、MVCC</h2><p>参考： <a href="https://www.cnblogs.com/cjsblog/p/8365921.html" target="_blank" rel="noopener">https://www.cnblogs.com/cjsblog/p/8365921.html</a> </p>
-<p>　　MVCC的全称是“多版本并发控制”。这项技术使得InnoDB的事务隔离级别下执行一致性读操作有了保证，换言之，就是为了查询一些正在被另一个事务更新的行，并且可以看到它们被更新之前的值。这是一个可以用来增强并发性的强大的技术，因为这样的一来的话查询就不用等待另一个事务释放锁。这项技术在数据库领域并不是普遍使用的。一些其它的数据库产品，以及mysql其它的存储引擎并不支持它。</p>
-<h4 id="1-1、说明"><a href="#1-1、说明" class="headerlink" title="1.1、说明"></a>1.1、说明</h4><p>​        网上看到大量的文章讲到MVCC都是说给每一行增加两个隐藏的字段分别表示行的创建时间以及过期时间，它们存储的并不是时间，而是事务版本号。</p>
-<p>​        事实上，这种说法并不准确，严格的来讲，<u><strong>InnoDB会给数据库中的每一行增加三个字段</strong></u>，它们分别是<u><strong>DB_TRX_ID、DB_ROLL_PTR、DB_ROW_ID</strong></u>。</p>
-<p>​        但是，为了理解的方便，我们可以这样去理解，索引接下来的讲解中也还是用这两个字段的方式去理解。</p>
-<h4 id="1-2、增删查改"><a href="#1-2、增删查改" class="headerlink" title="1.2、增删查改"></a>1.2、增删查改</h4><p>​        在InnoDB中，给每行增加两个隐藏字段来实现MVCC，一个用来记录数据行的创建时间，另一个用来记录行的过期时间（删除时间）。在实际操作中，存储的并不是时间，而是事务的版本号，每开启一个新事务，事务的版本号就会递增。</p>
-<p>于是乎，默认的隔离级别（REPEATABLE READ）下，增删查改变成了这样：</p>
-<ul>
-<li>SELECT：读取创建版本小于或等于当前事务版本号，并且删除版本为空或大于当前事务版本号的记录。这样可以保证在读取之前记录是存在的。</li>
-<li>INSERT：将当前事务的版本号保存至行的创建版本号</li>
-<li>UPDATE：新插入一行，并以当前事务的版本号作为新行的创建版本号，同时将原记录行的删除版本号设置为当前事务版本号</li>
-<li>DELETE：将当前事务的版本号保存至行的删除版本号</li>
-</ul>
-<h4 id="1-3、快照读和当前读"><a href="#1-3、快照读和当前读" class="headerlink" title="1.3、快照读和当前读"></a>1.3、快照读和当前读</h4><ul>
-<li><p>快照读：读取的是快照版本，也就是历史版本</p>
-</li>
-<li><p>当前读：读取的是最新版本</p>
-</li>
-</ul>
-<p>​        普通的SELECT就是快照读，而UPDATE、DELETE、INSERT、SELECT …  LOCK IN SHARE MODE、SELECT … FOR UPDATE是当前读。</p>
-<h2 id="2、一致性非锁定读和锁定读"><a href="#2、一致性非锁定读和锁定读" class="headerlink" title="2、一致性非锁定读和锁定读"></a>2、一致性非锁定读和锁定读</h2><h4 id="2-1、锁定读"><a href="#2-1、锁定读" class="headerlink" title="2.1、锁定读"></a>2.1、锁定读</h4><p>　　在一个事务中，标准的SELECT语句是不会加锁，但是有两种情况例外。SELECT … LOCK IN SHARE MODE 和 SELECT … FOR UPDATE。</p>
-<ul>
-<li><p><u><strong>SELECT … LOCK IN SHARE MODE</strong></u>：给记录假设共享锁，这样一来的话，其它事务只能读不能修改，直到当前事务提交；</p>
-</li>
-<li><p><u><strong>SELECT … FOR UPDATE</strong></u>：给索引记录加锁，这种情况下跟UPDATE的加锁情况是一样的；</p>
-</li>
-</ul>
-<h4 id="2-2、一致性非锁定读"><a href="#2-2、一致性非锁定读" class="headerlink" title="2.2、一致性非锁定读"></a>2.2、一致性非锁定读</h4><p>一致性读（consistent read）意味着 InnoDB 对一个 query 展示的数据是 多版本中一个时间点的 snapshot。</p>
-<ul>
-<li><p>如果隔离级别是REPEATABLE READ，那么在同一个事务中的所有一致性读都读的是事务中<u><strong>第一个这样的读读到的快照</strong></u>；</p>
-</li>
-<li><p>如果是READ COMMITTED，那么一个事务中的每一个一致性读都会读到它自己<u><strong>刷新的快照版本</strong></u>。</p>
-</li>
-</ul>
-<p>Consistent read（一致性读）是READ COMMITTED和REPEATABLE READ隔离级别下普通SELECT语句默认的模式。一致性读不会给它所访问的表加任何形式的锁，因此其它事务可以同时并发的修改它们。</p>
-<h2 id="3、悲观锁和乐观锁"><a href="#3、悲观锁和乐观锁" class="headerlink" title="3、悲观锁和乐观锁"></a>3、悲观锁和乐观锁</h2><ul>
-<li><p>悲观锁，正如它的名字那样，数据库总是认为别人会去修改它所要操作的数据，因此在数据库处理过程中将数据加锁。其实现依靠数据库底层。</p>
-</li>
-<li><p>乐观锁，如它的名字那样，总是认为别人不会去修改，只有在提交更新的时候去检查数据的状态。通常是给数据增加一个字段来标识数据的版本。</p>
-</li>
-</ul>
-<h2 id="4、锁"><a href="#4、锁" class="headerlink" title="4、锁"></a>4、锁</h2><p>有这样三种锁我们需要了解</p>
-<ul>
-<li>Record Locks（记录锁）：在<u><strong>索引记录上加锁</strong></u>。</li>
-<li>Gap Locks（间隙锁）：在<u><strong>索引记录之间加锁</strong></u>，或者在第一个索引记录之前加锁，或者在最后一个索引记录之后加锁。</li>
-<li>Next-Key Locks：在索引记录上加锁，并且在索引记录之前的间隙加锁。它相当于是Record Locks与Gap Locks的一个结合。</li>
-</ul>
-<p>假设一个索引包含以下几个值：10,11,13,20。那么这个索引的next-key锁将会覆盖以下区间：</p>
-<p>(negative infinity, 10]<br>(10, 11]<br>(11, 13]<br>(13, 20]<br>(20, positive infinity)</p>
-<p>了解了以上概念之后，接下来具体就简单分析下REPEATABLE READ隔离级别是如何实现的</p>
-<h2 id="5、理论分析"><a href="#5、理论分析" class="headerlink" title="5、理论分析"></a>5、理论分析</h2><p>​        之所以说是理论分析，是因为要是实际操作证明的话我也不知道怎么去证明，毕竟作者水平实在有限。但是，这并不意味着我在此胡说八道，有官方文档为证。</p>
-<p>​        这段话的大致意思是，在默认的隔离级别中，普通的SELECT用的是一致性读不加锁。而对于<u><strong>锁定读、UPDATE和DELETE，则需要加锁</strong></u>，至于加什么锁视情况而定。如果你对一个<code>唯一索引</code>使用了唯一的检索条件，那么只需锁定索引记录即可；如果你<code>没有使用唯一索</code>引作为检索条件，或者用到了索引范围扫描，那么将会使用间隙锁或者next-key锁以此来阻塞其它会话向这个范围内的间隙插入数据。</p>
-<p>​        作者曾经有一个误区，认为按照前面说MVCC下的增删查改的行为就不会出现任何问题，也不会出现不可重复读和幻读。但其实是大错特错。</p>
-<p>​        举个很简单的例子，假设事务A更新表中id=1的记录，而事务B也更新这条记录，并且B先提交，如果按照前面MVVC说的，事务A读取id=1的快照版本，那么它看不到B所提交的修改，此时如果直接更新的话就会覆盖B之前的修改，这就不对了，可能B和A修改的不是一个字段，但是这样一来，B的修改就丢失了，这是不允许的。</p>
-<p>​        所以，在修改的时候一定不是快照读，而是当前读。</p>
-<p>​        而且，前面也讲过只有普通的SELECT才是快照读，其它诸如UPDATE、删除都是当前读。<u><strong>修改的时候加锁这是必然的</strong></u>，同时为了防止幻读的出现还需要加间隙锁。</p>
-<ul>
-<li>一致性读保证了可用重复读</li>
-<li><u><strong>间隙锁防止了幻读</strong></u></li>
-</ul>
-<p>回想一下</p>
-<p>1、利用MVCC实现一致性非锁定读，这就有保证在同一个事务中多次读取相同的数据返回的结果是一样的，解决了不可重复读的问题</p>
-<p>2、利用Gap Locks和Next-Key可以阻止其它事务在锁定区间内插入数据，因此解决了幻读问题</p>
-<p>综上所述，默认隔离级别的实现依赖于MVCC和锁，再具体一点是一致性读和锁。</p>
-<br>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/netty/netty-nio/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/java/netty/netty-nio/" itemprop="url">Netty-4.1.3X NIO与平台相关性</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-05T00:00:00+08:00">
-                2018-12-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/netty/" itemprop="url" rel="index">
-                    <span itemprop="name">netty</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Netty-NIO-底层实现"><a href="#Netty-NIO-底层实现" class="headerlink" title="Netty NIO 底层实现"></a>Netty NIO 底层实现</h1><p>Netty 实现了 Reactor 模型，核心是 Selector；</p>
-<p>Netty 的 Selector 底层是基于 JDK 的 Selector 实现的，依赖于 操作系统的 NIO实现；</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SelectorProvider <span class="title">provider</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">        <span class="keyword">if</span> (provider != <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span> provider;</span><br><span class="line">        <span class="keyword">return</span> AccessController.doPrivileged(</span><br><span class="line">            <span class="keyword">new</span> PrivilegedAction&lt;SelectorProvider&gt;() &#123;</span><br><span class="line">                <span class="function"><span class="keyword">public</span> SelectorProvider <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                        <span class="keyword">if</span> (loadProviderFromProperty())</span><br><span class="line">                            <span class="keyword">return</span> provider;</span><br><span class="line">                        <span class="keyword">if</span> (loadProviderAsService())</span><br><span class="line">                            <span class="keyword">return</span> provider;</span><br><span class="line">                        provider = sun.nio.ch.DefaultSelectorProvider.create();</span><br><span class="line">                        <span class="keyword">return</span> provider;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<br>
-
-<h1 id="JDK-DefaultSelectorProvider-create"><a href="#JDK-DefaultSelectorProvider-create" class="headerlink" title="JDK DefaultSelectorProvider.create()"></a>JDK DefaultSelectorProvider.create()</h1><p>下载 openjdk-8 的源码</p>
-<p>搜索 SelectorProvider 即可发现，不同的操作系统 有不同的 DefaultSelectorProvider 实现：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190923092806.png" alt></p>
-<h3 id="在mac下"><a href="#在mac下" class="headerlink" title="在mac下"></a>在mac下</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190923093124.png" alt></p>
-<p>DefaultSelectorProvider 定义 封装：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultSelectorProvider</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Prevent instantiation.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">DefaultSelectorProvider</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns the default SelectorProvider.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SelectorProvider <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> sun.nio.ch.KQueueSelectorProvider();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>KQueueSelectorProvider 定义 kqueue 实现；</p>
-<p>KQueueSelectorImpl 定义 kqueue 的实现逻辑；</p>
-<p>KQueueArrayWrapper 真正通过 jni 调用 操作系统实现 kqueue；</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190923093610.png" alt></p>
-<h3 id="在window下"><a href="#在window下" class="headerlink" title="在window下"></a>在window下</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190923094154.png" alt></p>
-<p>可以看到NIO只有 poll</p>
-<h3 id="在-solaris-下"><a href="#在-solaris-下" class="headerlink" title="在 solaris 下"></a>在 solaris 下</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultSelectorProvider</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns the default SelectorProvider.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SelectorProvider <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String osname = AccessController</span><br><span class="line">            .doPrivileged(<span class="keyword">new</span> GetPropertyAction(<span class="string">"os.name"</span>));</span><br><span class="line">        <span class="keyword">if</span> (osname.equals(<span class="string">"SunOS"</span>))</span><br><span class="line">            <span class="keyword">return</span> createProvider(<span class="string">"sun.nio.ch.DevPollSelectorProvider"</span>);</span><br><span class="line">        <span class="keyword">if</span> (osname.equals(<span class="string">"Linux"</span>))</span><br><span class="line">            <span class="keyword">return</span> createProvider(<span class="string">"sun.nio.ch.EPollSelectorProvider"</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> sun.nio.ch.PollSelectorProvider();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到如果 操作系统是 SunOS 下，则调用 DevPollSelectorProvider，否则调用 EPollSelectorProvider， 如果不能确定，默认调用 PollSelectorProvider；</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190923094418.png" alt></p>
-<p>可以看到 EPoll 的实现也是 jni 调用系统实现</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190923095240.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3106,7 +3022,7 @@ clientId 格式：客户端IP@instanceName（@unitName）</code></pre></li>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

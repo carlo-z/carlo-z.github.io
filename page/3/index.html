@@ -314,6 +314,345 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/tcpdump-manual-analysis-network-package/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/computer-network/tcpdump-manual-analysis-network-package/" itemprop="url">tcpdump 捕获中文传输数据包，并手动解析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-05T17:43:01+08:00">
+                2019-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="开启tcpdump抓包"><a href="#开启tcpdump抓包" class="headerlink" title="开启tcpdump抓包"></a>开启tcpdump抓包</h1><p>centos7 下 ，只抓有数据的包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i eth0 '((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) != 0' and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX</span><br></pre></td></tr></table></figure>
+
+<p><br><br></p>
+<h1 id="示例（1）输入“中国a”"><a href="#示例（1）输入“中国a”" class="headerlink" title="示例（1）输入“中国a”"></a>示例（1）输入“中国a”</h1><p>centos7 下 netcat 输入：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824201628.png" alt></p>
+<p><br><br></p>
+<h1 id="抓包结果放在-WireShark中分析"><a href="#抓包结果放在-WireShark中分析" class="headerlink" title="抓包结果放在 WireShark中分析"></a>抓包结果放在 WireShark中分析</h1><p> tcpdump抓包：<img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824201929.png" alt></p>
+<p>wireshark分析抓到的文件：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202144.png" alt></p>
+<p>可以看到 中文的16进制编码为 d6 d0 b9 fa 61 0a，</p>
+<p>查看 控制台的编码：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202204.png" alt></p>
+<p>可知，中文经过GBK编码以后的 16进制表示为： d6 d0 b9 fa 61 0a；</p>
+<p>GBK的编码规则如下：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202247.png" alt></p>
+<p>d6d0 b9fa 610a 按双字节表示转换为：D6D0 B9FA  610A</p>
+<p>GBK对照表：<a href="http://ff.163.com/newflyff/gbk-list/" target="_blank" rel="noopener">http://ff.163.com/newflyff/gbk-list/</a></p>
+<p>D6D0 对应的中文为：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202325.png" alt></p>
+<p>B9FA 对应的中文为：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202339.png" alt></p>
+<p>610A 对应的中文为：</p>
+<p>搜索没有对应的GBK编码</p>
+<p>ASCII码对照表：<a href="http://ascii.911cha.com/" target="_blank" rel="noopener">http://ascii.911cha.com/</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202358.png" alt></p>
+<p>0A 为换行符；</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202416.png" alt></p>
+<p><br><br></p>
+<h1 id="示例（2）输入“asdf123”"><a href="#示例（2）输入“asdf123”" class="headerlink" title="示例（2）输入“asdf123”"></a>示例（2）输入“asdf123”</h1><p>输入：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202532.png" alt></p>
+<p>抓包：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202544.png" alt></p>
+<p>解析：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202624.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/tcpdump-and-wireshark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/computer-network/tcpdump-and-wireshark/" itemprop="url">tcpdump抓包后，wireshark分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-03T20:47:11+08:00">
+                2019-08-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<blockquote>
+<p>来源：<a href="https://segmentfault.com/a/1190000015044878?utm_source=tag-newest" target="_blank" rel="noopener">https://segmentfault.com/a/1190000015044878?utm_source=tag-newest</a></p>
+</blockquote>
+<p>因为最近要解析 TCP 报文中 option 段的一块数据，所以不得不详细了解下 TCP/IP 报文。虽然之前看过，很长时间没这么细致地用过，导致了健忘，借着这个机会，通过 tcpdump 抓包分析，详细捋一遍 TCP/IP 报文。</p>
+<h2 id="报文获取"><a href="#报文获取" class="headerlink" title="报文获取"></a>报文获取</h2><p>如果那样干巴巴地讲这个东西比较晕，而且网上的文章一大堆，没有什么创新。我选择换一个角度来切入 TCP/IP 协议。首先通过 tcpdump 准备报文。<br>【1】我在 <code>192.168.1.22</code> 这台机器的 <code>10000</code> 端口启一个 <code>redis</code> 服务。<br>【2】通过 tcpdump 这个工具来抓取数据包，命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -w /tmp/logs -i eth0 port 10000 -s0</span><br></pre></td></tr></table></figure>
+
+<p>【3】在 <code>192.168.1.26</code> 这台机器上访问 <code>192.168.1.22:10000</code> 这个 redis 实例，可以用 <code>redis-cli</code> 客户端，也可以用 <code>telnet</code>，发送一个 <code>ping</code>, 得到对端回复 <code>pong</code>。<br>【4】停止抓包，用 tcpdump 读取这个数据包（<code>-x</code> 以16进制形式展示，便于后面分析）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -r /tmp/logs -n -nn -A -x| vim -</span><br></pre></td></tr></table></figure>
+
+<p>其中有一个数据包是这样的，这也是这篇文章要分析的:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">10:54:54.270967 IP 192.168.1.26.61096 &gt; 192.168.1.22.10000: Flags [P.], seq 1041414875:1041414889, ack 658186233, win 115, options [nop,nop,TS val 2377448931 ecr 2741547141], length 140x0000: [4560 0042   7567 0000  3d06 6F3C C0A8 011A</span><br><span class="line">        0x0010:  C0A8 0116] &#123;eea8 2710  3e12 badb 273b 1ff9</span><br><span class="line">        0x0020:  8018 0073   64b0 0000  0101 080a 8db4 fde3</span><br><span class="line">        0x0030:  a368 b085&#125;  2a31 0d0a  2434 0d0a 7069 6e670x0040:  0d0a</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong><br>【1】之前在文章<a href="https://vonalex.github.io/2017/08/05/常用shell/" target="_blank" rel="noopener">常用 shell</a> 中介绍过抓包神器 <strong>tcpdump</strong>，还不会的小伙伴可以偷瞄一眼。<br>【2】上面报文数据中的 <code>[</code>、<code>]</code>、<code>{</code> 和 <code>}</code> 是为了方便区分数据，我自己加上的。<code>[]</code>包围的部分为本报文中的 IP 头，<code>{}</code>包围的部分为本报文中的 TCP 头。</p>
+<h2 id="报文分析"><a href="#报文分析" class="headerlink" title="报文分析"></a>报文分析</h2><p>IP 报文整体结构如下，因为抓到的数据包是 <code>redis</code> 服务，因此在传输层为 TCP 协议。</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824204922.png" alt></p>
+<h3 id="IP-层解析"><a href="#IP-层解析" class="headerlink" title="IP 层解析"></a>IP 层解析</h3><p>解析数据包之前，先把 IP 协议拿出来，如下：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824204946.png" alt></p>
+<p>可以看到，IP 报文头部采用<code>固定长度(20B) + 可变长度</code>构成，下面的 TCP 头部也是这样。<br>然后下面对着抓到的数据包进行分析：<br>【1】<code>0x4</code> 4bit， <strong>ip 协议版本</strong><br><code>0x4</code> 表示 IPv4。<br>【2】<code>0x5</code> 4bit，<strong>ip首部长度</strong><br>该字段表示单位是32bits(4字节) ，所以这个 ip 包的头部有 <code>5*4=20B</code>，这就可以推出，该 IP 报文头没有可选字段。4bit 可以表示最大的数为 0xF，因此，IP 头部的最大长度为 <code>15*4=60B</code>。该报文的 IP 头部我已经在报文中标注出来了。<br>【3】<code>0x60</code> 8bit，<strong>服务类型 TOS</strong><br>该段数据组成为 3bit 优先权字段(现已被忽略) + 4bit TOS 字段 + 1bit 保留字段(须为0)。<br>4bit TOS 字段分别表示自小时延、最大吞吐量、最高可用性和最小费用。只能置其中 1bit，全为 0 表示一般服务。<strong>现在大多数的TCP/IP实现都不支持TOS特性</strong> 。可以看到，本报文 TOS 字段为全 0。<br>【4】<code>0x0042</code> 16bit， <strong>IP 报文总长度</strong><br>单位字节，换算下来，该数据报的长度为 66 字节，数一下上面的报文，恰好 66B。<br>从占位数来算， IP 数据报最长为 <code>2^16=65535B</code>，但大部分网络的链路层 MTU（最大传输单元）没有这么大，一些上层协议或主机也不会接受这么大的，故超长 IP 数据报在传输时会被分片。<br>【5】<code>0x7567</code> 16bit，<strong>标识</strong><br>唯一的标识主机发送的每一个数据报。通常每发送一个报文，它的值+1。当 IP 报文分片时，该标识字段值被复制到所有数据分片的标识字段中，使得这些分片在达到最终目的地时可以依照标识字段的内容重新组成原先的数据。<br>【6】<code>0x0000</code> 3bit <strong>标志</strong> + 13bit <strong>片偏移</strong><br>3bit 标志对应 R、DF、MF。目前只有后两位有效，DF位：为1表示不分片，为0表示分片。MF：为1表示“更多的片”，为0表示这是最后一片。<br>13bit 片位移：本分片在原先数据报文中相对首位的偏移位。<strong>（需要再乘以8）</strong><br>【7】<code>0x3d</code> 8bit <strong>生存时间TTL</strong><br>IP 报文所允许通过的路由器的最大数量。每经过一个路由器，TTL减1，当为 0 时，路由器将该数据报丢弃。TTL 字段是由发送端初始设置一个 8 bit字段.推荐的初始值由分配数字 RFC 指定。发送 ICMP 回显应答时经常把 TTL 设为最大值 255。TTL可以防止数据报陷入路由循环。本报文该值为 61。<br>【8】<code>0x06</code> 8bit <strong>协议</strong><br>指出 IP 报文携带的数据使用的是哪种协议，以便目的主机的IP层能知道要将数据报上交到哪个进程。TCP 的协议号为6，UDP 的协议号为17。ICMP 的协议号为1，IGMP 的协议号为2。该 IP 报文携带的数据使用 TCP 协议，得到了验证。<br>【9】<code>0x6F3C</code> 16bit <strong>IP 首部校验和</strong><br>由发送端填充。以本报文为例，先说这个值是怎么计算出来的。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 将校验和字段 16bit 值抹去变为 `0x0000`，然后将首部 20字节值相加0x4560 + 0x0042 + 0x7567 + 0x0000 + 0x3d06 + 0x0000 + 0xC0A8 + 0x011A + 0xC0A8 +0x0116 = 0x27B95</span><br><span class="line"># 将上述结果的进位 2 与低 16bit 相加0x7B95 + 0x2 = 0x7B97</span><br><span class="line"># 0x7B97 按位取反~(0x7B97) = 0x8468</span><br></pre></td></tr></table></figure>
+
+<p>【10】<code>0xC0A8011A</code> 32bit 源地址<br>可以通过一下 python 程序将 hex 转换成我们熟悉的点分 IP 表示法</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span>&gt;&gt; import socket</span><br><span class="line"><span class="meta">&gt;</span>&gt;&gt; import struct</span><br><span class="line"><span class="meta">&gt;</span>&gt;&gt; int_ip=int("0xC0A8011A",16)</span><br><span class="line"><span class="meta">&gt;</span>&gt;&gt; socket.inet_ntoa(struct.pack('I',socket.htonl(int_ip)))</span><br><span class="line">'192.168.1.26'</span><br></pre></td></tr></table></figure>
+
+<p>本报文中的 src addr 为 <code>192.168.1.26</code>，恰好就是发起请求的 IP。<br>【11】<code>0xC0A80116</code> 32bit 目的地址<br>经过计算为 <code>192.168.1.22</code>，恰好就是启 redis 服务那台机器的 IP。</p>
+<p>由于该报文首部长度为 20B，因此没有<strong>可变长部分</strong>。</p>
+<h3 id="传输层解析"><a href="#传输层解析" class="headerlink" title="传输层解析"></a>传输层解析</h3><p>本报文携带的数据使用的 TCP 协议，因此下面开始分析 TCP 协议。<br>与上面的 IP 报文一样， TCP 报文头也才用采用<code>固定长度(20B) + 可变长度</code>的形式。<br>首先还是看 TCP 协议的格式，从网上找了一张图，如下：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824205153.png" alt></p>
+<p><strong>注：</strong> TCP 的头部必须是 4字节的倍数,而大多数选项不是4字节倍数,不足的用 <code>NOP</code> 填充。<br>【1】<code>0xeea8</code> 16bit，<strong>源端口</strong><br>解析得到 61096，这与 tcpdump 读包显示的是一致的。16bit 决定了端口号的最大值为 65535.<br>【2】<code>0x2710</code> 16bit，<strong>目的端口</strong><br>解析得到 10000。<br>【3】<code>0x273b1ff9</code> 32bit，<strong>序号</strong><br>解析得到 1041414875，这与上面 tcpdump 显示的 <strong>seq</strong> 段是一致的。<br>【4】<code>0x273b1ff9</code> 32bit，<strong>确认号</strong><br>解析得到 658186233，这与上面 tcpdump 显示的 <strong>ack</strong> 段是一致的。<br>【5】<code>0x8</code> 4bit，<strong>TCP 报文首部长度</strong><br>也叫 offset，其实也就是数据从哪里开始。<code>8 * 4 = 32B</code>,因此该 TCP 报文的可选部分长度为 <code>32 - 20 = 12B</code>，这个资源还是很紧张的！ 同 IP 头部类似，最大长度为 <code>60B</code>。<br>【6】<code>0b000000</code> 6bit, <strong>保留位</strong><br>保留为今后使用，但目前应置为 0。<br>【7】<code>0b011000</code> 6bit，<strong>TCP 标志位</strong><br>上图可以看到，从左到右依次是紧急 URG、确认 ACK、推送 PSH、复位 RST、同步 SYN 、终止 FIN。<br>从抓包可以看出，该报文是带了 ack 的，所以 ACK 标志位置为 1。关于标志位的知识这里就不展开了。<br>【8】<code>0x0073</code> 16bit，<strong>滑动窗口大小</strong><br>解析得到十进制 115，跟 tcpdump 解析的 <strong>win</strong> 字段一致。<br>【9】<code>0x64b0</code> 16bit，<strong>校验和</strong><br>由发送端填充，接收端对 TCP 报文段执行 CRC 算法，以检验 TCP 报文段在传输过程中是否损坏，如果损坏这丢弃。<br>检验范围包括首部和数据两部分，这也是 TCP 可靠传输的一个重要保障。<br>【10】<code>0x0000</code> 16bit，<strong>紧急指针</strong><br>仅在 URG = 1 时才有意义，它指出本报文段中的紧急数据的字节数。<br>当 URG = 1 时，发送方 TCP 就把紧急数据插入到本报文段数据的最前面，而在紧急数据后面的数据仍是普通数据。</p>
+<hr>
+<p>下面是 TCP 可选项，其格式如下：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824205227.png" alt></p>
+<p>常见的可选项如下图：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824205242.png" alt></p>
+<p>【11】<code>0x01</code><br>NOP 填充，没有 Length 和 Value 字段， 用于将TCP Header的长度补齐至 32bit 的倍数。<br>【12】<code>0x01</code><br>同上。<br>【13】<code>0x080a</code><br>可选项类型为时间戳，len为 10B，value 为<code>0x8db4 0xfde3 0xa368 0xb085</code>，加上 <code>0x080a</code>，恰好 10B!<br>启用 Timestamp Option后，该字段包含2 个 32bit 的Timestamp（TSval 和 TSecr）。<br>【14】<code>0x8db4 0xfde3</code><br>解析后得到 2377448931，恰好与 tcpdump 解析到的 TS 字段的 <strong>val</strong>一致！<br>【15】<code>0xa368 0xb085</code><br>解析后得到 2741547141，恰好与 tcpdump 解析到的 TS 字段的 <strong>ecr</strong>一致！</p>
+<h3 id="数据部分解析"><a href="#数据部分解析" class="headerlink" title="数据部分解析"></a>数据部分解析</h3><p>上面分析得知，该 IP 报文长度为 66B，IP 头长度为 20B，TCP 头部长度为 32B，因此得到数据的长度为 <code>66 - 20 - 32 = 14B</code>，这与 tcpdump 解析到的 <strong>len</strong> 字段一致！下面来分析这个具体的数据。<br>这里涉及到 redis 协议，不知道的小伙伴可以查看这篇文档<a href="http://www.redis.cn/topics/protocol.html" target="_blank" rel="noopener">redis 协议说明</a>。<br>在抓包时，用客户端向 redis 服务端发送了一个 <code>ping</code> 命令，转换成 redis 协议如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">*1\<span class="selector-tag">r</span>\<span class="selector-tag">n</span></span><br><span class="line">$4\r\n</span><br><span class="line"><span class="selector-tag">ping</span>\<span class="selector-tag">r</span>\<span class="selector-tag">n</span></span><br></pre></td></tr></table></figure>
+
+<p>下面看抓包数据解析，这需要对照 ascii 码表来看，在 linux 下可以用 <code>man 7 ascii</code> 这个命令来获得，或者在这里查看<a href="https://blog.csdn.net/innobase/article/details/51671996" target="_blank" rel="noopener">ascii码表</a>。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0<span class="selector-tag">x2a31</span>         <span class="selector-tag">-</span>&gt; *10<span class="selector-tag">x0d0a</span>         <span class="selector-tag">-</span>&gt; \<span class="selector-tag">r</span>\<span class="selector-tag">n</span></span><br><span class="line">0x2434         -&gt; $40x0d0a         -&gt; \r\n</span><br><span class="line">0<span class="selector-tag">x7069</span> 0<span class="selector-tag">x6e67</span>  <span class="selector-tag">-</span>&gt; <span class="selector-tag">ping</span></span><br><span class="line">0<span class="selector-tag">x0d0a</span>         <span class="selector-tag">-</span>&gt; \<span class="selector-tag">r</span>\<span class="selector-tag">n</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>既然详细说到 TCP/IP 协议，那补充一下 tcpdump filter 的几点用法。<br>filter可以简单地分为三类：<code>type</code>, <code>dir</code> 和 <code>proto</code>。</p>
+<p>type 区分报文的类型，主要由 host（主机）, net（网络，支持 CIDR） 和 port(支持范围，如 portrange 21-23) 组成。<br>dir 区分方向，主要由 src 和 dst 组成。<br>proto 区分协议支持 tcp、udp 、icmp 等。</p>
+<p>下面说几个 filter 表达式。<br><code>proto[x:y]</code> start at offset x into the proto header and read y <strong>bytes</strong><br><code>[x]</code> abbreviation for <code>[x:1]</code><br><strong>注意</strong>：单位是字节，不是位！<br>举几个栗子：<br>【1】<strong>打印 80 端口，有数据的 tcp 包</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump 'tcp port 80 and (((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) != 0)'</span><br></pre></td></tr></table></figure>
+
+<p><code>ip[2:2]</code> 从 ip 报文的第3个字节开始读2个字节，这个恰好就是 ip 包的总长度，单位是字节<br><code>ip[0]&amp;0xf</code> 取的是 ip 报文第 1 个字节的低 4 位，<code>&lt;&lt; 2</code>（乘以 4），为 ip 头部长度，单位是字节<br><code>tcp[12]&amp;0xf0</code> 取的是 tcp 报文第 13 个字节的高 4 位，<code>&gt;&gt; 2</code> 其实等价于 <code>&gt;&gt; 4</code> 然后 <code>&lt;&lt; 2</code>，为 tcp 头部长度，单位是字节。<br>所以 <code>((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2))</code> 表示的数据长度。<br>【2】<strong>打印 80 端口，长度超过 576 的 ip 包</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump 'port 80 and ip[2:2] &gt; 576'</span><br></pre></td></tr></table></figure>
+
+<p>【3】<strong>打印特定 TCP Flag 的数据包</strong><br>TCP Flags 在 tcpdump 抓取的报文中的体现：<br><code>[S]</code>：SYN（开始连接）<br><code>[.]</code>: 没有 Flag<br><code>[P]</code>: PSH（推送数据）<br><code>[F]</code>: FIN （结束连接）<br><code>[R]</code>: RST（重置连接）<br><code>[S.]</code> SYN-ACK，就是 SYN 报文的应答报文。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tcpdump 'tcp[13] &amp; 16!=0'# 等价于</span><br><span class="line">tcpdump 'tcp[tcpflags] == tcp-ack'</span><br></pre></td></tr></table></figure>
+
+<p>打印出所有的 ACK 包.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tcpdump 'tcp[13] &amp; 4!=0'# 等价于</span><br><span class="line">tcpdump 'tcp[tcpflags] == tcp-rst'</span><br></pre></td></tr></table></figure>
+
+<p>打印出所有的 RST 包，即包含 <code>[R]</code> 标志的包。</p>
+<p>更多 tcpdump filter 可以查看 <a href="http://www.tcpdump.org/manpages/pcap-filter.7.html" target="_blank" rel="noopener">PCAP-FILTER</a> 或者 <code>man tcpdump</code>！</p>
+<p>好了，这个 IP 包的解析就到此为止了，照着 TCP/IP 协议分析了一遍, 发现协议也就那么回事儿，没有想象的那么难，不要害怕协议！</p>
+<h1 id="具体抓包示例"><a href="#具体抓包示例" class="headerlink" title="具体抓包示例"></a>具体抓包示例</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824205506.png" alt></p>
+<p>IP协议：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824205529.png" alt></p>
+<p>tcp协议：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824205544.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/shardingsphere-proxy-setup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2019,456 +2358,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/6-1-Elasticsearch搜索详解-索机制/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/6-1-Elasticsearch搜索详解-索机制/" itemprop="url">6.1、ES搜索详解 —— 搜索机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-15T00:01:00+08:00">
-                2019-03-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>本章参考文档：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-percolate-query.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-percolate-query.html</a><br>注意文档对应的Elasticsearch版本</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154850.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154858.png" alt></p>
-<p>索引过程：</p>
-<p>第2象限 有 原始文档；</p>
-<p>Elasticsearch 保存 文档的原始内容 和 对应的倒排序索引文件；</p>
-<p>搜索过程：</p>
-<p>在 倒排索引文件 维护的 倒排记录表 找 关键词 对应的 文档集合，然后做评分、排序、高亮，将结果返回给用户；</p>
-<p>过滤机制：</p>
-<p>根据条件对文档进行过滤，不计算评分；</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">DELETE</span> <span class="selector-tag">books</span></span><br><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">books</span></span><br><span class="line">&#123;</span><br><span class="line">  "settings": &#123;</span><br><span class="line">    "<span class="selector-tag">number_of_replicas</span>": 1,</span><br><span class="line">    "<span class="selector-tag">number_of_shards</span>": 3</span><br><span class="line">  &#125;,</span><br><span class="line">  "<span class="selector-tag">mappings</span>": &#123;</span><br><span class="line">    "properties": &#123;</span><br><span class="line">      "<span class="selector-tag">id</span>": &#123;</span><br><span class="line">        "type": "long"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">title</span>": &#123;</span><br><span class="line">        "type": "text",</span><br><span class="line">        "<span class="selector-tag">analyzer</span>": "<span class="selector-tag">ik_max_word</span>"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">language</span>": &#123;</span><br><span class="line">        "type": "keyword"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">author</span>": &#123;</span><br><span class="line">        "type": "keyword"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">price</span>": &#123;</span><br><span class="line">        "type": "double"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">publish_time</span>": &#123;</span><br><span class="line">        "type": "date",</span><br><span class="line">        "<span class="selector-tag">format</span>": "<span class="selector-tag">yyyy-MM-dd</span>"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">desc</span>": &#123;</span><br><span class="line">        "type": "text",</span><br><span class="line">        "<span class="selector-tag">analyzer</span>": "<span class="selector-tag">ik_max_word</span>"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  "id":1,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"Java</span>编程思想",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"Java"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "<span class="selector-tag">Bruce</span> <span class="selector-tag">Eckel</span>",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:70.20</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2017-01-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"Java</span>学习必读经典，殿堂级著作！赢得全球程序员的广泛赞誉。"</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/2</span><br><span class="line">&#123;</span><br><span class="line">  "id":2,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"Java</span>程序性能优化",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"Java"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "葛一鸣",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:46.50</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2012-08-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"Java</span>程序更快，更稳定。深入剖析软件设计层面、代码层面、<span class="selector-tag">JVM</span>层面的优化方法。"</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/3</span><br><span class="line">&#123;</span><br><span class="line">  "id":3,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"Python</span>科学计算",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"python"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "张若愚",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:81.40</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2014-01-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"</span>零基础学<span class="selector-tag">python</span>， 光盘中坐着度假开发<span class="selector-tag">winPython</span>运行环境，涵盖了<span class="selector-tag">Python</span>各个扩展库。"</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/4</span><br><span class="line">&#123;</span><br><span class="line">  "id":4,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"Python</span>基础教程",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"python"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "<span class="selector-tag">Helant</span>",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:54.50</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2014-03-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"</span>经典的<span class="selector-tag">python</span>入门教程，层次鲜明，结构严谨，内容详实。"</span><br><span class="line">&#125;</span><br><span class="line">PUT books/_doc/5</span><br><span class="line">&#123;</span><br><span class="line">  "id":5,</span><br><span class="line">  "<span class="selector-tag">title</span>"<span class="selector-pseudo">:"JavaScript</span>高级程序设计",</span><br><span class="line">  "<span class="selector-tag">language</span>"<span class="selector-pseudo">:"javascript"</span>,</span><br><span class="line">  "<span class="selector-tag">author</span>": "<span class="selector-tag">Nicholas</span> <span class="selector-tag">C</span>. <span class="selector-tag">Zakas</span>",</span><br><span class="line">  "<span class="selector-tag">price</span>"<span class="selector-pseudo">:66.40</span>,</span><br><span class="line">  "<span class="selector-tag">publish_time</span>"<span class="selector-pseudo">:"2012-03-02"</span>,</span><br><span class="line">  "<span class="selector-tag">desc</span>"<span class="selector-pseudo">:"JavaScript</span> 技术经典名著。"</span><br><span class="line">&#125;</span><br><span class="line">GET books/_mapping</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">match_all</span>搜索,简化语法：</span><br><span class="line">GET books/_search</span><br><span class="line"><span class="selector-tag">term</span> <span class="selector-tag">query</span> 搜索：</span><br><span class="line">GET books/_search</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "<span class="selector-tag">term</span>": &#123;</span><br><span class="line">      "title": "思想"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>数据量很大的情况下，需要分页：</p>
-<p>from：开始位置</p>
-<p>size：返回文档最大数量</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET books/_search</span><br><span class="line">&#123;</span><br><span class="line">  "from": 1,</span><br><span class="line">  "<span class="selector-tag">size</span>": 2,</span><br><span class="line">  "<span class="selector-tag">query</span>": &#123;</span><br><span class="line">    "term": &#123;</span><br><span class="line">      "<span class="selector-tag">title</span>": "<span class="selector-tag">java</span>"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最小评分过滤机制：</p>
-<p>相关文档很多的情况下，相关性比较低的文档可以过滤掉</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825155004.png" alt></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET books/_search</span><br><span class="line">&#123;</span><br><span class="line">  "min_score": 0.6,</span><br><span class="line">  "<span class="selector-tag">query</span>": &#123;</span><br><span class="line">    "term": &#123;</span><br><span class="line">      "<span class="selector-tag">title</span>": "<span class="selector-tag">java</span>"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825155024.png" alt></p>
-<p>高亮查询关键字：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET books/_search</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "<span class="selector-tag">term</span>": &#123;</span><br><span class="line">      "title": "java"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  "<span class="selector-tag">highlight</span>": &#123;</span><br><span class="line">    "fields": &#123;</span><br><span class="line">      "<span class="selector-tag">title</span>": &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825155056.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/distribution/distributed-consensus-algorithm/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/distribution/distributed-consensus-algorithm/" itemprop="url">分布式共识算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-15T00:00:00+08:00">
-                2019-03-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/distributed/" itemprop="url" rel="index">
-                    <span itemprop="name">distributed</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="一、Paxos协议"><a href="#一、Paxos协议" class="headerlink" title="一、Paxos协议"></a>一、Paxos协议</h1><h3 id="1、拜占庭将军问题"><a href="#1、拜占庭将军问题" class="headerlink" title="1、拜占庭将军问题"></a>1、拜占庭将军问题</h3><br>
-
-<h3 id="2、提出问题"><a href="#2、提出问题" class="headerlink" title="2、提出问题"></a>2、提出问题</h3><br>
-
-<h3 id="3、故事背景"><a href="#3、故事背景" class="headerlink" title="3、故事背景"></a>3、故事背景</h3><br>
-
-<h3 id="4、Paxos算法"><a href="#4、Paxos算法" class="headerlink" title="4、Paxos算法"></a>4、Paxos算法</h3><h4 id="4-1、基本定义"><a href="#4-1、基本定义" class="headerlink" title="4.1、基本定义"></a>4.1、基本定义</h4><br>
-
-<h4 id="4-2、算法详解"><a href="#4-2、算法详解" class="headerlink" title="4.2、算法详解"></a>4.2、算法详解</h4><p>Paxos算法有两个阶段</p>
-<ul>
-<li>Prepare阶段（第一阶段）</li>
-<li>Accept阶段（第二阶段）</li>
-</ul>
-<h5 id="1-、第一阶段"><a href="#1-、第一阶段" class="headerlink" title="1)、第一阶段"></a>1)、第一阶段</h5><ol>
-<li>Proposer希望议案V。首先发出Prepare请求至大多数Acceptor。Prepare请求内容为序列号K；</li>
-<li>Acceptor收到Prepare请求为编号K后，检查自己手里是否有处理过Prepare请求；</li>
-<li>如果Acceptor没有接受过任何Prepare请求，那么用OK来回复Proposer，代表Acceptor必须接受收到的第一个议案；</li>
-<li>否则，如果Acceptor之前接受过任何Prepare请求（如：MaxN），那么比较议案编号，如果K&lt;MaxN，则用reject或者error回复Proposer；</li>
-<li>如果K&gt;=MaxN，那么检查之前是否有批准的议案，如果没有则用OK来回复Proposer，并记录K；</li>
-<li>如果K&gt;=MaxN，那么检查之前是否有批准的议案，如果有则回复批准的议案编号和议案内容（如：&lt;AcceptN, AcceptV&gt;， AcceptN为批准的议案编号，AcceptV为批准的议案内容）。</li>
-</ol>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315202153.png" alt></p>
-<h5 id="2-、第二阶段"><a href="#2-、第二阶段" class="headerlink" title="2)、第二阶段"></a>2)、第二阶段</h5><ol>
-<li>Proposer收到过半Acceptor发来的回复，回复都是OK，且没有附带任何批准过的议案编号和议案内容。那么Proposer继续提交批准请求，不过此时会连议案编号K和议案内容V一起提交（&lt;K, V&gt;这种数据形式）</li>
-<li>Proposer收到过半Acceptor发来的回复，回复都是OK，且附带批准过的议案编号和议案内容（&lt;pok，议案编号，议案内容&gt;）。那么Proposer找到所有回复中<u><strong>AcceptN最大</strong></u>的那个AccpetV（假设为&lt;pok，AcceptNx，AcceptVx&gt;）作为提交批准请求（请求为&lt;K，AcceptVx&gt;）发送给Acceptor。</li>
-<li>Proposer没有收到过半Acceptor发来的回复，则修改议案编号K为Kx，并将编号重新发送给Acceptors（重复Prepare阶段的过程）</li>
-<li>Acceptor收到Proposer发来的Accept请求，如果编号K&lt;MaxN则不回应或者reject。</li>
-<li>Acceptor收到Proposer发来的Accept请求，如果编号K&gt;=MaxN则批准该议案，并设置手里批准的议案为&lt;K，接受议案的编号，接受议案的内容&gt;，回复Proposer。</li>
-<li>经过一段时间Proposer对比手里收到的Accept回复，如果超过半数，则结束流程（代表议案被批准），同时通知Leaner可以学习议案。</li>
-<li>经过一段时间Proposer对比手里收到的Accept回复，如果未超过半数，则修改议案编号重新进入Prepare阶段。</li>
-</ol>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315210019.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315210641.png" alt></p>
-<br>
-
-<h3 id="5、Paxos流程图"><a href="#5、Paxos流程图" class="headerlink" title="5、Paxos流程图"></a>5、Paxos流程图</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315202245.png" alt></p>
-<br>
-
-<h1 id="二、ZAB协议"><a href="#二、ZAB协议" class="headerlink" title="二、ZAB协议"></a>二、ZAB协议</h1><p>zookeeper 的 leader 选举采用了 ZAB协议，消息广播的时候没有采用ZAB协议</p>
-<p>ZooKeeper并没有完全采用Paxos算法，而是使用了一种称之为ZooKeeper Atomic Broadcast（ZAB，ZooKeeper原子广播协议）的协议作为其数据一致性的核心算法。</p>
-<p>ZAB协议并不像Paxos算法那样，是一种通用的分布式一致性算法，它是一种特别为ZooKeeper设计的崩溃恢复的原子消息广播算法。ZooKeeper采用一个单一的主进程接受并处理客户端的所有事务请求，并将服务器数据的状态变更以事务Proposal的形式广播到所有的副本进程上去。</p>
-<p>ZAB协议包含两种基本的模式：</p>
-<ul>
-<li>崩溃恢复</li>
-<li>消息广播</li>
-</ul>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315211924.png" alt></p>
-<p>ZAB协议包含三个阶段：</p>
-<ul>
-<li><p>阶段1：发现（Leader选举过程）</p>
-</li>
-<li><p>阶段2：同步（数据同步过程）</p>
-</li>
-<li><p>阶段3：广播（正式接受请求过程）</p>
-</li>
-</ul>
-<p>当整个服务框架在启动过程中，或是当 Leader 服务器出现网络中断、崩溃退出与重启等异常情况时， ZAB 协议就会进入恢复模式并选举产生新的 Leader 服务器。当选举产生了新的Leader 服务器同时集群中已经有过半的机器与该 Leader 服务器完成了状态同步之后，ZAB 协议就会退出恢复模式。</p>
-<p>当集群中已经有过半的 Follower 服务器完成了和 Leader 服务器的状态同步，那么整个服务框架就可以进入消息广播模式了。当一台同样遵守 ZAB 协议的服务器启动后加入到集群中时，如果此时集群中已经存在一个 Leader 服务器在负责进行消息广播 ， 那么新加入的服务器就会自觉地进入数据恢复模式：找到 Leader 所在的服务器，并与其进行数据同步，然后一起参与到消息广播流程中去。</p>
-<p><strong>org.apache.zookeeper.server.quorum.QuorumPeer.ServerState</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ServerState &#123;</span><br><span class="line">   LOOKING, FOLLOWING, LEADING, OBSERVING;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="1、崩溃恢复"><a href="#1、崩溃恢复" class="headerlink" title="1、崩溃恢复"></a>1、崩溃恢复</h3><p>当整个服务器在启动过程中，或者当Leader服务器出现网络中断、崩溃退出与重启等异常情况时，ZAB协议就会进入恢复模式并通过选举产生新的Leader服务器。</p>
-<ul>
-<li>当选举产生了新的Leader服务器，同时集群中已经有过半机器与该Leader服务器完成状态同步之后，ZAB协议就会退出恢复模式。这里的状态同步指的就是数据同步，用来保证集群中存在过半的机器能够和Leader服务器的数据保持一致。</li>
-<li>当集群中有过半的Follower服务器完成和Leader服务器的同步，那么整个服务器集群就可以进入消息广播模式。</li>
-<li>当新的机器加入集群，由于集群已经存在一个Leader，那么新加入的机器会进入数据同步模式，即找到Leader服务器，并与其进行数据同步。</li>
-<li>当Leader崩溃退出或者重启，或者及集群中不存在过半的服务器可以和Leader保持正常通信，那么在开始新一轮事务操作前所有机器会使用崩溃恢复协议来达到一个一致性的状态。</li>
-</ul>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315211802.png" alt></p>
-<p>ZAB协议规定了如果一个事务Proposal在一台机器上被处理成功，那么应该在所有的机器上都被处理成功，哪怕机器出现故障崩溃。 </p>
-<ol>
-<li>每个Server会发出一个投票，第一次都是投自己。投票信息：（myid，ZXID）</li>
-<li>收集来自各个服务器的投票</li>
-<li>处理投票并重新投票，处理逻辑：优先比较ZXID，然后比较myid</li>
-<li>统计投票，只要超过半数的机器接收到同样的投票信息，就可以确定Leader</li>
-<li>改变服务器状态 </li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 选票和服务器的当前选票进行对比</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">totalOrderPredicate</span><span class="params">(<span class="keyword">long</span> newId, <span class="keyword">long</span> newZxid, <span class="keyword">long</span> newEpoch, <span class="keyword">long</span> curId, <span class="keyword">long</span> curZxid, <span class="keyword">long</span> curEpoch)</span> </span>&#123;</span><br><span class="line">    LOG.debug(<span class="string">"id: "</span> + newId + <span class="string">", proposed id: "</span> + curId + <span class="string">", zxid: 0x"</span> +</span><br><span class="line">              Long.toHexString(newZxid) + <span class="string">", proposed zxid: 0x"</span> + Long.toHexString(curZxid));</span><br><span class="line">    <span class="keyword">if</span>(self.getQuorumVerifier().getWeight(newId) == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 以下三种情况成立，则返回true:</span></span><br><span class="line"><span class="comment">     * 1- 新epoch更大</span></span><br><span class="line"><span class="comment">     * 2- 新epoch与当前epoch相同，但新zxid更大</span></span><br><span class="line"><span class="comment">     * 3- 新epoch与当前epoch相同，新zxid与当前zxid相同，但是服务器id更高。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">return</span> ((newEpoch &gt; curEpoch) || </span><br><span class="line">            ((newEpoch == curEpoch) &amp;&amp;</span><br><span class="line">             ((newZxid &gt; curZxid) || ((newZxid == curZxid) &amp;&amp; (newId &gt; curId)))));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="2、消息广播"><a href="#2、消息广播" class="headerlink" title="2、消息广播"></a>2、消息广播</h3><p>消息广播类似于一个2PC提交过程。根据客户端的事务请求，Leader服务器会为其生成对应的事务投票（即Proposal）并将其发送给集群中其他服务器，然后在分表搜集各自的选票，最后进行事务提交。</p>
-<p>与2PC不同的是，ZAB协议没有中断逻辑（所有Follower要么对Leader提成的事务Ack，要么就不回应），而且当过半的Follower服务器反馈Ack之后就开始提交事务，不用等待所有Follower都反馈。</p>
-<p>整个消息广播协议是基于FIFO特性的TCP协议来进行网络通信，因此能够很容易地保证消息广播过程中消息接受与发送的顺序性。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315212126.png" alt></p>
-<ol>
-<li>Leader接收到消息请求后，将消息赋予一个全局唯一的64位自增id，叫做：Zxid，通过zxid的大小比较即可实现因果有序这一特性。</li>
-<li>Leader通过先进先出队列(通过 TCP 协议来实现，以此实现了全局有序这一特性)将带有zxid的消息作为一个提案(Proposal)分发给所有Follower。</li>
-<li>当Follower接收到Proposal，先将Proposal写到硬盘，写硬盘成功后再向Leader回一个ACK。</li>
-<li>当Leader接收到合法数量的ACKs后，Leader就向所有Follower发送COMMIT命令，同时会在本地执行该消息。</li>
-<li>当Follower收到消息的COMMIT命令时，就会执行该消息。</li>
-</ol>
-<br>
-
-<h3 id="3、数据同步"><a href="#3、数据同步" class="headerlink" title="3、数据同步"></a>3、数据同步</h3><p>整个集群完成Leader选举后，Learner会向Leader进行注册，当Learner向Leader完成注册后，就进入数据同步环节，同步过程就是Leader将那些没有在Learner服务器上提交过的事务请求同步给Learner服务器。</p>
-<h4 id="3-1、直接差异化同步"><a href="#3-1、直接差异化同步" class="headerlink" title="3.1、直接差异化同步"></a>3.1、直接差异化同步</h4><p>举例，某个时刻Leader服务器的事务队列对应的ZXID依次是：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0x200000001</span><br><span class="line">0x200000002</span><br><span class="line">0x200000003</span><br><span class="line">0x200000004</span><br><span class="line">0x200000005</span><br></pre></td></tr></table></figure>
-
-<p>而需要数据同步的服务器最后处理的ZXID为：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x200000003</span><br></pre></td></tr></table></figure>
-
-<p>这种场景就执行“直接差异化同步”，Leader会依次将<strong>0x200000004，0x200000005</strong>同步给服务器，同步过程中顺序如下：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315212355.png" alt></p>
-<h4 id="3-2、先回滚再差异化同步"><a href="#3-2、先回滚再差异化同步" class="headerlink" title="3.2、先回滚再差异化同步"></a>3.2、先回滚再差异化同步</h4><p>假如在ZooKeeper集群中有A、B、C三台服务器，B当选为Leader服务器。</p>
-<p>某个时刻，B正要处理一个ZXID=0x200000003的事务，并且已经将该事务写入到B服务器的本地的事务日志中，就在B要发送给其他Follower A、C机器进行同步的时候，B服务器挂了，Proposal并没有发送出去，而此时此时ZooKeeper会进行新一轮选举。假设A当选为新的Leader服务器对外进行工作，客户端又提交了</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0x300000001</span><br><span class="line">0x300000002</span><br></pre></td></tr></table></figure>
-
-<p>而此时之前的奔溃的B服务器再次启动，并开始进行数据同步。</p>
-<p>因为B之前为Leader，故它的本地日志中事务编号为：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x200000001</span><br><span class="line">0x200000002</span><br><span class="line">0x200000003</span><br></pre></td></tr></table></figure>
-
-<p>而A、C的本地日志中的事务编号为：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">0x200000001</span><br><span class="line">0x200000002</span><br><span class="line">0x300000001</span><br><span class="line">0x300000002</span><br></pre></td></tr></table></figure>
-
-<p>这时候就需要A服务器对数据进行回滚之后再同步，这个就称之为“先回滚再差异化同步”</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200315212507.png" alt></p>
-<h4 id="3-3、仅回滚同步"><a href="#3-3、仅回滚同步" class="headerlink" title="3.3、仅回滚同步"></a>3.3、仅回滚同步</h4><p>先回滚再差异化的特殊模式。</p>
-<h4 id="3-4、全量同步"><a href="#3-4、全量同步" class="headerlink" title="3.4、全量同步"></a>3.4、全量同步</h4><p>如：新加入的Follower服务器。</p>
-<br>
-
-<h1 id="三、Raft协议"><a href="#三、Raft协议" class="headerlink" title="三、Raft协议"></a>三、Raft协议</h1><br>
-
-<h1 id="四、Gossip协议"><a href="#四、Gossip协议" class="headerlink" title="四、Gossip协议"></a>四、Gossip协议</h1><br>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2519,7 +2408,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-count">186</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
