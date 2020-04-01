@@ -1,0 +1,2517 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CarloZ">
+<meta property="og:url" content="https://carlo-z.com/page/15/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CarloZ">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/page/15/">
+
+
+
+
+
+  <title>CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-tcp-and-udp-buffer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-tcp-and-udp-buffer/" itemprop="url">centos7 tcp缓冲区和udp缓冲区大小设置_未完</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-17T00:00:00+08:00">
+                2016-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="设置TCP缓冲区大小"><a href="#设置TCP缓冲区大小" class="headerlink" title="设置TCP缓冲区大小"></a>设置TCP缓冲区大小</h1><br>
+
+<h1 id="设置UPD缓冲区大小"><a href="#设置UPD缓冲区大小" class="headerlink" title="设置UPD缓冲区大小"></a>设置UPD缓冲区大小</h1><p>鉴于tcp有重传机制，更多的时候udp对收发缓冲区的大小可能更加敏感一点。</p>
+<p>udp缓冲区的大小主要和以下几个值有关：</p>
+<ol>
+<li>/proc/sys/net/core/rmem_max ——— udp缓冲区的最大值，单位字节，下同</li>
+<li>/proc/sys/net/core/rmem_default ———- udp缓冲区的默认值，如果不更改的话程序的udp缓冲区默认值就是这个。</li>
+</ol>
+<p>查看方法可以直接 <code>cat</code> 以上两个文件进行查看，也可以通过 <code>sysctl</code> 查看。</p>
+<p>sysctl -a | grep rmem_max</p>
+<p>其实sysctl信息来源就是 <code>proc</code> 下的文件。</p>
+<h3 id="程序中进行更改"><a href="#程序中进行更改" class="headerlink" title="程序中进行更改"></a>程序中进行更改</h3><p>程序中可以使用setsockopt函数与SO_RCVBUF选项对udp缓冲区的值进行更改，但是要注意不管设置的值有多大，超过rmem_max的部分都会被无视。</p>
+<p>int a = value_wanted;</p>
+<p>if (setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, &amp;a, sizeof(int)) == - 1 ) {</p>
+<p>…</p>
+<p>}</p>
+<h3 id="更改系统值"><a href="#更改系统值" class="headerlink" title="更改系统值"></a>更改系统值</h3><p>如果确实要把udp缓冲区改到一个比较大的值，那就需要更改rmem_max的值。编辑/etc/rc.local文件添加以下代码可使系统在每次启动的时候自动更改系统缓冲区的最大值。</p>
+<p>echo value_wanted &gt; / proc /sys/net/core/rmem_default</p>
+<p>或者在/etc/sysctl.conf添加以下代码即可在重启后永久生效。</p>
+<p>rmem_max = MAX</p>
+<p>不想重启的话使用命令 <code>sysctl -p</code> 即可。</p>
+<p>可以顺便看下setsockopt在linux下的相关实现</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> SO_SNDBUF:</span><br><span class="line">    <span class="keyword">if</span> (val &gt; sysctl_wmem_max)</span><br><span class="line">        val = sysctl_wmem_max;</span><br><span class="line">    <span class="keyword">if</span> ((val * <span class="number">2</span> ) &lt; SOCK_MIN_SNDBUF)</span><br><span class="line">        sk-&gt;sk_sndbuf = SOCK_MIN_SNDBUF;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        sk-&gt;sk_sndbuf = val * <span class="number">2</span> ; <span class="comment">//当然缓冲区在系统中的实际值要大一点，因为udp报头以及IP报头等都是需要空间的。</span></span><br></pre></td></tr></table></figure>
+
+<br>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-performance-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-performance-tools/" itemprop="url">Linux性能分析工具总纲_未完</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-11T00:00:00+08:00">
+                2016-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<p>linux 更详细的性能分析工具网址：<strong><a href="http://www.brendangregg.com/" target="_blank" rel="noopener">http://www.brendangregg.com/</a></strong></p>
+<p>CSDN中文介绍：<a href="https://www.cnblogs.com/tcicy/p/8461807.html" target="_blank" rel="noopener">https://www.cnblogs.com/tcicy/p/8461807.html</a> </p>
+<p> <img src="https://images2018.cnblogs.com/blog/1213536/201803/1213536-20180302093835823-228635776.png" alt="img"> </p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191114142810.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191114142659.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191114142615.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191114142044.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/dns-resolution-process/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/computer-network/dns-resolution-process/" itemprop="url">DNS解析过程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-02T00:00:00+08:00">
+                2016-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-network/" itemprop="url" rel="index">
+                    <span itemprop="name">computer-network</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830131855.png" alt></p>
+<br>
+
+<p>先说一下DNS的几个基本概念：</p>
+<h1 id="一．-根域"><a href="#一．-根域" class="headerlink" title="一． 根域"></a>一． 根域</h1><p>就是所谓的“.”，其实我们的网址<a href="http://www.baidu.com在配置当中应该是www.baidu.com.（最后有一点），一般我们在浏览器里输入时会省略后面的点，而这也已经成为了习惯。" target="_blank" rel="noopener">www.baidu.com在配置当中应该是www.baidu.com.（最后有一点），一般我们在浏览器里输入时会省略后面的点，而这也已经成为了习惯。</a></p>
+<p>根域服务器我们知道有13台，但是这是错误的观点。</p>
+<p>根域服务器只是具有13个IP地址，但机器数量却不是13台，因为这些IP地址借助了任播的技术，所以我们可以在全球设立这些IP的镜像站点，你访问到的这个IP并不是唯一的那台主机。</p>
+<p>具体的镜像分布可以参考维基百科。这些主机的内容都是一样的</p>
+<h1 id="二．-域的划分"><a href="#二．-域的划分" class="headerlink" title="二． 域的划分"></a>二． 域的划分</h1><p>根域下来就是顶级域或者叫一级域，</p>
+<p>有两种划分方式，一种互联网刚兴起时的按照行业性质划分的com.，net.等，一种是按国家划分的如cn.，jp.，等。</p>
+<p>具体多少你可以自己去查，我们这里不关心。</p>
+<p>每个域都会有域名服务器，也叫权威域名服务器。</p>
+<p>Baidu.com就是一个顶级域名，而<a href="http://www.baidu.com却不是顶级域名，他是在baidu.com" target="_blank" rel="noopener">www.baidu.com却不是顶级域名，他是在baidu.com</a> 这个域里的一叫做www的主机。</p>
+<p>一级域之后还有二级域，三级域，只要我买了一个顶级域，并且我搭建了自己BIND服务器（或者其他软件搭建的）注册到互联网中，那么我就可以随意在前面多加几个域了（当然长度是有限制的）。</p>
+<p>比如a.<a href="http://www.baidu.com，在这个网址中，www.baidu.com变成了一个二级域而不是一台主机，主机名是a。" target="_blank" rel="noopener">www.baidu.com，在这个网址中，www.baidu.com变成了一个二级域而不是一台主机，主机名是a。</a></p>
+<h1 id="三．-域名服务器"><a href="#三．-域名服务器" class="headerlink" title="三． 域名服务器"></a>三． 域名服务器</h1><p>能提供域名解析的服务器，上面的记录类型可以是A(address)记录，NS记录（name server），MX（mail），CNAME等。</p>
+<p>（详解参见博客：域名解析中A记录、CNAME、MX记录、NS记录的区别和联系）</p>
+<p>A记录是什么意思呢，就是记录一个IP地址和一个主机名字，比如我这个域名服务器所在的域test.baidu.com，我们知道这是一个二级的域名，然后我在里面有一条A记录,记录了主机为a的IP，查到了就返回给你了。</p>
+<p>如果我现在要想baidu.com这个域名服务器查询a.test.baidu.com，那么这个顶级域名服务器就会发现你请求的这个网址在test.baidu.com这个域中，我这里记录了这个二级域的域名服务器test.baidu.com的NS的IP。我返回给你这个地址你再去查主机为a的主机把。</p>
+<p>这些域内的域名服务器都称为权威服务器，直接提供DNS查询服务。（这些服务器可不会做递归哦）</p>
+<h1 id="四．解析过程"><a href="#四．解析过程" class="headerlink" title="四．解析过程"></a>四．解析过程</h1><p>那么我们的DNS是怎么解析一个域名的呢？</p>
+<p>1、现在我有一台计算机，通过ISP接入了互联网，那么ISP就会给我分配一个DNS服务器，这个DNS服务器不是权威服务器，而是相当于一个代理的dns解析服务器，他会帮你迭代权威服务器返回的应答，然后把最终查到IP返回给你。</p>
+<p>2、现在的我计算机要向这台ISPDNS发起请求查询<a href="http://www.baidu.com这个域名了，(经网友提醒：这里其实准确来说不是ISPDNS，而应该是用户自己电脑网络设置里的DNS，并不一定是ISPDNS。比如也有可能你手工设置了8.8.8.8)" target="_blank" rel="noopener">www.baidu.com这个域名了，(经网友提醒：这里其实准确来说不是ISPDNS，而应该是用户自己电脑网络设置里的DNS，并不一定是ISPDNS。比如也有可能你手工设置了8.8.8.8)</a></p>
+<p>3、ISPDNS拿到请求后，先检查一下自己的缓存中有没有这个地址，有的话就直接返回。这个时候拿到的ip地址，会被标记为非权威服务器的应答。</p>
+<p>4、如果缓存中没有的话，ISPDNS会从配置文件里面读取13个根域名服务器的地址（这些地址是不变的，直接在BIND的配置文件中），</p>
+<p>5、然后像其中一台发起请求。</p>
+<p>6、根服务器拿到这个请求后，知道他是com.这个顶级域名下的，所以就会返回com域中的NS记录，一般来说是13台主机名和IP。</p>
+<p>7、然后ISPDNS向其中一台再次发起请求，com域的服务器发现你这请求是baidu.com这个域的，我一查发现了这个域的NS，那我就返回给你，你再去查。</p>
+<p>（目前百度有4台baidu.com的顶级域名服务器）。</p>
+<p>8、ISPDNS不厌其烦的再次向baidu.com这个域的权威服务器发起请求，baidu.com收到之后，查了下有www的这台主机，就把这个IP返回给你了，</p>
+<p>9、然后ISPDNS拿到了之后，将其返回给了客户端，并且把这个保存在高速缓存中。</p>
+<p>下面我们来用 <strong>nslookup 这个工具</strong>详细来说一下解析步骤：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132429.png" alt></p>
+<p>从上图我们可以看到:</p>
+<p>​          第一行Server是：DNS服务器的主机名–210.32.32.1</p>
+<p>​          第二行Address是： 它的IP地址–210.32.32.1#53</p>
+<p>​          下面的Name是：解析的URL–    <a href="http://www.jsjzx.com" target="_blank" rel="noopener">www.jsjzx.com</a></p>
+<p>​          Address是：解析出来的IP–112.121.162.168</p>
+<p>但是也有像百度这样的DNS比较复杂的解析:</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132502.png" alt></p>
+<p>你会发现百度有一个cname = <a href="http://www.a.shifen.com" target="_blank" rel="noopener">www.a.shifen.com</a>  的别名。</p>
+<p>这是怎么一个过程呢？</p>
+<p>我们用dig工具来跟踪一下吧（linux系统自带有）</p>
+<p>-—————————————————————————————————————————————————————————————————————————–</p>
+<p>Dig工具会在本地计算机做迭代，然后记录查询的过程。</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132528.png" alt></p>
+<p>第一步是向我这台机器的ISPDNS获取到根域服务区的13个IP和主机名[b-j].root-servers.net.。</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132552.png" alt></p>
+<p>第二步是向其中的一台根域服务器（Servername就是末行小括号里面的）发送<a href="http://www.baidu.com的查询请求，他返回了com.顶级域的服务器IP（未显示）和名称" target="_blank" rel="noopener">www.baidu.com的查询请求，他返回了com.顶级域的服务器IP（未显示）和名称</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132622.png" alt></p>
+<p>第三步，便向com.域的一台服务器192.43.172.30请求,<a href="http://www.baidu.com，他返回了baidu.com域的服务器IP（未显示）和名称，百度有四台顶级域的服务器" target="_blank" rel="noopener">www.baidu.com，他返回了baidu.com域的服务器IP（未显示）和名称，百度有四台顶级域的服务器</a></p>
+<p>​     【此处可以用dig @192.43.172.30 <a href="http://www.baidu.com查看返回的百度顶级域名服务器IP地址】。" target="_blank" rel="noopener">www.baidu.com查看返回的百度顶级域名服务器IP地址】。</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132642.png" alt></p>
+<p>第四步呢，向百度的顶级域服务器（202.181.33.31）请求<a href="http://www.baidu.com，他发现这个www有个别名，而不是一台主机，别名是www.a.shifen.com。" target="_blank" rel="noopener">www.baidu.com，他发现这个www有个别名，而不是一台主机，别名是www.a.shifen.com。</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132642.png" alt></p>
+<p>-——————————————————————————————————————————————————————————————————————————–</p>
+<p>按照一般的逻辑，当dns请求到别名的时候，查询会终止，然后重新发起查询别名的请求，所以此处应该返回的是<a href="http://www.a.shifen.com。" target="_blank" rel="noopener">www.a.shifen.com。</a></p>
+<p>此处用dig +trace [<a href="http://www.a.shifen.com】跟踪一下" target="_blank" rel="noopener">www.a.shifen.com】跟踪一下</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132705.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132723.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132733.png" alt></p>
+<p>用一个图来说明一下</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135134.png" alt></p>
+<p>以下内容为在虚拟机中搭建local dns服务器得到的实验数据，纠正上述结论</p>
+<p>在上面的分析中，我们用dig工具进行了追踪，但是dig没有继续追踪当我们从baidu.com拿到cname和ns2.a.shifen.com的IP之后的事情。</p>
+<p>我们就所以然的下结论认为local dns会向ns2.a.shifen.com请求<a href="http://www.a.shifenc.om。" target="_blank" rel="noopener">www.a.shifenc.om。</a></p>
+<p>其实这个想法是错误，在自己的本地搭建一个local dns，抓取整个解析过程中是所有包，看看就明白拉。</p>
+<p>实际的结果是虽然dns.baidu.com返回了a.shifen.com域的服务器地址和IP，</p>
+<p>但是local dns并不是直接向上述返回的IP请求<a href="http://www.a.shifen.com，而是再一次去请求com域，得到shifen.com域的服务器（也就是baidu.com的那四台），" target="_blank" rel="noopener">www.a.shifen.com，而是再一次去请求com域，得到shifen.com域的服务器（也就是baidu.com的那四台），</a></p>
+<p>然后又请求<a href="http://www.a.shifen.com，返回a.shifen.com的域的服务器，最后才是去请求www.a.shifen.com，" target="_blank" rel="noopener">www.a.shifen.com，返回a.shifen.com的域的服务器，最后才是去请求www.a.shifen.com，</a></p>
+<p>虽然上面已经返回了IP，但是实验的结果就是再走一遍shifen.com域的查询。</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135211.png" alt></p>
+<p>上图就是localdns在解析<a href="http://www.baidu.com的抓包全过程。蓝色那条就是在收到cname和响应的a.shifen.com的域名服务器IP地址之后，继续向com域请求shifen.com。" target="_blank" rel="noopener">www.baidu.com的抓包全过程。蓝色那条就是在收到cname和响应的a.shifen.com的域名服务器IP地址之后，继续向com域请求shifen.com。</a> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135255.png" alt></p>
+<p>这个图充分说明了返回cname的同时也返回了ns2.a.shifen.com的IP。</p>
+<p>因此总结一下便是</p>
+<p>​         ①本机向local dns请求<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a></p>
+<p>​         ②local dns向根域请求<a href="http://www.baidu.com，根域返回com.域的服务器IP" target="_blank" rel="noopener">www.baidu.com，根域返回com.域的服务器IP</a></p>
+<p>​         ③向com.域请求<a href="http://www.baidu.com，com.域返回baidu.com域的服务器IP" target="_blank" rel="noopener">www.baidu.com，com.域返回baidu.com域的服务器IP</a></p>
+<p>​         ④向baidu.com请求<a href="http://www.baidu.com，返回cname" target="_blank" rel="noopener">www.baidu.com，返回cname</a> <a href="http://www.a.shifen.com和a.shifen.com域的服务器IP" target="_blank" rel="noopener">www.a.shifen.com和a.shifen.com域的服务器IP</a></p>
+<p>​         ⑤向root域请求<a href="http://www.a.shifen.com" target="_blank" rel="noopener">www.a.shifen.com</a></p>
+<p>​         ⑥向com.域请求<a href="http://www.a.shife.com" target="_blank" rel="noopener">www.a.shife.com</a></p>
+<p>​         ⑦向shifen.com请求</p>
+<p>​         ⑧向a.shifen.com域请求</p>
+<p>​         ⑨拿到<a href="http://www.a.shifen.com的IP" target="_blank" rel="noopener">www.a.shifen.com的IP</a></p>
+<p>​         ⑩localdns返回本机<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> cname <a href="http://www.a.shifen.com" target="_blank" rel="noopener">www.a.shifen.com</a> 以及 <a href="http://www.a.shifen.com的IP先说一下DNS的几个基本概念：" target="_blank" rel="noopener">www.a.shifen.com的IP先说一下DNS的几个基本概念：</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135331.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/lambda/1-java-lambda-introduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/java/lambda/1-java-lambda-introduce/" itemprop="url">1、lambda表达式入门：Java多核编程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-11T00:00:00+08:00">
+                2016-08-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/lambda/" itemprop="url" rel="index">
+                    <span itemprop="name">lambda</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="第1章-新生代Java"><a href="#第1章-新生代Java" class="headerlink" title="第1章 新生代Java"></a>第1章 新生代Java</h1><h3 id="1、外部迭代-gt-内部迭代"><a href="#1、外部迭代-gt-内部迭代" class="headerlink" title="1、外部迭代 -&gt; 内部迭代"></a>1、外部迭代 -&gt; 内部迭代</h3><p>外部迭代示例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Point p : pointList) &#123;</span><br><span class="line">    p.distance(<span class="number">0</span>,<span class="number">0</span>); <span class="comment">// 点p 到 原点（0，0）的距离</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内部迭代示例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pointList.forEach(p -&gt; p.distance(<span class="number">0</span>,<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1、内部迭代"><a href="#1-1、内部迭代" class="headerlink" title="1.1、内部迭代"></a>1.1、内部迭代</h4><p>外部迭代 -&gt; 串行、有序</p>
+<p>内部迭代 -&gt; 顺序不重要，重要的是行为；</p>
+<p>​                -&gt; 延迟加载，乱序执行；</p>
+<h4 id="1-2、命令模式"><a href="#1-2、命令模式" class="headerlink" title="1.2、命令模式"></a>1.2、命令模式</h4><p>类似与命令模式，将 行为 抽象出来，作为Action；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 行为 接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Consumer</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(T t)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 具体定义行为</span></span><br><span class="line"><span class="keyword">public</span> Distance implements Consumer&lt;Point&gt; &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Point p)</span> </span>&#123;</span><br><span class="line">        p.distance(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 为了调用 p.distance(0, 0); 不断创建对象，而且不够直观</span></span><br><span class="line">pointList.forEach(<span class="keyword">new</span> Distance());</span><br></pre></td></tr></table></figure>
+
+<p>为了调用 p.distance(0, 0); 不断创建对象，而且不够直观。</p>
+<p>这是因为Java 方法只接受 对象引用 作为参数，因此要引入新语法 lambda 表达式</p>
+<h4 id="1-3、lambda-表达式"><a href="#1-3、lambda-表达式" class="headerlink" title="1.3、lambda 表达式"></a>1.3、lambda 表达式</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pointList.forEach(<span class="keyword">new</span> Consumer&lt;Point&gt; &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Point p)</span> </span>&#123;</span><br><span class="line">        p.distance(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>Consumer 是一种 ”单方法接口“，有利于 编译器直接 无歧义 的选择正确的方法执行；</p>
+<p>引入一个额外的愈发（”-&gt;“）之后，将 参数与 表达式 分隔开，得到简单形式的 lambda表达式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pointList.forEach(p -&gt; p.distance(<span class="number">0</span>,<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="2、集合-gt-流"><a href="#2、集合-gt-流" class="headerlink" title="2、集合 -&gt; 流"></a>2、集合 -&gt; 流</h3><p>场景：一个Integer集合 —&gt; 转换成一个 Point实例 集合 —&gt; 寻找 距离原点(0, 0) 最远的点到原点的距离；</p>
+<p>集合的写法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; intList = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>);</span><br><span class="line">List&lt;Point&gt; pointList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span> (Integer i : intList) &#123;</span><br><span class="line">    pointList.add(<span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line">Double maxDistance = Double.MIN_VALUE;</span><br><span class="line"><span class="keyword">for</span> (Point p : pointList) &#123;</span><br><span class="line">    maxDistance = Math.max(maxDistance, p.distance(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>假如把 intList 看作一个无限流：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">intStream = intList.stream();</span><br><span class="line">Stream&lt;Point&gt; pointStream = intStream.map(i -&gt; <span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>));</span><br><span class="line">DoubleStream distanceStream = pointStream.mapToDouble(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line"><span class="comment">// 管道最后是终止操作max</span></span><br><span class="line">OptionalDouble maxDistance = distances.max();</span><br></pre></td></tr></table></figure>
+
+<p>完整的代码变成了如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">OptionalDouble maxDistance = intList</span><br><span class="line">    .stream()</span><br><span class="line">    .map(i -&gt; <span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>))</span><br><span class="line">    .mapToDouble(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    .max();</span><br></pre></td></tr></table></figure>
+
+<p>使用管道的好处是， 创建与管理中间集合所导致的性能消耗也随之消失；</p>
+<br>
+
+<h3 id="3、串行-gt-并行"><a href="#3、串行-gt-并行" class="headerlink" title="3、串行 -&gt; 并行"></a>3、串行 -&gt; 并行</h3><p>Java 8 支持对集合的并行处理，而 lambda表达式 是”提供这种支持“ 必备的一环；</p>
+<p>原理：</p>
+<ol>
+<li>将大任务  递归的 切分为 ”足够小“ 的 小任务（能串行执行为止）；</li>
+<li>使用 cpu 的多核 分别执行完以后；</li>
+<li>将结果 结合起来 返回；</li>
+</ol>
+<p>实现方式：fork/join 框架</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191113211438.png" alt></p>
+<p>代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">OptionalDouble maxDistance = intList</span><br><span class="line">    .parallelStream()</span><br><span class="line">    .map(i -&gt; <span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>))</span><br><span class="line">    .mapToDouble(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    .max();</span><br></pre></td></tr></table></figure>
+
+<p>什么是 “足够小”的任务？ 取决于 可用核的数量；</p>
+<br>
+
+<h3 id="4、组合行为"><a href="#4、组合行为" class="headerlink" title="4、组合行为"></a>4、组合行为</h3><p>Java 原版的排序器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;Point&gt; byX = <span class="keyword">new</span> Comparator&lt;Point&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Point p1, Point p2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Double.compare(p1.getX(), p2.getX());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个通用的 排序器 Comparator</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T,U extends Comparable&lt;U&gt;&gt; </span><br><span class="line">    <span class="function">Compatable&lt;T&gt; <span class="title">comparing</span><span class="params">(Function&lt;T, U&gt; keyExtractor)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (c1, c2) -&gt; </span><br><span class="line">        keyExtractor.apply(c1).compateTo(keyExtractor.apply(c2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么 1.3 中的问题，根据距离排序 可以实现为 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;Point&gt; byDistance = comparing(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+
+<p>新需求：按所有点到 原点的距离 升序排列，打印点：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">intList</span><br><span class="line">    .stream()</span><br><span class="line">    .map(i -&gt; <span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>))</span><br><span class="line">    .sorted(comparing(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>)))</span><br><span class="line">    .forEach(p -&gt; System.out.printf(<span class="string">"(%f, %f)"</span>, p.getX(), p.getY()));</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<br>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/valid-parentheses/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/valid-parentheses/" itemprop="url">Valid Parentheses</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-09T21:27:02+08:00">
+                2016-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法分类：Stack"><a href="#算法分类：Stack" class="headerlink" title="算法分类：Stack"></a>算法分类：Stack</h1><p>url：<a href="https://leetcode.com/problems/valid-parentheses/" target="_blank" rel="noopener">https://leetcode.com/problems/valid-parentheses/</a></p>
+<p>​                          </p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">20. <span class="selector-tag">Valid</span> <span class="selector-tag">Parentheses</span></span><br><span class="line">Given a string containing just the characters '(', ')', '&#123;', '&#125;', '[' and ']', determine if the input string is valid.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">An</span> <span class="selector-tag">input</span> <span class="selector-tag">string</span> <span class="selector-tag">is</span> <span class="selector-tag">valid</span> <span class="selector-tag">if</span>:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Open</span> <span class="selector-tag">brackets</span> <span class="selector-tag">must</span> <span class="selector-tag">be</span> <span class="selector-tag">closed</span> <span class="selector-tag">by</span> <span class="selector-tag">the</span> <span class="selector-tag">same</span> <span class="selector-tag">type</span> <span class="selector-tag">of</span> <span class="selector-tag">brackets</span>.</span><br><span class="line"><span class="selector-tag">Open</span> <span class="selector-tag">brackets</span> <span class="selector-tag">must</span> <span class="selector-tag">be</span> <span class="selector-tag">closed</span> <span class="selector-tag">in</span> <span class="selector-tag">the</span> <span class="selector-tag">correct</span> <span class="selector-tag">order</span>.</span><br><span class="line"><span class="selector-tag">Note</span> <span class="selector-tag">that</span> <span class="selector-tag">an</span> <span class="selector-tag">empty</span> <span class="selector-tag">string</span> <span class="selector-tag">is</span> <span class="selector-tag">also</span> <span class="selector-tag">considered</span> <span class="selector-tag">valid</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span> 1:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "()"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">true</span></span><br><span class="line"><span class="selector-tag">Example</span> 2:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "()<span class="selector-attr">[]</span>&#123;&#125;"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">true</span></span><br><span class="line"><span class="selector-tag">Example</span> 3:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "(]"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">false</span></span><br></pre></td></tr></table></figure>
+
+<p>​                     </p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Stack&lt;String&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] chArr = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> ch : chArr) &#123;</span><br><span class="line">            String top = stack.isEmpty() ? <span class="keyword">null</span> : stack.peek();</span><br><span class="line">            String c = String.valueOf(ch);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == top) &#123;</span><br><span class="line">                stack.push(c);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"&#123;"</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">"&#125;"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"["</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">"]"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"("</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">")"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                stack.push(c);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (stack.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Stack&lt;Character&gt; stack = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line">        HashMap&lt;Character, Character&gt; map = <span class="keyword">new</span> HashMap&lt;Character, Character&gt;() &#123;&#123;</span><br><span class="line">            put(<span class="string">'&#125;'</span>, <span class="string">'&#123;'</span>);</span><br><span class="line">            put(<span class="string">']'</span>, <span class="string">'['</span>);</span><br><span class="line">            put(<span class="string">')'</span>, <span class="string">'('</span>);</span><br><span class="line">        &#125;&#125;;</span><br><span class="line">        <span class="keyword">char</span>[] chArr = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> ch : chArr) &#123;</span><br><span class="line">            Character top = stack.isEmpty() ? <span class="keyword">null</span> : stack.peek();</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == top) &#123;</span><br><span class="line">                stack.push(ch);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top == map.get(ch)) &#123;</span><br><span class="line">                stack.pop();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                stack.push(ch);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> stack.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​                          </p>
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isValid</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        stack = []</span><br><span class="line">        map = &#123;<span class="string">u'&#125;'</span>:<span class="string">u'&#123;'</span>, <span class="string">u']'</span>:<span class="string">u'['</span>, <span class="string">u')'</span>:<span class="string">u'('</span>&#125;</span><br><span class="line">        <span class="keyword">for</span> ch <span class="keyword">in</span> s:</span><br><span class="line">            top = <span class="string">u'#'</span> <span class="keyword">if</span> (len(stack) == <span class="number">0</span>) <span class="keyword">else</span> stack[<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">if</span> map.has_key(ch) <span class="keyword">and</span> top == map[ch]:</span><br><span class="line">                stack.pop()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(ch)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> == len(stack)</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/unique-binary-search-trees-ii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/unique-binary-search-trees-ii/" itemprop="url">Unique Binary Search Trees ii</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-07T00:37:33+08:00">
+                2016-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：二叉搜索树"><a href="#算法：二叉搜索树" class="headerlink" title="算法：二叉搜索树"></a>算法：二叉搜索树</h1><p>url：<a href="https://leetcode-cn.com/problems/unique-binary-search-trees-ii/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/unique-binary-search-trees-ii/</a></p>
+<p>​                   </p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">给定一个整数 <span class="selector-tag">n</span>，生成所有由 1 ... <span class="selector-tag">n</span> 为节点所组成的二叉搜索树。</span><br><span class="line">示例:</span><br><span class="line"></span><br><span class="line">输入: 3</span><br><span class="line">输出:</span><br><span class="line">[</span><br><span class="line">  <span class="selector-attr">[1,null,3,2]</span>,</span><br><span class="line">  <span class="selector-attr">[3,2,null,1]</span>,</span><br><span class="line">  <span class="selector-attr">[3,1,null,null,2]</span>,</span><br><span class="line">  <span class="selector-attr">[2,1,3]</span>,</span><br><span class="line">  <span class="selector-attr">[1,null,2,null,3]</span></span><br><span class="line">]</span><br><span class="line">解释:</span><br><span class="line">以上的输出对应以下 5 种不同结构的二叉搜索树：</span><br><span class="line"></span><br><span class="line">   1         3     3      2      1</span><br><span class="line">    \       /     /      / \      \</span><br><span class="line">     3     2     1      1   3      2</span><br><span class="line">    /     /       \                 \</span><br><span class="line">   2     1         2                 3</span><br></pre></td></tr></table></figure>
+
+<p>分析</p>
+<p>首先来计数需要构建的二叉树数量。可能的二叉搜素数数量是一个 卡特兰数。</p>
+<p>我们跟随上文的逻辑，只是这次是构建具体的树，而不是计数。</p>
+<p>算法</p>
+<p>我们从序列 1 ..n 中取出数字 i，作为当前树的树根。于是，剩余 i - 1 个元素可用于左子树，n - i 个元素用于右子树。<br>如 前文所述，这样会产生 G(i - 1) 种左子树 和 G(n - i) 种右子树，其中 G 是卡特兰数。</p>
+<p><img src="https://pic.leetcode-cn.com/f709dff506c20ac970d4cd7ace0436aafca7828c67b510cdbaaa60d54f5479b3-image.png" alt="image.png"></p>
+<p>现在，我们对序列 1 … i - 1 重复上述过程，以构建所有的左子树；然后对 i + 1 … n 重复，以构建所有的右子树。</p>
+<p>这样，我们就有了树根 i 和可能的左子树、右子树的列表。</p>
+<p>最后一步，对两个列表循环，将左子树和右子树连接在根上。</p>
+<p>​                       </p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;TreeNode&gt; <span class="title">generateTrees</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> LinkedList&lt;TreeNode&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> listTrees(<span class="number">1</span>, n);        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> LinkedList&lt;TreeNode&gt; <span class="title">listTrees</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">        LinkedList&lt;TreeNode&gt; rootList = <span class="keyword">new</span> LinkedList&lt;TreeNode&gt;();</span><br><span class="line">        <span class="keyword">if</span>(start &gt; end) &#123;</span><br><span class="line">            rootList.add(<span class="keyword">null</span>);</span><br><span class="line">            <span class="keyword">return</span> rootList;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=start; i&lt;=end; ++i) &#123;</span><br><span class="line">            LinkedList&lt;TreeNode&gt; leftList = listTrees(start, i-<span class="number">1</span>); </span><br><span class="line">            LinkedList&lt;TreeNode&gt; rightList = listTrees(i+<span class="number">1</span>, end);</span><br><span class="line">            <span class="keyword">for</span>(TreeNode left : leftList) &#123;</span><br><span class="line">                <span class="keyword">for</span>(TreeNode right : rightList) &#123;</span><br><span class="line">                    TreeNode cur = <span class="keyword">new</span> TreeNode(i);</span><br><span class="line">                    cur.left = left;</span><br><span class="line">                    cur.right = right;</span><br><span class="line">                    rootList.add(cur);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> rootList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><p>​                        </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/two-sum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/two-sum/" itemprop="url">Two Ssum</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-05T00:17:33+08:00">
+                2016-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="url："><a href="#url：" class="headerlink" title="url："></a>url：</h1><p><a href="https://leetcode.com/problems/two-sum/submissions/" target="_blank" rel="noopener">https://leetcode.com/problems/two-sum/submissions/</a></p>
+<p>​                 </p>
+<h1 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h1><p>Given an array of integers, return <strong>indices</strong> of the two numbers such that they add up to a specific target.</p>
+<p>You may assume that each input would have <strong>exactly</strong> one solution, and you may not use the <em>same</em> element twice.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Given nums = [2, 7, 11, 15], target = 9,</span><br><span class="line"></span><br><span class="line">Because nums[0] + nums[1] = 2 + 7 = 9,</span><br><span class="line"><span class="selector-tag">return</span> <span class="selector-attr">[0, 1]</span>.</span><br></pre></td></tr></table></figure>
+
+<p>​                    </p>
+<h1 id="Java-解法："><a href="#Java-解法：" class="headerlink" title="Java 解法："></a>Java 解法：</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>[] twoSum(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) &#123;</span><br><span class="line">        Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="keyword">int</span> complement = target - nums[i];</span><br><span class="line">            <span class="keyword">if</span> (map.containsKey(complement)) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[] &#123; map.get(complement), i &#125;;</span><br><span class="line">            &#125;</span><br><span class="line">            map.put(nums[i], i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"No two sum solution"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​                     </p>
+<h1 id="Python解法："><a href="#Python解法：" class="headerlink" title="Python解法："></a>Python解法：</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># https://leetcode.com/problems/two-sum/submissions/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">twoSum</span><span class="params">(self, nums, target)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type nums: List[int]</span></span><br><span class="line"><span class="string">        :type target: int</span></span><br><span class="line"><span class="string">        :rtype: List[int]</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(nums)):</span><br><span class="line">            x = target-nums[i];</span><br><span class="line">            c = nums[<span class="number">0</span>:i].count(x);</span><br><span class="line">            <span class="keyword">if</span> c &gt; <span class="number">0</span> <span class="keyword">and</span> nums.index(x) != i:</span><br><span class="line">                <span class="keyword">return</span> [nums.index(x), i]</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/reverse-linked-list/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/reverse-linked-list/" itemprop="url">单链表反转 —— 变形</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-03T00:05:58+08:00">
+                2016-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：单链表反转"><a href="#算法：单链表反转" class="headerlink" title="算法：单链表反转"></a>算法：单链表反转</h1><h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">这其实是一道变形的链表反转题，大致描述如下</span><br><span class="line"></span><br><span class="line">给定一个单链表的头节点 <span class="selector-tag">head</span>,实现一个调整单链表的函数，使得每<span class="selector-tag">K</span>个节点之间为一组进行逆序，并且从链表的尾部开始组起，头部剩余节点数量不够一组的不需要逆序。（不能使用队列或者栈作为辅助）</span><br><span class="line"></span><br><span class="line">例如：</span><br><span class="line">链表:1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;7-&gt;8-&gt;null, K = 3。那么 6-&gt;7-&gt;8，3-&gt;4-&gt;5，1-&gt;2各位一组。调整后：1-&gt;2-&gt;5-&gt;4-&gt;3-&gt;8-&gt;7-&gt;6-&gt;null。其中 1，2不调整，因为不够一组。</span><br></pre></td></tr></table></figure>
+
+<p>解析</p>
+<blockquote>
+<p>这道题的难点在于，是从链表的尾部开始组起的，而不是从链表的<strong>头部</strong>，如果是头部的话，那我们还是比较容易做的，因为你可以遍历链表，每遍历 k 个就拆分为一组来逆序。但是从尾部的话就不一样了，因为是单链表，不能往后遍历组起；</p>
+</blockquote>
+<blockquote>
+<p>思路1：整体反转，然后从头开始截取 K个节点 ，被后续截图的K个节点 的尾部连接；最后长度不足K的节点再局部反转 作为 队头</p>
+</blockquote>
+<blockquote>
+<p>思路2：整体反转，</p>
+</blockquote>
+<p>​                       </p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    Node next;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> d)</span> </span>&#123; <span class="keyword">this</span>.val = d; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">reverse</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">        Node pre = node;</span><br><span class="line">        Node cur = node.next;</span><br><span class="line">        node.next = <span class="keyword">null</span>;</span><br><span class="line">        Node tmp;</span><br><span class="line">        <span class="keyword">while</span>(cur!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            tmp = cur.next;</span><br><span class="line">            cur.next = pre;</span><br><span class="line">            pre = cur;</span><br><span class="line">            cur = tmp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pre;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">reverseByK</span><span class="params">(Node node, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        Node tmp = node;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;k &amp;&amp; tmp != <span class="keyword">null</span>; i++) &#123;</span><br><span class="line">            tmp = tmp.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (tmp == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125;</span><br><span class="line">        Node childList = tmp.next;</span><br><span class="line">        tmp.next = <span class="keyword">null</span>;</span><br><span class="line">        Node retNode = reverse(node);</span><br><span class="line">        Node newChildNode = reverseByK(childList, k);</span><br><span class="line">        node.next = newChildNode;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> retNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Node link = <span class="keyword">null</span>;</span><br><span class="line">        Node tmp = link;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;<span class="number">9</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">null</span> == tmp) &#123;</span><br><span class="line">            	tmp = <span class="keyword">new</span> Node(i);</span><br><span class="line">            	link = tmp;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            	tmp.next = <span class="keyword">new</span> Node(i);</span><br><span class="line">            	tmp = tmp.next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Solution solution = <span class="keyword">new</span> Solution();</span><br><span class="line">        link = solution.reverse(solution.reverseByK(solution.reverse(link), <span class="number">3</span>));</span><br><span class="line">        <span class="keyword">while</span>(link!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.print(link.val + <span class="string">" "</span>);</span><br><span class="line">            link = link.next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><p>​                         </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/recover-binary-search-tree/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/recover-binary-search-tree/" itemprop="url">Recover Binary Search Tree</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-03T00:05:58+08:00">
+                2016-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：二叉搜索树，-深度优先搜索"><a href="#算法：二叉搜索树，-深度优先搜索" class="headerlink" title="算法：二叉搜索树， 深度优先搜索"></a>算法：二叉搜索树， 深度优先搜索</h1><p>url：<a href="https://leetcode.com/problems/recover-binary-search-tree/" target="_blank" rel="noopener">https://leetcode.com/problems/recover-binary-search-tree/</a></p>
+<p>​                     </p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">99. <span class="selector-tag">Recover</span> <span class="selector-tag">Binary</span> <span class="selector-tag">Search</span> <span class="selector-tag">Tree</span></span><br><span class="line"><span class="selector-tag">Two</span> <span class="selector-tag">elements</span> <span class="selector-tag">of</span> <span class="selector-tag">a</span> <span class="selector-tag">binary</span> <span class="selector-tag">search</span> <span class="selector-tag">tree</span> (<span class="selector-tag">BST</span>) <span class="selector-tag">are</span> <span class="selector-tag">swapped</span> <span class="selector-tag">by</span> <span class="selector-tag">mistake</span>.</span><br><span class="line"><span class="selector-tag">Recover</span> <span class="selector-tag">the</span> <span class="selector-tag">tree</span> <span class="selector-tag">without</span> <span class="selector-tag">changing</span> <span class="selector-tag">its</span> <span class="selector-tag">structure</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span> 1:</span><br><span class="line"><span class="selector-tag">Input</span>: <span class="selector-attr">[1,3,null,null,2]</span></span><br><span class="line">   1</span><br><span class="line">  /</span><br><span class="line"> 3</span><br><span class="line">  \</span><br><span class="line">   2</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-attr">[3,1,null,null,2]</span></span><br><span class="line">   3</span><br><span class="line">  /</span><br><span class="line"> 1</span><br><span class="line">  \</span><br><span class="line">   2</span><br><span class="line"><span class="selector-tag">Example</span> 2:</span><br><span class="line"><span class="selector-tag">Input</span>: <span class="selector-attr">[3,1,4,null,null,2]</span></span><br><span class="line">  3</span><br><span class="line"> / \</span><br><span class="line">1   4</span><br><span class="line">   /</span><br><span class="line">  2</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-attr">[2,1,4,null,null,3]</span></span><br><span class="line">  2</span><br><span class="line"> / \</span><br><span class="line">1   4</span><br><span class="line">   /</span><br><span class="line">  3</span><br><span class="line"><span class="selector-tag">Follow</span> <span class="selector-tag">up</span>:</span><br><span class="line"><span class="selector-tag">A</span> <span class="selector-tag">solution</span> <span class="selector-tag">using</span> <span class="selector-tag">O</span>(<span class="selector-tag">n</span>) <span class="selector-tag">space</span> <span class="selector-tag">is</span> <span class="selector-tag">pretty</span> <span class="selector-tag">straight</span> <span class="selector-tag">forward</span>.</span><br><span class="line"><span class="selector-tag">Could</span> <span class="selector-tag">you</span> <span class="selector-tag">devise</span> <span class="selector-tag">a</span> <span class="selector-tag">constant</span> <span class="selector-tag">space</span> <span class="selector-tag">solution</span>?</span><br></pre></td></tr></table></figure>
+
+<p>分析</p>
+<ol>
+<li>要求，不改变现有树结构的前提，使数恢复为二叉搜索树；</li>
+<li>使用DFS便利二叉树，凡是 不符合规则的节点都标记出来；</li>
+<li>中序遍历，遍历结果有序，无序的节点就是 不合格的节点</li>
+</ol>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    TreeNode pre;</span><br><span class="line">    TreeNode first, second;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">recoverTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        pre = <span class="keyword">new</span> TreeNode(Integer.MIN_VALUE);</span><br><span class="line">        inorder(root);</span><br><span class="line">        swap(first, second);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">inorder</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">null</span> == root) <span class="keyword">return</span>;</span><br><span class="line">        inorder(root.left);</span><br><span class="line">        <span class="keyword">if</span>(pre.val &gt;= root.val &amp;&amp; pre.val != Integer.MIN_VALUE) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">null</span> == first) first = pre;</span><br><span class="line">            second = root;</span><br><span class="line">        &#125;</span><br><span class="line">        pre = root;</span><br><span class="line">        inorder(root.right);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(TreeNode node1, TreeNode node2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp = node1.val;</span><br><span class="line">        node1.val = node2.val;</span><br><span class="line">        node2.val = tmp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TreeNode <span class="title">stringToTreeNode</span><span class="params">(String input)</span> </span>&#123;</span><br><span class="line">        input = input.trim();</span><br><span class="line">        input = input.substring(<span class="number">1</span>, input.length() - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (input.length() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        String[] parts = input.split(<span class="string">","</span>);</span><br><span class="line">        String item = parts[<span class="number">0</span>];</span><br><span class="line">        TreeNode root = <span class="keyword">new</span> TreeNode(Integer.parseInt(item));</span><br><span class="line">        Queue&lt;TreeNode&gt; nodeQueue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        nodeQueue.add(root);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">int</span> index = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(!nodeQueue.isEmpty()) &#123;</span><br><span class="line">            TreeNode node = nodeQueue.remove();</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (index == parts.length) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            item = parts[index++];</span><br><span class="line">            item = item.trim();</span><br><span class="line">            <span class="keyword">if</span> (!item.equals(<span class="string">"null"</span>)) &#123;</span><br><span class="line">                <span class="keyword">int</span> leftNumber = Integer.parseInt(item);</span><br><span class="line">                node.left = <span class="keyword">new</span> TreeNode(leftNumber);</span><br><span class="line">                nodeQueue.add(node.left);</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (index == parts.length) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            item = parts[index++];</span><br><span class="line">            item = item.trim();</span><br><span class="line">            <span class="keyword">if</span> (!item.equals(<span class="string">"null"</span>)) &#123;</span><br><span class="line">                <span class="keyword">int</span> rightNumber = Integer.parseInt(item);</span><br><span class="line">                node.right = <span class="keyword">new</span> TreeNode(rightNumber);</span><br><span class="line">                nodeQueue.add(node.right);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">treeNodeToString</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"[]"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        String output = <span class="string">""</span>;</span><br><span class="line">        Queue&lt;TreeNode&gt; nodeQueue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        nodeQueue.add(root);</span><br><span class="line">        <span class="keyword">while</span>(!nodeQueue.isEmpty()) &#123;</span><br><span class="line">            TreeNode node = nodeQueue.remove();</span><br><span class="line">    </span><br><span class="line">            <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">              output += <span class="string">"null, "</span>;</span><br><span class="line">              <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">    </span><br><span class="line">            output += String.valueOf(node.val) + <span class="string">", "</span>;</span><br><span class="line">            nodeQueue.add(node.left);</span><br><span class="line">            nodeQueue.add(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"["</span> + output.substring(<span class="number">0</span>, output.length() - <span class="number">2</span>) + <span class="string">"]"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        BufferedReader in = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(System.in));</span><br><span class="line">        String line;</span><br><span class="line">        <span class="keyword">while</span> ((line = in.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            TreeNode root = stringToTreeNode(line);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">new</span> Solution().recoverTree(root);</span><br><span class="line">            String out = treeNodeToString(root);</span><br><span class="line">            </span><br><span class="line">            System.out.print(out);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><p>​                              </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/longest-palindromic-substring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/longest-palindromic-substring/" itemprop="url">Longest Palindromic Substring</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-01T00:25:11+08:00">
+                2016-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：动态规划"><a href="#算法：动态规划" class="headerlink" title="算法：动态规划"></a>算法：动态规划</h1><h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>URL：<a href="https://leetcode-cn.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/longest-palindromic-substring/</a></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">给定一个字符串 <span class="selector-tag">s</span>，找到 <span class="selector-tag">s</span> 中最长的回文子串。你可以假设 <span class="selector-tag">s</span> 的最大长度为 1000。</span><br><span class="line"></span><br><span class="line">示例 1：</span><br><span class="line"></span><br><span class="line">输入: "<span class="selector-tag">babad</span>"</span><br><span class="line">输出: "<span class="selector-tag">bab</span>"</span><br><span class="line">注意: "<span class="selector-tag">aba</span>" 也是一个有效答案。</span><br><span class="line">示例 2：</span><br><span class="line"></span><br><span class="line">输入: "<span class="selector-tag">cbbd</span>"</span><br><span class="line">输出: "<span class="selector-tag">bb</span>"</span><br></pre></td></tr></table></figure>
+
+<p>分析</p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><p>扩展中心算法</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190826121546.png" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Stack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        String longestS=<span class="keyword">null</span>, curS=<span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;s.length(); ++i) &#123;</span><br><span class="line">            curS = palindrome(s.toCharArray(), i);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == curS) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == longestS) longestS = curS;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (longestS.length() &lt;= curS.length()) longestS = curS;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">null</span> == longestS) ? <span class="string">""</span> : longestS;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">palindrome</span><span class="params">(<span class="keyword">char</span>[] chArr, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">        Stack&lt;Character&gt; stack1 = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line">        Stack&lt;Character&gt; stack2 = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line">        <span class="keyword">int</span> len1=<span class="number">0</span>, len2=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(index-<span class="number">1</span>&gt;=<span class="number">0</span> &amp;&amp; chArr[index] == chArr[index-<span class="number">1</span>]) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=index-<span class="number">1</span>; i&gt;=<span class="number">0</span>; --i) &#123;</span><br><span class="line">                <span class="keyword">int</span> delta = index-<span class="number">1</span>-i;</span><br><span class="line">                <span class="keyword">if</span>(index+delta&gt;=chArr.length) <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">if</span>(chArr[i] == chArr[index+delta]) &#123;</span><br><span class="line">                    stack1.push(chArr[i]);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            len1 = stack1.size()*<span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(index-<span class="number">2</span>&gt;=<span class="number">0</span> &amp;&amp; chArr[index] == chArr[index-<span class="number">2</span>]) &#123;</span><br><span class="line">            stack2.push(chArr[index-<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=index-<span class="number">2</span>; i&gt;=<span class="number">0</span>; --i) &#123;</span><br><span class="line">                <span class="keyword">int</span> delta = index-<span class="number">2</span>-i;</span><br><span class="line">                <span class="keyword">if</span>(index+delta&gt;=chArr.length) <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">if</span>(chArr[i] == chArr[index+delta]) &#123;</span><br><span class="line">                    stack2.push(chArr[i]);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            len2 = stack2.size()*<span class="number">2</span> - <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// System.out.printf("%d, %d %c \n", len1, len2, chArr[index]);</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span>==len1 &amp;&amp; <span class="number">0</span>==len2) <span class="keyword">return</span> String.valueOf(chArr[index]);</span><br><span class="line">        <span class="keyword">if</span> (len1&gt;len2) &#123;</span><br><span class="line">            <span class="keyword">char</span>[] res = <span class="keyword">new</span> <span class="keyword">char</span>[len1];</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; !stack1.isEmpty(); ++i) &#123;</span><br><span class="line">                <span class="keyword">char</span> c = stack1.pop().charValue();</span><br><span class="line">                res[i] = res[len1-<span class="number">1</span>-i] = c;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> String.copyValueOf(res);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">char</span>[] res = <span class="keyword">new</span> <span class="keyword">char</span>[len2];</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; !stack2.isEmpty(); ++i) &#123;</span><br><span class="line">                <span class="keyword">char</span> c = stack2.pop().charValue();</span><br><span class="line">                res[i] = res[len2-<span class="number">1</span>-i] = c;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> String.copyValueOf(res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            String s = <span class="string">"ba"</span>;</span><br><span class="line">            String ret = <span class="keyword">new</span> Solution().longestPalindrome(s);</span><br><span class="line">            String out = (ret);</span><br><span class="line">            System.out.print(out);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样解法的代码优化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (s == <span class="keyword">null</span> || s.length() &lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">		<span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">			<span class="keyword">int</span> len1 = expandAroundCenter(s, i, i);</span><br><span class="line">			<span class="keyword">int</span> len2 = expandAroundCenter(s, i, i + <span class="number">1</span>);</span><br><span class="line">			<span class="keyword">int</span> len = Math.max(len1, len2);</span><br><span class="line">			<span class="keyword">if</span> (len &gt; end - start) &#123;</span><br><span class="line">				start = i - (len - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">				end = i + len / <span class="number">2</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> s.substring(start, end + <span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">expandAroundCenter</span><span class="params">(String s, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> L = left, R = right;</span><br><span class="line">		<span class="keyword">while</span> (L &gt;= <span class="number">0</span> &amp;&amp; R &lt; s.length() &amp;&amp; s.charAt(L) == s.charAt(R)) &#123;</span><br><span class="line">			L--;</span><br><span class="line">			R++;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> R - L - <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>动态规划的解法</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190826121624.png" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		String s = <span class="string">"aba1ab"</span>;</span><br><span class="line">		String ret = <span class="keyword">new</span> Solution().longestPalindrome(s);</span><br><span class="line">		String out = (ret);</span><br><span class="line">		System.out.print(out);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">null</span> == s || s.length() &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> s;</span><br><span class="line">        &#125;</span><br><span class="line">        String origin = s;</span><br><span class="line">        String reverse = <span class="keyword">new</span> StringBuffer(s).reverse().toString();</span><br><span class="line">        <span class="keyword">int</span> length = s.length();</span><br><span class="line">        <span class="keyword">int</span>[][] arr = <span class="keyword">new</span> <span class="keyword">int</span>[length][length];</span><br><span class="line">        <span class="keyword">int</span> maxLen = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> maxEnd = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;length; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span>(origin.charAt(i) == reverse.charAt(j)) &#123;</span><br><span class="line">                    <span class="keyword">if</span>(<span class="number">0</span>==i || <span class="number">0</span>==j) &#123;</span><br><span class="line">                        arr[i][j] = <span class="number">1</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        arr[i][j] = arr[i-<span class="number">1</span>][j-<span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (arr[i][j]&gt;= maxLen) &#123;</span><br><span class="line">                    <span class="keyword">int</span> beforeRev = length-<span class="number">1</span> - j;</span><br><span class="line">                    <span class="keyword">if</span>(arr[i][j]-<span class="number">1</span>+beforeRev == i) &#123;</span><br><span class="line">                        maxLen = arr[i][j];</span><br><span class="line">                        maxEnd = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.substring(maxEnd-(maxLen-<span class="number">1</span>), maxEnd+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><p>​          </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/16/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

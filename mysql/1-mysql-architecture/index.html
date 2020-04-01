@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、MySQL逻辑架构 二、MySQL基本架构​       对于MySQL来说，虽然经历了多个版本迭代（MySQL5.5,MySQL 5.6,MySQL 5.7,MySQL 8）,但每次的迭代，都是基于MySQL基架的，MySQL基架大致包括如下几大模块组件： 1、MySQL向外提供的交互接口(Connectors)Connectors组件，是MySQL向外提供的交互组件，如java,.n">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL架构设计">
+<meta property="og:url" content="https://carlo-z.com/mysql/1-mysql-architecture/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="一、MySQL逻辑架构 二、MySQL基本架构​       对于MySQL来说，虽然经历了多个版本迭代（MySQL5.5,MySQL 5.6,MySQL 5.7,MySQL 8）,但每次的迭代，都是基于MySQL基架的，MySQL基架大致包括如下几大模块组件： 1、MySQL向外提供的交互接口(Connectors)Connectors组件，是MySQL向外提供的交互组件，如java,.n">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122160128.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227105042.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191023135901.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122161052.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191224143046.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191203113218.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191203141337.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227112553.png">
+<meta property="og:image" content="https://dev.mysql.com/doc/refman/5.6/en/images/innodb-change-buffer.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227105823.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227105837.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227111149.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227110901.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227111242.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227111258.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227113203.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191203113218.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191203205602.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227120738.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227120913.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227121113.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122161139.png">
+<meta property="og:updated_time" content="2020-01-05T12:05:06.270Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL架构设计">
+<meta name="twitter:description" content="一、MySQL逻辑架构 二、MySQL基本架构​       对于MySQL来说，虽然经历了多个版本迭代（MySQL5.5,MySQL 5.6,MySQL 5.7,MySQL 8）,但每次的迭代，都是基于MySQL基架的，MySQL基架大致包括如下几大模块组件： 1、MySQL向外提供的交互接口(Connectors)Connectors组件，是MySQL向外提供的交互组件，如java,.n">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122160128.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/mysql/1-mysql-architecture/">
+
+
+
+
+
+  <title>MySQL架构设计 | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/1-mysql-architecture/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MySQL架构设计</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T00:00:00+08:00">
+                2017-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<h1 id="一、MySQL逻辑架构"><a href="#一、MySQL逻辑架构" class="headerlink" title="一、MySQL逻辑架构"></a>一、MySQL逻辑架构</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122160128.png" alt></p>
+<h1 id="二、MySQL基本架构"><a href="#二、MySQL基本架构" class="headerlink" title="二、MySQL基本架构"></a>二、MySQL基本架构</h1><p>​       对于MySQL来说，虽然经历了多个版本迭代（MySQL5.5,MySQL 5.6,MySQL 5.7,MySQL 8）,但每次的迭代，都是基于MySQL基架的，MySQL基架大致包括如下几大模块组件：</p>
+<h3 id="1、MySQL向外提供的交互接口-Connectors"><a href="#1、MySQL向外提供的交互接口-Connectors" class="headerlink" title="1、MySQL向外提供的交互接口(Connectors)"></a>1、MySQL向外提供的交互接口(Connectors)</h3><p>Connectors组件，是MySQL向外提供的交互组件，如java,.net,php等语言可以通过该组件来操作SQL语句，实现与SQL的交互。</p>
+<h3 id="2、管理服务组件和工具组件-Management-Service-amp-Utilities"><a href="#2、管理服务组件和工具组件-Management-Service-amp-Utilities" class="headerlink" title="2、管理服务组件和工具组件(Management Service &amp; Utilities)"></a>2、管理服务组件和工具组件(Management Service &amp; Utilities)</h3><p>提供对MySQL的集成管理，如备份(Backup),恢复(Recovery),安全管理(Security)等</p>
+<h3 id="3、连接池组件-Connection-Pool"><a href="#3、连接池组件-Connection-Pool" class="headerlink" title="3、连接池组件(Connection Pool)"></a>3、连接池组件(Connection Pool)</h3><p> 负责监听对客户端向MySQL Server端的各种请求，接收请求，转发请求到目标模块。每个成功连接MySQL Server的客户请求都会被创建或分配一个线程，该线程负责客户端与MySQL Server端的通信，接收客户端发送的命令，传递服务端的结果信息等。</p>
+<h3 id="4、SQL接口组件-SQL-Interface"><a href="#4、SQL接口组件-SQL-Interface" class="headerlink" title="4、SQL接口组件(SQL Interface)"></a>4、SQL接口组件(SQL Interface)</h3><p>接收用户SQL命令，如DML,DDL和存储过程等，并将最终结果返回给用户。</p>
+<h3 id="5、查询分析器组件-Parser"><a href="#5、查询分析器组件-Parser" class="headerlink" title="5、查询分析器组件(Parser)"></a>5、查询分析器组件(Parser)</h3><p>首先分析SQL命令语法的合法性，并尝试将SQL命令解析成抽象语法树，若解析失败，则提示SQL语句不合理</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">FROM</span> t_user <span class="keyword">WHERE</span> <span class="keyword">status</span> = <span class="string">'ACTIVE'</span> <span class="keyword">AND</span> age &gt; <span class="number">18</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227105042.png" alt></p>
+<h3 id="6、优化器组件-Optimizer"><a href="#6、优化器组件-Optimizer" class="headerlink" title="6、优化器组件(Optimizer)"></a>6、优化器组件(Optimizer)</h3><p>对SQL命令按照标准流程进行优化分析。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">explain select c_user.*, t.cust_id, ifnull(tcc.tradeamt, 0) tradeamt,  ifnull(tcc.commission,0) commission, ifnull(ih.is_hadtrade, 0) is_hadtrade</span><br><span class="line">  from crm.c_user</span><br><span class="line">    left join crm.trade_fund_account t on c_user.id = t.c_user_id and t.cust_id &gt; 0</span><br><span class="line">     left join (select cust_id, sum(amount_trade) tradeamt, max(commission_ft_current_month) commission </span><br><span class="line">                     from crm.trade_commission tc </span><br><span class="line">                    where tc.bizdate between 20171001 and 20171031 </span><br><span class="line">                        and tc.bid = '00000000000000007'</span><br><span class="line">                group by cust_id</span><br><span class="line">                ) tcc on tcc.cust_id = t.cust_id </span><br><span class="line">    left join (select cust_id, sum(amount_trade), (case when sum(amount_trade) &gt; 0 then 1 else 0 end) is_hadtrade</span><br><span class="line">                   from crm.trade_commission tc </span><br><span class="line">                  where tc.bid = '00000000000000007' </span><br><span class="line">                      and tc.bizdate &lt; 20171022</span><br><span class="line">                  group by tc.cust_id</span><br><span class="line">              ) ih on ih.cust_id = t.cust_id </span><br><span class="line"> where c_user.bapp_broker_id = '00000000000000007'</span><br><span class="line">   and is_hadtrade = 1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191023135901.png" alt></p>
+<h3 id="7、缓存主件-Caches-amp-Buffers"><a href="#7、缓存主件-Caches-amp-Buffers" class="headerlink" title="7、缓存主件(Caches &amp; Buffers)"></a>7、缓存主件(Caches &amp; Buffers)</h3><p>缓存和缓冲组件</p>
+<h3 id="8、插件式存储引擎-Pluggable-Storage-Engines"><a href="#8、插件式存储引擎-Pluggable-Storage-Engines" class="headerlink" title="8、插件式存储引擎(Pluggable Storage Engines)"></a>8、插件式存储引擎(Pluggable Storage Engines)</h3><h3 id="9、物理文件-File-System"><a href="#9、物理文件-File-System" class="headerlink" title="9、物理文件(File System)"></a>9、物理文件(File System)</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122161052.png" alt></p>
+<br>
+
+<h1 id="三、InnoDB存储引擎"><a href="#三、InnoDB存储引擎" class="headerlink" title="三、InnoDB存储引擎"></a>三、InnoDB存储引擎</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191224143046.png" alt></p>
+<blockquote>
+<p>1）、 当事务要修改一条记录时，Innodb需要将该记录从Disk中读到BP（Buffer Pool）中。当事务提交后（commit），BP当中的page的记录被修改，这时BP中page就和Disk中的page不一致了，所以这时候BP中的page就是Dirty Page, 需要等待刷新到Disk中；</p>
+<p>2）、假如在BP的Dirty Pages刷新到Disk前，系统断电了那么Dirty Page中的数据修改是不是就全部丢失了呢？答案是不会的，这就是Redo Log(innodb_flush_log_at_trx_commit=1)要做的事情了。在事务提交时候，事务中的更新操作会立即保存到Redo Log. 所以就算BP中的Dirty Page在断电后全部丢失，MySQL在重启时，仍可以根据Redo Log来恢复数据；</p>
+<p>3）、好了，现在想象一下，假如Dirty Page在flush到disk的过程中发生断电，导致部分数据丢失，Redo Log还能不能恢复这部分数据。答案是不行的，因为mysql在恢复的时候是根据page的checksum来决定这个page是否需要恢复，而这个checksum就是这个page最后一个事务的事务号。这就是partial write的问题，这时候就需要double write了；</p>
+<blockquote>
+<p>partial write是指mysql在将数据写到数据文件的时候, 会出现只写了一半但由于某种原因剩下的数据没有写到innodb file上. 出现这种问题可能是由于系统断电, mysql crash造成的, 而造成这个问题更根本的原因是由于mysql 的page size跟系统文件的page size不一致, 导致在写数据的时候, 系统并不是把整个buffer pool page一次性写到disk上,所以当写到一半时, 系统断电,partial write也就产生了; 如果partial write产生, 会发生什么问题呢? 因为我们知道在flush buffer cache的时候,其实redo log已经写好了. 为什么还需要担心partial write呢? 这是因为mysql在恢复的时候是通过检查page的checksum来决定这个page是否需要恢复的, checksum就是当前这个page最后一个事务的事务号; 如果系统找不到checksum, mysql也就无法对这行数据执行写入操作;</p>
+</blockquote>
+<p>4）、double write的作用就是在mysql将数据刷新到硬盘的时候，先将数据写到double write的空间，然后再某个时刻再把数据写到Disk中。</p>
+</blockquote>
+<h3 id="InnoDB架构"><a href="#InnoDB架构" class="headerlink" title="InnoDB架构"></a>InnoDB架构</h3><p> 下图显示了组成InnoDB存储引擎架构的内存和磁盘结构。</p>
+<p>有关每个结构的信息，请参阅第15.5节“InnoDB内存结构”和第15.6节“InnoDB磁盘结构”。 </p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191203113218.png" alt="Mysql5.6"></p>
+<br>
+
+<h3 id="InnoDB内存结构"><a href="#InnoDB内存结构" class="headerlink" title="InnoDB内存结构"></a>InnoDB内存结构</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191203141337.png" alt></p>
+<h4 id="缓冲池-buffer-pool"><a href="#缓冲池-buffer-pool" class="headerlink" title="缓冲池(buffer pool)"></a>缓冲池(buffer pool)</h4><blockquote>
+<p>1）、innodb_buffer_pool缓冲池提高数据库整体性能。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227112553.png" alt></p>
+<p>2）、innodb读取页操作时，先将从磁盘读到的页放在缓冲池中，下次再次读取，先判断是否缓存命中，若否，则读磁盘中的页</p>
+<p>3）、事务提交后,InnoDB首先在buffer pool中找到对应的页,把事务更新到 buffer poll 中.</p>
+<p>​        当刷新脏页到磁盘时,缓冲区都干了什么? 缓冲区把脏页拷贝到doublewrite buffer，doublewirte buffer把脏页刷新到double write磁盘(这也是一次顺序IO),再把脏页刷新到数据文件中。当然buffer pool中还有其他组件,也非常重要,如插入缓冲（change buffer）,该缓冲区是为了高效维护二级非唯一索引所做的优化,把多次IO转化为一次IO来达到快速更新的目的</p>
+<p>4）、mysql crash时，buffer pool中的数据都会丢失。</p>
+<p>​        innodb数据文件中，会存储<code>checkpoint信息</code>，redo log中也存储checkpoint信息。<code>InnoDB会对比数据文件ibd和redo log中的checkpoint信息，找出最后一次checkpoint对应的log sequence number，通过redo log的变更记录重新应用到数据库</code></p>
+</blockquote>
+<h4 id="更改缓冲区（change-buffer）"><a href="#更改缓冲区（change-buffer）" class="headerlink" title="更改缓冲区（change buffer）"></a>更改缓冲区（change buffer）</h4><p><img src="https://dev.mysql.com/doc/refman/5.6/en/images/innodb-change-buffer.png" alt></p>
+<blockquote>
+<ul>
+<li><p>原来就是insert buffer，后来随着update和delete缓冲加入改为change buffer。</p>
+</li>
+<li><p>缓存对二级索引的变更。二级索引通常是非唯一的，并且二级索引中的插入以相对随机的顺序发生。</p>
+</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227105823.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227105837.png" alt></p>
+</blockquote>
+<h4 id="log-buffer"><a href="#log-buffer" class="headerlink" title="log buffer"></a>log buffer</h4><blockquote>
+<h4 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h4><p>1）、InnoDB存储引擎是基于磁盘存储的，并将其中的记录按照页的方式进行管理</p>
+<ul>
+<li><p>bp(<code>buffer pool</code>)：<code>InnoDB数据库page的缓存。</code></p>
+</li>
+<li><p>page：<code>对InnoDB中数据的任何修改，首先在bp的page上进行。修改后的page标记为dirty page。</code></p>
+</li>
+<li><p>flush list：<code>存放dirty page，后续由专门的thread写入磁盘中。</code></p>
+</li>
+</ul>
+<p>2）、使用bp的好处：<code>避免每次对page的修改都进行IO操作，将多次对页面的修改合并成一次IO操作。</code></p>
+<ul>
+<li>引入问题：<code>会造成数据的不一致性，RAM和Disk中数据不一致。</code></li>
+<li>解决(<code>数据不一致性</code>)：<code>使用redo log，将所有对page进行的修改操作，都写入一个专门的文件中数据库启动时，会从中恢复。</code></li>
+<li>redo log的影响：<code>延迟了bp中page刷新到磁盘，提高了数据库的吞吐量。 额外的redo log顺序IO的写入开销，以及数据库启动时使用redo log恢复所需时间。</code></li>
+</ul>
+<h4 id="2、redo-log相关参数"><a href="#2、redo-log相关参数" class="headerlink" title="2、redo log相关参数"></a>2、redo log相关参数</h4><p>show variables like “%innodb_log%”;</p>
+<ul>
+<li><p>innodb_log_file_size 指定redo log日志文件大小，默认48M</p>
+</li>
+<li><p>innodb_log_files_in_group redo log日志文件组中文件的数量，默认2个，ib_logfile0和ib_logfile1</p>
+</li>
+<li><p>innodb_log_buffer_size redo log buffer的大小，默认为16M</p>
+</li>
+</ul>
+<p>日志组中的文件大小是一致的，以循环的方式运行。ib_logfile0写满时，切换到ib_logfile1，ib_logfile1写满时，再次切换到ib_logfile0。</p>
+<h4 id="3、redo-log写入过程"><a href="#3、redo-log写入过程" class="headerlink" title="3、redo log写入过程"></a>3、redo log写入过程</h4><p>1）、<code>redo log buffer 向 redo log file 写，是按512个字节，也就是一个扇区的大小进行写入。扇区是写入的最小单位。</code></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227111149.png" alt></p>
+<p>​        参数innodb_flush_log_at_trx_commit用来控制事务日志刷新到磁盘的策略。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227110901.png" alt></p>
+<p>2）、将redo log buffer中的内容刷新到磁盘的redo log file（<code>ib_logfile</code>）中的条件。</p>
+<ul>
+<li>保证<code>日志先行</code>，每次事务commit前，都会将redo log刷新到磁盘上。</li>
+<li><code>redo log是一个环(ring)结构，当redo空间快占满时，将会将部分dirty pages flush到disk上，然后释放部分redo log。</code></li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227111242.png" alt></p>
+<h4 id="4、对比binlog"><a href="#4、对比binlog" class="headerlink" title="4、对比binlog"></a>4、对比binlog</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227111258.png" alt></p>
+<h4 id="5、对比undo-log"><a href="#5、对比undo-log" class="headerlink" title="5、对比undo log"></a>5、对比undo log</h4><p>1）、<code>Undo Log 是为了实现事务的原子性(rollback)，在MySQL数据库InnoDB存储引擎中，还用Undo Log来实现多版本并发控制(简称：MVCC)。</code></p>
+<p> 2）、Undo log是InnoDB MVCC事务特性的重要组成部分。当我们对记录做了变更操作时就会产生undo记录，Undo记录默认被记录到系统表空间(ibdata)中，但从5.6开始，也可以使用独立的Undo 表空间。</p>
+<p> 3）、Undo记录中存储的是老版本数据，当一个旧的事务需要读取数据时，为了能读取到老版本的数据，需要顺着undo链找到满足其可见性的记录。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227113203.png" alt></p>
+</blockquote>
+<br>
+
+<h3 id="InnoDB磁盘结构"><a href="#InnoDB磁盘结构" class="headerlink" title="InnoDB磁盘结构"></a>InnoDB磁盘结构</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191203113218.png" alt="Mysql5.6"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191203205602.png" alt></p>
+<ul>
+<li>tablespace：表空间</li>
+<li>segment 段：</li>
+<li>extent 簇：物理上连续的几个页； 1MB一个簇 = 64 * 16KB = 128 * 8KB = 256 * 4KB，一个簇包含多少Page取决于Page的大小</li>
+<li>page 页：16KB</li>
+</ul>
+<h4 id="索引组织表"><a href="#索引组织表" class="headerlink" title="索引组织表"></a>索引组织表</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227120738.png" alt></p>
+<h4 id="doublewrite-buffer"><a href="#doublewrite-buffer" class="headerlink" title="doublewrite buffer"></a>doublewrite buffer</h4><ul>
+<li><p>doublewrite buffer 是 InnoDB 的 system tablespace 中的一个区域。在 把 buffer pool 中的内容写入对应的 data file 之前，先要把数据写入 doublewirte buffer 中；</p>
+</li>
+<li><p>如果 storage 或者 mysqld 在写 page的过程中 进程崩溃，InnoDB 可以在 doublewrite buffer 中找到完成的 page 的拷贝 用来恢复；</p>
+</li>
+<li><p>尽管数据总是写两次，但 doublewrite buffer 不需要两倍的 I/O开销 或 两倍的 I/O 操作。数据作为一个大的连续块 写入 doublwrite buffer，只需对操作系统执行一次 fsync() 调用；</p>
+</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227120913.png" alt></p>
+<p>double write的缺点是什么?</p>
+<p>​        虽然mysql称double write是一个buffer, 但其实它是开在物理文件上的一个buffer, 其实也就是file, 所以它会导致系统有更多的fsync操作, 而我们知道硬盘的fsync性能是很慢的, 所以它会降低mysql的整体性能. 但是并不会降低到原来的50%. 这主要是因为: 1) double write是一个连接的存储空间, 所以硬盘在写数据的时候是顺序写, 而不是随机写, 这样性能更高. 另外将数据从double write buffer写到真正的segment中的时候, 系统会自动合并连接空间刷新的方式, 每次可以刷新多个pages;</p>
+<h4 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h4><ul>
+<li><p>Redo Log是基于磁盘的数据结构，在崩溃恢复期间用于纠正不完整事务写入的数据。</p>
+</li>
+<li><p>默认情况下，Redo Log在磁盘上由两个名为ib_logfile0和的 文件物理表示ib_logfile1。MySQL以循环方式写入Redo Log文件。Redo Log中的数据按照受影响的记录进行编码；此数据统称为重做。</p>
+</li>
+</ul>
+<h4 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h4><ul>
+<li><p>功能：事务回滚、MVCC</p>
+</li>
+<li><p>undo log是与单个读写事务关联的 undo Log 记录的集合。undo Log 记录包含如何 撤消事务对 聚簇索引 记录的最新更改 的信息。如果另一个事务读取原始数据，就需要在 undo Log记录读取。</p>
+</li>
+<li><p>undo log存在于 undo log segment。默认情况下，undo log segment 实际上是 system tablespace 的一部分 ，但它们也可以驻留在 undolog tablespace 中</p>
+</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191227121113.png" alt></p>
+<blockquote>
+<p>•undo:相当于数据修改前的备份</p>
+<p>•redo: 相当于数据修改后的备份,为了保证事务的持久化,redo会一直写</p>
+<p>•<strong>Undo + Redo**</strong>事务的简化过程**<br>  假设有A、B两个数据，值分别为1,2.<br>  A.事务开始.<br>  B.记录A=1到undo log.<br>  C.修改A=3.<br>  D.记录A=3到redo log.<br>  E.记录B=2到undo log.<br>  F.修改B=4.<br>  G.记录B=4到redo log.<br>  H.将redo log写入磁盘<br>  I.事务提交完成</p>
+<p>•- <strong>Undo + Redo**</strong>事务的特点**<br>  A. 为了保证持久性，必须在事务提交前将Redo Log持久化  —一般每个事务提交时或每秒刷盘<br>  B. 数据不需要在事务提交前写入磁盘，而是缓存在内存中。   —data在此时不需要写磁盘，但是如果redo文件过小也会触发事务未提交前数据落盘<br>  C. Redo Log 保证事务的持久性<br>  D. Undo Log 保证事务的原子性。<br>  E. 有一个隐含的特点，数据必须要晚于redo log写入持久存储。</p>
+</blockquote>
+<br>
+
+<h1 id="一个查询流程图"><a href="#一个查询流程图" class="headerlink" title="一个查询流程图"></a>一个查询流程图</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122161139.png" alt></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/tools/azkaban-setup/" rel="next" title="Azkaban安装部署">
+                <i class="fa fa-chevron-left"></i> Azkaban安装部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/mysql/mysql-explain/" rel="prev" title="mysql explain 详解">
+                mysql explain 详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、MySQL逻辑架构"><span class="nav-text">一、MySQL逻辑架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、MySQL基本架构"><span class="nav-text">二、MySQL基本架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、MySQL向外提供的交互接口-Connectors"><span class="nav-text">1、MySQL向外提供的交互接口(Connectors)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、管理服务组件和工具组件-Management-Service-amp-Utilities"><span class="nav-text">2、管理服务组件和工具组件(Management Service &amp; Utilities)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、连接池组件-Connection-Pool"><span class="nav-text">3、连接池组件(Connection Pool)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、SQL接口组件-SQL-Interface"><span class="nav-text">4、SQL接口组件(SQL Interface)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、查询分析器组件-Parser"><span class="nav-text">5、查询分析器组件(Parser)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、优化器组件-Optimizer"><span class="nav-text">6、优化器组件(Optimizer)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、缓存主件-Caches-amp-Buffers"><span class="nav-text">7、缓存主件(Caches &amp; Buffers)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、插件式存储引擎-Pluggable-Storage-Engines"><span class="nav-text">8、插件式存储引擎(Pluggable Storage Engines)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9、物理文件-File-System"><span class="nav-text">9、物理文件(File System)</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#三、InnoDB存储引擎"><span class="nav-text">三、InnoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB架构"><span class="nav-text">InnoDB架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB内存结构"><span class="nav-text">InnoDB内存结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#缓冲池-buffer-pool"><span class="nav-text">缓冲池(buffer pool)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更改缓冲区（change-buffer）"><span class="nav-text">更改缓冲区（change buffer）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#log-buffer"><span class="nav-text">log buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1、概念"><span class="nav-text">1、概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、redo-log相关参数"><span class="nav-text">2、redo log相关参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、redo-log写入过程"><span class="nav-text">3、redo log写入过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4、对比binlog"><span class="nav-text">4、对比binlog</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5、对比undo-log"><span class="nav-text">5、对比undo log</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB磁盘结构"><span class="nav-text">InnoDB磁盘结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#索引组织表"><span class="nav-text">索引组织表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#doublewrite-buffer"><span class="nav-text">doublewrite buffer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redo-log"><span class="nav-text">redo log</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undo-log"><span class="nav-text">undo log</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一个查询流程图"><span class="nav-text">一个查询流程图</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

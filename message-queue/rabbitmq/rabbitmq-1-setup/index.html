@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rabbitmq,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1、什么是消息中间件利用可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，他可以在分布式环境下扩展进程间通信。 应用程序之间异步通信   2、消息中间件的作用异步 解耦 削峰 冗余   3、JMS协议JavaMessageService sun 01年发布的 规范，用来统一所有的mq规范，提供了一个JavaAPI AMQP协议">
+<meta name="keywords" content="rabbitmq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rabbitmq-消息中间件基础">
+<meta property="og:url" content="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-1-setup/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="1、什么是消息中间件利用可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，他可以在分布式环境下扩展进程间通信。 应用程序之间异步通信   2、消息中间件的作用异步 解耦 削峰 冗余   3、JMS协议JavaMessageService sun 01年发布的 规范，用来统一所有的mq规范，提供了一个JavaAPI AMQP协议">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316100917.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316100959.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316101331.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316101244.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316101543.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316102154.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200317141617.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200329220729.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200330154343.png">
+<meta property="og:updated_time" content="2020-03-31T12:16:48.317Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rabbitmq-消息中间件基础">
+<meta name="twitter:description" content="1、什么是消息中间件利用可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，他可以在分布式环境下扩展进程间通信。 应用程序之间异步通信   2、消息中间件的作用异步 解耦 削峰 冗余   3、JMS协议JavaMessageService sun 01年发布的 规范，用来统一所有的mq规范，提供了一个JavaAPI AMQP协议">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316100917.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-1-setup/">
+
+
+
+
+
+  <title>rabbitmq-消息中间件基础 | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-1-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">rabbitmq-消息中间件基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T02:28:42+08:00">
+                2017-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mq/" itemprop="url" rel="index">
+                    <span itemprop="name">mq</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mq/rabbitmq/" itemprop="url" rel="index">
+                    <span itemprop="name">rabbitmq</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<h1 id="1、什么是消息中间件"><a href="#1、什么是消息中间件" class="headerlink" title="1、什么是消息中间件"></a>1、什么是消息中间件</h1><p>利用可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，他可以在分布式环境下扩展进程间通信。</p>
+<p>应用程序之间异步通信</p>
+<br>
+
+<h1 id="2、消息中间件的作用"><a href="#2、消息中间件的作用" class="headerlink" title="2、消息中间件的作用"></a>2、消息中间件的作用</h1><p>异步</p>
+<p>解耦</p>
+<p>削峰</p>
+<p>冗余</p>
+<br>
+
+<h1 id="3、JMS协议"><a href="#3、JMS协议" class="headerlink" title="3、JMS协议"></a>3、JMS协议</h1><p>JavaMessageService sun 01年发布的 规范，用来统一所有的mq规范，提供了一个JavaAPI</p>
+<p>AMQP协议 04年出现的</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316100917.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316100959.png" alt></p>
+<h3 id="单播"><a href="#单播" class="headerlink" title="单播"></a>单播</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316101331.png" alt></p>
+<h3 id="广播"><a href="#广播" class="headerlink" title="广播"></a>广播</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316101244.png" alt></p>
+<br>
+
+<h1 id="4、AMQP协议"><a href="#4、AMQP协议" class="headerlink" title="4、AMQP协议"></a>4、AMQP协议</h1><p>AMQP包含如下几个组件</p>
+<ul>
+<li>生产者</li>
+<li>消费者</li>
+<li>消息：有效载荷与标签</li>
+<li>连接、信道：一个tcp连接里有多个信道，节省资源</li>
+<li>交换器、队列、路由键、绑定： 交换器和队列通过路由键来绑定</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316101543.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200316102154.png" alt></p>
+<br>
+
+<h1 id="5、RabbitMQ简介"><a href="#5、RabbitMQ简介" class="headerlink" title="5、RabbitMQ简介"></a>5、RabbitMQ简介</h1><p>RabbitMQ的一些特性：</p>
+<ul>
+<li><p>消息确认机制</p>
+</li>
+<li><p>队列、消息持久化</p>
+</li>
+<li><p>消息拒收</p>
+</li>
+<li><p>默认交换器 mandatory（防止丢失）</p>
+</li>
+</ul>
+<p>官方文档：<a href="https://www.rabbitmq.com/documentation.html" target="_blank" rel="noopener">https://www.rabbitmq.com/documentation.html</a></p>
+<br>
+
+<h1 id="6、Centos7下RabbitMQ安装"><a href="#6、Centos7下RabbitMQ安装" class="headerlink" title="6、Centos7下RabbitMQ安装"></a>6、Centos7下RabbitMQ安装</h1><blockquote>
+<p>安装指南：<a href="https://www.rabbitmq.com/install-rpm.html" target="_blank" rel="noopener">https://www.rabbitmq.com/install-rpm.html</a></p>
+</blockquote>
+<h3 id="6-1、安装Erlang"><a href="#6-1、安装Erlang" class="headerlink" title="6.1、安装Erlang"></a>6.1、安装Erlang</h3><p>版本选择：<a href="https://www.rabbitmq.com/which-erlang.html" target="_blank" rel="noopener">https://www.rabbitmq.com/which-erlang.html</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200317141617.png" alt></p>
+<p>下载地址：<a href="https://github.com/rabbitmq/erlang-rpm/releases" target="_blank" rel="noopener">https://github.com/rabbitmq/erlang-rpm/releases</a></p>
+<p>选择：rabbitmq官方维护的专为rabbitmq准备的erlang版本</p>
+<p><code>vi /etc/yum.repos.d/rabbitmq_erlang.repo</code>写入:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[rabbitmq-erlang]</span><br><span class="line">name=rabbitmq-erlang</span><br><span class="line">baseurl=https://dl.bintray.com/rabbitmq-erlang/rpm/erlang/22/el/7</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://dl.bintray.com/rabbitmq/Keys/rabbitmq-release-signing-key.asc</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">enabled=1</span><br></pre></td></tr></table></figure>
+
+<p>安装：<code>yum install erlang -y</code></p>
+<br>
+
+<h3 id="6-2、安装RabbitMQ"><a href="#6-2、安装RabbitMQ" class="headerlink" title="6.2、安装RabbitMQ"></a>6.2、安装RabbitMQ</h3><p>官网：<a href="https://github.com/rabbitmq/rabbitmq-server/releases" target="_blank" rel="noopener">https://github.com/rabbitmq/rabbitmq-server/releases</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rpm --import https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc</span><br><span class="line"></span><br><span class="line">vi /etc/yum.repos.d/rabbitmq.repo</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[bintray-rabbitmq-server]</span><br><span class="line">name=bintray-rabbitmq-rpm</span><br><span class="line">baseurl=https://dl.bintray.com/rabbitmq/rpm/rabbitmq-server/v3.7.x/el/7/</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br><span class="line">enabled=1</span><br></pre></td></tr></table></figure>
+
+<p>安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y rabbitmq-server</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="6-3、开机启动RabbitMQ"><a href="#6-3、开机启动RabbitMQ" class="headerlink" title="6.3、开机启动RabbitMQ"></a>6.3、开机启动RabbitMQ</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chkconfig rabbitmq-server on</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="6-4、启动运行"><a href="#6-4、启动运行" class="headerlink" title="6.4、启动运行"></a>6.4、启动运行</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/sbin/service rabbitmq-server start</span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认会以用户rabbitmq运行，注意日志目录等写权限</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> /var/lib/rabbitmq -&gt; .erlang.cookie</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> /var/<span class="built_in">log</span>/rabbitmq</span></span><br><span class="line"></span><br><span class="line">/sbin/service rabbitmq-server stop</span><br><span class="line"></span><br><span class="line">ps aux | grep rabbitmq</span><br><span class="line">netstat -nltp</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="6-5、防火墙设置"><a href="#6-5、防火墙设置" class="headerlink" title="6.5、防火墙设置"></a>6.5、防火墙设置</h3><ul>
+<li>4369: <a href="http://erlang.org/doc/man/epmd.html" target="_blank" rel="noopener">epmd</a>, a peer discovery service used by RabbitMQ nodes and CLI tools</li>
+<li>5672, 5671: used by AMQP 0-9-1 and 1.0 clients without and with TLS</li>
+<li>25672: used for inter-node and CLI tools communication (Erlang distribution server port) and is allocated from a dynamic range (limited to a single port by default, computed as AMQP port + 20000). Unless external connections on these ports are really necessary (e.g. the cluster uses <a href="https://www.rabbitmq.com/federation.html" target="_blank" rel="noopener">federation</a> or CLI tools are used on machines outside the subnet), these ports should not be publicly exposed. See <a href="https://www.rabbitmq.com/networking.html" target="_blank" rel="noopener">networking guide</a> for details.</li>
+<li>35672-35682: used by CLI tools (Erlang distribution client ports) for communication with nodes and is allocated from a dynamic range (computed as server distribution port + 10000 through server distribution port + 10010). See <a href="https://www.rabbitmq.com/networking.html" target="_blank" rel="noopener">networking guide</a> for details.</li>
+<li>15672: <a href="https://www.rabbitmq.com/management.html" target="_blank" rel="noopener">HTTP API</a> clients, <a href="https://www.rabbitmq.com/management.html" target="_blank" rel="noopener">management UI</a> and <a href="https://www.rabbitmq.com/management-cli.html" target="_blank" rel="noopener">rabbitmqadmin</a> (only if the <a href="https://www.rabbitmq.com/management.html" target="_blank" rel="noopener">management plugin</a> is enabled)</li>
+<li>61613, 61614: <a href="https://stomp.github.io/stomp-specification-1.2.html" target="_blank" rel="noopener">STOMP clients</a> without and with TLS (only if the <a href="https://www.rabbitmq.com/stomp.html" target="_blank" rel="noopener">STOMP plugin</a> is enabled)</li>
+<li>1883, 8883: (<a href="http://mqtt.org/" target="_blank" rel="noopener">MQTT clients</a> without and with TLS, if the <a href="https://www.rabbitmq.com/mqtt.html" target="_blank" rel="noopener">MQTT plugin</a> is enabled</li>
+<li>15674: STOMP-over-WebSockets clients (only if the <a href="https://www.rabbitmq.com/web-stomp.html" target="_blank" rel="noopener">Web STOMP plugin</a> is enabled)</li>
+<li>15675: MQTT-over-WebSockets clients (only if the <a href="https://www.rabbitmq.com/web-mqtt.html" target="_blank" rel="noopener">Web MQTT plugin</a> is enabled)</li>
+<li>15692: Prometheus metrics (only if the <a href="https://www.rabbitmq.com/prometheus.html" target="_blank" rel="noopener">Prometheus plugin</a> is enabled)</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --query-port=5672/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=5672/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="7、配置优化"><a href="#7、配置优化" class="headerlink" title="7、配置优化"></a>7、配置优化</h1><p>官方文档：<a href="https://www.rabbitmq.com/configure.html" target="_blank" rel="noopener">https://www.rabbitmq.com/configure.html</a></p>
+<p>​        rabbitmq的默认设置往往能够适应大多数开发或OA环境，但是对于生产环境来说还需要一定的优化。</p>
+<br>
+
+<h3 id="1、配置文件"><a href="#1、配置文件" class="headerlink" title="1、配置文件"></a>1、配置文件</h3><p>位置：<a href="https://www.rabbitmq.com/configure.html#config-file-location" target="_blank" rel="noopener">https://www.rabbitmq.com/configure.html#config-file-location</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node           : rabbit@example</span><br><span class="line">home dir       : /var/lib/rabbitmq</span><br><span class="line">config file(s) : /etc/rabbitmq/advanced.config</span><br><span class="line">               : /etc/rabbitmq/rabbitmq.conf</span><br></pre></td></tr></table></figure>
+
+<p>如果不能确定你的配置文件的路径，查阅 log文件。或者在ManagerUI中查找</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@dn1 rabbitmq]# find / -name rabbitmq.co*</span><br><span class="line">/usr/share/doc/rabbitmq-server-3.7.24/rabbitmq.config.example</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="如何检查配置是否生效？"><a href="#如何检查配置是否生效？" class="headerlink" title="如何检查配置是否生效？"></a>如何检查配置是否生效？</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl environment</span><br><span class="line">rabbitmqctl [--node &lt;node&gt;] [--longnames] [--quiet] environment</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="新老配置文件格式"><a href="#新老配置文件格式" class="headerlink" title="新老配置文件格式"></a>新老配置文件格式</h4><p>rabbitmq 3.7.0 之前格式 rabbitmq.config，使用erlang 配置格式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ssl_options.cacertfile           = /path/to/ca_certificate.pem</span><br><span class="line">ssl_options.certfile             = /path/to/server_certificate.pem</span><br><span class="line">ssl_options.keyfile              = /path/to/server_key.pem</span><br><span class="line">ssl_options.verify               = verify_peer</span><br><span class="line">ssl_options.fail_if_no_peer_cert = true</span><br></pre></td></tr></table></figure>
+
+<p>rabbitmq 3.7.0 之后，推荐使用新的 sysctl格式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">  &#123;rabbit, [&#123;ssl_options, [&#123;cacertfile,           "/path/to/ca_certificate.pem"&#125;,</span><br><span class="line">                           &#123;certfile,             "/path/to/server_certificate.pem"&#125;,</span><br><span class="line">                           &#123;keyfile,              "/path/to/server_key.pem"&#125;,</span><br><span class="line">                           &#123;verify,               verify_peer&#125;,</span><br><span class="line">                           &#123;fail_if_no_peer_cert, true&#125;]&#125;]&#125;</span><br><span class="line">].</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="rabbitmq-conf"><a href="#rabbitmq-conf" class="headerlink" title="rabbitmq.conf"></a>rabbitmq.conf</h4><p>配置文件的例子<code>/usr/share/doc/rabbitmq-server-3.7.24/rabbitmq.config.example</code></p>
+<p>通过 <code>环境变量</code> 来指定使用哪个配置文件，可以用来指定dev 或 prod：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Example rabbitmq-env.conf file entries. Note that the variables</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">do</span> not have the RABBITMQ_ prefix.</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Overrides node name</span></span><br><span class="line">NODENAME=bunny@myhost</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies new style config file location</span></span><br><span class="line">CONFIG_FILE=/etc/rabbitmq/rabbitmq.conf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Specifies advanced config file location</span></span><br><span class="line">ADVANCED_CONFIG_FILE=/etc/rabbitmq/advanced.config</span><br></pre></td></tr></table></figure>
+
+<p>其实是 <code>RABBITMQ_CONFIG_FILE</code> 省略了前缀 <code>RABBITMQ_</code>，就变成了 <code>CONFIG_FILE</code>.</p>
+<br>
+
+<p>核心配置选项</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">listeners.tcp.default = 5672  # AMQP 对外服务端口</span><br><span class="line">num_acceptors.tcp = 10  # 用来 accept tcp连接的 erlang 线程数</span><br><span class="line">handshake_timeout = 10000  # AMQP 0-9-1 的 tcp握手超时时间</span><br><span class="line"><span class="meta">#</span><span class="bash"> listeners.ssl  <span class="comment"># 监听 tls加密的 AMQP 对外端口</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> num_acceptors.ssl = 10  <span class="comment"># 用来 accept tls连接的 erlang 线程数</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ssl_handshake_timeout = 5000 <span class="comment"># AMQP 0-9-1 的 tls握手超时时间</span></span></span><br><span class="line">ssl_options = none  # 默认不启用 SSL</span><br></pre></td></tr></table></figure>
+
+<h4 id="advanced-config"><a href="#advanced-config" class="headerlink" title="advanced.config"></a>advanced.config</h4><p>example：<code>https://github.com/rabbitmq/rabbitmq-server/blob/master/docs/advanced.config.example</code></p>
+<h4 id="rabbitmq-env-conf"><a href="#rabbitmq-env-conf" class="headerlink" title="rabbitmq-env.conf"></a>rabbitmq-env.conf</h4><br>
+
+<h1 id="8、生产环境检查"><a href="#8、生产环境检查" class="headerlink" title="8、生产环境检查"></a>8、生产环境检查</h1><p>官方文档：<a href="https://www.rabbitmq.com/production-checklist.html" target="_blank" rel="noopener">https://www.rabbitmq.com/production-checklist.html</a></p>
+<br>
+
+<h1 id="9、集群配置"><a href="#9、集群配置" class="headerlink" title="9、集群配置"></a>9、集群配置</h1><blockquote>
+<p>为什么需要集群？ 保证高可用</p>
+<p>可以保证消息的万无一失吗？不能，队列跟消息存储在单一节点上。exchange和绑定可以复制。默认不会对队列中的消息进行复制。但可以解决</p>
+<p>队列在及集群是如何存在的？默认不会复制</p>
+<p>交换器在集群中如何存在的？会复制</p>
+<p>集群中的节点有什么要求？ 为了保障高可用，建议至少在集群中设置两个磁盘节点，其他为内存节点，提高集群的吞吐量</p>
+</blockquote>
+<h2 id="单机多节点集群"><a href="#单机多节点集群" class="headerlink" title="单机多节点集群"></a>单机多节点集群</h2><p>一台机器上，开不同端口</p>
+<h2 id="多机多节点集群"><a href="#多机多节点集群" class="headerlink" title="多机多节点集群"></a>多机多节点集群</h2><h3 id="1、前提"><a href="#1、前提" class="headerlink" title="1、前提"></a>1、前提</h3><ul>
+<li><p>只能在内网使用，对网络非常敏感</p>
+</li>
+<li><p>停止rabbitmq节点：/sbin/service rabbitmq-server stop</p>
+</li>
+</ul>
+<h3 id="2、修改3台节点host文件"><a href="#2、修改3台节点host文件" class="headerlink" title="2、修改3台节点host文件"></a>2、修改3台节点host文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts</span><br><span class="line"></span><br><span class="line">192.168.145.133 dn1</span><br><span class="line">192.168.145.134 dn2</span><br><span class="line">192.168.145.135 dn3</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、修改-erlang-cookie"><a href="#3、修改-erlang-cookie" class="headerlink" title="3、修改 erlang.cookie"></a>3、修改 erlang.cookie</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat /var/lib/rabbitmq/.erlang.cookie</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用 node1 的 .erlang.cookie 覆盖其他所有节点的值</span></span><br><span class="line">echo 'LLSFPZFATCBYBMCXMMAC' &gt; /var/lib/rabbitmq/.erlang.cookie</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、配置集群"><a href="#4、配置集群" class="headerlink" title="4、配置集群"></a>4、配置集群</h3><p>1、启动节点</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service rabbitmq-server start</span><br></pre></td></tr></table></figure>
+
+<p>2、查看集群状态</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl cluster_status</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200329220729.png" alt></p>
+<p>3、将节点2，3加入集群</p>
+<p>node2作为磁盘节点加入集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@dn2 ~]# rabbitmqctl stop_app</span><br><span class="line">Stopping rabbit application on node rabbit@dn2 ...</span><br><span class="line">[root@dn2 ~]# rabbitmqctl reset</span><br><span class="line">Resetting node rabbit@dn2 ...</span><br><span class="line">[root@dn2 ~]# rabbitmqctl join_cluster rabbit@dn1</span><br><span class="line">Clustering node rabbit@dn2 with rabbit@dn1</span><br><span class="line">[root@dn2 ~]# rabbitmqctl start_app</span><br><span class="line">Starting node rabbit@dn2 ...</span><br><span class="line"> completed with 0 plugins.</span><br><span class="line">[root@dn2 ~]# rabbitmqctl cluster_status</span><br><span class="line">Cluster status of node rabbit@dn2 ...</span><br><span class="line">[&#123;nodes,[&#123;disc,[rabbit@dn1,rabbit@dn2]&#125;]&#125;,</span><br><span class="line"> &#123;running_nodes,[rabbit@dn1,rabbit@dn2]&#125;,</span><br><span class="line"> &#123;cluster_name,&lt;&lt;"rabbit@dn1"&gt;&gt;&#125;,</span><br><span class="line"> &#123;partitions,[]&#125;,</span><br><span class="line"> &#123;alarms,[&#123;rabbit@dn1,[]&#125;,&#123;rabbit@dn2,[]&#125;]&#125;]</span><br><span class="line">[root@dn2 ~]#</span><br></pre></td></tr></table></figure>
+
+<p>node3 作为内存节点加入集群</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@dn3 ~]# rabbitmqctl stop_app</span><br><span class="line">Stopping rabbit application on node rabbit@dn3 ...</span><br><span class="line">[root@dn3 ~]# rabbitmqctl reset</span><br><span class="line">Resetting node rabbit@dn3 ...</span><br><span class="line">[root@dn3 ~]# rabbitmqctl join_cluster rabbit@dn1 --ram</span><br><span class="line">Clustering node rabbit@dn3 with rabbit@dn1</span><br><span class="line">[root@dn3 ~]# rabbitmqctl start_app</span><br><span class="line">Starting node rabbit@dn3 ...</span><br><span class="line"> completed with 0 plugins.</span><br><span class="line">[root@dn3 ~]# rabbitmqctl cluster_status</span><br><span class="line">Cluster status of node rabbit@dn3 ...</span><br><span class="line">[&#123;nodes,[&#123;disc,[rabbit@dn2,rabbit@dn1]&#125;,&#123;ram,[rabbit@dn3]&#125;]&#125;,</span><br><span class="line"> &#123;running_nodes,[rabbit@dn1,rabbit@dn2,rabbit@dn3]&#125;,</span><br><span class="line"> &#123;cluster_name,&lt;&lt;"rabbit@dn1"&gt;&gt;&#125;,</span><br><span class="line"> &#123;partitions,[]&#125;,</span><br><span class="line"> &#123;alarms,[&#123;rabbit@dn1,[]&#125;,&#123;rabbit@dn2,[]&#125;,&#123;rabbit@dn3,[]&#125;]&#125;]</span><br><span class="line">[root@dn3 ~]#</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="10、负载均衡"><a href="#10、负载均衡" class="headerlink" title="10、负载均衡"></a>10、负载均衡</h1><h3 id="1、使用HAProxy实现负载均衡"><a href="#1、使用HAProxy实现负载均衡" class="headerlink" title="1、使用HAProxy实现负载均衡"></a>1、使用HAProxy实现负载均衡</h3><h4 id="配置各个负载的内核参数"><a href="#配置各个负载的内核参数" class="headerlink" title="配置各个负载的内核参数"></a>配置各个负载的内核参数</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysctl.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">开启允许绑定非本机的IP，haporxy启动忽视VIP存在</span></span><br><span class="line">net.ipv4.ip_nonlocal_bind = 1 </span><br><span class="line"><span class="meta">#</span><span class="bash">内核是否转发数据包</span></span><br><span class="line">net.ipv4.ip_forward = 1</span><br><span class="line"></span><br><span class="line">sysctl  -p</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="安装Haproxy"><a href="#安装Haproxy" class="headerlink" title="安装Haproxy"></a>安装Haproxy</h4><p>安装依赖包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc openssl-devel readline-devel systemd-devel make pcre-devel -y</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cd /data/soft/new/</span><br><span class="line">wget https://github.com/lua/lua/archive/v5.3.5.tar.gz -O lua-5.3.5.tag.gz</span><br><span class="line">tar xf lua-5.3.5.tag.gz</span><br><span class="line">cd lua-5.3.5</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">wget https://github.com/haproxy/haproxy/archive/v1.9.0.tar.gz -O haproxy-1.9.0.tar.gz</span><br><span class="line">tar -zxf haproxy-1.9.0.tar.gz</span><br><span class="line">cd haproxy-1.9.0</span><br><span class="line">pwd</span><br><span class="line"><span class="meta">#</span><span class="bash"> /data/soft/new/haproxy-1.9.0</span></span><br><span class="line">make TARGET=linux2628 PREFIX=/usr/local/haproxy</span><br><span class="line">make install PREFIX=/usr/local/haproxy</span><br><span class="line"></span><br><span class="line">cp -r examples/errorfiles/ /usr/local/haproxy/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>PREFIX 为指定的安装路径</li>
+<li>TARGET则根据当前操作系统内核版本指定<ul>
+<li>- linux22 for Linux 2.2</li>
+<li>- linux24 for Linux 2.4 and above (default)</li>
+<li>- linux24e for Linux 2.4 with support for a working epoll (&gt; 0.21)</li>
+<li>- linux26 for Linux 2.6 and above</li>
+<li>- linux2628 for Linux 2.6.28, 3.x, and above (enables splice and tproxy)</li>
+</ul>
+</li>
+</ul>
+<p>本文的操作系统内核版本为3.10.0，TARGET指定为 linux2628。</p>
+</blockquote>
+<blockquote>
+<p><code>make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1</code></p>
+<p># # USE_PCRE=1 开启正则 USE_OPENSSL=1 开启openssl USE_ZLIB=1</p>
+<p># # USE_CPU_AFFINITY=1 为开启haproxy进程与CPU核心绑定，USE_SYSTEMD=1为支持使用 -Ws参数（systemd-aware master-worker 模式）启动Haproxy，从而实现单主进程多子进程运行模式。</p>
+</blockquote>
+<h4 id="配置Haproxy"><a href="#配置Haproxy" class="headerlink" title="配置Haproxy"></a>配置Haproxy</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/haproxy</span><br><span class="line"></span><br><span class="line">cat &gt; /etc/haproxy/haproxy.cfg &lt;&lt; EOF</span><br><span class="line">global</span><br><span class="line">    log 127.0.0.1 local0 info</span><br><span class="line">    maxconn 4096</span><br><span class="line">    chroot /usr/local/haproxy</span><br><span class="line">    daemon</span><br><span class="line">    pidfile /run/haproxy.pid</span><br><span class="line"></span><br><span class="line">defaults</span><br><span class="line">    log global</span><br><span class="line">    mode tcp</span><br><span class="line">    option tcplog</span><br><span class="line">    option dontlognull</span><br><span class="line">    retries 3</span><br><span class="line">    maxconn 1000000</span><br><span class="line">    timeout connect 5s</span><br><span class="line">    timeout client 120s</span><br><span class="line">    timeout server 120s</span><br><span class="line"></span><br><span class="line">listen rabbitmq_cluster</span><br><span class="line">    bind 0.0.0.0:5671</span><br><span class="line">    mode tcp</span><br><span class="line">    balance roundrobin</span><br><span class="line">    server rmq_dn1 dn1:5672 check inter 5000 rise 2 fall 3 weight 1</span><br><span class="line">    server rmq_dn2 dn2:5672 check inter 5000 rise 2 fall 3 weight 1</span><br><span class="line">    server rmq_dn3 dn3:5672 check inter 5000 rise 2 fall 3 weight 1</span><br><span class="line"></span><br><span class="line">listen rabbitmq_monitor</span><br><span class="line">    bind 0.0.0.0:8100</span><br><span class="line">    mode http</span><br><span class="line">    option httplog</span><br><span class="line">    stats enable</span><br><span class="line">    stats uri /stats</span><br><span class="line">    stats refresh 5s</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> haproxy -c -f /etc/haproxy/haproxy.cfg</span></span><br></pre></td></tr></table></figure>
+
+<p>日志配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">打开rsyslog配置：</span><br><span class="line">vi /etc/rsyslog.conf</span><br><span class="line">去掉下面两行前面的#号</span><br><span class="line"><span class="meta">$</span><span class="bash">ModLoad imudp</span></span><br><span class="line"><span class="meta">$</span><span class="bash">UDPServerRun 514</span></span><br><span class="line">并添加下面一行</span><br><span class="line">local0.* /var/log/haproxy.log</span><br><span class="line">重启rsyslog</span><br><span class="line">systemctl restart rsyslog</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="准备system启动脚本"><a href="#准备system启动脚本" class="headerlink" title="准备system启动脚本"></a>准备system启动脚本</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cp /usr/local/haproxy/sbin/haproxy /usr/sbin/</span><br><span class="line">\cp ./examples/haproxy.init /etc/init.d/haproxy</span><br><span class="line"></span><br><span class="line">chmod 755 /etc/init.d/haproxy</span><br><span class="line">useradd -r haproxy</span><br><span class="line"></span><br><span class="line">chkconfig --add haproxy</span><br><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ol>
+<li><p>如果服务器安装后修改了hostname，出现了　unable to connect to epmd (port 4369) on bogon: nxdomain (non-existing domain)　这个问题，请看下是否 /etc/hosts 文件、/etc/hostname文件和环境变量$HOSTNAME　是否一致。</p>
+</li>
+<li><p>如果启动HAProxy出现　/etc/rc.d/init.d/haproxy: line 26: [: =: unary operator expected　这个错误，修改/etc/init.d/haproxy 文件的26行 [ ${NETWORKING} = “no” ] &amp;&amp; exit 0 为　[ “${NETWORKING}” = “no” ] &amp;&amp; exit 0</p>
+</li>
+</ol>
+</blockquote>
+<h4 id="启动haproxy"><a href="#启动haproxy" class="headerlink" title="启动haproxy"></a>启动haproxy</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 检查配置文件语法</span></span><br><span class="line">haproxy -c -f /etc/haproxy/haproxy.cfg</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 以daemon模式启动，以systemd管理的daemon模式启动</span></span><br><span class="line">haproxy -D -f /etc/haproxy/haproxy.cfg [-p /var/run/haproxy.pid]</span><br><span class="line">haproxy -Ds -f /etc/haproxy/haproxy.cfg [-p /var/run/haproxy.pid]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动调试功能，将显示所有连接和处理信息在屏幕</span></span><br><span class="line">haproxy -d -f /etc/haproxy/haproxy.cfg</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> restart。需要使用st选项指定pid列表</span></span><br><span class="line">haproxy -f /etc/haproxy.cfg [-p /var/run/haproxy.pid] -st `cat /var/run/haproxy.pid`</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> graceful restart，即reload。需要使用sf选项指定pid列表</span></span><br><span class="line">haproxy -f /etc/haproxy.cfg [-p /var/run/haproxy.pid] -sf `cat /var/run/haproxy.pid`</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示haproxy编译和启动信息</span></span><br><span class="line">haproxy -vv</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">systemctl start haproxy.service</span><br><span class="line">systemctl stop haproxy.service</span><br><span class="line">systemctl status haproxy.service -l</span><br><span class="line"></span><br><span class="line">haproxy &#123;start|stop|restart|reload|condrestart|status|check&#125;</span><br><span class="line">service haproxy reload</span><br><span class="line">service haproxy stop</span><br><span class="line">service haproxy check</span><br><span class="line">service haproxy status</span><br><span class="line">service haproxy start</span><br></pre></td></tr></table></figure>
+
+<p>开机启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/sbin/chkconfig haproxy on</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="安装keepalived"><a href="#安装keepalived" class="headerlink" title="安装keepalived"></a>安装keepalived</h4><p>官网：<code>https://www.keepalived.org/download.html</code></p>
+<p>下载安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /data/soft/new</span><br><span class="line">wget https://www.keepalived.org/software/keepalived-1.4.5.tar.gz</span><br><span class="line">tar -zxf keepalived-1.4.5.tar.gz</span><br><span class="line">cd keepalived-1.4.5</span><br><span class="line"></span><br><span class="line">[root@dn1 keepalived-1.4.5]# yum -y install libnl libnl-devel</span><br><span class="line">[root@dn1 keepalived-1.4.5]# yum install -y libnfnetlink-devel</span><br><span class="line"></span><br><span class="line">[root@dn1 keepalived-1.4.5]# ./configure --prefix=/usr/local/keepalived --with-init=SYSV</span><br><span class="line">[root@dn1 keepalived-1.4.5]# make</span><br><span class="line">[root@dn1 keepalived-1.4.5]# make install</span><br></pre></td></tr></table></figure>
+
+<p>配置系统服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@dn1 keepalived-1.4.5]# cd ~</span><br><span class="line">[root@dn1 ~]# cp /usr/local/keepalived/etc/rc.d/init.d/keepalived /etc/init.d/</span><br><span class="line">[root@dn1 ~]# cp /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig</span><br><span class="line">[root@dn1 ~]# cp /usr/local/keepalived/sbin/keepalived /usr/sbin/</span><br><span class="line">[root@dn1 ~]# chmod +x /etc/init.d/keepalived</span><br><span class="line">[root@dn1 ~]# chkconfig --add keepalived</span><br><span class="line">[root@dn1 ~]# chkconfig keepalived on</span><br><span class="line">[root@dn1 ~]# mkdir -p /etc/keepalived</span><br><span class="line">[root@dn1 ~]# cp /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/</span><br></pre></td></tr></table></figure>
+
+<p>配置keepalived</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">[root@dn1 ~]# vi /etc/keepalived/check_haproxy.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">if [ $(ps -C haproxy --no-header | wc -l) -eq 0 ];then</span><br><span class="line">    /usr/sbin/haproxy -D -f /etc/haproxy/haproxy.cfg -p /var/run/haproxy.pid</span><br><span class="line">fi</span><br><span class="line">sleep 2</span><br><span class="line">if [ $(ps -C haproxy --no-header | wc -l) -eq 0 ];then</span><br><span class="line">    service keepalived stop</span><br><span class="line">fi</span><br><span class="line">[root@dn1 ~]# chmod +x /etc/keepalived/check_haproxy.sh</span><br><span class="line"></span><br><span class="line">[root@dn1 ~]# &gt; /etc/keepalived/keepalived.conf</span><br><span class="line">[root@dn1 ~]# vim /etc/keepalived/keepalived.conf</span><br><span class="line">global_defs &#123;</span><br><span class="line">   router_id node1</span><br><span class="line">   script_user root</span><br><span class="line">   enable_script_security</span><br><span class="line">&#125;</span><br><span class="line">vrrp_script chk_haproxy &#123;</span><br><span class="line">    script "/etc/keepalived/check_haproxy.sh"</span><br><span class="line">    interval 5</span><br><span class="line">    weight 2</span><br><span class="line">&#125;</span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state MASTER</span><br><span class="line">    interface eth0</span><br><span class="line">    virtual_router_id 1</span><br><span class="line">    priority 100</span><br><span class="line">    advert_int 1</span><br><span class="line">    unicast_src_ip 192.168.145.13</span><br><span class="line">    unicast_peer &#123;</span><br><span class="line">        192.168.145.13</span><br><span class="line">        192.168.145.13</span><br><span class="line">    &#125;</span><br><span class="line">    authentication &#123;</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass root1111</span><br><span class="line">    &#125;</span><br><span class="line">    track_script &#123;</span><br><span class="line">        chk_haproxy</span><br><span class="line">    &#125;</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.145.200</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">[root@dn2 ~]# vim /etc/keepalived/keepalived.conf</span><br><span class="line">global_defs &#123;</span><br><span class="line">   router_id node2  # 每个节点必须不一样</span><br><span class="line">   script_user root</span><br><span class="line">   enable_script_security </span><br><span class="line">&#125;</span><br><span class="line">vrrp_script chk_haproxy &#123;</span><br><span class="line">    script "/etc/keepalived/check_haproxy.sh"</span><br><span class="line">    interval 5</span><br><span class="line">    weight 2</span><br><span class="line">&#125;</span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state BACKUP</span><br><span class="line">    interface eth0  # 根据情况变换</span><br><span class="line">    virtual_router_id 1</span><br><span class="line">    priority 90  #  每个节点必须不一样</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication &#123;</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass root1111</span><br><span class="line">    &#125;</span><br><span class="line">    track_script &#123;</span><br><span class="line">        chk_haproxy</span><br><span class="line">    &#125;</span><br><span class="line">    virtual_ipaddress &#123;</span><br><span class="line">        192.168.145.200</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service keepalived start &amp;&amp; systemctl status keepalived.service -l</span><br><span class="line">service keepalived stop</span><br><span class="line">service keepalived status</span><br><span class="line">service keepalived restart &amp;&amp; systemctl status keepalived.service -l</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@dn1 ~]# ip add show</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200330154343.png" alt></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rabbitmq/" rel="tag"># rabbitmq</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/message-queue/rabbitmq/rabbitmq-3/" rel="next" title="rabbitmq-消息中间件基础">
+                <i class="fa fa-chevron-left"></i> rabbitmq-消息中间件基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/java/spring/spring-cloud-sleuth-logback/" rel="prev" title="日志平台搭建 sleuth+flume+kafka+logstash+elasticsearch">
+                日志平台搭建 sleuth+flume+kafka+logstash+elasticsearch <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、什么是消息中间件"><span class="nav-text">1、什么是消息中间件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、消息中间件的作用"><span class="nav-text">2、消息中间件的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、JMS协议"><span class="nav-text">3、JMS协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单播"><span class="nav-text">单播</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#广播"><span class="nav-text">广播</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#4、AMQP协议"><span class="nav-text">4、AMQP协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5、RabbitMQ简介"><span class="nav-text">5、RabbitMQ简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6、Centos7下RabbitMQ安装"><span class="nav-text">6、Centos7下RabbitMQ安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1、安装Erlang"><span class="nav-text">6.1、安装Erlang</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2、安装RabbitMQ"><span class="nav-text">6.2、安装RabbitMQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3、开机启动RabbitMQ"><span class="nav-text">6.3、开机启动RabbitMQ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4、启动运行"><span class="nav-text">6.4、启动运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5、防火墙设置"><span class="nav-text">6.5、防火墙设置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7、配置优化"><span class="nav-text">7、配置优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、配置文件"><span class="nav-text">1、配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何检查配置是否生效？"><span class="nav-text">如何检查配置是否生效？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#新老配置文件格式"><span class="nav-text">新老配置文件格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rabbitmq-conf"><span class="nav-text">rabbitmq.conf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#advanced-config"><span class="nav-text">advanced.config</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rabbitmq-env-conf"><span class="nav-text">rabbitmq-env.conf</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8、生产环境检查"><span class="nav-text">8、生产环境检查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9、集群配置"><span class="nav-text">9、集群配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#单机多节点集群"><span class="nav-text">单机多节点集群</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多机多节点集群"><span class="nav-text">多机多节点集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、前提"><span class="nav-text">1、前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、修改3台节点host文件"><span class="nav-text">2、修改3台节点host文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、修改-erlang-cookie"><span class="nav-text">3、修改 erlang.cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、配置集群"><span class="nav-text">4、配置集群</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10、负载均衡"><span class="nav-text">10、负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、使用HAProxy实现负载均衡"><span class="nav-text">1、使用HAProxy实现负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置各个负载的内核参数"><span class="nav-text">配置各个负载的内核参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Haproxy"><span class="nav-text">安装Haproxy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置Haproxy"><span class="nav-text">配置Haproxy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#准备system启动脚本"><span class="nav-text">准备system启动脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动haproxy"><span class="nav-text">启动haproxy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装keepalived"><span class="nav-text">安装keepalived</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

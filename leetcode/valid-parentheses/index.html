@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="en">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -45,6 +45,38 @@
 
 
 
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
 
 
 
@@ -79,18 +111,18 @@
 
 
 
-<meta name="description" content="算法分类：Stack url：https://leetcode.com/problems/valid-parentheses/ 题目 12345678910111213141516171819202120. Valid ParenthesesGiven a string containing just the characters &apos;(&apos;, &apos;)&apos;, &apos;&amp;#123;&apos;, &apos;&amp;#125;&apos;, &apos;[">
+<meta name="description" content="算法分类：Stackurl：https://leetcode.com/problems/valid-parentheses/ ​                           题目12345678910111213141516171819202120. Valid ParenthesesGiven a string containing just the characters &apos;(&apos;, &apos;">
 <meta name="keywords" content="leetcode,Stack">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Valid Parentheses">
-<meta property="og:url" content="https://carloz.gitee.io/leetcode/valid-parentheses/index.html">
-<meta property="og:site_name" content="0ms AC">
-<meta property="og:description" content="算法分类：Stack url：https://leetcode.com/problems/valid-parentheses/ 题目 12345678910111213141516171819202120. Valid ParenthesesGiven a string containing just the characters &apos;(&apos;, &apos;)&apos;, &apos;&amp;#123;&apos;, &apos;&amp;#125;&apos;, &apos;[">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-24T10:00:02.711Z">
+<meta property="og:url" content="https://carlo-z.com/leetcode/valid-parentheses/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="算法分类：Stackurl：https://leetcode.com/problems/valid-parentheses/ ​                           题目12345678910111213141516171819202120. Valid ParenthesesGiven a string containing just the characters &apos;(&apos;, &apos;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-27T13:36:55.116Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Valid Parentheses">
-<meta name="twitter:description" content="算法分类：Stack url：https://leetcode.com/problems/valid-parentheses/ 题目 12345678910111213141516171819202120. Valid ParenthesesGiven a string containing just the characters &apos;(&apos;, &apos;)&apos;, &apos;&amp;#123;&apos;, &apos;&amp;#125;&apos;, &apos;[">
+<meta name="twitter:description" content="算法分类：Stackurl：https://leetcode.com/problems/valid-parentheses/ ​                           题目12345678910111213141516171819202120. Valid ParenthesesGiven a string containing just the characters &apos;(&apos;, &apos;">
 
 
 
@@ -106,7 +138,7 @@
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     duoshuo: {
       userId: '0',
-      author: 'Author'
+      author: '博主'
     },
     algolia: {
       applicationID: '',
@@ -120,13 +152,13 @@
 
 
 
-  <link rel="canonical" href="https://carloz.gitee.io/leetcode/valid-parentheses/">
+  <link rel="canonical" href="https://carlo-z.com/leetcode/valid-parentheses/">
 
 
 
 
 
-  <title>Valid Parentheses | 0ms AC</title>
+  <title>Valid Parentheses | CarloZ</title>
   
 
 
@@ -138,7 +170,7 @@
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
@@ -156,7 +188,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">0ms AC</span>
+        <span class="site-title">CarloZ</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -186,7 +218,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
             
-            Archives
+            归档
           </a>
         </li>
       
@@ -196,7 +228,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
             
-            Categories
+            分类
           </a>
         </li>
       
@@ -206,7 +238,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
             
-            Tags
+            标签
           </a>
         </li>
       
@@ -216,7 +248,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
             
-            About
+            关于
           </a>
         </li>
       
@@ -229,7 +261,7 @@
             
               <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
             
-            Search
+            搜索
           </a>
         </li>
       
@@ -248,7 +280,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -285,7 +317,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carloz.gitee.io/leetcode/valid-parentheses/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/valid-parentheses/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="-CarloZ">
@@ -294,7 +326,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="0ms AC">
+      <meta itemprop="name" content="CarloZ">
     </span>
 
     
@@ -312,9 +344,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-04-09T21:27:02+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-09T21:27:02+08:00">
                 2016-04-09
               </time>
             
@@ -353,18 +385,17 @@
 
       
         <hr>
-<p>算法分类：Stack</p>
-<p>url：<a href="https://leetcode.com/problems/valid-parentheses/" target="_blank" rel="noopener">https://leetcode.com/problems/valid-parentheses/</a></p>
-<p>题目</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">20. <span class="selector-tag">Valid</span> <span class="selector-tag">Parentheses</span></span><br><span class="line">Given a string containing just the characters '(', ')', '&#123;', '&#125;', '[' and ']', determine if the input string is valid.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">An</span> <span class="selector-tag">input</span> <span class="selector-tag">string</span> <span class="selector-tag">is</span> <span class="selector-tag">valid</span> <span class="selector-tag">if</span>:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Open</span> <span class="selector-tag">brackets</span> <span class="selector-tag">must</span> <span class="selector-tag">be</span> <span class="selector-tag">closed</span> <span class="selector-tag">by</span> <span class="selector-tag">the</span> <span class="selector-tag">same</span> <span class="selector-tag">type</span> <span class="selector-tag">of</span> <span class="selector-tag">brackets</span>.</span><br><span class="line"><span class="selector-tag">Open</span> <span class="selector-tag">brackets</span> <span class="selector-tag">must</span> <span class="selector-tag">be</span> <span class="selector-tag">closed</span> <span class="selector-tag">in</span> <span class="selector-tag">the</span> <span class="selector-tag">correct</span> <span class="selector-tag">order</span>.</span><br><span class="line"><span class="selector-tag">Note</span> <span class="selector-tag">that</span> <span class="selector-tag">an</span> <span class="selector-tag">empty</span> <span class="selector-tag">string</span> <span class="selector-tag">is</span> <span class="selector-tag">also</span> <span class="selector-tag">considered</span> <span class="selector-tag">valid</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span> 1:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "()"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">true</span></span><br><span class="line"><span class="selector-tag">Example</span> 2:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "()<span class="selector-attr">[]</span>&#123;&#125;"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">true</span></span><br><span class="line"><span class="selector-tag">Example</span> 3:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "(]"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">false</span></span><br></pre></td></tr></table></figure>
+<h1 id="算法分类：Stack"><a href="#算法分类：Stack" class="headerlink" title="算法分类：Stack"></a>算法分类：Stack</h1><p>url：<a href="https://leetcode.com/problems/valid-parentheses/" target="_blank" rel="noopener">https://leetcode.com/problems/valid-parentheses/</a></p>
+<p>​                          </p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">20. <span class="selector-tag">Valid</span> <span class="selector-tag">Parentheses</span></span><br><span class="line">Given a string containing just the characters '(', ')', '&#123;', '&#125;', '[' and ']', determine if the input string is valid.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">An</span> <span class="selector-tag">input</span> <span class="selector-tag">string</span> <span class="selector-tag">is</span> <span class="selector-tag">valid</span> <span class="selector-tag">if</span>:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Open</span> <span class="selector-tag">brackets</span> <span class="selector-tag">must</span> <span class="selector-tag">be</span> <span class="selector-tag">closed</span> <span class="selector-tag">by</span> <span class="selector-tag">the</span> <span class="selector-tag">same</span> <span class="selector-tag">type</span> <span class="selector-tag">of</span> <span class="selector-tag">brackets</span>.</span><br><span class="line"><span class="selector-tag">Open</span> <span class="selector-tag">brackets</span> <span class="selector-tag">must</span> <span class="selector-tag">be</span> <span class="selector-tag">closed</span> <span class="selector-tag">in</span> <span class="selector-tag">the</span> <span class="selector-tag">correct</span> <span class="selector-tag">order</span>.</span><br><span class="line"><span class="selector-tag">Note</span> <span class="selector-tag">that</span> <span class="selector-tag">an</span> <span class="selector-tag">empty</span> <span class="selector-tag">string</span> <span class="selector-tag">is</span> <span class="selector-tag">also</span> <span class="selector-tag">considered</span> <span class="selector-tag">valid</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span> 1:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "()"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">true</span></span><br><span class="line"><span class="selector-tag">Example</span> 2:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "()<span class="selector-attr">[]</span>&#123;&#125;"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">true</span></span><br><span class="line"><span class="selector-tag">Example</span> 3:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "(]"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">false</span></span><br></pre></td></tr></table></figure>
 
-<p>Java解法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Stack&lt;String&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] chArr = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> ch : chArr) &#123;</span><br><span class="line">            String top = stack.isEmpty() ? <span class="keyword">null</span> : stack.peek();</span><br><span class="line">            String c = String.valueOf(ch);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == top) &#123;</span><br><span class="line">                stack.push(c);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"&#123;"</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">"&#125;"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"["</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">"]"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"("</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">")"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                stack.push(c);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (stack.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>​                     </p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Stack&lt;String&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] chArr = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> ch : chArr) &#123;</span><br><span class="line">            String top = stack.isEmpty() ? <span class="keyword">null</span> : stack.peek();</span><br><span class="line">            String c = String.valueOf(ch);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == top) &#123;</span><br><span class="line">                stack.push(c);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"&#123;"</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">"&#125;"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"["</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">"]"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"("</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">")"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                stack.push(c);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (stack.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Stack&lt;Character&gt; stack = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line">        HashMap&lt;Character, Character&gt; map = <span class="keyword">new</span> HashMap&lt;Character, Character&gt;() &#123;&#123;</span><br><span class="line">            put(<span class="string">'&#125;'</span>, <span class="string">'&#123;'</span>);</span><br><span class="line">            put(<span class="string">']'</span>, <span class="string">'['</span>);</span><br><span class="line">            put(<span class="string">')'</span>, <span class="string">'('</span>);</span><br><span class="line">        &#125;&#125;;</span><br><span class="line">        <span class="keyword">char</span>[] chArr = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> ch : chArr) &#123;</span><br><span class="line">            Character top = stack.isEmpty() ? <span class="keyword">null</span> : stack.peek();</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == top) &#123;</span><br><span class="line">                stack.push(ch);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top == map.get(ch)) &#123;</span><br><span class="line">                stack.pop();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                stack.push(ch);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> stack.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>Python解法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isValid</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        stack = []</span><br><span class="line">        map = &#123;<span class="string">u'&#125;'</span>:<span class="string">u'&#123;'</span>, <span class="string">u']'</span>:<span class="string">u'['</span>, <span class="string">u')'</span>:<span class="string">u'('</span>&#125;</span><br><span class="line">        <span class="keyword">for</span> ch <span class="keyword">in</span> s:</span><br><span class="line">            top = <span class="string">u'#'</span> <span class="keyword">if</span> (len(stack) == <span class="number">0</span>) <span class="keyword">else</span> stack[<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">if</span> map.has_key(ch) <span class="keyword">and</span> top == map[ch]:</span><br><span class="line">                stack.pop()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(ch)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> == len(stack)</span><br></pre></td></tr></table></figure>
+<p>​                          </p>
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isValid</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        stack = []</span><br><span class="line">        map = &#123;<span class="string">u'&#125;'</span>:<span class="string">u'&#123;'</span>, <span class="string">u']'</span>:<span class="string">u'['</span>, <span class="string">u')'</span>:<span class="string">u'('</span>&#125;</span><br><span class="line">        <span class="keyword">for</span> ch <span class="keyword">in</span> s:</span><br><span class="line">            top = <span class="string">u'#'</span> <span class="keyword">if</span> (len(stack) == <span class="number">0</span>) <span class="keyword">else</span> stack[<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">if</span> map.has_key(ch) <span class="keyword">and</span> top == map[ch]:</span><br><span class="line">                stack.pop()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(ch)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> == len(stack)</span><br></pre></td></tr></table></figure>
 
 
       
@@ -408,8 +439,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/mq/rabbitmq-introduce/" rel="prev" title="rabbitmq简介">
-                rabbitmq简介 <i class="fa fa-chevron-right"></i>
+              <a href="/java/lambda/1-java-lambda-introduce/" rel="prev" title="1、lambda表达式入门：Java多核编程">
+                1、lambda表达式入门：Java多核编程 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -467,8 +498,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -483,8 +523,8 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">46</span>
-                  <span class="site-state-item-name">posts</span>
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
@@ -494,8 +534,8 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">11</span>
-                  <span class="site-state-item-name">categories</span>
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
                 </a>
               </div>
             
@@ -505,8 +545,8 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
-                  <span class="site-state-item-name">tags</span>
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
                 </a>
               </div>
             
@@ -543,6 +583,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#算法分类：Stack"><span class="nav-text">算法分类：Stack</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#题目"><span class="nav-text">题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java解法"><span class="nav-text">Java解法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Python解法"><span class="nav-text">Python解法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
 
@@ -556,7 +612,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-"></i>
   </span>

@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1、官网文档源码1234# 文档https://shardingsphere.apache.org/document/current/cn/quick-start/sharding-proxy-quick-start/# 源码https://github.com/apache/incubator-shardingsphere  2、快速入门2.1、规则配置编辑%SHARDING_PROXY_">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shardingsphere-proxy 安装">
+<meta property="og:url" content="https://carlo-z.com/mysql/shardingsphere-proxy-setup/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="1、官网文档源码1234# 文档https://shardingsphere.apache.org/document/current/cn/quick-start/sharding-proxy-quick-start/# 源码https://github.com/apache/incubator-shardingsphere  2、快速入门2.1、规则配置编辑%SHARDING_PROXY_">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215237.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215403.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215526.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215203.png">
+<meta property="og:updated_time" content="2020-01-05T12:05:06.270Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shardingsphere-proxy 安装">
+<meta name="twitter:description" content="1、官网文档源码1234# 文档https://shardingsphere.apache.org/document/current/cn/quick-start/sharding-proxy-quick-start/# 源码https://github.com/apache/incubator-shardingsphere  2、快速入门2.1、规则配置编辑%SHARDING_PROXY_">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215237.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/mysql/shardingsphere-proxy-setup/">
+
+
+
+
+
+  <title>shardingsphere-proxy 安装 | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/shardingsphere-proxy-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">shardingsphere-proxy 安装</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-01T00:00:00+08:00">
+                2019-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/shardingsphere-proxy/" itemprop="url" rel="index">
+                    <span itemprop="name">shardingsphere-proxy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<h1 id="1、官网文档源码"><a href="#1、官网文档源码" class="headerlink" title="1、官网文档源码"></a>1、官网文档源码</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 文档</span><br><span class="line">https://shardingsphere.apache.org/document/current/cn/quick-start/sharding-proxy-quick-start/</span><br><span class="line"><span class="meta">#</span> 源码</span><br><span class="line">https://github.com/apache/incubator-shardingsphere</span><br></pre></td></tr></table></figure>
+
+<h1 id="2、快速入门"><a href="#2、快速入门" class="headerlink" title="2、快速入门"></a>2、快速入门</h1><h2 id="2-1、规则配置"><a href="#2-1、规则配置" class="headerlink" title="2.1、规则配置"></a>2.1、规则配置</h2><p>编辑<code>%SHARDING_PROXY_HOME%\conf\config-xxx.yaml</code>。详情请参见<a href="https://shardingsphere.apache.org/document/current/cn/manual/sharding-proxy/configuration/" target="_blank" rel="noopener">配置手册</a>。</p>
+<p>编辑<code>%SHARDING_PROXY_HOME%\conf\server.yaml</code>。详情请参见<a href="https://shardingsphere.apache.org/document/current/cn/manual/sharding-proxy/configuration/" target="_blank" rel="noopener">配置手册</a>。</p>
+<h2 id="2-2、引入依赖"><a href="#2-2、引入依赖" class="headerlink" title="2.2、引入依赖"></a>2.2、引入依赖</h2><p>如果后端连接PostgreSQL数据库，不需要引入额外依赖。</p>
+<p>如果后端连接MySQL数据库，需要下载<a href="https://cdn.mysql.com//Downloads/Connector-J/mysql-connector-java-5.1.47.tar.gz" target="_blank" rel="noopener">MySQL Connector/J</a>， 解压缩后，将mysql-connector-java-5.1.47.jar拷贝到${sharding-proxy}\lib目录。</p>
+<h2 id="2-3、启动服务"><a href="#2-3、启动服务" class="headerlink" title="2.3、启动服务"></a>2.3、启动服务</h2><ul>
+<li>使用默认配置项</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;sharding-proxy&#125;</span>\bin\start.sh</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置端口</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$&#123;sharding-proxy&#125;</span>\bin\start.sh <span class="variable">$&#123;port&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="3、使用手册"><a href="#3、使用手册" class="headerlink" title="3、使用手册"></a>3、使用手册</h1><h2 id="3-1、Proxy启动"><a href="#3-1、Proxy启动" class="headerlink" title="3.1、Proxy启动"></a>3.1、Proxy启动</h2><ol>
+<li>下载Sharding-Proxy的最新发行版。</li>
+<li>如果使用docker，可以执行<code>docker pull shardingsphere/sharding-proxy</code>获取镜像。详细信息请参考<a href="https://shardingsphere.apache.org/document/current/cn/manual/sharding-proxy/docker/" target="_blank" rel="noopener">Docker镜像</a>。</li>
+<li>解压缩后修改conf/server.yaml和以config-前缀开头的文件，如：conf/config-xxx.yaml文件，进行分片规则、读写分离规则配置. 配置方式请参考<a href="https://shardingsphere.apache.org/document/current/cn/manual/sharding-proxy/configuration/" target="_blank" rel="noopener">配置手册</a>。</li>
+<li>Linux操作系统请运行<code>bin/start.sh</code>，Windows操作系统请运行<code>bin/start.bat</code>启动Sharding-Proxy。如需配置启动端口、配置文件位置，可参考<a href="https://shardingsphere.apache.org/document/current/cn/quick-start/sharding-proxy-quick-start/" target="_blank" rel="noopener">快速入门</a> 进行启动。</li>
+<li>使用任何PostgreSQL的客户端连接。如: <code>psql -U root -h 127.0.0.1 -p 3307</code></li>
+</ol>
+<h2 id="3-2、注册中心使用"><a href="#3-2、注册中心使用" class="headerlink" title="3.2、注册中心使用"></a>3.2、注册中心使用</h2><p>若想使用Sharding-Proxy的数据库治理功能，则需要使用注册中心实现实例熔断和从库禁用功能。详情请参考<a href="https://shardingsphere.apache.org/document/current/cn/features/orchestration/supported-registry-repo/" target="_blank" rel="noopener">支持的注册中心</a>。</p>
+<h3 id="Zookeeper"><a href="#Zookeeper" class="headerlink" title="Zookeeper"></a>Zookeeper</h3><ol>
+<li>Sharding-Proxy默认提供了Zookeeper的注册中心解决方案。您只需按照<a href="https://shardingsphere.apache.org/document/current/cn/manual/sharding-proxy/configuration/" target="_blank" rel="noopener">配置规则</a>进行注册中心的配置，即可使用。</li>
+</ol>
+<h3 id="其他第三方注册中心"><a href="#其他第三方注册中心" class="headerlink" title="其他第三方注册中心"></a>其他第三方注册中心</h3><ol>
+<li>将Sharding-Proxy的lib目录下的<code>sharding-orchestration-reg-zookeeper-curator-${sharding-sphere.version}.jar</code>文件删除。</li>
+<li>使用SPI方式实现相关逻辑编码，并将生成的jar包放到Sharding-Proxy的lib目录下。</li>
+<li>按照<a href="https://shardingsphere.apache.org/document/current/cn/manual/sharding-proxy/configuration/" target="_blank" rel="noopener">配置规则</a>进行注册中心的配置，即可使用。</li>
+</ol>
+<h2 id="3-3、使用自定义分片算法"><a href="#3-3、使用自定义分片算法" class="headerlink" title="3.3、使用自定义分片算法"></a>3.3、使用自定义分片算法</h2><p>当用户需要使用自定义的分片算法类时，无法再通过简单的inline表达式在yaml文件进行配置。可通过以下方式配置使用自定义分片算法。</p>
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.jzsec<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sharding-strategy<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.0.0-RC3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">sharding-sphere.version</span>&gt;</span>4.0.0-RC3<span class="tag">&lt;/<span class="name">sharding-sphere.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.shardingsphere<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sharding-jdbc-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;sharding-sphere.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.slf4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>slf4j-nop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.7.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.18.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">encoding</span>&gt;</span>utf8<span class="tag">&lt;/<span class="name">encoding</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jzsec.sharding.strategy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">YyyyTableShardingAlgorithm</span> <span class="keyword">implements</span> <span class="title">PreciseShardingAlgorithm</span>&lt;<span class="title">Integer</span>&gt;, <span class="title">RangeShardingAlgorithm</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Collection&lt;String&gt; <span class="title">doSharding</span><span class="params">(Collection&lt;String&gt; availableTargetNames, RangeShardingValue&lt;Integer&gt; shardingValue)</span> </span>&#123;</span><br><span class="line">        log.info(<span class="string">"shardingValue:"</span> + shardingValue);</span><br><span class="line">        Range&lt;Integer&gt; valueRange = shardingValue.getValueRange();</span><br><span class="line">        <span class="keyword">return</span> actualDataNodes(shardingValue.getLogicTableName(), valueRange.lowerEndpoint(), valueRange.upperEndpoint());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">doSharding</span><span class="params">(Collection&lt;String&gt; availableTargetNames, PreciseShardingValue&lt;Integer&gt; shardingValue)</span> </span>&#123;</span><br><span class="line">        log.info(<span class="string">"shardingValue:"</span> + shardingValue);</span><br><span class="line">        <span class="keyword">return</span> shardingValue.getLogicTableName() + DateFmtUtils.getYyyy(shardingValue.getValue());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean &amp;&amp; package</span><br></pre></td></tr></table></figure>
+
+<h3 id="上传包"><a href="#上传包" class="headerlink" title="上传包"></a>上传包</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/data/downloads/sharding-proxy-4.0.0-RC3/lib</span><br><span class="line">ll sharding-strategy*</span><br><span class="line">-rw-r--r--. 1 502 games 10437 Dec 25 19:34 sharding-strategy-4.0.0-RC3.jar</span><br><span class="line"></span><br><span class="line">chown 502:games sharding-strategy-4.0.0-RC3.jar</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定分片算法"><a href="#指定分片算法" class="headerlink" title="指定分片算法"></a>指定分片算法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">shardingRule:</span><br><span class="line">  tables:</span><br><span class="line">    kd_logasset:</span><br><span class="line">      actualDataNodes: ds_master.kd_logasset_$&#123;2015..2099&#125;_0$&#123;1..9&#125;, ds_master.kd_logasset_$&#123;2015..2099&#125;_$&#123;10..12&#125;</span><br><span class="line">      tableStrategy:</span><br><span class="line">        standard:</span><br><span class="line">          shardingColumn: bizdate</span><br><span class="line">          preciseAlgorithmClassName: com.jzsec.sharding.strategy.Yyyy_mmTableShardingAlgorithm</span><br><span class="line">          rangeAlgorithmClassName: com.jzsec.sharding.strategy.Yyyy_mmTableShardingAlgorithm</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-4、分布式事务"><a href="#3-4、分布式事务" class="headerlink" title="3.4、分布式事务"></a>3.4、分布式事务</h2><p>Sharding-Proxy接入的分布式事务API同Sharding-JDBC保持一致，支持LOCAL，XA，BASE类型的事务。</p>
+<h3 id="XA事务"><a href="#XA事务" class="headerlink" title="XA事务"></a>XA事务</h3><p>Sharding-Proxy原生支持XA事务，默认的事务管理器为Atomikos。 可以通过在Sharding-Proxy的conf目录中添加<code>jta.properties</code>来定制化Atomikos配置项。 具体的配置规则请参考Atomikos的<a href="https://www.atomikos.com/Documentation/JtaProperties" target="_blank" rel="noopener">官方文档</a>。</p>
+<h3 id="BASE事务"><a href="#BASE事务" class="headerlink" title="BASE事务"></a>BASE事务</h3><p>BASE目前没有打包到Sharding-Proxy中，使用时需要将实现了<code>ShardingTransactionManager</code>SPI的jar拷贝至conf/lib目录，然后切换事务类型为BASE。</p>
+<h2 id="3-5、SCTL-Sharding-Proxy-control-language"><a href="#3-5、SCTL-Sharding-Proxy-control-language" class="headerlink" title="3.5、SCTL (Sharding-Proxy control language)"></a>3.5、SCTL (Sharding-Proxy control language)</h2><p>SCTL为Sharding-Proxy特有的控制语句，可以在运行时修改和查询Sharding-Proxy的状态，目前支持的语法为：</p>
+<table>
+<thead>
+<tr>
+<th align="left">语句</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">sctl:set transaction_type=XX</td>
+<td align="left">修改当前TCP连接的事务类型, 支持LOCAL，XA，BASE。例：sctl:set transaction_type=XA</td>
+</tr>
+<tr>
+<td align="left">sctl:show transaction_type</td>
+<td align="left">查询当前TCP连接的事务类型</td>
+</tr>
+<tr>
+<td align="left">sctl:show cached_connections</td>
+<td align="left">查询当前TCP连接中缓存的物理数据库连接个数</td>
+</tr>
+<tr>
+<td align="left">sctl:explain SQL语句</td>
+<td align="left">查看逻辑SQL的执行计划，例：sctl:explain select * from t_order;</td>
+</tr>
+<tr>
+<td align="left">sctl:hint set MASTER_ONLY=true</td>
+<td align="left">针对当前TCP连接，是否将数据库操作强制路由到主库</td>
+</tr>
+<tr>
+<td align="left">sctl:hint set DatabaseShardingValue=yy</td>
+<td align="left">针对当前TCP连接，设置hint仅对数据库分片有效，并添加分片值，yy：数据库分片值</td>
+</tr>
+<tr>
+<td align="left">sctl:hint addDatabaseShardingValue xx=yy</td>
+<td align="left">针对当前TCP连接，为表xx添加分片值yy，xx：逻辑表名称，yy：数据库分片值</td>
+</tr>
+<tr>
+<td align="left">sctl:hint addTableShardingValue xx=yy</td>
+<td align="left">针对当前TCP连接，为表xx添加分片值yy，xx：逻辑表名称，yy：表分片值</td>
+</tr>
+<tr>
+<td align="left">sctl:hint clear</td>
+<td align="left">针对当前TCP连接，清除hint所有设置</td>
+</tr>
+<tr>
+<td align="left">sctl:hint show status</td>
+<td align="left">针对当前TCP连接，查询hint状态，master_only:true/false，sharding_type:databases_only/databases_tables</td>
+</tr>
+<tr>
+<td align="left">sctl:hint show table status</td>
+<td align="left">针对当前TCP连接，查询逻辑表的hint分片值</td>
+</tr>
+</tbody></table>
+<p>Sharding-Proxy 默认不支持hint，如需支持，请在conf/server.yaml中，将<code>props</code>的属性<code>proxy.hint.enabled</code>设置为true。在Sharding-Proxy中，HintShardingAlgorithm的泛型只能是String类型。</p>
+<h2 id="3-6、注意事项"><a href="#3-6、注意事项" class="headerlink" title="3.6、注意事项"></a>3.6、注意事项</h2><ol>
+<li>Sharding-Proxy默认使用3307端口，可以通过启动脚本追加参数作为启动端口号。如: <code>bin/start.sh 3308</code></li>
+<li>Sharding-Proxy使用conf/server.yaml配置注册中心、认证信息以及公用属性。</li>
+<li>Sharding-Proxy支持多逻辑数据源，每个以config-前缀命名的yaml配置文件，即为一个逻辑数据源。</li>
+</ol>
+<h1 id="4、配置手册"><a href="#4、配置手册" class="headerlink" title="4、配置手册"></a>4、配置手册</h1><h2 id="数据源与分片配置示例"><a href="#数据源与分片配置示例" class="headerlink" title="数据源与分片配置示例"></a>数据源与分片配置示例</h2><p>Sharding-Proxy支持多逻辑数据源，每个以config-前缀命名的yaml配置文件，即为一个逻辑数据源。以下是<code>config-xxx.yaml</code>的配置配置示例。</p>
+<h3 id="数据分片"><a href="#数据分片" class="headerlink" title="数据分片"></a>数据分片</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">schemaName: sharding_db</span><br><span class="line"></span><br><span class="line">dataSources:</span><br><span class="line">  ds0: </span><br><span class="line">    url: jdbc:postgresql://localhost:5432/ds0</span><br><span class="line">    username: root</span><br><span class="line">    password: </span><br><span class="line">    connectionTimeoutMilliseconds: 30000</span><br><span class="line">    idleTimeoutMilliseconds: 60000</span><br><span class="line">    maxLifetimeMilliseconds: 1800000</span><br><span class="line">    maxPoolSize: 65</span><br><span class="line">  ds1:</span><br><span class="line">    url: jdbc:postgresql://localhost:5432/ds1</span><br><span class="line">    username: root</span><br><span class="line">    password: </span><br><span class="line">    connectionTimeoutMilliseconds: 30000</span><br><span class="line">    idleTimeoutMilliseconds: 60000</span><br><span class="line">    maxLifetimeMilliseconds: 1800000</span><br><span class="line">    maxPoolSize: 65</span><br><span class="line"></span><br><span class="line">shardingRule:</span><br><span class="line">  tables:</span><br><span class="line">    t_order:</span><br><span class="line">      actualDataNodes: ds$&#123;0..1&#125;.t_order$&#123;0..1&#125;</span><br><span class="line">      databaseStrategy:</span><br><span class="line">        inline:</span><br><span class="line">          shardingColumn: user_id</span><br><span class="line">          algorithmExpression: ds$&#123;user_id % 2&#125;</span><br><span class="line">      tableStrategy: </span><br><span class="line">        inline:</span><br><span class="line">          shardingColumn: order_id</span><br><span class="line">          algorithmExpression: t_order$&#123;order_id % 2&#125;</span><br><span class="line">      keyGenerator:</span><br><span class="line">        type: SNOWFLAKE</span><br><span class="line">        column: order_id</span><br><span class="line">    t_order_item:</span><br><span class="line">      actualDataNodes: ds$&#123;0..1&#125;.t_order_item$&#123;0..1&#125;</span><br><span class="line">      databaseStrategy:</span><br><span class="line">        inline:</span><br><span class="line">          shardingColumn: user_id</span><br><span class="line">          algorithmExpression: ds$&#123;user_id % 2&#125;</span><br><span class="line">      tableStrategy:</span><br><span class="line">        inline:</span><br><span class="line">          shardingColumn: order_id</span><br><span class="line">          algorithmExpression: t_order_item$&#123;order_id % 2&#125;</span><br><span class="line">      keyGenerator:</span><br><span class="line">        type: SNOWFLAKE</span><br><span class="line">        column: order_item_id</span><br><span class="line">  bindingTables:</span><br><span class="line">    - t_order,t_order_item</span><br><span class="line">  defaultTableStrategy:</span><br><span class="line">    none:</span><br></pre></td></tr></table></figure>
+
+<h3 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">schemaName: master_slave_db</span><br><span class="line"></span><br><span class="line">dataSources:</span><br><span class="line">  ds_master:</span><br><span class="line">    url: jdbc:postgresql://localhost:5432/ds_master</span><br><span class="line">    username: root</span><br><span class="line">    password: </span><br><span class="line">    connectionTimeoutMilliseconds: 30000</span><br><span class="line">    idleTimeoutMilliseconds: 60000</span><br><span class="line">    maxLifetimeMilliseconds: 1800000</span><br><span class="line">    maxPoolSize: 65</span><br><span class="line">  ds_slave0:</span><br><span class="line">    url: jdbc:postgresql://localhost:5432/ds_slave0</span><br><span class="line">    username: root</span><br><span class="line">    password: </span><br><span class="line">    connectionTimeoutMilliseconds: 30000</span><br><span class="line">    idleTimeoutMilliseconds: 60000</span><br><span class="line">    maxLifetimeMilliseconds: 1800000</span><br><span class="line">    maxPoolSize: 65</span><br><span class="line">  ds_slave1:</span><br><span class="line">    url: jdbc:postgresql://localhost:5432/ds_slave1</span><br><span class="line">    username: root</span><br><span class="line">    password: </span><br><span class="line">    connectionTimeoutMilliseconds: 30000</span><br><span class="line">    idleTimeoutMilliseconds: 60000</span><br><span class="line">    maxLifetimeMilliseconds: 1800000</span><br><span class="line">    maxPoolSize: 65</span><br><span class="line"></span><br><span class="line">masterSlaveRule:</span><br><span class="line">  name: ds_ms</span><br><span class="line">  masterDataSourceName: ds_master</span><br><span class="line">  slaveDataSourceNames: </span><br><span class="line">    - ds_slave0</span><br><span class="line">    - ds_slave1</span><br></pre></td></tr></table></figure>
+
+<h2 id="全局配置示例"><a href="#全局配置示例" class="headerlink" title="全局配置示例"></a>全局配置示例</h2><p>Sharding-Proxy使用conf/server.yaml配置注册中心、认证信息以及公用属性。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">省略数据分片和读写分离配置</span></span><br><span class="line">orchestration:</span><br><span class="line">  name: orchestration_ds</span><br><span class="line">  overwrite: true</span><br><span class="line">  registry:</span><br><span class="line">    type: zookeeper</span><br><span class="line">    namespace: orchestration</span><br><span class="line">    serverLists: localhost:2181</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">权限验证</span></span><br><span class="line">authentication:</span><br><span class="line">  users:</span><br><span class="line">    root: # 自定义用户名</span><br><span class="line">      password: root # 自定义用户名</span><br><span class="line">    sharding: # 自定义用户名</span><br><span class="line">      password: sharding # 自定义用户名</span><br><span class="line">      authorizedSchemas: sharding_db, masterslave_db # 该用户授权可访问的数据库，多个用逗号分隔。缺省将拥有root权限，可访问全部数据库。</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">Proxy属性</span></span><br><span class="line"><span class="meta">#</span><span class="bash">省略与Sharding-JDBC一致的配置属性</span></span><br><span class="line">props:</span><br><span class="line">  acceptor.size: #用于设置接收客户端请求的工作线程个数，默认为CPU核数*2</span><br><span class="line">  proxy.transaction.type: #默认为LOCAL事务，允许LOCAL，XA，BASE三个值，XA采用Atomikos作为事务管理器，BASE类型需要拷贝实现ShardingTransactionManager的接口的jar包至lib目录中</span><br><span class="line">  proxy.opentracing.enabled: #是否开启链路追踪功能，默认为不开启。详情请参见[链路追踪](/cn/features/orchestration/apm/)</span><br><span class="line">  check.table.metadata.enabled: #是否在启动时检查分表元数据一致性，默认值: false</span><br><span class="line">  proxy.frontend.flush.threshold: # 对于单个大查询,每多少个网络包返回一次</span><br></pre></td></tr></table></figure>
+
+<h1 id="5、排查问题"><a href="#5、排查问题" class="headerlink" title="5、排查问题"></a>5、排查问题</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]# top</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215237.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]# top -Hp 31009</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215403.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]# printf '%x' 31165</span><br><span class="line">79bd</span><br><span class="line">[root@localhost conf]# jstack 31009 &gt; aaa.log</span><br><span class="line">[root@localhost conf]# vi aaa.log</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215526.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]# iftop</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215203.png" alt></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/computer-network/simulated-network-delay-loss-interrupt/" rel="next" title="linux 模拟  网络延迟、网络丢包、网络中断">
+                <i class="fa fa-chevron-left"></i> linux 模拟  网络延迟、网络丢包、网络中断
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/computer-network/tcpdump-and-wireshark/" rel="prev" title="tcpdump抓包后，wireshark分析">
+                tcpdump抓包后，wireshark分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、官网文档源码"><span class="nav-text">1、官网文档源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、快速入门"><span class="nav-text">2、快速入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1、规则配置"><span class="nav-text">2.1、规则配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2、引入依赖"><span class="nav-text">2.2、引入依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3、启动服务"><span class="nav-text">2.3、启动服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、使用手册"><span class="nav-text">3、使用手册</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1、Proxy启动"><span class="nav-text">3.1、Proxy启动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2、注册中心使用"><span class="nav-text">3.2、注册中心使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper"><span class="nav-text">Zookeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他第三方注册中心"><span class="nav-text">其他第三方注册中心</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3、使用自定义分片算法"><span class="nav-text">3.3、使用自定义分片算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#编码"><span class="nav-text">编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打包"><span class="nav-text">打包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#上传包"><span class="nav-text">上传包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指定分片算法"><span class="nav-text">指定分片算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4、分布式事务"><span class="nav-text">3.4、分布式事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#XA事务"><span class="nav-text">XA事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BASE事务"><span class="nav-text">BASE事务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5、SCTL-Sharding-Proxy-control-language"><span class="nav-text">3.5、SCTL (Sharding-Proxy control language)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6、注意事项"><span class="nav-text">3.6、注意事项</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、配置手册"><span class="nav-text">4、配置手册</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据源与分片配置示例"><span class="nav-text">数据源与分片配置示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分片"><span class="nav-text">数据分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读写分离"><span class="nav-text">读写分离</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全局配置示例"><span class="nav-text">全局配置示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5、排查问题"><span class="nav-text">5、排查问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

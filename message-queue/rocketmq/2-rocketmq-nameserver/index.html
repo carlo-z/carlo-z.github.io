@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mq,rocketmq,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="NameServer 是 整个 RocketMQ 的 ”大脑“； 路由管理、服务注册、服务发现 机制； 本章重点内容：  NameServer 整体架构设计； NameServer 动态路由 发现与剔除机制；    1、NameServer 架构设计RocketMQ 逻辑部署图：   Broker 启动时，向 所有NameServer 注册；  Producer在 发送消息 之前，先从 Na">
+<meta name="keywords" content="mq,rocketmq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2、RocketMQ 路由中心 NameServer">
+<meta property="og:url" content="https://carlo-z.com/message-queue/rocketmq/2-rocketmq-nameserver/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="NameServer 是 整个 RocketMQ 的 ”大脑“； 路由管理、服务注册、服务发现 机制； 本章重点内容：  NameServer 整体架构设计； NameServer 动态路由 发现与剔除机制；    1、NameServer 架构设计RocketMQ 逻辑部署图：   Broker 启动时，向 所有NameServer 注册；  Producer在 发送消息 之前，先从 Na">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191107163137.png">
+<meta property="og:updated_time" content="2019-11-17T09:20:12.132Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2、RocketMQ 路由中心 NameServer">
+<meta name="twitter:description" content="NameServer 是 整个 RocketMQ 的 ”大脑“； 路由管理、服务注册、服务发现 机制； 本章重点内容：  NameServer 整体架构设计； NameServer 动态路由 发现与剔除机制；    1、NameServer 架构设计RocketMQ 逻辑部署图：   Broker 启动时，向 所有NameServer 注册；  Producer在 发送消息 之前，先从 Na">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191107163137.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/message-queue/rocketmq/2-rocketmq-nameserver/">
+
+
+
+
+
+  <title>2、RocketMQ 路由中心 NameServer | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rocketmq/2-rocketmq-nameserver/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2、RocketMQ 路由中心 NameServer</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-10T00:00:00+08:00">
+                2019-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mq/" itemprop="url" rel="index">
+                    <span itemprop="name">mq</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mq/rocketmq/" itemprop="url" rel="index">
+                    <span itemprop="name">rocketmq</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<p>NameServer 是 整个 RocketMQ 的 ”大脑“；</p>
+<p>路由管理、服务注册、服务发现 机制；</p>
+<p><u><strong>本章重点内容</strong></u>：</p>
+<ul>
+<li>NameServer 整体架构设计；</li>
+<li>NameServer 动态路由 发现与剔除机制；</li>
+</ul>
+<br>
+
+<h1 id="1、NameServer-架构设计"><a href="#1、NameServer-架构设计" class="headerlink" title="1、NameServer 架构设计"></a>1、NameServer 架构设计</h1><p>RocketMQ 逻辑部署图：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191107163137.png" alt></p>
+<ul>
+<li><p>Broker 启动时，向 所有NameServer 注册；</p>
+</li>
+<li><p>Producer在 发送消息 之前，先从 NameServer 获取 Broker 服务器地址列表，然后 根据负载均衡 算法 从 列表中选择一台服务器进行消息发送；</p>
+</li>
+<li><p>NameServer 与 每台 Broker 保持 长链接，并且间隔 30s 检测 Broker是否存活。如果Broker宕机，则从 路由注册表中将其移除；</p>
+</li>
+<li><p>NameServer 本身的 高可用 通过 部署多台NameServer 服务器来实现；但彼此之间不通信；</p>
+</li>
+</ul>
+<br>
+
+<h1 id="2、NameServer-启动流程"><a href="#2、NameServer-启动流程" class="headerlink" title="2、NameServer 启动流程"></a>2、NameServer 启动流程</h1><p>NamaServer 启动类：org.apache.rocketmq.namesrv.NamesrvStartup</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> NamesrvController <span class="title">main0</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        NamesrvController controller = createNamesrvController(args);</span><br><span class="line">        start(controller);</span><br><span class="line">        String tip = <span class="string">"The Name Server boot success. serializeType="</span> + RemotingCommand.getSerializeTypeConfigInThisServer();</span><br><span class="line">        log.info(tip);</span><br><span class="line">        System.out.printf(<span class="string">"%s%n"</span>, tip);</span><br><span class="line">        <span class="keyword">return</span> controller;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        System.exit(-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1、初始化-NamesrvController"><a href="#2-1、初始化-NamesrvController" class="headerlink" title="2.1、初始化 NamesrvController"></a>2.1、初始化 NamesrvController</h3><blockquote>
+<p>NamesrvController controller = createNamesrvController(args);</p>
+</blockquote>
+<p>创建：</p>
+<blockquote>
+<p>org.apache.rocketmq.namesrv.NamesrvStartup.createNamesrvController</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> NamesrvController <span class="title">createNamesrvController</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, JoranException </span>&#123;</span><br><span class="line">    System.setProperty(RemotingCommand.REMOTING_VERSION_KEY, Integer.toString(MQVersion.CURRENT_VERSION));</span><br><span class="line">    <span class="comment">//PackageConflictDetect.detectFastjson();</span></span><br><span class="line">    <span class="comment">// 将 args 转换成 CommandLine 对象</span></span><br><span class="line">    Options options = ServerUtil.buildCommandlineOptions(<span class="keyword">new</span> Options());</span><br><span class="line">    commandLine = ServerUtil.parseCmdLine(<span class="string">"mqnamesrv"</span>, args, buildCommandlineOptions(options), <span class="keyword">new</span> PosixParser());</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> == commandLine) &#123;</span><br><span class="line">        System.exit(-<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 读取 CommandLine 中 -c namesrv.conf 中的配置, 加载 到 NamesrvConfig 和 NettyServerConfig 中</span></span><br><span class="line">    <span class="keyword">final</span> NamesrvConfig namesrvConfig = <span class="keyword">new</span> NamesrvConfig();</span><br><span class="line">    <span class="keyword">final</span> NettyServerConfig nettyServerConfig = <span class="keyword">new</span> NettyServerConfig();</span><br><span class="line">    nettyServerConfig.setListenPort(<span class="number">9876</span>);</span><br><span class="line">    <span class="keyword">if</span> (commandLine.hasOption(<span class="string">'c'</span>)) &#123;</span><br><span class="line">        String file = commandLine.getOptionValue(<span class="string">'c'</span>);</span><br><span class="line">        <span class="keyword">if</span> (file != <span class="keyword">null</span>) &#123;</span><br><span class="line">            InputStream in = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(file));</span><br><span class="line">            properties = <span class="keyword">new</span> Properties();</span><br><span class="line">            properties.load(in);</span><br><span class="line">            MixAll.properties2Object(properties, namesrvConfig);</span><br><span class="line">            MixAll.properties2Object(properties, nettyServerConfig);</span><br><span class="line"></span><br><span class="line">            namesrvConfig.setConfigStorePath(file);</span><br><span class="line"></span><br><span class="line">            System.out.printf(<span class="string">"load config properties file OK, %s%n"</span>, file);</span><br><span class="line">            in.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果有 -p 参数，则 向console打印 namesrvConfig 和 nettyServerConfig 所有属性，退出</span></span><br><span class="line">    <span class="keyword">if</span> (commandLine.hasOption(<span class="string">'p'</span>)) &#123;</span><br><span class="line">        InternalLogger console = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_CONSOLE_NAME);</span><br><span class="line">        MixAll.printObjectProperties(console, namesrvConfig);</span><br><span class="line">        MixAll.printObjectProperties(console, nettyServerConfig);</span><br><span class="line">        System.exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将 commandLine 中的其他参数 加载到 namesrvConfig 中</span></span><br><span class="line">    MixAll.properties2Object(ServerUtil.commandLine2Properties(commandLine), namesrvConfig);</span><br><span class="line">    <span class="comment">// 如果没有 设置 rocketmqHome，则 退出</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> == namesrvConfig.getRocketmqHome()) &#123;</span><br><span class="line">        System.out.printf(<span class="string">"Please set the %s variable in your environment to match the location of the RocketMQ installation%n"</span>, MixAll.ROCKETMQ_HOME_ENV);</span><br><span class="line">        System.exit(-<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 从 logback_namesrv.xml 中 加载 日志配置信息</span></span><br><span class="line">    LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();</span><br><span class="line">    JoranConfigurator configurator = <span class="keyword">new</span> JoranConfigurator();</span><br><span class="line">    configurator.setContext(lc);</span><br><span class="line">    lc.reset();</span><br><span class="line">    configurator.doConfigure(namesrvConfig.getRocketmqHome() + <span class="string">"/conf/logback_namesrv.xml"</span>);</span><br><span class="line"></span><br><span class="line">    log = InternalLoggerFactory.getLogger(LoggerName.NAMESRV_LOGGER_NAME);</span><br><span class="line">    <span class="comment">// 向 日志文件.log 打印 namesrvConfig 和 nettyServerConfig</span></span><br><span class="line">    MixAll.printObjectProperties(log, namesrvConfig);</span><br><span class="line">    MixAll.printObjectProperties(log, nettyServerConfig);</span><br><span class="line">    <span class="comment">// 使用 namesrvConfig 和 nettyServerConfig 初始化 NamesrvController</span></span><br><span class="line">    <span class="comment">// 同时初始化 Configuration</span></span><br><span class="line">    <span class="keyword">final</span> NamesrvController controller = <span class="keyword">new</span> NamesrvController(namesrvConfig, nettyServerConfig);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// remember all configs to prevent discard</span></span><br><span class="line">    <span class="comment">// 将 properties 全部记录到 Configuration 中</span></span><br><span class="line">    controller.getConfiguration().registerConfig(properties);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> controller;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码功能：</p>
+<ol>
+<li>需要先加载 <u><strong>命令行中-c configFile 指定的配置文件</strong></u> 和 <u><strong>命令行中的其他参数</strong></u> 初始化 NamesrvConfig 和 NettyServerConfig；</li>
+<li>使用 NamesrvConfig 和 NettyServerConfig 初始化 NamesrvController；</li>
+<li>然后将 所有参数 持久化在 configFile 中；</li>
+</ol>
+<blockquote>
+<p>org.apache.rocketmq.namesrv.NamesrvController</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">NamesrvController</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    NamesrvConfig namesrvConfig, NettyServerConfig nettyServerConfig)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.namesrvConfig = namesrvConfig;</span><br><span class="line">    <span class="keyword">this</span>.nettyServerConfig = nettyServerConfig;</span><br><span class="line">    <span class="keyword">this</span>.kvConfigManager = <span class="keyword">new</span> KVConfigManager(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.routeInfoManager = <span class="keyword">new</span> RouteInfoManager();</span><br><span class="line">    <span class="keyword">this</span>.brokerHousekeepingService = <span class="keyword">new</span> BrokerHousekeepingService(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.configuration = <span class="keyword">new</span> Configuration(</span><br><span class="line">        log,</span><br><span class="line">        <span class="keyword">this</span>.namesrvConfig, <span class="keyword">this</span>.nettyServerConfig</span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">this</span>.configuration.setStorePathFromConfig(<span class="keyword">this</span>.namesrvConfig, <span class="string">"configStorePath"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>初始化：</p>
+<ul>
+<li>kvConfigManager：使用 configTable（HashMap）存储 所有配置；</li>
+<li>routeInfoManager：存储路由信息；</li>
+<li>brokerHousekeepingService：</li>
+</ul>
+<br>
+
+<h3 id="2-2、启动-NamesrvController"><a href="#2-2、启动-NamesrvController" class="headerlink" title="2.2、启动 NamesrvController"></a>2.2、启动 NamesrvController</h3><blockquote>
+<p>start(controller);</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">org.apache.rocketmq.namesrv.NamesrvController;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> NamesrvController <span class="title">start</span><span class="params">(<span class="keyword">final</span> NamesrvController controller)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> == controller) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"NamesrvController is null"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 初始化</span></span><br><span class="line">    <span class="keyword">boolean</span> initResult = controller.initialize();</span><br><span class="line">    <span class="keyword">if</span> (!initResult) &#123;</span><br><span class="line">        controller.shutdown();</span><br><span class="line">        System.exit(-<span class="number">3</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 注册钩子，JVM 关闭时，关闭controller</span></span><br><span class="line">    Runtime.getRuntime().addShutdownHook(</span><br><span class="line">        <span class="keyword">new</span> ShutdownHookThread(log, <span class="keyword">new</span> Callable&lt;Void&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Void <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            controller.shutdown();</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;));</span><br><span class="line">    <span class="comment">// 启动 controller</span></span><br><span class="line">    controller.start();</span><br><span class="line">    <span class="keyword">return</span> controller;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>初始化 controller</p>
+<blockquote>
+<p>boolean initResult = controller.initialize();</p>
+</blockquote>
+<ol>
+<li>从 configFile 中 加在配置 放在 kvConfigManager 的 configTable（HashMap） 中；</li>
+<li>初始化 NettyRemotingServer；</li>
+<li>创建 业务线程池 remotingExecutor；</li>
+<li>把 remotingExecutor 作为 remotingServer 的 默认处理线程池；</li>
+<li>每 10s 扫描一次不活跃的 Broker，从 brokerLiveTable 中移除；</li>
+<li>每 10s 打印一次 KV配置；</li>
+<li>创建一个文件监控服务，当 sslContext 变更时，重新加载 sslContext；</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">org.apache.rocketmq.namesrv.NamesrvController;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 从 configFile 中 加在配置 放在 kvConfigManager 的 configTable（HashMap） 中</span></span><br><span class="line">    <span class="keyword">this</span>.kvConfigManager.load();</span><br><span class="line">    <span class="comment">// 初始化 NettyRemotingServer</span></span><br><span class="line">    <span class="keyword">this</span>.remotingServer = <span class="keyword">new</span> NettyRemotingServer(<span class="keyword">this</span>.nettyServerConfig, <span class="keyword">this</span>.brokerHousekeepingService);</span><br><span class="line">    <span class="comment">// 创建 业务线程池</span></span><br><span class="line">    <span class="keyword">this</span>.remotingExecutor =</span><br><span class="line">        Executors.newFixedThreadPool(</span><br><span class="line">        nettyServerConfig.getServerWorkerThreads(), </span><br><span class="line">        <span class="keyword">new</span> ThreadFactoryImpl(<span class="string">"RemotingExecutorThread_"</span>));</span><br><span class="line">    <span class="comment">// 把 remotingExecutor 作为 remotingServer 的 默认处理线程池</span></span><br><span class="line">    <span class="keyword">this</span>.registerProcessor();</span><br><span class="line">    <span class="comment">// 每 10s 扫描一次不活跃的 Broker，从 brokerLiveTable 中移除</span></span><br><span class="line">    <span class="keyword">this</span>.scheduledExecutorService.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            NamesrvController.<span class="keyword">this</span>.routeInfoManager.scanNotActiveBroker();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="number">5</span>, <span class="number">10</span>, TimeUnit.SECONDS);</span><br><span class="line">    <span class="comment">// 每 10s 打印一次 KV配置</span></span><br><span class="line">    <span class="keyword">this</span>.scheduledExecutorService.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            NamesrvController.<span class="keyword">this</span>.kvConfigManager.printAllPeriodically();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="number">1</span>, <span class="number">10</span>, TimeUnit.MINUTES);</span><br><span class="line">    <span class="comment">// 创建一个文件监控服务，当 sslContext 变更时，重新加载 sslContext</span></span><br><span class="line">    <span class="keyword">if</span> (TlsSystemConfig.tlsMode != TlsMode.DISABLED) &#123;</span><br><span class="line">        <span class="comment">// Register a listener to reload SslContext</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            fileWatchService = <span class="keyword">new</span> FileWatchService(</span><br><span class="line">                <span class="keyword">new</span> String[] &#123;</span><br><span class="line">                    TlsSystemConfig.tlsServerCertPath,</span><br><span class="line">                    TlsSystemConfig.tlsServerKeyPath,</span><br><span class="line">                    TlsSystemConfig.tlsServerTrustCertPath</span><br><span class="line">                &#125;,</span><br><span class="line">                <span class="keyword">new</span> FileWatchService.Listener() &#123;</span><br><span class="line">                    <span class="keyword">boolean</span> certChanged, keyChanged = <span class="keyword">false</span>;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChanged</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">                        <span class="keyword">if</span> (path.equals(TlsSystemConfig.tlsServerTrustCertPath)) &#123;</span><br><span class="line">                            log.info(<span class="string">"The trust certificate changed, reload the ssl context"</span>);</span><br><span class="line">                            reloadServerSslContext();</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (path.equals(TlsSystemConfig.tlsServerCertPath)) &#123;</span><br><span class="line">                            certChanged = <span class="keyword">true</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (path.equals(TlsSystemConfig.tlsServerKeyPath)) &#123;</span><br><span class="line">                            keyChanged = <span class="keyword">true</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (certChanged &amp;&amp; keyChanged) &#123;</span><br><span class="line">                            log.info(<span class="string">"The certificate and private key changed, reload the ssl context"</span>);</span><br><span class="line">                            certChanged = keyChanged = <span class="keyword">false</span>;</span><br><span class="line">                            reloadServerSslContext();</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">reloadServerSslContext</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                        ((NettyRemotingServer) remotingServer).loadSslContext();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            log.warn(<span class="string">"FileWatchService created error, can't load the certificate dynamically"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>controller 的 关闭和启动</p>
+<blockquote>
+<p>controller.shutdown();<br>controller.start();</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.remotingServer.start(); <span class="comment">// 启动 Netty服务器</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.fileWatchService != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.fileWatchService.start();  <span class="comment">// 启动 sslContext 文件监控服务</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shutdown</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.remotingServer.shutdown();  <span class="comment">// 关闭 Netty服务器</span></span><br><span class="line">    <span class="keyword">this</span>.remotingExecutor.shutdown();  <span class="comment">// 关闭 线程池</span></span><br><span class="line">    <span class="keyword">this</span>.scheduledExecutorService.shutdown();  <span class="comment">// 关闭 sslContext 文件监控服务</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.fileWatchService != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">this</span>.fileWatchService.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="2-3、NameServer-路由注册、故障剔除"><a href="#2-3、NameServer-路由注册、故障剔除" class="headerlink" title="2.3、NameServer 路由注册、故障剔除"></a>2.3、NameServer 路由注册、故障剔除</h3><p>NameServer的主要作用： 为Producer 和 Consumer 提供 Topic的 路由信息；</p>
+<p>NameServer功能：存储路由信息 、管理Broker节点；</p>
+<h4 id="1）路由元信息"><a href="#1）路由元信息" class="headerlink" title="1）路由元信息"></a>1）路由元信息</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HashMap&lt;String<span class="comment">/* topic */</span>, List&lt;QueueData&gt;&gt; topicQueueTable;</span><br><span class="line">HashMap&lt;String<span class="comment">/* brokerName */</span>, BrokerData&gt; brokerAddrTable;</span><br><span class="line">HashMap&lt;String<span class="comment">/* clusterName */</span>, Set&lt;String<span class="comment">/* brokerName */</span>&gt;&gt; clusterAddrTable;</span><br><span class="line">HashMap&lt;String<span class="comment">/* brokerAddr */</span>, BrokerLiveInfo&gt; brokerLiveTable;</span><br><span class="line">HashMap&lt;String<span class="comment">/* brokerAddr */</span>, List&lt;String&gt;<span class="comment">/* Filter Server */</span>&gt; filterServerTable;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>topicQueueTable：Topic消息队列 路由信息，Producer 根据 路由表 进行负载均衡；</li>
+<li>brokerAddrTable：Broker基础信息，包含 brokerName、所属集群名称、主备 broker地址；</li>
+<li>clusterAddrTable：Broker集群信息，存储集群中 所有 Broker 名称；</li>
+<li>brokerLiveTable：Broker状态信息。NameServer每次收到心跳包时会替换该信息；</li>
+<li>filterServerTable：Broker上的 FilterServer 列表，用于类模式消息过滤；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.apache.rocketmq.common.protocol.route;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueueData</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">QueueData</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String brokerName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> readQueueNums;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> writeQueueNums;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> perm; <span class="comment">// 读写权限，具体含义参考 PermName</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> topicSynFlag;  <span class="comment">// topic同步标记，具体含义参考 TopicSynFlag</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> org.apache.rocketmq.common.protocol.route;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokerData</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">BrokerData</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String cluster;</span><br><span class="line">    <span class="keyword">private</span> String brokerName;</span><br><span class="line">    <span class="comment">// brokerId = 0, 表示Master, brokerId &gt; 0 表示Slave</span></span><br><span class="line">    <span class="keyword">private</span> HashMap&lt;Long<span class="comment">/* brokerId */</span>, String<span class="comment">/* broker address */</span>&gt; brokerAddrs;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">selectBrokerAddr</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String addr = <span class="keyword">this</span>.brokerAddrs.get(MixAll.MASTER_ID);</span><br><span class="line">        <span class="comment">// 先取 Master，取不到Master则随机返回一个Slave</span></span><br><span class="line">        <span class="keyword">if</span> (addr == <span class="keyword">null</span>) &#123;</span><br><span class="line">            List&lt;String&gt; addrs = <span class="keyword">new</span> ArrayList&lt;String&gt;(brokerAddrs.values());</span><br><span class="line">            <span class="keyword">return</span> addrs.get(random.nextInt(addrs.size()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> addr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> org.apache.rocketmq.namesrv.routeinfo;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BrokerLiveInfo</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> lastUpdateTimestamp;</span><br><span class="line">    <span class="keyword">private</span> DataVersion dataVersion;</span><br><span class="line">    <span class="keyword">private</span> Channel channel;</span><br><span class="line">    <span class="keyword">private</span> String haServerAddr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="2）路由注册"><a href="#2）路由注册" class="headerlink" title="2）路由注册"></a>2）路由注册</h4><p><u><strong>机制</strong></u>：通过Broker 与 NameServer 心跳功能实现的。</p>
+<ol>
+<li>Broker 启动时 向集群中 所有NameServer 发送心跳语句;</li>
+<li>Broker 每隔 30s 向集群中 所有NameServer 发送心跳语句;</li>
+<li>NameServer 收到 Broker 心跳包时，会更新 brokerLiveTable 缓存中 BrokerLiveInfo 的 lastUpdateTimestamp；</li>
+<li>NameServer 每隔 10s 扫描 brokerLiveTable，如果连续 120s 没有收到 心跳包，则 NameServer将移除 该Broker 的路由信息，同时关闭 socket 连接；</li>
+</ol>
+<p><u><strong>①、Broker发送心跳包核心代码</strong></u>：</p>
+<blockquote>
+<p>org.apache.rocketmq.broker.BrokerController.start()</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="comment">// Broker 启动时 向集群中 所有NameServer 发送心跳语句;</span></span><br><span class="line">    <span class="keyword">this</span>.registerBrokerAll(<span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">true</span>);</span><br><span class="line">    <span class="comment">// Broker 每隔 30s 向集群中 所有NameServer 发送心跳语句;</span></span><br><span class="line">    <span class="keyword">this</span>.scheduledExecutorService.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                BrokerController.<span class="keyword">this</span>.registerBrokerAll(</span><br><span class="line">                    <span class="keyword">true</span>, <span class="keyword">false</span>, brokerConfig.isForceRegister());</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable e) &#123;</span><br><span class="line">                log.error(<span class="string">"registerBrokerAll Exception"</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="number">1000</span> * <span class="number">10</span>, </span><br><span class="line">       Math.max(<span class="number">10000</span>, Math.min(brokerConfig.getRegisterNameServerPeriod(), <span class="number">60000</span>)),</span><br><span class="line">       TimeUnit.MILLISECONDS);</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>遍历 NameServer 列表，Broker 消息服务器 依次向 NameServer 发送心跳包：</p>
+<blockquote>
+<p>org.apache.rocketmq.broker.out.BrokerOuterAPI</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 向所有 NameServer 注册 Broker</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> clusterName String 集群名称</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> brokerAddr String broker地址</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> brokerName String broker名称</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> brokerId long brokerId，0-Master，大于0-Salve</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> haServerAddr String Master地址，初次请求时，该值为空，salve 向 NameServer注册后返回</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> topicConfigWrapper TopicConfigSerializeWrapper 主题（topic）配置，存储在$&#123;&#125;rocket_home&#125;/store/config/topic.json中</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> filterServerList List&lt;String&gt; 消息过滤服务器列表</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> oneway boolean 是否 单向请求，不关心返回结果</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> timeoutMills int</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> compressed boolean</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;RegisterBrokerResult&gt; <span class="title">registerBrokerAll</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> String clusterName,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> String brokerAddr,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> String brokerName,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> <span class="keyword">long</span> brokerId,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> String haServerAddr,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> TopicConfigSerializeWrapper topicConfigWrapper,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> List&lt;String&gt; filterServerList,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> <span class="keyword">boolean</span> oneway,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> <span class="keyword">int</span> timeoutMills,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> <span class="keyword">boolean</span> compressed)</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">final</span> List&lt;RegisterBrokerResult&gt; registerBrokerResultList = Lists.newArrayList();</span><br><span class="line">    List&lt;String&gt; nameServerAddressList = <span class="keyword">this</span>.remotingClient.getNameServerAddressList();</span><br><span class="line">    <span class="keyword">if</span> (nameServerAddressList != <span class="keyword">null</span> &amp;&amp; nameServerAddressList.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 构造 requestHeader</span></span><br><span class="line">        <span class="keyword">final</span> RegisterBrokerRequestHeader requestHeader = </span><br><span class="line">            <span class="keyword">new</span> RegisterBrokerRequestHeader();</span><br><span class="line">        requestHeader.setBrokerAddr(brokerAddr);</span><br><span class="line">        requestHeader.setBrokerId(brokerId);</span><br><span class="line">        requestHeader.setBrokerName(brokerName);</span><br><span class="line">        requestHeader.setClusterName(clusterName);</span><br><span class="line">        requestHeader.setHaServerAddr(haServerAddr);</span><br><span class="line">        requestHeader.setCompressed(compressed);</span><br><span class="line">		<span class="comment">// 构造 requestBody</span></span><br><span class="line">        RegisterBrokerBody requestBody = <span class="keyword">new</span> RegisterBrokerBody();</span><br><span class="line">        requestBody.setTopicConfigSerializeWrapper(topicConfigWrapper);</span><br><span class="line">        requestBody.setFilterServerList(filterServerList);</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">byte</span>[] body = requestBody.encode(compressed);</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> bodyCrc32 = UtilAll.crc32(body);</span><br><span class="line">        requestHeader.setBodyCrc32(bodyCrc32);  <span class="comment">// 使用 crc32 作为 校验码</span></span><br><span class="line">        <span class="keyword">final</span> CountDownLatch countDownLatch = </span><br><span class="line">            <span class="keyword">new</span> CountDownLatch(nameServerAddressList.size());</span><br><span class="line">        <span class="comment">// 遍历 NameServer 列表，Broker 消息服务器 依次向 NameServer 发送心跳包</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">final</span> String namesrvAddr : nameServerAddressList) &#123;</span><br><span class="line">            brokerOuterExecutor.execute(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="comment">// 向单个 NameServer 注册, </span></span><br><span class="line">                        <span class="comment">// 从 responseHeader 里 拿到Master地址 和 HaServer地址</span></span><br><span class="line">                        <span class="comment">// 从 response.getBody() 中解析，放入 KVTable</span></span><br><span class="line">                        RegisterBrokerResult result = registerBroker(</span><br><span class="line">                            namesrvAddr,oneway, timeoutMills,requestHeader,body);</span><br><span class="line">                        <span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            registerBrokerResultList.add(result);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        log.info(<span class="string">"register broker to name server &#123;&#125; OK"</span>, namesrvAddr);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        log.warn(<span class="string">"registerBroker Exception, &#123;&#125;"</span>, namesrvAddr, e);</span><br><span class="line">                    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                        countDownLatch.countDown();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 使用 countDownLatch 等待 固定时间timeoutMills</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            countDownLatch.await(timeoutMills, TimeUnit.MILLISECONDS);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回 注册结果</span></span><br><span class="line">    <span class="keyword">return</span> registerBrokerResultList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><u><strong>②、NameServer处理心跳包</strong></u></p>
+<p>处理机制：org.apache.rocketmq.namesrv.processor.DefaultRequestProcessor.processRequest() 网络处理 解析请求类型，如果请求类型为 RequestCode.REGISTER_BROKER，则请求最终转发到 RouteInfoManager.registerBroker()；</p>
+<blockquote>
+<p>org.apache.rocketmq.namesrv.processor.DefaultRequestProcessor;</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> RemotingCommand <span class="title">processRequest</span><span class="params">(ChannelHandlerContext ctx,</span></span></span><br><span class="line"><span class="function"><span class="params">    RemotingCommand request)</span> <span class="keyword">throws</span> RemotingCommandException </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (request.getCode()) &#123;</span><br><span class="line">        .......</span><br><span class="line">        <span class="keyword">case</span> RequestCode.REGISTER_BROKER:</span><br><span class="line">            <span class="comment">// 如果 请求类型 为 Broker 心跳</span></span><br><span class="line">            Version brokerVersion = MQVersion.value2Version(request.getVersion());</span><br><span class="line">            <span class="keyword">if</span> (brokerVersion.ordinal() &gt;= MQVersion.Version.V3_0_11.ordinal()) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">this</span>.registerBrokerWithFilterServer(ctx, request);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">this</span>.registerBroker(ctx, request);</span><br><span class="line">            &#125;</span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>org.apache.rocketmq.namesrv.routeinfo.RouteInfoManager.registerBroker()</p>
+<ol>
+<li>路由注册需要加写锁（ReentrantReadWriteLock.writeLock()）, 防止 并发 修改 RouteInfoManager 的路由表；首先判断 Broker 集群 是否存在，如果不存在，则 创建。然后将 broker名 加入到对应集群中；</li>
+<li>维护 BrokerData信息；</li>
+<li>如果Broker是Master，并且 broker中的topic 配置信息发生变化 或 首次注册，则创建或更新 Topic的路由元数据，填充 topicQueueTable；</li>
+<li>更新 BrokerLiveInfo，存活的 Broker信息表；</li>
+<li>注册Broker的过滤器 Server地址列表，一个Broker 上会关联 多个FilterSever消息过滤器；</li>
+<li>如果 brokerName 不是Master，则 获取对应的 masterAddr 和 masterAddr 对应的 haServerAddr 作为返回值；</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 处理 broker来的 心跳包，更新NameServer中的元数据信息；</span></span><br><span class="line"><span class="comment"> * 更新 clusterAddrTable，brokerAddrTable，topicConfigWrapper</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> clusterName String</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> brokerAddr String</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> brokerName String</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> brokerId long</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> haServerAddr String</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> topicConfigWrapper TopicConfigSerializeWrapper</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> filterServerList List&lt;String&gt;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> channel Channel</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> RegisterBrokerResult <span class="title">registerBroker</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> String clusterName,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> String brokerAddr,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> String brokerName,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> <span class="keyword">long</span> brokerId,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> String haServerAddr,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> TopicConfigSerializeWrapper topicConfigWrapper,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> List&lt;String&gt; filterServerList,</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">final</span> Channel channel)</span> </span>&#123;</span><br><span class="line">    RegisterBrokerResult result = <span class="keyword">new</span> RegisterBrokerResult();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.lock.writeLock().lockInterruptibly();</span><br><span class="line">            <span class="comment">// 将 brokerName 放入所属的 集群地址表clusterAddrTable（HashMap&lt;String, Set&lt;String&gt;&gt;）</span></span><br><span class="line">            Set&lt;String&gt; brokerNames = <span class="keyword">this</span>.clusterAddrTable.get(clusterName);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == brokerNames) &#123;</span><br><span class="line">                brokerNames = <span class="keyword">new</span> HashSet&lt;String&gt;();</span><br><span class="line">                <span class="keyword">this</span>.clusterAddrTable.put(clusterName, brokerNames);</span><br><span class="line">            &#125;</span><br><span class="line">            brokerNames.add(brokerName);</span><br><span class="line">            <span class="comment">// 判断是否第一次注册，写入broker地址表 brokerAddrTable（HashMap&lt;String, BrokerData&gt;）</span></span><br><span class="line">            <span class="keyword">boolean</span> registerFirst = <span class="keyword">false</span>;</span><br><span class="line">            BrokerData brokerData = <span class="keyword">this</span>.brokerAddrTable.get(brokerName);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == brokerData) &#123;</span><br><span class="line">                registerFirst = <span class="keyword">true</span>;</span><br><span class="line">                brokerData = <span class="keyword">new</span> BrokerData(clusterName, brokerName, <span class="keyword">new</span> HashMap&lt;Long, String&gt;());</span><br><span class="line">                <span class="keyword">this</span>.brokerAddrTable.put(brokerName, brokerData);</span><br><span class="line">            &#125;</span><br><span class="line">            String oldAddr = brokerData.getBrokerAddrs().put(brokerId, brokerAddr);</span><br><span class="line">            registerFirst = registerFirst || (<span class="keyword">null</span> == oldAddr);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 如果 brokerName 是 Master节点，并且topicConfig有变更，则 更新 topicConfigWrapper 中的元数据信息</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> != topicConfigWrapper</span><br><span class="line">                &amp;&amp; MixAll.MASTER_ID == brokerId) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">this</span>.isBrokerTopicConfigChanged(brokerAddr, topicConfigWrapper.getDataVersion())</span><br><span class="line">                    || registerFirst) &#123;</span><br><span class="line">                    ConcurrentMap&lt;String, TopicConfig&gt; tcTable =</span><br><span class="line">                        topicConfigWrapper.getTopicConfigTable();</span><br><span class="line">                    <span class="keyword">if</span> (tcTable != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="keyword">for</span> (Map.Entry&lt;String, TopicConfig&gt; entry : tcTable.entrySet()) &#123;</span><br><span class="line">                            <span class="comment">// 添加或更新 brokerName 的 topic 配置</span></span><br><span class="line">                            <span class="keyword">this</span>.createAndUpdateQueueData(brokerName, entry.getValue());</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 更新 brokerLiveTable 中的 对应 broker 的 最近一次心跳时间</span></span><br><span class="line">            BrokerLiveInfo prevBrokerLiveInfo = <span class="keyword">this</span>.brokerLiveTable.put(brokerAddr,</span><br><span class="line">                <span class="keyword">new</span> BrokerLiveInfo(</span><br><span class="line">                    System.currentTimeMillis(),</span><br><span class="line">                    topicConfigWrapper.getDataVersion(),</span><br><span class="line">                    channel,</span><br><span class="line">                    haServerAddr));</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == prevBrokerLiveInfo) &#123;</span><br><span class="line">                log.info(<span class="string">"new broker registered, &#123;&#125; HAServer: &#123;&#125;"</span>, brokerAddr, haServerAddr);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 更新 brokerAddr 对应的 过滤服务器列表</span></span><br><span class="line">            <span class="keyword">if</span> (filterServerList != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (filterServerList.isEmpty()) &#123;</span><br><span class="line">                    <span class="keyword">this</span>.filterServerTable.remove(brokerAddr);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">this</span>.filterServerTable.put(brokerAddr, filterServerList);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 如果 brokerName 不是Master，则 获取对应的 masterAddr 和 masterAddr 对应的 haServerAddr</span></span><br><span class="line">            <span class="keyword">if</span> (MixAll.MASTER_ID != brokerId) &#123;</span><br><span class="line">                String masterAddr = brokerData.getBrokerAddrs().get(MixAll.MASTER_ID);</span><br><span class="line">                <span class="keyword">if</span> (masterAddr != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    BrokerLiveInfo brokerLiveInfo = <span class="keyword">this</span>.brokerLiveTable.get(masterAddr);</span><br><span class="line">                    <span class="keyword">if</span> (brokerLiveInfo != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        result.setHaServerAddr(brokerLiveInfo.getHaServerAddr());</span><br><span class="line">                        result.setMasterAddr(masterAddr);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.lock.writeLock().unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        log.error(<span class="string">"registerBroker Exception"</span>, e);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="3）-路由删除"><a href="#3）-路由删除" class="headerlink" title="3） 路由删除"></a>3） 路由删除</h4><p><u><strong>心跳包</strong></u>：{BrokerId，Broker地址，Broker名称，Broker所属集群名称}；</p>
+<p><u><strong>剔除失效Broker机制</strong></u>：NameServer 每隔 10s 扫描 brokerLiveTable 状态表，如果 BrokerLive的 lastUpdateTimestamp 的时间戳 距 当前时间超过 120s，则 认为 Broker失效；移除 该 Broker，关闭与Broker连接，并同时更新 topicQueueTable、brokerAddrTable、brokerLiveTable、filterServerTable；</p>
+<p>RocketMQ 有 <u><strong>两个触发点来 触发 路由删除</strong></u>：</p>
+<ol>
+<li>Namaserver 定时扫描brokerLiveTable，检测上次心跳包与当前系统时间差，如果时间间隔 &gt; 120s，则移除该Broker信息；</li>
+<li>Broker 在正常被关闭的情况下，会执行 unregisterBroker 指令；</li>
+</ol>
+<p>两种方法的触发方式的公共代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">org.apache.rocketmq.namesrv.NamesrvController;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="comment">// 每 10s 扫描一次不活跃的 Broker，从 brokerLiveTable 中移除</span></span><br><span class="line">    <span class="keyword">this</span>.scheduledExecutorService.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            NamesrvController.<span class="keyword">this</span>.routeInfoManager.scanNotActiveBroker();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="number">5</span>, <span class="number">10</span>, TimeUnit.SECONDS);</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.rocketmq.namesrv.routeinfo.RouteInfoManager;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="4）路由发现"><a href="#4）路由发现" class="headerlink" title="4）路由发现"></a>4）路由发现</h4><br>
+
+
+
+
+
+
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mq/" rel="tag"># mq</a>
+          
+            <a href="/tags/rocketmq/" rel="tag"># rocketmq</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/message-queue/rocketmq/1-rocketmq-srcode-debug/" rel="next" title="IntelliJ IDEA 调试 rocketmq 源码">
+                <i class="fa fa-chevron-left"></i> IntelliJ IDEA 调试 rocketmq 源码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/nginx/log/nginxlog-shell/" rel="prev" title="shell解析nginx日志">
+                shell解析nginx日志 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、NameServer-架构设计"><span class="nav-text">1、NameServer 架构设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、NameServer-启动流程"><span class="nav-text">2、NameServer 启动流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、初始化-NamesrvController"><span class="nav-text">2.1、初始化 NamesrvController</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、启动-NamesrvController"><span class="nav-text">2.2、启动 NamesrvController</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3、NameServer-路由注册、故障剔除"><span class="nav-text">2.3、NameServer 路由注册、故障剔除</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）路由元信息"><span class="nav-text">1）路由元信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）路由注册"><span class="nav-text">2）路由注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3）-路由删除"><span class="nav-text">3） 路由删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4）路由发现"><span class="nav-text">4）路由发现</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="elasticsearch,lucene,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="目录2.3.1、Lucene分词系统 2.3.2、分词测试 2.3.3、IK分词器配置 2.3.4、中文分词器对比 2.3.5、扩展停用词词典 2.3.6、扩展自定义词典 -—————————————————————— ​     2.3.1、Lucene分词系统索引和查询 都是以 词项 为基本单位 Lucene中，分词 主要依靠 Analyzer类 解析实现 Analyzer是抽象类，内部调用">
+<meta name="keywords" content="elasticsearch,lucene">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2.3、Lucene分词详解">
+<meta property="og:url" content="https://carlo-z.com/elasticsearch/doc/2-3-Lucene分词详解/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="目录2.3.1、Lucene分词系统 2.3.2、分词测试 2.3.3、IK分词器配置 2.3.4、中文分词器对比 2.3.5、扩展停用词词典 2.3.6、扩展自定义词典 -—————————————————————— ​     2.3.1、Lucene分词系统索引和查询 都是以 词项 为基本单位 Lucene中，分词 主要依靠 Analyzer类 解析实现 Analyzer是抽象类，内部调用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123942.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123952.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124040.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124340.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124519.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124535.png">
+<meta property="og:updated_time" content="2019-08-25T05:46:09.858Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2.3、Lucene分词详解">
+<meta name="twitter:description" content="目录2.3.1、Lucene分词系统 2.3.2、分词测试 2.3.3、IK分词器配置 2.3.4、中文分词器对比 2.3.5、扩展停用词词典 2.3.6、扩展自定义词典 -—————————————————————— ​     2.3.1、Lucene分词系统索引和查询 都是以 词项 为基本单位 Lucene中，分词 主要依靠 Analyzer类 解析实现 Analyzer是抽象类，内部调用">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123942.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/elasticsearch/doc/2-3-Lucene分词详解/">
+
+
+
+
+
+  <title>2.3、Lucene分词详解 | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-3-Lucene分词详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2.3、Lucene分词详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-02T00:03:00+08:00">
+                2019-03-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p>2.3.1、Lucene分词系统</p>
+<p>2.3.2、分词测试</p>
+<p>2.3.3、IK分词器配置</p>
+<p>2.3.4、中文分词器对比</p>
+<p>2.3.5、扩展停用词词典</p>
+<p>2.3.6、扩展自定义词典</p>
+<p>-——————————————————————</p>
+<p>​    </p>
+<h1 id="2-3-1、Lucene分词系统"><a href="#2-3-1、Lucene分词系统" class="headerlink" title="2.3.1、Lucene分词系统"></a>2.3.1、Lucene分词系统</h1><p>索引和查询 都是以 词项 为基本单位</p>
+<p>Lucene中，分词 主要依靠 Analyzer类 解析实现</p>
+<p>Analyzer是抽象类，内部调用 TokenStream 实现</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123942.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123952.png" alt></p>
+<p>​     </p>
+<h1 id="2-3-2、分词测试"><a href="#2-3-2、分词测试" class="headerlink" title="2.3.2、分词测试"></a>2.3.2、分词测试</h1><p>StandardAnalyzer 分词器测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.analyzer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.standard.StandardAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.CharTermAttribute;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.StringReader;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * StandardAnalyzer demo</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StdAnalyzerDemo</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String strCh = <span class="string">"中华人名共和国简称中国，是一个有13亿人口的国家"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String strEn = <span class="string">"Dogs can not achieve a place, eyes can reach;"</span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"StandardAnalyzer 对中文分词："</span>);</span><br><span class="line">		stdAnalyzer(strCh);</span><br><span class="line">		System.out.println(<span class="string">"StandardAnalyzer 对英文分词："</span>);</span><br><span class="line">		stdAnalyzer(strEn);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stdAnalyzer</span><span class="params">(String str)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		Analyzer analyzer = <span class="keyword">null</span>;</span><br><span class="line">		analyzer = <span class="keyword">new</span> StandardAnalyzer();</span><br><span class="line">		StringReader reader = <span class="keyword">new</span> StringReader(str);</span><br><span class="line">		TokenStream tokenStream = analyzer.tokenStream(str, reader);</span><br><span class="line">		tokenStream.reset();</span><br><span class="line">		CharTermAttribute charTermAttribute = tokenStream.getAttribute(CharTermAttribute.class);</span><br><span class="line">		System.out.println(<span class="string">"分词结果："</span>);</span><br><span class="line">		<span class="keyword">while</span> (tokenStream.incrementToken()) &#123;</span><br><span class="line">			System.out.print(charTermAttribute.toString() + <span class="string">"|"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">"\n"</span>);</span><br><span class="line">		analyzer.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124040.png" alt></p>
+<p>测试多种Analyzer，注意要特意指定 jdk8： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.analyzer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.cjk.CJKAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.core.KeywordAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.core.SimpleAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.core.StopAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.core.WhitespaceAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.standard.StandardAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.CharTermAttribute;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.StringReader;</span><br><span class="line"><span class="keyword">import</span> java.util.StringJoiner;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试多种分词器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VariousAnalyzersDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String strCh = <span class="string">"中华人民共和国简称中国，是一个有13亿人口的国家"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String strEn = <span class="string">"Dogs can not achieve a place, eyes can reach;"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"标准分词："</span> + printAnalyzer(<span class="keyword">new</span> StandardAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"空格分词："</span> + printAnalyzer(<span class="keyword">new</span> WhitespaceAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"简单分词："</span> + printAnalyzer(<span class="keyword">new</span> SimpleAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"二分法分词："</span> + printAnalyzer(<span class="keyword">new</span> CJKAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"关键字分词："</span> + printAnalyzer(<span class="keyword">new</span> KeywordAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"停用词分词："</span> + printAnalyzer(<span class="keyword">new</span> StopAnalyzer(<span class="keyword">new</span> StringReader(strCh)), strCh));</span><br><span class="line">		System.out.println(<span class="string">"中文智能分词："</span> + printAnalyzer(<span class="keyword">new</span> SmartChineseAnalyzer(), strCh));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">printAnalyzer</span><span class="params">(Analyzer analyzer, String str)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		StringReader reader = <span class="keyword">new</span> StringReader(str);</span><br><span class="line">		TokenStream tokenStream = analyzer.tokenStream(str, reader);</span><br><span class="line">		tokenStream.reset();</span><br><span class="line">		CharTermAttribute charTermAttribute = tokenStream.getAttribute(CharTermAttribute.class);</span><br><span class="line">		StringJoiner stringJoiner = <span class="keyword">new</span> StringJoiner(<span class="string">"|"</span>);</span><br><span class="line">		<span class="keyword">while</span> (tokenStream.incrementToken()) &#123;</span><br><span class="line">			stringJoiner.add(charTermAttribute.toString());</span><br><span class="line">		&#125;</span><br><span class="line">		analyzer.close();</span><br><span class="line">		<span class="keyword">return</span> stringJoiner.toString();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124340.png" alt></p>
+<p>​    </p>
+<h1 id="2-3-3、IK分词器配置"><a href="#2-3-3、IK分词器配置" class="headerlink" title="2.3.3、IK分词器配置"></a>2.3.3、IK分词器配置</h1><p>Lucene 8.0 实用 IK分词器需要修改 IKTokenizer 和 IKAnalyzer</p>
+<p>在 com.learn.lucene.chapter2.ik 下 新建 IKTokenizer8x.java 和 IKAnalyzer8x.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.ik;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Tokenizer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.CharTermAttribute;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.OffsetAttribute;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.TypeAttribute;</span><br><span class="line"><span class="keyword">import</span> org.wltea.analyzer.core.IKSegmenter;</span><br><span class="line"><span class="keyword">import</span> org.wltea.analyzer.core.Lexeme;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 修改 IKTokenizer —— incrementToken()</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IKTokenizer8x</span> <span class="keyword">extends</span> <span class="title">Tokenizer</span> </span>&#123;</span><br><span class="line">	<span class="comment">// IK分词器实现</span></span><br><span class="line">	<span class="keyword">private</span> IKSegmenter _IKIkSegmenter;</span><br><span class="line">	<span class="comment">// 词元文本属性</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> CharTermAttribute termAttribute;</span><br><span class="line">	<span class="comment">// 词元位移属性</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> OffsetAttribute offsetAttribute;</span><br><span class="line">	<span class="comment">// 词元分类属性</span></span><br><span class="line">	<span class="comment">// (该属性分类参考 org.wltea.analyzer.core.Lexeme 中的分类常量)</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> TypeAttribute typeAttribute;</span><br><span class="line">	<span class="comment">// 记录最后一个词元的结束位置</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> endPosttion;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Lucene 8.x Tokenizer适配器类构造函数，实现最新的 Tokenizer 接口</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">IKTokenizer8x</span><span class="params">(<span class="keyword">boolean</span> useSmart)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>();</span><br><span class="line">		offsetAttribute = addAttribute(OffsetAttribute.class);</span><br><span class="line">		termAttribute = addAttribute(CharTermAttribute.class);</span><br><span class="line">		typeAttribute = addAttribute(TypeAttribute.class);</span><br><span class="line">		_IKIkSegmenter = <span class="keyword">new</span> IKSegmenter(input, useSmart);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">incrementToken</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		clearAttributes();      <span class="comment">// 清除所有的词元属性</span></span><br><span class="line">		Lexeme nextLexeme = _IKIkSegmenter.next();</span><br><span class="line">		<span class="keyword">if</span> (nextLexeme != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="comment">// 将 Lexeme 转化成 Attributes</span></span><br><span class="line">			termAttribute.append(nextLexeme.getLexemeText());  <span class="comment">// 设置词元文本</span></span><br><span class="line">			termAttribute.setLength(nextLexeme.getLength());  <span class="comment">// 设置词元长度</span></span><br><span class="line">			offsetAttribute.setOffset(nextLexeme.getBeginPosition(), nextLexeme.getEndPosition());  <span class="comment">// 设置词元位移</span></span><br><span class="line">			endPosttion = nextLexeme.getEndPosition();  <span class="comment">// 记录 分词的最后位置</span></span><br><span class="line">			typeAttribute.setType(nextLexeme.getLexemeText()); <span class="comment">// 记录词元分分类</span></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>; <span class="comment">// 返回true 告知 还有下个词元</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.reset();</span><br><span class="line">		_IKIkSegmenter.reset(input);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">end</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> finalOffset = correctOffset(<span class="keyword">this</span>.endPosttion);</span><br><span class="line">		offsetAttribute.setOffset(finalOffset, finalOffset);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">package com.learn.lucene.chapter2.ik;</span><br><span class="line"></span><br><span class="line">import org.apache.lucene.analysis.Analyzer;</span><br><span class="line">import org.apache.lucene.analysis.Tokenizer;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 修改IKAnalyzer —— createComponents(String fieldName)</span><br><span class="line"> */</span><br><span class="line">public class IKAnalyzer8x extends Analyzer &#123;</span><br><span class="line"></span><br><span class="line">	private boolean useSmart;</span><br><span class="line"></span><br><span class="line">	public IKAnalyzer8x() &#123;</span><br><span class="line">		this(false);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public IKAnalyzer8x(boolean useSmart) &#123;</span><br><span class="line">		super();</span><br><span class="line">		this.useSmart = useSmart;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	protected TokenStreamComponents createComponents(String fieldName) &#123;</span><br><span class="line">		Tokenizer _IKTokenizer = new IKTokenizer8x(this.isUseSmart());</span><br><span class="line">		return new TokenStreamComponents(_IKTokenizer);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public boolean isUseSmart() &#123;</span><br><span class="line">		return useSmart;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setUseSmart(boolean useSmart) &#123;</span><br><span class="line">		this.useSmart = useSmart;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实例化 IKAnalyzer8x 就能实用IK分词器了</p>
+<p>1、 默认使用细粒度切分算法：</p>
+<p>​        Analyzer analyzer = new IKAnalyzer8x();</p>
+<p>2、创建智能切分算法的 IKAnalyzer：</p>
+<p>​        Analyzer analyzer = new IKAnalyzer8x(true);</p>
+<p>​    </p>
+<h1 id="2-3-4、中文分词器对比"><a href="#2-3-4、中文分词器对比" class="headerlink" title="2.3.4、中文分词器对比"></a>2.3.4、中文分词器对比</h1><p>​        分词效果会直接影响文档搜索的准确性</p>
+<p>​        我们对比一下 Lucene自带的 SmartChineseAnalyzer 和 IK Analyzer的效率。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.analyzer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.CharTermAttribute;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.StringReader;</span><br><span class="line"><span class="keyword">import</span> java.util.StringJoiner;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 中文分词器效果对比</span></span><br><span class="line"><span class="comment"> * 1、Lucene 自带的 SmartChineseAnalyzer 分词器</span></span><br><span class="line"><span class="comment"> * 2、IKAnalyzer8x分词器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IkVSSmartchDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String str1 = <span class="string">"公路局正在治理解放大道路面积水问题。"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String str2 = <span class="string">"IKAnalyzer 是一个开源的，基于java语言开发的轻量级的中文分词工具包。"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"句子一："</span> + str1);</span><br><span class="line">		System.out.println(<span class="string">"SmartChineseAnalyzer分词结果："</span> + printAnalyzer(<span class="keyword">new</span> SmartChineseAnalyzer(), str1));</span><br><span class="line">		System.out.println(<span class="string">"IKAnalyzer8x分词结果："</span> + printAnalyzer(<span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>), str1));</span><br><span class="line"><span class="comment">//		System.out.println("IKAnalyzer分词结果(bug)：" + printAnalyzer(new IKAnalyzer(), str1));</span></span><br><span class="line">		System.out.println(<span class="string">"----------------------------------------"</span>);</span><br><span class="line">		System.out.println(<span class="string">"句子二："</span> + str2);</span><br><span class="line">		System.out.println(<span class="string">"SmartChineseAnalyzer分词结果："</span> + printAnalyzer(<span class="keyword">new</span> SmartChineseAnalyzer(), str2));</span><br><span class="line">		System.out.println(<span class="string">"IKAnalyzer8x分词结果："</span> + printAnalyzer(<span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>), str2));</span><br><span class="line"><span class="comment">//		System.out.println("IKAnalyzer分词结果(bug)：" + printAnalyzer(new IKAnalyzer(true), str2));</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">printAnalyzer</span><span class="params">(Analyzer analyzer, String str)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		StringReader reader = <span class="keyword">new</span> StringReader(str);</span><br><span class="line">		TokenStream tokenStream = analyzer.tokenStream(str, reader);</span><br><span class="line">		tokenStream.reset();</span><br><span class="line">		CharTermAttribute charTermAttribute = tokenStream.getAttribute(CharTermAttribute.class);</span><br><span class="line">		StringJoiner stringJoiner = <span class="keyword">new</span> StringJoiner(<span class="string">"|"</span>);</span><br><span class="line">		<span class="keyword">while</span> (tokenStream.incrementToken()) &#123;</span><br><span class="line">			stringJoiner.add(charTermAttribute.toString());</span><br><span class="line">		&#125;</span><br><span class="line">		analyzer.close();</span><br><span class="line">		<span class="keyword">return</span> stringJoiner.toString();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<h1 id="2-3-5、扩展停用词词典"><a href="#2-3-5、扩展停用词词典" class="headerlink" title="2.3.5、扩展停用词词典"></a>2.3.5、扩展停用词词典</h1><p>IK Analyzer 默认的停用词词典为 IKAnalyzer2012_u6/stopword.dic</p>
+<p>这个词典只有30多个英文停用词，并不完整</p>
+<p>推荐使用扩展额停用词词表：<a href="https://github.com/cseryp/stopwords" target="_blank" rel="noopener">https://github.com/cseryp/stopwords</a></p>
+<p>在工程中新建 ext_stopword.dic，放在IKAnalyzer.cfg.xml同一目录；</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124519.png" alt></p>
+<p>编辑IKAnalyzer.cfg.xml，</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124535.png" alt></p>
+<p>​       </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elasticsearch/" rel="tag"># elasticsearch</a>
+          
+            <a href="/tags/lucene/" rel="tag"># lucene</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/elasticsearch/doc/2-2-Lucene开发准备/" rel="next" title="2.2、Lucene开发准备">
+                <i class="fa fa-chevron-left"></i> 2.2、Lucene开发准备
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/elasticsearch/doc/2-4-Lucene索引详解/" rel="prev" title="2.4、Lucene索引详解">
+                2.4、Lucene索引详解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目录"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-3-1、Lucene分词系统"><span class="nav-text">2.3.1、Lucene分词系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-3-2、分词测试"><span class="nav-text">2.3.2、分词测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-3-3、IK分词器配置"><span class="nav-text">2.3.3、IK分词器配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-3-4、中文分词器对比"><span class="nav-text">2.3.4、中文分词器对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-3-5、扩展停用词词典"><span class="nav-text">2.3.5、扩展停用词词典</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

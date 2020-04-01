@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Azkaban是由Linkedin开源的一个批量工作流任务调度器。用于在一个工作流内以一个特定的顺序运行一组工作和流程。Azkaban定义了一种KV文件格式来建立任务之间的依赖关系，并提供一个易于使用的web用户界面维护和跟踪你的工作流。  1、简介官网： https://azkaban.github.io/  下载： https://github.com/azkaban/azkaban/">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Azkaban安装部署">
+<meta property="og:url" content="https://carlo-z.com/tools/azkaban-setup/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="Azkaban是由Linkedin开源的一个批量工作流任务调度器。用于在一个工作流内以一个特定的顺序运行一组工作和流程。Azkaban定义了一种KV文件格式来建立任务之间的依赖关系，并提供一个易于使用的web用户界面维护和跟踪你的工作流。  1、简介官网： https://azkaban.github.io/  下载： https://github.com/azkaban/azkaban/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121164657.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121141742.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121152746.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121210448.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122103413.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122103509.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122103928.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122111810.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122112621.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122122433.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122122633.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122122831.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122123029.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122144130.png">
+<meta property="og:updated_time" content="2019-11-22T12:04:30.601Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Azkaban安装部署">
+<meta name="twitter:description" content="Azkaban是由Linkedin开源的一个批量工作流任务调度器。用于在一个工作流内以一个特定的顺序运行一组工作和流程。Azkaban定义了一种KV文件格式来建立任务之间的依赖关系，并提供一个易于使用的web用户界面维护和跟踪你的工作流。  1、简介官网： https://azkaban.github.io/  下载： https://github.com/azkaban/azkaban/">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121164657.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/tools/azkaban-setup/">
+
+
+
+
+
+  <title>Azkaban安装部署 | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/tools/azkaban-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Azkaban安装部署</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-21T00:00:00+08:00">
+                2017-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<blockquote>
+<p>Azkaban是由Linkedin开源的一个批量工作流任务调度器。用于在一个工作流内以一个特定的顺序运行一组工作和流程。Azkaban定义了一种KV文件格式来建立任务之间的依赖关系，并提供一个易于使用的web用户界面维护和跟踪你的工作流。</p>
+</blockquote>
+<h1 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h1><p>官网： <a href="https://azkaban.github.io/" target="_blank" rel="noopener">https://azkaban.github.io/</a> </p>
+<p>下载： <a href="https://github.com/azkaban/azkaban/releases" target="_blank" rel="noopener">https://github.com/azkaban/azkaban/releases</a> </p>
+<h3 id="1-1、架构"><a href="#1-1、架构" class="headerlink" title="1.1、架构"></a>1.1、架构</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121164657.png" alt></p>
+<h3 id="1-2、三个关键组件的作用"><a href="#1-2、三个关键组件的作用" class="headerlink" title="1.2、三个关键组件的作用"></a>1.2、三个关键组件的作用</h3><ul>
+<li>Relational Database：存储元数据，如项目名称、项目描述、项目权限、任务状态、SLA规则等。</li>
+<li>AzkabanWebServer：项目管理、权限授权、任务调度、监控executor。</li>
+<li>AzkabanExecutorServer：作业流执行的Server。</li>
+</ul>
+<h3 id="1-3、三种部署模式"><a href="#1-3、三种部署模式" class="headerlink" title="1.3、三种部署模式"></a>1.3、三种部署模式</h3><h4 id="1-、solo-server模式"><a href="#1-、solo-server模式" class="headerlink" title="1)、solo-server模式"></a>1)、solo-server模式</h4><p>​        DB使用的是一个内嵌的H2，Web Server和Executor Server运行在同一个进程里。这种模式包含Azkaban的所有特性，但一般用来学习和测试。</p>
+<h4 id="2-、two-server模式"><a href="#2-、two-server模式" class="headerlink" title="2)、two-server模式"></a>2)、two-server模式</h4><p>​        DB使用的是MySQL，MySQL支持master-slave架构，Web Server和Executor Server<u><strong>运行在不同的进程中</strong></u>。</p>
+<h4 id="3-、分布式multiple-executor模式"><a href="#3-、分布式multiple-executor模式" class="headerlink" title="3)、分布式multiple-executor模式"></a>3)、分布式multiple-executor模式</h4><p>​        DB使用的是MySQL，MySQL支持master-slave架构，<u><strong>Web Server和Executor Server运行在不同机器上，且有多个Executor Server</strong></u>。</p>
+<h1 id="2、下载安装"><a href="#2、下载安装" class="headerlink" title="2、下载安装"></a>2、下载安装</h1><h3 id="2-1、编译环境"><a href="#2-1、编译环境" class="headerlink" title="2.1、编译环境"></a>2.1、编译环境</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装jdk 1.8</span></span><br><span class="line">yum install -y git</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2、下载源码编译"><a href="#2-2、下载源码编译" class="headerlink" title="2.2、下载源码编译"></a>2.2、下载源码编译</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/azkaban/azkaban/archive/3.38.0.tar.gz -O azkaban-3.38.0.tar.gz</span><br><span class="line">tar -zxf azkaban-3.38.0.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121141742.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd azkaban-3.38.0</span><br><span class="line">./gradlew clean build -x test</span><br><span class="line"><span class="meta">#</span><span class="bash"> ./gradlew build -x <span class="built_in">test</span></span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121152746.png" alt></p>
+<h3 id="2-3、列出编译产物"><a href="#2-3、列出编译产物" class="headerlink" title="2.3、列出编译产物"></a>2.3、列出编译产物</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> solo-server模式安装包路径</span></span><br><span class="line">[root@localhost azkaban-3.38.0]# ll azkaban-solo-server/build/distributions/</span><br><span class="line">-rw-r--r--. 1 root root 24166624 Nov 21 15:27 azkaban-solo-server-0.1.0-SNAPSHOT.tar.gz</span><br><span class="line">-rw-r--r--. 1 root root 24303950 Nov 21 15:27 azkaban-solo-server-0.1.0-SNAPSHOT.zip</span><br><span class="line"><span class="meta">#</span><span class="bash"> two-server模式和multiple-executor模式web-server安装包路径</span></span><br><span class="line">[root@localhost azkaban-3.38.0]# ll azkaban-web-server/build/distributions/</span><br><span class="line">-rw-r--r--. 1 root root 20120241 Nov 21 15:21 azkaban-web-server-0.1.0-SNAPSHOT.tar.gz</span><br><span class="line">-rw-r--r--. 1 root root 20246140 Nov 21 15:21 azkaban-web-server-0.1.0-SNAPSHOT.zip</span><br><span class="line"><span class="meta">#</span><span class="bash"> two-server模式和multiple-executor模式<span class="built_in">exec</span>-server安装包路径</span></span><br><span class="line">[root@localhost azkaban-3.38.0]# ll azkaban-exec-server/build/distributions/</span><br><span class="line">-rw-r--r--. 1 root root 16055070 Nov 21 15:27 azkaban-exec-server-0.1.0-SNAPSHOT.tar.gz</span><br><span class="line">-rw-r--r--. 1 root root 16060378 Nov 21 15:27 azkaban-exec-server-0.1.0-SNAPSHOT.zip</span><br><span class="line"><span class="meta">#</span><span class="bash"> 建表sql</span></span><br><span class="line">[root@localhost azkaban-3.38.0]# ll azkaban-db/build/sql/</span><br><span class="line">-rw-r--r--. 1 root root 13887 Nov 21 15:13 create-all-sql-0.1.0-SNAPSHOT.sql</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="3、multiple-executor集群搭建"><a href="#3、multiple-executor集群搭建" class="headerlink" title="3、multiple-executor集群搭建"></a>3、multiple-executor集群搭建</h1><blockquote>
+<p>1、WebServer 负责管理Job，存储在mysql中</p>
+<p>2、mysql存储Job</p>
+<p>3、ExecutorServer从mysql中读取任务执行，ExecutorServer要部署在定时任务机器上；</p>
+<p>Azkaban WebServer挂掉，不影响已经提交的任务执行，主要是不能通过WebUI查看Job、管理Job、跟踪Job状态。<br>因此，对于这个架构，主要是要解决MySQL HA和ExecutorServer HA。官方支持ExecutorServer HA，我们只需要配一个MySQL HA就行了。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/azkaban</span><br><span class="line">tar -zxf azkaban-db/build/distributions/azkaban-db-0.1.0-SNAPSHOT.tar.gz -C /data/azkaban</span><br><span class="line">tar -zxf azkaban-web-server/build/distributions/azkaban-web-server-0.1.0-SNAPSHOT.tar.gz -C /data/azkaban</span><br><span class="line">tar -zxf azkaban-exec-server/build/distributions/azkaban-exec-server-0.1.0-SNAPSHOT.tar.gz -C /data/azkaban</span><br><span class="line">tar -zxf azkaban-solo-server/build/distributions/azkaban-solo-server-0.1.0-SNAPSHOT.tar.gz -C /data/azkaban</span><br><span class="line"><span class="meta">#</span><span class="bash"> 结果</span></span><br><span class="line">[root@localhost azkaban]# pwd</span><br><span class="line">/data/azkaban</span><br><span class="line">[root@localhost azkaban]# ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x. 2 root root 4096 Nov 21 14:50 azkaban-db-0.1.0-SNAPSHOT</span><br><span class="line">drwxr-xr-x. 6 root root   55 Nov 21 15:27 azkaban-exec-server-0.1.0-SNAPSHOT</span><br><span class="line">drwxr-xr-x. 8 root root   77 Nov 21 15:27 azkaban-solo-server-0.1.0-SNAPSHOT</span><br><span class="line">drwxr-xr-x. 6 root root   51 Nov 21 15:21 azkaban-web-server-0.1.0-SNAPSHOT</span><br><span class="line"></span><br><span class="line">mv azkaban-web-server-0.1.0-SNAPSHOT/ webserver</span><br><span class="line">mv azkaban-exec-server-0.1.0-SNAPSHOT exec-server</span><br><span class="line">mv azkaban-solo-server-0.1.0-SNAPSHOT soloserver</span><br><span class="line"></span><br><span class="line">[root@localhost azkaban]# ll</span><br><span class="line">drwxr-xr-x.  2 root root 4096 Nov 21 14:50 azkaban-db-0.1.0-SNAPSHOT</span><br><span class="line">drwxr-xr-x. 10 root root  202 Nov 22 10:20 exec-server</span><br><span class="line">drwxr-xr-x.  8 root root   77 Nov 21 15:27 soloserver</span><br><span class="line">drwxr-xr-x.  9 root root  196 Nov 22 10:07 webserver</span><br><span class="line">[root@localhost azkaban]#</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-1、建立Azkaban数据库"><a href="#3-1、建立Azkaban数据库" class="headerlink" title="3.1、建立Azkaban数据库"></a>3.1、建立Azkaban数据库</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin create db_azkaban -h 172.18.1.51 -P 3306 -uroot -p123456</span><br><span class="line">mysql -h 172.18.1.51 -P 3306 -uroot -p123456 db_azkaban &lt; /data/azkaban/azkaban-db-0.1.0-SNAPSHOT/create-all-sql-0.1.0-SNAPSHOT.sql</span><br><span class="line"><span class="meta">#</span><span class="bash"> 报错：ERROR 1071 (42000) at line 64: Specified key was too long; max key length is 767 bytes</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将数据库编码改为Latin1可解决</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191121210448.png" alt></p>
+<h3 id="3-2、生成SSL"><a href="#3-2、生成SSL" class="headerlink" title="3.2、生成SSL"></a>3.2、生成SSL</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost azkaban]# cd ~</span><br><span class="line">[root@localhost ~]#  keytool -keystore keystore -alias jetty -genkey -keyalg RSA</span><br><span class="line">Enter keystore password: 123456</span><br><span class="line">Re-enter new password: 123456</span><br><span class="line">What is your first and last name?</span><br><span class="line">  [Unknown]: 回车</span><br><span class="line">What is the name of your organizational unit?</span><br><span class="line">  [Unknown]:  回车</span><br><span class="line">What is the name of your organization?</span><br><span class="line">  [Unknown]:  回车</span><br><span class="line">What is the name of your City or Locality?</span><br><span class="line">  [Unknown]:  回车</span><br><span class="line">What is the name of your State or Province?</span><br><span class="line">  [Unknown]:  回车</span><br><span class="line">What is the two-letter country code for this unit?</span><br><span class="line">  [Unknown]:  回车</span><br><span class="line">Is CN=Unknown, OU=Unknown, O=Unknown, L=Unknown, ST=Unknown, C=Unknown correct?</span><br><span class="line">  [no]:  yes</span><br><span class="line">Enter key password for &lt;jetty&gt;</span><br><span class="line">        (RETURN if same as keystore password):  123456</span><br><span class="line">Re-enter new password: 123456</span><br><span class="line">[root@localhost ~]#</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3、设置-ExecutorServer"><a href="#3-3、设置-ExecutorServer" class="headerlink" title="3.3、设置 ExecutorServer"></a>3.3、设置 ExecutorServer</h3><p>vi /data/azkaban/exec-server/conf/azkaban.properties</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"># Azkaban Personalization Settings</span><br><span class="line">azkaban.name=AzkabanExecutor</span><br><span class="line">azkaban.label=AzkabanExecutor</span><br><span class="line">azkaban.color=#FF3601</span><br><span class="line">azkaban.default.servlet.path=/index</span><br><span class="line">web.resource.dir=web/</span><br><span class="line">default.timezone.id=Asia/Shanghai</span><br><span class="line"># Azkaban UserManager class</span><br><span class="line">user.manager.class=azkaban.user.XmlUserManager</span><br><span class="line">user.manager.xml.file=conf/azkaban-users.xml</span><br><span class="line"># Loader for projects</span><br><span class="line">executor.global.properties=conf/global.properties</span><br><span class="line">azkaban.project.dir=projects</span><br><span class="line"># Velocity dev mode</span><br><span class="line">velocity.dev.mode=false</span><br><span class="line"># Azkaban Jetty server properties.</span><br><span class="line">jetty.use.ssl=false</span><br><span class="line">jetty.maxThreads=25</span><br><span class="line">jetty.port=8181</span><br><span class="line"># Where the Azkaban web server is located</span><br><span class="line">azkaban.webserver.url=http://localhost:8081</span><br><span class="line"># mail settings</span><br><span class="line">mail.sender=iceleader@126.com</span><br><span class="line">mail.host=iceleader@126.com</span><br><span class="line"># User facing web server configurations used to construct the user facing server URLs. They are useful when there is a reverse proxy between Azkaban web servers and users.</span><br><span class="line"># enduser -&gt; myazkabanhost:443 -&gt; proxy -&gt; localhost:8081</span><br><span class="line"># when this parameters set then these parameters are used to generate email links.</span><br><span class="line"># if these parameters are not set then jetty.hostname, and jetty.port(if ssl configured jetty.ssl.port) are used.</span><br><span class="line"># azkaban.webserver.external_hostname=myazkabanhost.com</span><br><span class="line"># azkaban.webserver.external_ssl_port=443</span><br><span class="line"># azkaban.webserver.external_port=8081</span><br><span class="line">job.failure.email=iceleader@126.com</span><br><span class="line">job.success.email=iceleader@126.com</span><br><span class="line">lockdown.create.projects=false</span><br><span class="line">cache.directory=cache</span><br><span class="line"># JMX stats</span><br><span class="line">jetty.connector.stats=true</span><br><span class="line">executor.connector.stats=true</span><br><span class="line"># Azkaban plugin settings</span><br><span class="line">azkaban.jobtype.plugin.dir=plugins/jobtypes</span><br><span class="line"># Azkaban mysql settings by default. Users should configure their own username and password.</span><br><span class="line">database.type=mysql</span><br><span class="line">mysql.port=3306</span><br><span class="line">mysql.host=172.18.1.51</span><br><span class="line">mysql.database=db_azkaban</span><br><span class="line">mysql.user=root</span><br><span class="line">mysql.password=123456</span><br><span class="line">mysql.numconnections=100</span><br><span class="line"># Azkaban Executor settings</span><br><span class="line">executor.maxThreads=50</span><br><span class="line">executor.flow.threads=30</span><br></pre></td></tr></table></figure>
+
+<p>设置：</p>
+<blockquote>
+<ul>
+<li>default.timezone.id 时区配置</li>
+<li>user.manager.xml.file 登录用户配置</li>
+<li>azkaban.webserver.url 指向 webserver</li>
+<li>mysql.* mysql 相关配置</li>
+<li>mail.sender、mail.host、job.failure.email、job.success.email 邮件相关配置</li>
+</ul>
+</blockquote>
+<p>启动：/data/azkaban/exec-server/bin/start-exec.sh</p>
+<p>curl <a href="http://172.18.1.51:41096/executor?action=activate" target="_blank" rel="noopener">http://172.18.1.51:41096/executor?action=activate</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://<span class="variable">$&#123;executorHost&#125;</span>:<span class="variable">$&#123;executorPort&#125;</span>/executor?action=activate</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4、设置-WebServer"><a href="#3-4、设置-WebServer" class="headerlink" title="3.4、设置 WebServer"></a>3.4、设置 WebServer</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /data/azkaban/webserver/conf/</span><br><span class="line">vi /data/azkaban/webserver/conf/azkaban.properties</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 修改时区</span></span><br><span class="line">default.timezone.id=Asia/Shanghai</span><br><span class="line"><span class="meta">#</span><span class="bash"> 邮箱配置</span></span><br><span class="line">job.failure.email=iceleader@126.com</span><br><span class="line">job.success.email=iceleader@126.com</span><br><span class="line"><span class="meta">#</span><span class="bash"> mysql配置</span></span><br><span class="line">database.type=mysql</span><br><span class="line">mysql.port=3306</span><br><span class="line">mysql.host=172.18.1.51</span><br><span class="line">mysql.database=db_azkaban</span><br><span class="line">mysql.user=root</span><br><span class="line">mysql.password=123456</span><br><span class="line">mysql.numconnections=100</span><br><span class="line"><span class="meta">#</span><span class="bash"> SSL密码和文件路径</span></span><br></pre></td></tr></table></figure>
+
+<p>vi /data/azkaban/webserver/conf/azkaban-users.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">azkaban-users</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">user</span> <span class="attr">groups</span>=<span class="string">"azkaban"</span> <span class="attr">password</span>=<span class="string">"azkaban"</span> <span class="attr">roles</span>=<span class="string">"admin"</span> <span class="attr">username</span>=<span class="string">"azkaban"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">user</span> <span class="attr">password</span>=<span class="string">"metrics"</span> <span class="attr">roles</span>=<span class="string">"metrics"</span> <span class="attr">username</span>=<span class="string">"metrics"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">user</span> <span class="attr">username</span>=<span class="string">"admin"</span> <span class="attr">password</span>=<span class="string">"admin"</span> <span class="attr">roles</span>=<span class="string">"admin"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">role</span> <span class="attr">name</span>=<span class="string">"admin"</span> <span class="attr">permissions</span>=<span class="string">"ADMIN"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">role</span> <span class="attr">name</span>=<span class="string">"metrics"</span> <span class="attr">permissions</span>=<span class="string">"METRICS"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">azkaban-users</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>mkdir -p /data/azkaban/webserver/plugins/jobtypes</p>
+<p>vi /data/azkaban/webserver/plugins/jobtypes/commonprivate.properties</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">azkaban.native.lib=false</span><br><span class="line">execute.as.user=false</span><br></pre></td></tr></table></figure>
+
+<p>启动服务器</p>
+<p>sh /data/azkaban/webserver/bin/start-web.sh</p>
+<p>sh /data/azkaban/webserver/bin/shutdown-web.sh</p>
+<blockquote>
+<p>注意：没有 ExecutorServer 启动，WebServer就是退出</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122103413.png" alt></p>
+<p>select * from db_azkaban.executors</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122103509.png" alt></p>
+<p>update db_azkaban.executors set active = 1 where id = 1;</p>
+</blockquote>
+<p>浏览器访问： <a href="http://172.18.1.51:8081/index" target="_blank" rel="noopener">http://172.18.1.51:8081/index</a> </p>
+<p>使用admin/admin登录</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122103928.png" alt></p>
+<h3 id="3-5、配置Job"><a href="#3-5、配置Job" class="headerlink" title="3.5、配置Job"></a>3.5、配置Job</h3><h4 id="1-、创建project"><a href="#1-、创建project" class="headerlink" title="1)、创建project"></a>1)、创建project</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122111810.png" alt></p>
+<h4 id="2-、定义任务并上传"><a href="#2-、定义任务并上传" class="headerlink" title="2)、定义任务并上传"></a>2)、定义任务并上传</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122112621.png" alt></p>
+<p>每个任务格式如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type=command</span><br><span class="line">dependencies=dailysummary,advisor</span><br><span class="line">command=echo dailysettlement</span><br></pre></td></tr></table></figure>
+
+<p>完成后打包为 dailysettlement.zip， 上传到 Project dailysettlement下</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122122433.png" alt></p>
+<h4 id="3-、定制执行计划"><a href="#3-、定制执行计划" class="headerlink" title="3)、定制执行计划"></a>3)、定制执行计划</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122122633.png" alt></p>
+<p>每小时30分执行一次</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122122831.png" alt></p>
+<h4 id="4-、查看执行计划"><a href="#4-、查看执行计划" class="headerlink" title="4)、查看执行计划"></a>4)、查看执行计划</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122123029.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191122144130.png" alt></p>
+<h3 id="3-6、执行任务的问题"><a href="#3-6、执行任务的问题" class="headerlink" title="3.6、执行任务的问题"></a>3.6、执行任务的问题</h3><p>1、集群内存不足，去掉webserver中的内存限制</p>
+<p>vi webserver/conf/azkaban.properties</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> azkaban.executorselector.filters=StaticRemainingFlowSize,MinimumFreeMemory,CpuStatus</span></span><br><span class="line">azkaban.executorselector.filters=StaticRemainingFlowSize,CpuStatus</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ERROR [FlowTriggerScheduler] [Azkaban] Unable to get scheduled flow triggers</span><br><span class="line">java.lang.NullPointerException</span><br><span class="line">        at azkaban.flowtrigger.quartz.FlowTriggerScheduler.getScheduledFlowTriggerJobs(FlowTriggerScheduler.java:<span class="number">139</span>)</span><br><span class="line">        at azkaban.webapp.servlet.FlowTriggerServlet.ajaxFetchTrigger(FlowTriggerServlet.java:<span class="number">67</span>)</span><br><span class="line">        at azkaban.webapp.servlet.FlowTriggerServlet.handleAJAXAction(FlowTriggerServlet.java:<span class="number">107</span>)</span><br><span class="line">        at azkaban.webapp.servlet.FlowTriggerServlet.handleGet(FlowTriggerServlet.java:<span class="number">57</span>)</span><br><span class="line">        at azkaban.webapp.servlet.LoginAbstractAzkabanServlet.doGet(LoginAbstractAzkabanServlet.java:<span class="number">122</span>)</span><br><span class="line">        at javax.servlet.http.HttpServlet.service(HttpServlet.java:<span class="number">668</span>)</span><br><span class="line">        at javax.servlet.http.HttpServlet.service(HttpServlet.java:<span class="number">770</span>)</span><br><span class="line">        at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:<span class="number">511</span>)</span><br><span class="line">        at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:<span class="number">401</span>)</span><br><span class="line">        at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:<span class="number">182</span>)</span><br><span class="line">        at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:<span class="number">766</span>)</span><br><span class="line">        at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:<span class="number">152</span>)</span><br><span class="line">        at org.mortbay.jetty.Server.handle(Server.java:<span class="number">326</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:<span class="number">542</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpConnection$RequestHandler.headerComplete(HttpConnection.java:<span class="number">928</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:<span class="number">549</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:<span class="number">212</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:<span class="number">404</span>)</span><br><span class="line">        at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:<span class="number">228</span>)</span><br><span class="line">        at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:<span class="number">582</span>)</span><br></pre></td></tr></table></figure>
+
+<p>2、ExcutorServer未激活，需要调用url手动去激活一下 executor，方式如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://<span class="variable">$&#123;executorHost&#125;</span>:<span class="variable">$&#123;executorPort&#125;</span>/executor?action=activate</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2019</span>/<span class="number">11</span>/<span class="number">22</span> <span class="number">14</span>:<span class="number">25</span>:<span class="number">23.831</span> +<span class="number">0800</span> ERROR [ExecutorServlet] [Azkaban] executor became inactive before setting up the flow <span class="number">4</span></span><br><span class="line">azkaban.executor.ExecutorManagerException: executor became inactive before setting up the flow <span class="number">4</span></span><br><span class="line">        at azkaban.execapp.FlowRunnerManager.createFlowRunner(FlowRunnerManager.java:<span class="number">403</span>)</span><br><span class="line">        at azkaban.execapp.FlowRunnerManager.submitFlow(FlowRunnerManager.java:<span class="number">347</span>)</span><br><span class="line">        at azkaban.execapp.ExecutorServlet.handleAjaxExecute(ExecutorServlet.java:<span class="number">288</span>)</span><br><span class="line">        at azkaban.execapp.ExecutorServlet.handleRequest(ExecutorServlet.java:<span class="number">136</span>)</span><br><span class="line">        at azkaban.execapp.ExecutorServlet.doPost(ExecutorServlet.java:<span class="number">93</span>)</span><br><span class="line">        at javax.servlet.http.HttpServlet.service(HttpServlet.java:<span class="number">727</span>)</span><br><span class="line">        at javax.servlet.http.HttpServlet.service(HttpServlet.java:<span class="number">820</span>)</span><br><span class="line">        at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:<span class="number">511</span>)</span><br><span class="line">        at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:<span class="number">401</span>)</span><br><span class="line">        at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:<span class="number">182</span>)</span><br><span class="line">        at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:<span class="number">766</span>)</span><br><span class="line">        at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:<span class="number">152</span>)</span><br><span class="line">        at org.mortbay.jetty.Server.handle(Server.java:<span class="number">326</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:<span class="number">542</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:<span class="number">945</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:<span class="number">756</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:<span class="number">218</span>)</span><br><span class="line">        at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:<span class="number">404</span>)</span><br><span class="line">        at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:<span class="number">228</span>)</span><br><span class="line">        at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:<span class="number">582</span>)</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/message-queue/rocketmq/rocketmq-benchmark-test/" rel="next" title="rocketmq基准测试_未完">
+                <i class="fa fa-chevron-left"></i> rocketmq基准测试_未完
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/mysql/1-mysql-architecture/" rel="prev" title="MySQL架构设计">
+                MySQL架构设计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、简介"><span class="nav-text">1、简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1、架构"><span class="nav-text">1.1、架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2、三个关键组件的作用"><span class="nav-text">1.2、三个关键组件的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3、三种部署模式"><span class="nav-text">1.3、三种部署模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-、solo-server模式"><span class="nav-text">1)、solo-server模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-、two-server模式"><span class="nav-text">2)、two-server模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-、分布式multiple-executor模式"><span class="nav-text">3)、分布式multiple-executor模式</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#2、下载安装"><span class="nav-text">2、下载安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、编译环境"><span class="nav-text">2.1、编译环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、下载源码编译"><span class="nav-text">2.2、下载源码编译</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3、列出编译产物"><span class="nav-text">2.3、列出编译产物</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、multiple-executor集群搭建"><span class="nav-text">3、multiple-executor集群搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1、建立Azkaban数据库"><span class="nav-text">3.1、建立Azkaban数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2、生成SSL"><span class="nav-text">3.2、生成SSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3、设置-ExecutorServer"><span class="nav-text">3.3、设置 ExecutorServer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4、设置-WebServer"><span class="nav-text">3.4、设置 WebServer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5、配置Job"><span class="nav-text">3.5、配置Job</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-、创建project"><span class="nav-text">1)、创建project</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-、定义任务并上传"><span class="nav-text">2)、定义任务并上传</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-、定制执行计划"><span class="nav-text">3)、定制执行计划</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-、查看执行计划"><span class="nav-text">4)、查看执行计划</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6、执行任务的问题"><span class="nav-text">3.6、执行任务的问题</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

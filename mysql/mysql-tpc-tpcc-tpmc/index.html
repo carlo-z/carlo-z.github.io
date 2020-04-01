@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mysql,tpc,tpmc,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="第一章 什么是TPC和tpmC?1 TPCTPC(Transaction Processing Performance Council，事务处理性能委员会)是由数10家会员公司创建的非盈利组织，总部设在美国。该组织对全世界开放，但迄今为止，绝大多数会员都是美、日、西欧的大公司。TPC的成员主要是计算机软硬件厂家，而非计算机用户，它的功 能是制定商务应用基准程序(Benchmark)的标准规范、性能">
+<meta name="keywords" content="mysql,tpc,tpmc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TPC,TPCC,TPMC(数据库性能衡量指标)">
+<meta property="og:url" content="https://carlo-z.com/mysql/mysql-tpc-tpcc-tpmc/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="第一章 什么是TPC和tpmC?1 TPCTPC(Transaction Processing Performance Council，事务处理性能委员会)是由数10家会员公司创建的非盈利组织，总部设在美国。该组织对全世界开放，但迄今为止，绝大多数会员都是美、日、西欧的大公司。TPC的成员主要是计算机软硬件厂家，而非计算机用户，它的功 能是制定商务应用基准程序(Benchmark)的标准规范、性能">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-12T16:00:22.619Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TPC,TPCC,TPMC(数据库性能衡量指标)">
+<meta name="twitter:description" content="第一章 什么是TPC和tpmC?1 TPCTPC(Transaction Processing Performance Council，事务处理性能委员会)是由数10家会员公司创建的非盈利组织，总部设在美国。该组织对全世界开放，但迄今为止，绝大多数会员都是美、日、西欧的大公司。TPC的成员主要是计算机软硬件厂家，而非计算机用户，它的功 能是制定商务应用基准程序(Benchmark)的标准规范、性能">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/mysql/mysql-tpc-tpcc-tpmc/">
+
+
+
+
+
+  <title>TPC,TPCC,TPMC(数据库性能衡量指标) | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/mysql-tpc-tpcc-tpmc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TPC,TPCC,TPMC(数据库性能衡量指标)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-20T00:00:00+08:00">
+                2019-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="第一章-什么是TPC和tpmC"><a href="#第一章-什么是TPC和tpmC" class="headerlink" title="第一章 什么是TPC和tpmC?"></a>第一章 什么是TPC和tpmC?</h1><h2 id="1-TPC"><a href="#1-TPC" class="headerlink" title="1 TPC"></a>1 TPC</h2><p>TPC(Transaction Processing Performance Council，事务处理性能委员会)是由数10家会员公司创建的非盈利组织，总部设在美国。该组织对全世界开放，但迄今为止，绝大多数会员都是美、日、西欧的大公司。TPC的成员主要是计算机软硬件厂家，而非计算机用户，它的功 能是制定商务应用基准程序(Benchmark)的标准规范、性能和价格度量，并管理测 试结果的发布。</p>
+<p>TPC的出版物是开放的，可以通过网络获取(<a href="http://www.tpc.org/" target="_blank" rel="noopener">http://www.tpc.org</a>)。TPC不给出基准程序的代码，而只给出基准程序的标准规范(Standard Specification)。任何厂家或其它测试者都可以根据规范，最优地构造出自己的系统(测试平台和测试程序)。为保证测试结果的客观性，被测试者(通常是厂家)必须提交给TPC一套完整的报告(Full Disclosure Report)，包括被测系统的详细配置、分类价格和包含五年维护费用在内的总价 格。该报告必须由TPC授权的审核员核实(TPC本身并不做审计)。现在全球只有几个审核员，全部在美国。</p>
+<p>TPC已经推出了四套基准程序，被称为TPC－A、TPC－B、TPC－C和TPC－D。其中A和B已经过时，不再使用了。TPC－C是在线事务处理(OLTP)的基准程序，TPC－D是决策支持(Decision Support) 的基准程序。TPC即将推TPC－E，作为大型企业(Enterprise)信息服务的基准程序。</p>
+<h2 id="2-tpmC"><a href="#2-tpmC" class="headerlink" title="2 tpmC"></a>2 tpmC</h2><p>tpmC值在国内外被广 泛用于衡量计算机系统的事务处理能力。但究竟什么是tpmC值呢?作者曾向一些 用户、推销人员乃至某些国外大公司的技术人员问过这个问题，但回答的精确度 与tpmC值的流行程度远非相称。tpmC这一度量也常被误写为TPM或TPMC。</p>
+<p>TPC-C模拟一个批发商的货物管理环境。该批发公司有N个仓库，每个仓库供应10个地区，其中每个地区为3000名顾客服务。在每个仓库中有10个终端，每一个终端用于一个地区。在运行时，10×N个终端操作员向公司的数据库发出5类请求。由于一个仓库中不可能存储公司所有的货物，有一些请求必须发往其它仓库，因此，数据库在逻辑上是 分布的。N是一个可变参数，测试者可以随意改变N，以获得最佳测试效果。</p>
+<p>TPC-C使用三种性能和价格度量，其中性能由TPC-C吞吐率衡量，单位是tpmC。tpm是transactions per minute的简称；C指TPC中的C基准程序。它的定义是每分钟内系统处理的新订单个数。要注意的是，在处理新订单的同时，系统还要按表1的要求处理其它4类事务 请求。从表1可以看出，新订单请求不可能超出全部事务请求的45％，因此，当一个 系统的性能为1000tpmC时，它每分钟实际处理的请求数是2000多个。价格是指系 统的总价格，单位是美元，而价格性能比则定义为总价格÷性能，单位是＄/tpmC。</p>
+<p>tpmC定义: TPC-C的吞吐量，按有效TPC-C配置期间每分钟处理的平均交易次数测量，至少要运行12分钟。</p>
+<p>（吞吐量测试结果以比特/秒或字节/秒表示。）</p>
+<h1 id="第二章-TPCC"><a href="#第二章-TPCC" class="headerlink" title="第二章 TPCC"></a>第二章 TPCC</h1><h2 id="1-基准测试"><a href="#1-基准测试" class="headerlink" title="1 基准测试"></a>1 基准测试</h2><p>TPCC值被广泛用于衡量C/S环境下,由服务器和客户端构筑的整体系统的性能,它由事物处理性能委员会（TPC，Transaction Processing Corp）制定,TPC为非赢利性国际组织。</p>
+<p>TPCC值可以反映出系统的性能价格比。TPCC测试系统每分钟处理的任务数,单位为tpm,(transactions per minute)。系统的总体价格(单位为美元)除以TPCC值,就可以衡量出系统的性价比,系统的性价比值越大,系统的性价比越好。</p>
+<p>需要注意的是,TPC-C值描述的是C/S整体系统的性能,它与系统的服务器和客户机的性能都有关系,也就是说,同样的服务器配置不同的客户端将会影响TPCC值,任何厂商和测试者都可以根据TPC提供的测试规范构造出自己最优的系统,当然测试的结果要经过TPC审核。</p>
+<h2 id="2-性能测试指标介绍"><a href="#2-性能测试指标介绍" class="headerlink" title="2 性能测试指标介绍"></a>2 性能测试指标介绍</h2><p>TPC-C</p>
+<p>作为一家非盈利性机构，事务处理性能委员会（TPC）负责定义诸如TPC-C、TPC-H和TPC-W基准测试之类的事务处理与数据库性能基准测试，并依据这些基准测试项目发布客观性能数据。TPC基准测试采用极为严格的运行环境，并且必须在独立审计机构监督下进行。委员会成员包括大多数主要数据库产品厂商以及服务器硬件系统供应商。</p>
+<p>相关企业参与TPC基准测试以期在规定运行环境中获得客观性能验证，并通过应用测试过程中所使用的技术开发出更加强健且更具伸缩性的软件产品及硬件设备。</p>
+<p>TPC-C是一种旨在衡量联机事务处理（OLTP）系统性能与可伸缩性的行业标准基准测试项目。这种基准测试项目将对包括查询、更新及队列式小批量事务在内的广泛数据库功能进行测试。许多IT专业人员将TPC-C视为衡量“真实”OLTP系统性能的有效指示器。</p>
+<p>TPC-C基准测试针对一种模拟订单录入与销售环境测量每分钟商业事务（tpmC）吞吐量。特别值得一提的是，它将专门测量系统在同时执行其它四种事务类型（如支付、订单状态更新、交付及证券级变更）时每分钟所生成的新增订单事务数量。独立审计机构将负责对基准测试结果进行公证，同时，TPC将出据一份全面彻底的测试报告。这份测试报告可以从TPC Web站点(<a href="http://www.tpc.org)上获得。" target="_blank" rel="noopener">http://www.tpc.org)上获得。</a></p>
+<h2 id="3-TPC-C规范概要"><a href="#3-TPC-C规范概要" class="headerlink" title="3 TPC-C规范概要"></a>3 TPC-C规范概要</h2><p>TPC-C是专门针对联机交易处理系统（OLTP系统）的，一般情况下我们也把这类系统称为业务处理系统。</p>
+<p>TPC-C测试规范中模拟了一个比较复杂并具有代表意义的OLTP应用环境:假设有一个大型商品批发商，它拥有若干个分布在不同区域的商品库；每个仓库负责为10个销售点供货；每个销售点为3000个客户提供服务；每个客户平均一个订单有10项产品;所有订单中约1%的产品在其直接所属的仓库中没有存货，需要由其他区域的仓库来供货。同时，每个仓库都要维护公司销售的100000种商品的库存记录。</p>
+<p>该系统需要处理的交易为以下几种：</p>
+<p>New-Order：客户输入一笔新的订货交易；</p>
+<p>Payment:更新客户账户余额以反映其支付状况;</p>
+<p>Delivery:发货(模拟批处理交易);</p>
+<p>Order-Status:查询客户最近交易的状态；</p>
+<p>Stock-Level:查询仓库库存状况，以便能够及时补货。</p>
+<p>对于前四种类型的交易，要求响应时间在5秒以内；对于库存状况查询交易，要求响应时间在20秒以内。</p>
+<h2 id="4评测指标"><a href="#4评测指标" class="headerlink" title="4评测指标"></a>4评测指标</h2><p>TPC-C测试规范经过两年的研制，于1992年7月发布。几乎所有在OLTP市场提供软硬件平台的厂商都发布了相应的TPC-C测试结果，随着计算机技术的不断发展，这些测试结果也在不断刷新。</p>
+<p>TPC-C的测试结果主要有两个指标：</p>
+<h3 id="①流量指标-Throughput，简称tpmC"><a href="#①流量指标-Throughput，简称tpmC" class="headerlink" title="①流量指标(Throughput，简称tpmC)"></a>①流量指标(Throughput，简称tpmC)</h3><p>按照TPC的定义，流量指标描述了系统在执行Payment、Order-status、Delivery、Stock-Level这四种交易的同时，每分钟可以处理多少个New-Order交易。所有交易的响应时间必须满足TPC-C测试规范的要求。</p>
+<p>流量指标值越大越好！</p>
+<h3 id="②性价比-Price-Performance，简称Price-tpmC"><a href="#②性价比-Price-Performance，简称Price-tpmC" class="headerlink" title="②性价比(Price/Performance，简称Price/tpmC)"></a>②性价比(Price/Performance，简称Price/tpmC)</h3><p>即测试系统价格（指在美国的报价）与流量指标的比值。</p>
+<p>性价比越大越好！</p>
+<h1 id="第三章（TPCC）如何衡量计算机系统的性能和价格"><a href="#第三章（TPCC）如何衡量计算机系统的性能和价格" class="headerlink" title="第三章（TPCC）如何衡量计算机系统的性能和价格"></a>第三章（TPCC）如何衡量计算机系统的性能和价格</h1><p>在系统选型时，我们一定不要忘记我们是为特定用户环境中的特定应用选择系统。切忌为了“与国际接轨”而盲目套用“国际通用”的东西。在性能评价领域，越是通用的度量常常越是不准确的。据我所知，美国的一些大用户从不相信任何“国际通用”的度量，而是花相当精力，比如预算的5％，使用自己的应用来测试系统，决定选型。在使用任何一种性能和价格度量时，一定要弄明白该度量的定义，以及它是在什么系统配置和运行环境下得到的，如何解释它的意义等。下面我们由好到差讨论三种方式。</p>
+<h2 id="1在真实环境中运行-实际应用"><a href="#1在真实环境中运行-实际应用" class="headerlink" title="1在真实环境中运行 实际应用"></a>1在真实环境中运行 实际应用</h2><p>最理想的方式是搞一个试点，要求制造商或系统集成商配合将系统(含平台、软件和操作流程)在一个 实际用户点真正试运行一段时间。这样，用户不仅能看到实际性能，也能观察到系统是否稳定可靠、使用是否方便、服务是否周到、配置是否足够、全部价格是否合理。如果一个部门需要购买一批同类的系统，这种方式应列为首选，因为它不仅最精确、稳妥，也常常最有效率，用户还可先租一套系统作为试点。用这种方式得到的度量值常常具有很明确和实际的含义。</p>
+<h2 id="2使用用户定义的基准程序"><a href="#2使用用户定义的基准程序" class="headerlink" title="2使用用户定义的基准程序"></a>2使用用户定义的基准程序</h2><p>如果由于某种原因第一种方式不可行，用户可以定义一组含有自己实际应用环境特征的应用基准程序。 我举两个例子：近年来，由于R/3软件是应用层软件，SAP公司的基准程序获得了越来越多国外企业的认可；中国税务总局最近也开发了自己的基准程序，以帮助税务系统进行计算机选型。这种方式在中国尤其重要，因为中国的信息系统有其特殊性。</p>
+<h2 id="3使用通用基准程序"><a href="#3使用通用基准程序" class="headerlink" title="3使用通用基准程序"></a>3使用通用基准程序</h2><p>如果第1种和第2种方式都不行，则使用如TPC-C之类的通用基准程序，这是不得已的一种近似方法。因 此，tpmC值只能用作参考。我们应当注意以下几点：</p>
+<h3 id="①实际应用是否与基准程序相符"><a href="#①实际应用是否与基准程序相符" class="headerlink" title="①实际应用是否与基准程序相符"></a>①实际应用是否与基准程序相符</h3><p>绝大多数基准程序都是在美国制订的，而中国的企事业单位与美国的运作方式常常不一样(恐怕也不应该或不可能一样)。在使用TPC－C时，我们应该清楚地知道：我的应用是否符合批发商模式?事务请求是否与表1近似?对响应时间的要求是否满足表1?如果都不是，则tpmC值的参考价值就不太大了。</p>
+<h3 id="②TPC度量的解释"><a href="#②TPC度量的解释" class="headerlink" title="②TPC度量的解释"></a>②TPC度量的解释</h3><p>TPC基准程序是用来测系统而不是测主机的，厂家肯定要充分优化他们的被测系统。此处的“系统”包括主机、外设(如硬盘或RAID)、主机端操作系统、数据库软件、客户端计算机及其 操作系统、数据库软件和网络连接等。在很多厂家的TPC测试系统中，主机的价格只是系统总价格的1/4或更小，而硬盘的价格有可能占到总价格的1/3以上，因为TPC－C要求被测系统必须保存180天的事务记录。如果同样的主机被用到用户的环境中，厂家报的tpmC值就意义不大，因为用户的实际系统与厂家原来用于TPC测试的系统大不一样。当同样的主机用在不同的系统中时，tpmC值可能有相当大的变化，现在很多用户还没有意识到这一点。</p>
+<p>我举一个例子。假设用 户希望购买一批同类系统，每一系统至少需要1GB的内存和50GB的硬盘。厂家A、B、C 各报了三个价格相当的系统，tpmC值分别为3000、2800、2600。用户是否应该选厂家A的产品呢?答案是：不一定。厂家用于测试tpmC值的系统与实际提供给用户的系统配置大不一样。tpmC最低的厂家C提供给用户的系统反而有可能性能最好，不 论是以实际系统的tpmC值还是以用户的实际应用性能来衡量。</p>
+<h3 id="③TPC测试的成本"><a href="#③TPC测试的成本" class="headerlink" title="③TPC测试的成本"></a>③TPC测试的成本</h3><p>TPC－C和TPC－D都是很复杂的基准程序，做一个严格的测试是很消耗资源的，厂家当然不会说出他们花费了多少钱和时间。但据国外知情人士透露，一个厂家做第一个TPC－C测试需 要几十万到上百万美元的资金和半年左右的时间投入。因此，很多TPC的度量值都 是估计的。由于计算机系统换代频繁，如果用户一定要用通过审核的度量值，就必 须多等待半年时间，因此而不能用最先进的系统。中国的厂家通过审核的时间则更长。</p>
+<p>综上所述，我们对中国 用户(尤其是大用户)在计算机系统的选型方面有如下建议：</p>
+<p>最好建立一个真实的试点，因为实际应用环境是检验计算机系统的最好标准。</p>
+<p>中国的行业应该建立符合自己实际应用的基准程序和测试标准。中国税务总局的做法值得提倡。国家有关部门应该建立独立的测试中心，制定跨行业、符合中国企事业运作模式的性能测试标准。</p>
+<p>“国际通用”的度量可以作为参考值，而不应作为必要条件。尤其是一定要弄清这些流行度量有什么含义，是在什么样的系统环境中测得的，以及基准程序是否符合企业真实的业务流程和运作模式。</p>
+<p>作为一家非盈利性机构，事务处理性能委员会（TPC）负责定义诸如TPC-C、TPC-H和TPC-W基准测试之类的事务处理与数据库性能基准测试，并依据这些基准测试项目发布客观性能数据。TPC基准测试采用极为严格的运行环境，并且必须在独立审计机构监督下进行。委员会成员包括大多数主要数据库产品厂商以及服务器硬件系统供应商。</p>
+<p>相关企业参与TPC基准测试以期在规定运行环境中获得客观性能验证，并通过应用测试过程中所使用的技术开发出更加强健且更具伸缩性的软件产品及硬件设备。</p>
+<p>TPC-C是一种旨在衡量联机事务处理（OLTP）系统性能与可伸缩性的行业标准基准测试项目。这种基准测试项目将对包括查询、更新及队列式小批量事务在内的广泛数据库功能进行测试。许多IT专业人员将TPC-C视为衡量“真实”OLTP系统性能的有效指示器。</p>
+<p>TPC-C基准测试针对一种模拟订单录入与销售环境测量每分钟商业事务（tpmC）吞吐量。特别值得一提的是，它将专门测量系统在同时执行其它四种事务类型（如支付、订单状态更新、交付及证券级变更）时每分钟所生成的新增订单事务数量。独立审计机构将负责对基准测试结果进行公证，同时，TPC将出据一份全面彻底的测试报告。这份测试报告可以从TPC Web站点(<a href="http://www.tpc.org/" target="_blank" rel="noopener">http://www.tpc.org</a>)上获得。</p>
+<h1 id="第四章-TPCC计算原则"><a href="#第四章-TPCC计算原则" class="headerlink" title="第四章 TPCC计算原则"></a>第四章 TPCC计算原则</h1><h2 id="1建议"><a href="#1建议" class="headerlink" title="1建议"></a>1建议</h2><p>不管是TPC-C还是SPECjbb2000，计算结果都只能作为一个横向比较的参考。在实际应用中，决定系统性能的因素除了硬件、系统软件外，与应用软件的设计也是有很大关系的，此外，基于系统可扩展性的考虑，更多时候也倾向于一次性的采购。<br>从长远考虑，以政府信息化主管部门的角度考虑，建立一套评估机制是非常有用的，这其中包括：<br>1、 通过对各单位业务系统运行情况的调查，进行历史数据的收集分析，按分类建立基准指标库。收集的信息包括：服务器的配置、并发用户数（每天业务量）、CPU负荷等；<br>2、 由厂商定期提供基准值，更新基准指标库；<br>有了基准指标库的信息参照，不仅可以用于评估项目建设方案中服务器选型，也可以对各部门进行系统架构设计的优化提供指导。如以下是一些指导原则：<br>1、 数据库服务器选型：采购两台相同配置的小型机，进行虚拟分区和并行处理，以提高系统资源的利用率；日后扩容时采取垂直扩展的方式进行升级；<br>2、 应用服务器：采用负载均衡的方式提高并发处理能力，一般可配置2台以上，每台的硬件配置完全可以不同，应首先考虑使用旧的数据库服务器（利旧），如需采购新的服务器，应采用水平扩展的方式逐步升级；<br>3、 WEB服务器，可以考虑采用刀片服务器，提高扩展性和可管理性。</p>
+<h2 id="2参考：某项目计算实例"><a href="#2参考：某项目计算实例" class="headerlink" title="2参考：某项目计算实例"></a>2参考：某项目计算实例</h2><h3 id="参考1"><a href="#参考1" class="headerlink" title="参考1"></a>参考1</h3><p>为了方便计算数据库服务器的造型，我们约定：<br>“ 系统同时在线用户数为1500人（U1）；<br>“ 平均每个用户每分钟发出2次业务请求（N1）；<br>“ 系统发出的业务请求中，更新、查询、统计各占1/3；<br>“ 平均每次更新业务产生3个事务（T1）；<br>“ 平均每次查询业务产生8个事务（T2）；<br>“ 平均每次统计业务产生13个事务（T3）；<br>“ 一天内忙时的处理量为平均值的5倍；<br>“ 经验系数为1.6；(实际工程经验)<br>“ 考虑服务器保留30％的冗余；<br>服务器需要的处理能力为：<br>TPC-C=U1<em>N1</em>（T1+T2+T3）/3<em>3</em>经验系数/冗余系数<br>则应用服务器的处理性能估算为：<br>TPC-C= 1500<em>2</em>（3+8+13）/3<em>5</em>1.6/0.7= 274,285 tpmC</p>
+<p>数据库服务器关系到整个系统的稳定运行，考虑到高可靠性和高可用性，并注重设备的可扩展性和性价比，系统将配置两台TPC-C值不小于28万的高性能数据库服务器。</p>
+<h3 id="参考2"><a href="#参考2" class="headerlink" title="参考2"></a>参考2</h3><p>以单台服务器性能进行计算，即确保单台服务器工作的时候可以满足系统正常运行的需要；</p>
+<p>假设每天有1万人次来窗口办理业务，每人次办理一项业务。即以每日1万笔前台交易为例进行<strong><em>\</em>综合系数**</strong>的推导：</p>
+<p>\1. 假设每月前台交易数（未来5年内的设计指标）为220,000 （有些业务在月初、月末的处理量比较高，按月统计可以平衡此项差异）;<br>\2. 每日前台交易数=220000/22=10,000 ，即每日 1万笔；<br>\3. 忙时处理能力：每日交易的80%在4个小时内完成，即10000<em>80%/4=2000（笔/小时）<br>\4. 峰值处理能力：2000</em>2=4000（笔/小时），即峰值处理能力为每小时4000笔，或 67笔/分，假设业务人员同时在线为100人，即每人每分钟处理0.7笔）<br>\5. 假设每笔交易对应数据库事务数=20<strong>（这个是不是有点夸张了，有这么复杂的交易，TPC的标准交易都不算简单了吧，这只能说明数据库设计的有问题，按这样，支付宝咋弄）</strong>，基准TPC指标值对应的比例=8，cpu保留30%的处理能力冗余，计算值与公布值（最优值）的偏差经验值为4 <strong>（这几个参数估算的依据不足，更多的是经验值）</strong></p>
+<p>则 tpmC值为：<br>tpmC= 67<em>20<em>8</em>4/(1-30%)= 61257[颠峰处理能力时（笔/分）<em>每笔交易对应数据库事务数</em>基准TPC指标值对应的比例<em>计算值与公布值（最优值）的偏差经验值/（1- cpu保留30%的处理能力冗余）<br>倒算出 综合系数 = 61257/10000=6.1<br>即数据库服务器tpmC= **</em>*每日前台交易数 \</em> 6.1**** （实际计算值应不高于该值）<br>应用服务器的 tpmC = 数据库服务器 tpmC *50% （一般）</p>
+<p>应用服务器的 tpmC = tpmC *70% </p>
+<p>某单位要建立一个系统，设计容量是 2008 年要达到 1500 万客户的规模，在花费巨资（将近 100 M $）建设起此系统后，运行只有几个月，客户量也只达到几十万，厂商就说此系统容量不够，要花数 M $ 要扩容，并声称不是拍脑袋是，按 TPCC 计算的结果 …</p>
+<p>以前只大致了解 TPCC 指标的一些情况，平常也就看看 By Performace 和　By Price/Performace 的 Top 10 列表，了解一下各厂商的实力和产品的情况，这次对 TPCC 进行了一下深入了解，发现了一些容易被厂商搞猫腻的地方。</p>
+<p><a href="http://www.tpc.org/tpcc" target="_blank" rel="noopener">TPCC</a> 简单的来说，就是事务处理性能委员会 <a href="http://www.tpc.org/" target="_blank" rel="noopener">TPC</a> 组织针对联机数据库应用系统（OLTP）制定的一个综合性能考评指标，它模拟了一个批发 商的货物管理环境，有标准的数据库结构（Schema），可以很容易的扩展，在此系统中，主要有五类交易：</p>
+<p>\1. 新订单（New-Order） </p>
+<p>\2. 支付（Payment ） 43%（最小比例）</p>
+<p>\3. 订单查询（Order-Status） 4%（最小比例）</p>
+<p>\4. 交付（Delivery） 4%（最小比例）</p>
+<p>\5. 库存查询（Stock-Level） 4%（最小比例）</p>
+<p>因为 TPCC 指标值主要是衡量“新订单”交易的数量，所以厂商都会趋向于增加新订单交易的数量，这样并不满足实际的应用场景，所以 TPCC 的规范中指定了后四种交易数量的最小比例，这样意味着 “新订单” 的数量最多只能占到45%（这个 45% 不知出于什么原因，在很多 TPCC 的指标介绍中并没有提及）。</p>
+<p>这就说明了：如果一台机器有 1000 tpm (Transactions per Minute)，那么它实际上处理的交易（请求）为 1000/45% = 2222 ，而实际上大多数厂商在面对用户估算应用系统需要多少个 TPCC 的服务器的时候，是计算所有交易量的，这样带来的评估结果是用户至少买比实际需要大一倍性能容量的机器，获得利益的谁呢？当然是服务器厂商，越高 TPCC 值的机器，价格越高，性价比也一般要偏小。</p>
+<p>此外，服务器厂商还容易在以下方面愚弄客户：</p>
+<p>１、交易复杂度（用户的一个交易约等于多少个 TPCC 的标准交易），某国际著名的服务器厂商建议此值取 10 - 20 ，这个值也忒大了点， 在 TPCC 的场景，交易也不是很简单的，和实际的应用交易差别并不是很大。</p>
+<p>2、按一些峰值指标来计算性能，实际上，这些峰值只是在极少数情况下出现，所以在计算时，应乘以 80% 的系数。</p>
+<p>​    3、预留容量，很多厂商建议预留容量，甚至达到一半，这有点过份，在实际容量要求增高的时候，可以通过服务器的横向扩展来纵向扩展来满足应用要求，何必为未来五年的要求，要在眼下一下子要做全部的硬件投资呢？ 何况硬件的价格在不断下降呢。</p>
+<p><strong>具体情况具体分析，还得按中国国情来实测，国际标准有时不适合我们。<br>而且这个标准好多年了，现在很少在纵向扩展上花心思了，都注重横向扩展，按成本购置小机，尽量优化小机的数据库性能，得出TPCM值，然后对数据库进行横向扩展（虽然横向扩展有诸多问题，但是还是要扩展），利用集群提高整体的TPS</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+            <a href="/tags/tpc/" rel="tag"># tpc</a>
+          
+            <a href="/tags/tpmc/" rel="tag"># tpmc</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/mysql/2-mysql-benchmark-test/" rel="next" title="centos7.5下对mysql5.6基准测试">
+                <i class="fa fa-chevron-left"></i> centos7.5下对mysql5.6基准测试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/message-queue/rocketmq/linux-rocketmq-setup/" rel="prev" title="centos7 下 rocketmq 单机版安装">
+                centos7 下 rocketmq 单机版安装 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一章-什么是TPC和tpmC"><span class="nav-text">第一章 什么是TPC和tpmC?</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-TPC"><span class="nav-text">1 TPC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-tpmC"><span class="nav-text">2 tpmC</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章-TPCC"><span class="nav-text">第二章 TPCC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-基准测试"><span class="nav-text">1 基准测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-性能测试指标介绍"><span class="nav-text">2 性能测试指标介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-TPC-C规范概要"><span class="nav-text">3 TPC-C规范概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4评测指标"><span class="nav-text">4评测指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#①流量指标-Throughput，简称tpmC"><span class="nav-text">①流量指标(Throughput，简称tpmC)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#②性价比-Price-Performance，简称Price-tpmC"><span class="nav-text">②性价比(Price/Performance，简称Price/tpmC)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第三章（TPCC）如何衡量计算机系统的性能和价格"><span class="nav-text">第三章（TPCC）如何衡量计算机系统的性能和价格</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1在真实环境中运行-实际应用"><span class="nav-text">1在真实环境中运行 实际应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2使用用户定义的基准程序"><span class="nav-text">2使用用户定义的基准程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3使用通用基准程序"><span class="nav-text">3使用通用基准程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#①实际应用是否与基准程序相符"><span class="nav-text">①实际应用是否与基准程序相符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#②TPC度量的解释"><span class="nav-text">②TPC度量的解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#③TPC测试的成本"><span class="nav-text">③TPC测试的成本</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第四章-TPCC计算原则"><span class="nav-text">第四章 TPCC计算原则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1建议"><span class="nav-text">1建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2参考：某项目计算实例"><span class="nav-text">2参考：某项目计算实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考1"><span class="nav-text">参考1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考2"><span class="nav-text">参考2</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="kafka,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1、broker 端设计架构1.1、消息设计  1.2、集群管理1.2.1、成员管理kafka 的自动化服务发现 和 成员管理 靠 zookeeper 实现； 每当一个 broker 启动时，它会将 自己 注册到 zookeeper 的一个节点（/brokers/ids/&amp;lt;broker.id&amp;gt;）  注册信息格式如下： 12345678910111213&amp;#123;    &quot;lis">
+<meta name="keywords" content="kafka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3、kafka设计原理">
+<meta property="og:url" content="https://carlo-z.com/message-queue/kafka/3-kafka-design-principle/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="1、broker 端设计架构1.1、消息设计  1.2、集群管理1.2.1、成员管理kafka 的自动化服务发现 和 成员管理 靠 zookeeper 实现； 每当一个 broker 启动时，它会将 自己 注册到 zookeeper 的一个节点（/brokers/ids/&amp;lt;broker.id&amp;gt;）  注册信息格式如下： 12345678910111213&amp;#123;    &quot;lis">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191015160328.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191015163631.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016112327.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016112432.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016144419.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016145355.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016165845.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016171706.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016172010.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016172423.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016172514.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191017110417.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191017092632.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018111309.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018142603.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018142436.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018141137.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018155715.png">
+<meta property="og:updated_time" content="2019-11-10T12:12:50.773Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="3、kafka设计原理">
+<meta name="twitter:description" content="1、broker 端设计架构1.1、消息设计  1.2、集群管理1.2.1、成员管理kafka 的自动化服务发现 和 成员管理 靠 zookeeper 实现； 每当一个 broker 启动时，它会将 自己 注册到 zookeeper 的一个节点（/brokers/ids/&amp;lt;broker.id&amp;gt;）  注册信息格式如下： 12345678910111213&amp;#123;    &quot;lis">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191015160328.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/message-queue/kafka/3-kafka-design-principle/">
+
+
+
+
+
+  <title>3、kafka设计原理 | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/kafka/3-kafka-design-principle/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">3、kafka设计原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-03T00:00:00+08:00">
+                2018-12-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mq/" itemprop="url" rel="index">
+                    <span itemprop="name">mq</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mq/kafka/" itemprop="url" rel="index">
+                    <span itemprop="name">kafka</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<h1 id="1、broker-端设计架构"><a href="#1、broker-端设计架构" class="headerlink" title="1、broker 端设计架构"></a>1、broker 端设计架构</h1><h3 id="1-1、消息设计"><a href="#1-1、消息设计" class="headerlink" title="1.1、消息设计"></a>1.1、消息设计</h3><br>
+
+<h3 id="1-2、集群管理"><a href="#1-2、集群管理" class="headerlink" title="1.2、集群管理"></a>1.2、集群管理</h3><h4 id="1-2-1、成员管理"><a href="#1-2-1、成员管理" class="headerlink" title="1.2.1、成员管理"></a>1.2.1、成员管理</h4><p>kafka 的自动化服务发现 和 成员管理 靠 zookeeper 实现；</p>
+<p>每当一个 broker 启动时，它会将 自己 注册到 zookeeper 的一个节点（/brokers/ids/&lt;broker.id&gt;）</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191015160328.png" alt></p>
+<p>注册信息格式如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"listener_security_protocol_map"</span>:&#123;</span><br><span class="line">        <span class="attr">"PLAINTEXT"</span>:<span class="string">"PLAINTEXT"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"endpoints"</span>:[</span><br><span class="line">        <span class="string">"PLAINTEXT://172.18.1.51:9092"</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"jmx_port"</span>:<span class="number">-1</span>,</span><br><span class="line">    <span class="attr">"host"</span>:<span class="string">"172.18.1.51"</span>,</span><br><span class="line">    <span class="attr">"timestamp"</span>:<span class="string">"1570677366545"</span>,</span><br><span class="line">    <span class="attr">"port"</span>:<span class="number">9092</span>,</span><br><span class="line">    <span class="attr">"version"</span>:<span class="number">4</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>listener_security_protocol_map： 该broker与外界通信使用的安全协议类型；</li>
+<li>endpoints：指定 broker 的 endpoint 列表；endpoint可以配置多个，每种协议一个，只是端口号不能冲突；</li>
+<li>rack：指定broker机架信息，若设置了机架信息，kafka 会把副本分配在多个机架上；</li>
+<li>jmx_port： broker 的 JMX 监控端口；</li>
+<li>host：broker 主机名或 IP 地址；</li>
+<li>port：broker 服务端口号；</li>
+<li>timestamp：broker 启动时间；</li>
+<li>version：broker 当前版本号；不是kafka版本号，每个 broker版本，信息格式不一样；</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191015163631.png" alt></p>
+<p>注意 ephemeralOwner值，该值不是0，意味着 这是一个 zookeeper的临时节点；</p>
+<p><u><strong>kafka 管理集群及其成员的主要流程</strong></u>：</p>
+<p>1、broker启动时，在 zk 上创建对应的临时节点，同时还会创建一个 监听器（listener）监听该临时节点的状态；</p>
+<p>2、一旦 broker 启动后，监听器会自动同步整个集群信息到该 broker 上；</p>
+<p>3、一旦 broker 崩溃，broker 与 zk 的会话断开，该临时节点会被自动清楚掉，监听器被触发，然后处理 broker 崩溃的后续事宜。</p>
+<br>
+
+<h4 id="1-2-2、使用到的ZooKeeper-路径"><a href="#1-2-2、使用到的ZooKeeper-路径" class="headerlink" title="1.2.2、使用到的ZooKeeper 路径"></a>1.2.2、使用到的ZooKeeper 路径</h4><p>新版本的 producer 和 consumer 已经不再 需要连接 zookeeper</p>
+<p>下图涵盖了 Kafka 用到的 ZooKeeper 节点：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016112327.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016112432.png" alt></p>
+<br>
+
+<h3 id="1-3、副本与ISR设计"><a href="#1-3、副本与ISR设计" class="headerlink" title="1.3、副本与ISR设计"></a>1.3、副本与ISR设计</h3><p>副本：partition 在其他 broker 上的备份；</p>
+<p>ISR：与 leader partition 上 <u><strong>保持同步</strong></u>的副本集合；</p>
+<p>问题： 如何判断 副本与leader partition是否同步？</p>
+<h4 id="1-3-1、follower副本同步"><a href="#1-3-1、follower副本同步" class="headerlink" title="1.3.1、follower副本同步"></a>1.3.1、follower副本同步</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016144419.png" alt></p>
+<p>一个partition的格式如上图，其中比较重要的位置信息如下：</p>
+<ul>
+<li>起始位移（base offset）：表示该副本当前所含第一条消息的offset；</li>
+<li>高水印值（high watermark，HW）：副本高水印值。保存了 最新一条”已提交“消息的位移。超过 HW 值的所有消息都被视为 ”未提交成功的“，因此 consumer 是看不到的。注意：不只有 leader partition 有 HW 值，每个 follower 都有 HW 值，只不过只有 leader 的 HW 值 可以决定 consumer 能看到的消息数；</li>
+<li>日志末端位移（log end offset，LEO）：副本日志 下一条待写入消息的 offset，所有的 副本都需要维护自己的 LEO 信息。follower 向 leader 请求到数据后 会增加自己的 LEO。事实上 <u><strong>只有所有ISR副本都更新了对应的 LEO 之后 leader 才会 向右移动对应的 HW 值，来表明 消息写入成功</strong></u>。如下图</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016145355.png" alt></p>
+<h4 id="1-3-2、ISR-设计"><a href="#1-3-2、ISR-设计" class="headerlink" title="1.3.2、ISR 设计"></a>1.3.2、ISR 设计</h4><p>如何判定 ISR？</p>
+<p><u><strong>1、0.9.0.0 版本之前</strong></u></p>
+<ul>
+<li><p>参数：replica.lag.max.messages=n，follower落后leader的消息数；</p>
+</li>
+<li><p>参数：replica.lag.time.max.ms=m， follower 在 m 毫秒内 无法 向 leader 请求数据；</p>
+</li>
+</ul>
+<p><u><strong>follower 落后 leader 的可能原因</strong></u>：</p>
+<ul>
+<li>请求速度追不上：follower 所在的broker 的 网络 I/O开销过大，导致 获取消息速度过慢；</li>
+<li>进程卡住：follower 在一段时间内 无法 向 leader 请求数据，比如频繁GC和进程bug等；</li>
+<li>新创建的副本：如果用户新增了 副本数，新副本追赶 leader 进度期间 通常都是不同步的；</li>
+</ul>
+<p><u><strong>参数：replica.lag.max.messages 的缺陷</strong></u>：无法动态适配场景，容易导致follower 频繁的 踢出加入 ISR；</p>
+<p><u><strong>2、0.9.0.0 版本之后</strong></u></p>
+<p>参数：replica.lag.time.max.ms 默认值10s。用于检测由于慢和进程卡壳的滞后，即 follower 落后 leader 的 时间间隔。</p>
+<p>删除了 replica.lag.max.messages 参数，这样，只要 follower 不是持续落后，就不会被反复踢出 ISR；</p>
+<br>
+
+<h3 id="1-4、水印（watermark）和-leader-epoch"><a href="#1-4、水印（watermark）和-leader-epoch" class="headerlink" title="1.4、水印（watermark）和 leader epoch"></a>1.4、水印（watermark）和 leader epoch</h3><p>摘要：</p>
+<ul>
+<li>watermark机制的缺陷；</li>
+<li>leader epoch 解决 watermark 的缺陷；</li>
+</ul>
+<h4 id="1-4-1、LEO更新机制"><a href="#1-4-1、LEO更新机制" class="headerlink" title="1.4.1、LEO更新机制"></a>1.4.1、LEO更新机制</h4><p>分类：leader 的 LEO 更新机制、follower 的 LEO 更新机制；</p>
+<p><u><strong>follower 的 LEO 保存位置</strong></u>：【follower 所在 broker 的缓存上】，【leader 所在broker 的缓存上】；换句话说 leader 所在broker 上保存了 该 partition 下所有 follower 的 LEO；</p>
+<p><u><strong>follower 的 LEO 更新机制</strong></u>：</p>
+<ul>
+<li>更新【follower 所在 broker 的缓存】的 LEO，follower 发送 FETCH 请求从leader 拿到数据后，follower 开始向底层log 写数据，从而自动更新 LEO值；</li>
+<li>更新【leader 所在 broker 的缓存】的 LEO，leader 收到 follower的 FETCH请求后，它首先 从自己的log 读取响应的数据，但在 给 follower 返回数据之前，它会 先去更新自己 broker上的对应follower 的 LEO值；</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016165845.png" alt></p>
+<p><u><strong>leader 的 LEO 更新机制</strong></u>：和 follower 更新自己 的LEO相同，leader 在写入log 时 会自动更新自己的 LEO值；</p>
+<br>
+
+<h4 id="1-4-2、HW更新机制"><a href="#1-4-2、HW更新机制" class="headerlink" title="1.4.2、HW更新机制"></a>1.4.2、HW更新机制</h4><p><u><strong>follower 的 HW更新机制</strong></u>： follower.HW = min（follower.LEO，leader.HW）； follower 在写完log数据以后，就会尝试更新HW值；</p>
+<p><u><strong>leader 的 HW更新机制</strong></u>：leader的 HW 会影响 consumer的 可见性，所以比较重要；在以下 4种情况下，会做更新HW的尝试：</p>
+<ol>
+<li>副本称为 leader 时：有必要检查副本的状态；</li>
+<li>集群中有broker崩溃导致 它的 follower被踢出 ISR时：拖后腿的 ISR没有了，有必要检查一下；</li>
+<li>producer 向 leader 写入消息时：</li>
+<li>leader 处理 follower FETCH 请求时：</li>
+</ol>
+<p>leader.HW = min（foreach（ISR.partition.LEO），（落后时间&lt; replica.lag.time.max.ms）partition.LEO）；<u><strong>选择【 ISR】 和 【落后于leader的时长不大于 replica.lag.time.max.ms 的所有副本】的最小 LEO值 作为 HW</strong></u>;</p>
+<br>
+
+<h4 id="1-4-3、watermark备份机制的缺陷"><a href="#1-4-3、watermark备份机制的缺陷" class="headerlink" title="1.4.3、watermark备份机制的缺陷"></a>1.4.3、watermark备份机制的缺陷</h4><p>leader 的 HW更新 依赖于 下一轮的 follower FETCH才能完成，这可能引起如下问题：</p>
+<ul>
+<li>备份数据丢失；</li>
+<li>备份数据不一致；</li>
+</ul>
+<p><u><strong>问题1：备份数据丢失</strong></u></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016171706.png" alt></p>
+<p>上图中有两个副本：A和B。开始状态是A是leader。我们假设producer端min.insync.replicas设置为1，那么当producer发送两条消息给A后，A写入到底层log，此时Kafka会通知producer说这两条消息写入成功。</p>
+<p>但是在broker端，leader和follower底层的log虽都写入了2条消息且分区HW已经被更新到2，但follower HW尚未被更新（也就是上面紫色颜色标记的第二步尚未执行）。倘若此时副本B所在的broker宕机，那么重启回来后B会自动把LEO调整到之前的HW值，故副本B会做日志截断(log truncation)，将offset = 1的那条消息从log中删除，并调整LEO = 1，此时follower副本底层log中就只有一条消息，即offset = 0的消息。</p>
+<p>B重启之后需要给A发FETCH请求，但若A所在broker机器在此时宕机，那么Kafka会令B成为新的leader，而当A重启回来后也会执行日志截断，将HW调整回1。这样，位移=1的消息就从两个副本的log中被删除，即永远地丢失了。</p>
+<p>这个场景丢失数据的前提是在min.insync.replicas=1时，一旦消息被写入leader端log即被认为是“已提交”，而延迟一轮FETCH RPC更新HW值的设计使得follower HW值是异步延迟更新的，倘若在这个过程中leader发生变更，那么成为新leader的follower的HW值就有可能是过期的，使得clients端认为是成功提交的消息被删除</p>
+<p><u><strong>问题2：备份数据不一致</strong></u></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016172010.png" alt></p>
+<p>这种情况的初始状态与情况1有一些不同的：A依然是leader，A的log写入了2条消息，但B的log只写入了1条消息。分区HW更新到2，但B的HW还是1，同时producer端的min.insync.replicas = 1。</p>
+<p>这次我们让A和B所在机器同时挂掉，然后假设B先重启回来，因此成为leader，分区HW = 1。假设此时producer发送了第3条消息(绿色框表示)给B，于是B的log中offset = 1的消息变成了绿色框表示的消息，同时分区HW更新到2（A还没有回来，就B一个副本，故可以直接更新HW而不用理会A）之后A重启回来，需要执行日志截断，但发现此时分区HW=2而A之前的HW值也是2，故不做任何调整。此后A和B将以这种状态继续正常工作。</p>
+<p>显然，这种场景下，A和B底层log中保存在offset = 1的消息是不同的记录，从而引发不一致的情形出现。</p>
+<br>
+
+<h4 id="1-4-4、leader-epoch-如何解决"><a href="#1-4-4、leader-epoch-如何解决" class="headerlink" title="1.4.4、leader epoch 如何解决"></a>1.4.4、leader epoch 如何解决</h4><p>造成上述两个问题的根本原因在于HW值被用于衡量副本备份的成功与否以及在出现failture时作为日志截断的依据，但HW值的更新是异步延迟的，特别是需要额外的FETCH请求处理流程才能更新，故这中间发生的任何崩溃都可能导致HW值的过期。鉴于这些原因，Kafka 0.11引入了leader epoch来取代HW值。Leader端多开辟一段内存区域专门保存leader的epoch信息，这样即使出现上面的两个场景也能很好地规避这些问题。</p>
+<p>所谓leader epoch实际上是一对值：（epoch，offset）。epoch表示leader的版本号，从0开始，当leader变更过1次时epoch就会+1，而offset则对应于该epoch版本的leader写入第一条消息的位移。因此假设有两对值：</p>
+<p>(0, 0)</p>
+<p>(1, 120)</p>
+<p>则表示第一个leader从位移0开始写入消息；共写了120条[0, 119]；而第二个leader版本号是1，从位移120处开始写入消息。</p>
+<p><u><strong><em>leader broker中会保存这样的一个缓存，并定期地写入到一个checkpoint文件中</em></strong></u>。</p>
+<p>当leader写底层log时它会尝试更新整个缓存——如果这个leader首次写消息，则会在缓存中增加一个条目；否则就不做更新。而每次副本重新成为leader时会查询这部分缓存，获取出对应leader版本的位移，这就不会发生数据不一致和丢失的情况。</p>
+<p>下面我们依然使用图的方式来说明下利用leader epoch如何规避上述两种情况</p>
+<p><u><strong>一、规避数据丢失</strong></u></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016172423.png" alt></p>
+<p>上图左半边已经给出了简要的流程描述，这里不详细展开具体的leader epoch实现细节（比如OffsetsForLeaderEpochRequest的实现），我们只需要知道每个副本都引入了新的状态来保存自己当leader时开始写入的第一条消息的offset以及leader版本。这样在恢复的时候完全使用这些信息而非水位来判断是否需要截断日志。</p>
+<p><u><strong>二、规避数据不一致</strong></u></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016172514.png" alt></p>
+<p>同样的道理，依靠leader epoch的信息可以有效地规避数据不一致的问题。</p>
+<p><u><strong>总结</strong></u></p>
+<p>0.11.0.0版本的Kafka通过引入leader epoch解决了原先依赖水位表示副本进度可能造成的数据丢失/数据不一致问题。有兴趣的读者可以阅读源代码进一步地了解其中的工作原理。</p>
+<p>源代码位置：kafka.server.epoch.LeaderEpochCache.scala （leader epoch数据结构）、kafka.server.checkpoints.LeaderEpochCheckpointFile（checkpoint检查点文件操作类）还有分布在Log中的CRUD操作。</p>
+<br>
+
+<br>
+
+<h3 id="1-5、日志存储设计"><a href="#1-5、日志存储设计" class="headerlink" title="1.5、日志存储设计"></a>1.5、日志存储设计</h3><p><u><strong>1、kafka 日志</strong></u></p>
+<p>kafka的日志：不同于 请求日志，kafka日志 是 一种 专门为程序访问的 日志；更像是mysql中的binlog；</p>
+<p>kafka 把 消息体 和 元数据信息 打包成 一个record，以追加的方式 写入日志；</p>
+<p><strong><u>kafka的日志设计</u></strong>：topic -&gt; 多个 partition（分区）-&gt; 每个partition 又可以细分为 段日志（segment log），包含 日志段文件 和 索引文件； 下图中 .log 结尾的 就是 segment log，.index 和 .timeindex 结尾的就是 对应的索引文件；</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191017110417.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191017092632.png" alt></p>
+<p><u><strong>2、日志段文件</strong></u></p>
+<p>parition 分区名字：topic名-分区号；</p>
+<p>日志段文件：00000000000000000196.log，每个 日志段文件大小都有上限，默认大小 1GB，通过 broker参数 log.segment.bytes 控制；日志段文件被填满以后，会自动创建一组新的 日志段文件和索引文件；</p>
+<p><u><strong>3、索引文件</strong></u></p>
+<p>除了 .log 文件外，kafka分区日志还包括 两个特殊的文件 .index 和 .timeindex；</p>
+<p>.index 是位移索引文件；kafka可以用二分查找 将整体时间复杂度 降到 O(logN);</p>
+<p>.timeindex 是 时间戳索引文件；可以根据时间戳找到一定范围的记录；</p>
+<p><u><strong>4、日志留存</strong></u></p>
+<p>kafka 会定期清除日志，而且清除的单位是 日志段文件；即清除 .log 日志 和 对应的 两个索引文件；</p>
+<p>留存策略：</p>
+<ul>
+<li>基于时间的留存策略：kafka会morn清除7天前的日志段数据；可以通过 broker参数 log.retention.{hours|minutes|ms}用于配置清除日志的时间间隔；</li>
+<li>基于大小的留存策略：kafka 会 保存 log.retention.bytes 参数值大小 字节数 的 日志。默认值 是 -1，表示不限制大小；</li>
+</ul>
+<p>注意：日志清除对于当前日志段是不生效的；</p>
+<p><u><strong>5、日志压实 compaction</strong></u></p>
+<p>kafka可以对key相同的 日志进行和合并，只保留最新的 value；</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018111309.png" alt></p>
+<br>
+
+<h3 id="1-6、通信协议（wire-protocol）"><a href="#1-6、通信协议（wire-protocol）" class="headerlink" title="1.6、通信协议（wire protocol）"></a>1.6、通信协议（wire protocol）</h3><br>
+
+<h3 id="1-7、controller设计"><a href="#1-7、controller设计" class="headerlink" title="1.7、controller设计"></a>1.7、controller设计</h3><p>1、controller 架构</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018142603.png" alt></p>
+<p>2、controller 管理状态</p>
+<p>controller维护的状态分类：每台 broker 上的分区副本 和 每个分区的 leader 信息；从维度上看，又分为 副本状态和分区状态；由此 引入 副本状态机 和 分区状态机</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018142436.png" alt></p>
+<p>3、controller 职责</p>
+<ul>
+<li>更新集群元数据信息：分区信息变更时，controller封装变更信息 发送给每个 broker；</li>
+<li>创建topic：监控 zk的/brokers/topics 子节点变更，监听到新节点 触发topic创建逻辑；</li>
+<li>删除topic：监听到/admin/delete_topics下的节点时，触发删除topic操作；</li>
+<li>分区重分配：监听 /admin/reassign_partitions 节点下的变更；</li>
+<li>prefered leader 副本选举：分区的第一顺位副本作为 leader；</li>
+<li>topic 分区扩展：用户发起增加分区的操作，会在 /brokers/topics/topic_name 下写入新的分区目录；</li>
+<li>broker 加入集群：新加入的broker会在 /broker/ids 下创建 新的znode并写入 broker信息，对应的监听器会感知到变更；</li>
+<li>broker 崩溃：/broker/ids 下的znode小时，监听器拿到变更，执行broker退出逻辑；</li>
+<li>broker 受控关闭：</li>
+<li>controller leader 选举：/controller 节点 存储了当前 controller所在的brokerid，集群首次启动，都会抢着创建该节点，胜出的那个broker成为 controller，同时更新 /controller_epoch 节点的值；</li>
+</ul>
+<p>4、controller 与 broker 通信</p>
+<p>5、controller 组件</p>
+<p>6、老板本 controller 的缺陷</p>
+<p>7、新版本 controller</p>
+<br>
+
+<h3 id="1-8、broker-请求处理"><a href="#1-8、broker-请求处理" class="headerlink" title="1.8、broker 请求处理"></a>1.8、broker 请求处理</h3><p><u><strong>1、Reactor模型</strong></u></p>
+<p><u><strong>2、kafka的broker处理模型</strong></u></p>
+<p>1),KafkaServer<br>该类代表了一个kafka Broker的生命周期，处理kafka启动或者停止所需要的所有功能。</p>
+<p>2),SocketServer<br>一个NIO 服务中心。线程模型是<br>1个Acceptor线程，用来处理新的链接请求<br>N个加工Processor线程。每个线程拥有一个他们自己的selector，主要负责IO请求及应答。</p>
+<p>3),KafkaRequestHandler<br>实际会在KafkaRequestHandlerPool中创建多个对象，负责加工处理request线程。<br>会1创建M个处理Handler线程。负责处理request请求，将responses重新写会加工线程Processor，以便于其写回给客户端。</p>
+<p><u>一个典型的 broker 请求流程如下</u>：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018141137.png" alt></p>
+<p>（1）启动 broker</p>
+<ul>
+<li>启动 acceptor 线程A</li>
+<li>启动 3个 process 线程 P1, P2, P3</li>
+<li>创建 KafkaRequestHander 线程池 和 8个请求处理线程 H1 ~ H8</li>
+</ul>
+<p>（2）broker 启动后，acceptor 线程 不断轮询是否存在 客户端的 新连接；P1~P3实时轮询 是否有 acceptor新发送的 socket连接通道 以及 请求队列 和 响应队列中是否有请求需要处理；H1 ~ H8 则 实时监控 请求队列中的新请求；</p>
+<p>（3）此时 client 向 broker 发送数据，首先 client 会 创建 与 该 broker 的Socket 连接；</p>
+<p>（4）acceptor 线程 监听到socket连接，接收，将连接发送给 P1~P3中的一个，假设是 P2；</p>
+<p>（5）P2 下一次轮询时 发现 acceptor 传送过来的新连接，将其注册到 Selector上 并开始监听其上的 入站请求；</p>
+<p>（6）现在 client 开始给 broker 发送 producer请求；</p>
+<p>（7）P2 监听到 有新的请求到来，故获取之，然后发送到请求队列中；</p>
+<p>（8）由于 H1~H8 实时监听请求队列，故必有一个线程最早发现 producer请求并开始处理，假设是 H5，H5从请求队列中取出并开始处理；</p>
+<p>（9）H5 线程请求处理完成，将响应结果放入 P2 对应的 响应队列；</p>
+<p>（10）P2 监听到 它的响应队列 有 响应，将响应取出 发送给 对应的 client；</p>
+<p>（11）client 接收响应，标记本次 producer 请求处理过程结束；</p>
+<br>
+
+<br>
+
+<h1 id="2、producer-端设计架构"><a href="#2、producer-端设计架构" class="headerlink" title="2、producer 端设计架构"></a>2、producer 端设计架构</h1><h3 id="2-1、producer-端基本数据结构"><a href="#2-1、producer-端基本数据结构" class="headerlink" title="2.1、producer 端基本数据结构"></a>2.1、producer 端基本数据结构</h3><br>
+
+<h3 id="2-2、工作流程"><a href="#2-2、工作流程" class="headerlink" title="2.2、工作流程"></a>2.2、工作流程</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191018155715.png" alt></p>
+<ol>
+<li>用户首先构建发送的消息对象 ProducerRecord，然后调用 KafkaProducer.send 进行发送；</li>
+<li>KafkaProducer 接收到消息后首先 对其进行序列化；</li>
+<li>然后结合本地缓存的元数据信息一起发送给 pointer 去确定目标分区；最后追加 写入内存中的缓存池（accumulator）。此时 KafkaProducer.send 方法成功返回；</li>
+<li>KafkaProducer 负责 将缓存池 中的消息 分批次 发送给对应的 broker，完成真正的 消息发送逻辑；</li>
+</ol>
+<br>
+
+<br>
+
+<h1 id="3、consumer-端设计架构"><a href="#3、consumer-端设计架构" class="headerlink" title="3、consumer 端设计架构"></a>3、consumer 端设计架构</h1><h3 id="3-1、consumer-group-状态机"><a href="#3-1、consumer-group-状态机" class="headerlink" title="3.1、consumer group 状态机"></a>3.1、consumer group 状态机</h3><br>
+
+<h3 id="3-2、group-管理协议"><a href="#3-2、group-管理协议" class="headerlink" title="3.2、group 管理协议"></a>3.2、group 管理协议</h3><br>
+
+<h3 id="3-3、rebalance-场景分析"><a href="#3-3、rebalance-场景分析" class="headerlink" title="3.3、rebalance 场景分析"></a>3.3、rebalance 场景分析</h3><br>
+
+<br>
+
+<h1 id="4、实现精确一次处理语义"><a href="#4、实现精确一次处理语义" class="headerlink" title="4、实现精确一次处理语义"></a>4、实现精确一次处理语义</h1><h3 id="4-1、消息交付语义"><a href="#4-1、消息交付语义" class="headerlink" title="4.1、消息交付语义"></a>4.1、消息交付语义</h3><ul>
+<li>最多一次（at more once）：</li>
+<li>最少一次（at least once）：</li>
+<li>精确一次（exactly once）：</li>
+</ul>
+<p>KafkaProducer端默认是 at least once，可以通过幂等性 实现 exactly once；</p>
+<p>KafkaConsumer 跟 位移提交时机有关系</p>
+<ul>
+<li>先处理后提交位移，则是 at least once；</li>
+<li>先提交位移后处理消息，则是 at more once；</li>
+</ul>
+<br>
+
+<h3 id="4-2、幂等性producer（idempotent-producer）"><a href="#4-2、幂等性producer（idempotent-producer）" class="headerlink" title="4.2、幂等性producer（idempotent producer）"></a>4.2、幂等性producer（idempotent producer）</h3><p>需要 打开 producer 参数 enable.idempotence = true</p>
+<p>通过 producer_id，分区号，和消息序列号，实现 单个producer 的 exactly once，多个之间则不能；</p>
+<br>
+
+<h3 id="4-3、事务（transaction）"><a href="#4-3、事务（transaction）" class="headerlink" title="4.3、事务（transaction）"></a>4.3、事务（transaction）</h3><br>
+
+<br>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kafka/" rel="tag"># kafka</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/mysql/mysql-innodb/" rel="next" title="mysql5.6 innodb存储引擎">
+                <i class="fa fa-chevron-left"></i> mysql5.6 innodb存储引擎
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/mysql/mysql-innodb-disk-iot/" rel="prev" title="mysql5.6 innodb 索引组织表">
+                mysql5.6 innodb 索引组织表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、broker-端设计架构"><span class="nav-text">1、broker 端设计架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1、消息设计"><span class="nav-text">1.1、消息设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2、集群管理"><span class="nav-text">1.2、集群管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1、成员管理"><span class="nav-text">1.2.1、成员管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2、使用到的ZooKeeper-路径"><span class="nav-text">1.2.2、使用到的ZooKeeper 路径</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3、副本与ISR设计"><span class="nav-text">1.3、副本与ISR设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-1、follower副本同步"><span class="nav-text">1.3.1、follower副本同步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-2、ISR-设计"><span class="nav-text">1.3.2、ISR 设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4、水印（watermark）和-leader-epoch"><span class="nav-text">1.4、水印（watermark）和 leader epoch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-1、LEO更新机制"><span class="nav-text">1.4.1、LEO更新机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-2、HW更新机制"><span class="nav-text">1.4.2、HW更新机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-3、watermark备份机制的缺陷"><span class="nav-text">1.4.3、watermark备份机制的缺陷</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-4、leader-epoch-如何解决"><span class="nav-text">1.4.4、leader epoch 如何解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5、日志存储设计"><span class="nav-text">1.5、日志存储设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6、通信协议（wire-protocol）"><span class="nav-text">1.6、通信协议（wire protocol）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7、controller设计"><span class="nav-text">1.7、controller设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-8、broker-请求处理"><span class="nav-text">1.8、broker 请求处理</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#2、producer-端设计架构"><span class="nav-text">2、producer 端设计架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、producer-端基本数据结构"><span class="nav-text">2.1、producer 端基本数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、工作流程"><span class="nav-text">2.2、工作流程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、consumer-端设计架构"><span class="nav-text">3、consumer 端设计架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1、consumer-group-状态机"><span class="nav-text">3.1、consumer group 状态机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2、group-管理协议"><span class="nav-text">3.2、group 管理协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3、rebalance-场景分析"><span class="nav-text">3.3、rebalance 场景分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、实现精确一次处理语义"><span class="nav-text">4、实现精确一次处理语义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1、消息交付语义"><span class="nav-text">4.1、消息交付语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2、幂等性producer（idempotent-producer）"><span class="nav-text">4.2、幂等性producer（idempotent producer）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3、事务（transaction）"><span class="nav-text">4.3、事务（transaction）</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

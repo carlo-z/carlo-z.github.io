@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux,页缓存,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="​        首先明确的一点是，本文所述的是针对linux引入了虚拟内存管理机制以后所涉及的知识点。linux中页缓存的本质就是对于磁盘中的部分数据在内存中保留一定的副本，使得应用程序能够快速的读取到磁盘中相应的数据，并实现不同进程之间的数据共享。因此，linux中页缓存的引入主要是为了解决两类重要的问题：  磁盘读写速度较慢（ms 级别); 实现不同进程之间或者同一进程的前后不同部分之">
+<meta name="keywords" content="linux,页缓存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux页缓存和文件io">
+<meta property="og:url" content="https://carlo-z.com/linux/linux-page-cache-and-file-io/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="​        首先明确的一点是，本文所述的是针对linux引入了虚拟内存管理机制以后所涉及的知识点。linux中页缓存的本质就是对于磁盘中的部分数据在内存中保留一定的副本，使得应用程序能够快速的读取到磁盘中相应的数据，并实现不同进程之间的数据共享。因此，linux中页缓存的引入主要是为了解决两类重要的问题：  磁盘读写速度较慢（ms 级别); 实现不同进程之间或者同一进程的前后不同部分之">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117180409.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117180534.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181122.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181312.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181428.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181555.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181711.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117182546.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117182520.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117182459.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117182421.png">
+<meta property="og:updated_time" content="2020-02-11T12:09:59.033Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux页缓存和文件io">
+<meta name="twitter:description" content="​        首先明确的一点是，本文所述的是针对linux引入了虚拟内存管理机制以后所涉及的知识点。linux中页缓存的本质就是对于磁盘中的部分数据在内存中保留一定的副本，使得应用程序能够快速的读取到磁盘中相应的数据，并实现不同进程之间的数据共享。因此，linux中页缓存的引入主要是为了解决两类重要的问题：  磁盘读写速度较慢（ms 级别); 实现不同进程之间或者同一进程的前后不同部分之">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117180409.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/linux/linux-page-cache-and-file-io/">
+
+
+
+
+
+  <title>linux页缓存和文件io | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-page-cache-and-file-io/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">linux页缓存和文件io</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-17T00:00:00+08:00">
+                2017-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<p>​        首先明确的一点是，本文所述的是针对linux引入了虚拟内存管理机制以后所涉及的知识点。linux中页缓存的本质就是对于磁盘中的部分数据在内存中保留一定的副本，使得应用程序能够快速的读取到磁盘中相应的数据，并实现不同进程之间的数据共享。因此，linux中页缓存的引入主要是<u><strong>为了解决两类重要的问题</strong></u>：</p>
+<ol>
+<li>磁盘读写速度较慢（ms 级别);</li>
+<li>实现不同进程之间或者同一进程的前后不同部分之间对于数据的共享；</li>
+</ol>
+<p>​        如果没有进程之间的共享机制，那么对于系统中所启动的所有进程在打开文件的时候都要将需要的数据从磁盘加载进物理内存空间，这样不仅造成了加载速度变慢（每次都从磁盘中读取数据），而且造成了物理内存的浪费。为了解决以上问题，linux操作系统使用了缓存机制。在虚拟内存机制出现以前，操作系统使用块缓存机制，但是在虚拟内存出现以后操作系统管理IO的粒度更大，因此采用了页缓存机制。此后，和后备存储的数据交互普遍以页为单位。页缓存是基于页的、面向文件的一种缓存机制。</p>
+<p>​        说到这里，我们只是对于页缓存的重要性做了介绍。但是，还有三个问题（当然也是本文的重点）还没有解释，分别如下：</p>
+<ol>
+<li>页缓存究竟是如何实现，其和文件系统是如何关联的？</li>
+<li>页缓存、内存以及文件IO之间的关系是怎样的？</li>
+<li>页缓存中的数据如何实现和后备存储之间的同步？</li>
+</ol>
+<p>接下来我们将对这三个问题进行详细的解释。</p>
+<br>
+
+<h1 id="页缓存的实现"><a href="#页缓存的实现" class="headerlink" title="页缓存的实现"></a>页缓存的实现</h1><p>​        既然页缓存是以页为单位进行数据管理的，那么必须在内核中标识该物理页。其实每个真正存放数据的物理页帧都对应一个管理结构体，称之为struct page，其结构体如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">page</span>  &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>    flags;</span><br><span class="line">    <span class="keyword">atomic_t</span>    _count;</span><br><span class="line">    <span class="keyword">atomic_t</span>    _mapcount;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>    <span class="keyword">private</span>;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">address_space</span>    *<span class="title">mapping</span>;</span></span><br><span class="line">    <span class="keyword">pgoff_t</span>    index;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>    <span class="title">lru</span>;</span></span><br><span class="line">    <span class="keyword">void</span>*    <span class="keyword">virtual</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>下面详细介绍一下物理页结构体中各个成员的含义：</p>
+<ul>
+<li>flags:  描述page当前的状态和其他信息，如当前的page是否是脏页PG_dirty；是否是最新的已经同步到后备存储的页PG_uptodate; 是否处于lru链表上等；</li>
+<li>_count：引用计数，标识内核中引用该page的次数，如果要操作该page，引用计数会+1，操作完成之后-1。当该值为0时，表示没有引用该page的位置，所以该page可以被解除映射，这在内存回收的时候是有用的；</li>
+<li>_mapcount:  页表被映射的次数，也就是说page同时被多少个进程所共享，初始值为-1，如果只被一个进程的页表映射了，该值为0。</li>
+<li>_mapping有三种含义：<br>a. 如果mapping  =  0，说明该page属于交换缓存（swap cache); 当需要地址空间时会指定交换分区的地址空间swapper_space;<br>b. 如果mapping !=  0,  bit[0]  =  0,  说明该page属于页缓存或者文件映射，mapping指向文件的地址空间address_space；<br>c. 如果mapping !=  0,  bit[0]  !=0 说明该page为匿名映射，mapping指向struct  anon_vma对象；</li>
+<li>注意区分_count和_mapcount，_mapcount表示的是被映射的次数，而_count表示的是被使用的次数；被映射了不一定被使用，但是被使用之前肯定要先被映射）。</li>
+<li>index: 在映射的虚拟空间（vma_area)内的偏移；一个文件可能只是映射了一部分，假设映射了1M的空间，那么index指的是1M空间内的偏移，而不是在整个文件内的偏移；</li>
+<li>private :  私有数据指针；</li>
+<li>lru:当page被用户态使用或者是当做页缓存使用的时候，将该page连入zone中的lru链表，供内存回收使用；</li>
+</ul>
+<p>​        页缓存就是将一个文件在内存中的所有物理页所组成的一种树形结构，我们称之为基数树，用于管理属于同一个文件在内存中的缓存内容。</p>
+<p>​        如上所述，一个文件在内存中对应的所有物理页组成了一棵基数树。而一个文件在内存中具有唯一的inode结构标识，inode结构中有该文件所属的设备及其标识符，因而，根据一个inode能够确定其对应的后备设备。为了将文件在物理内存中的页缓存和文件及其后备设备关联起来，linux内核引入了address_space结构体。可以说address_space结构体是将页缓存和文件系统关联起来的桥梁，其组成如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">address_space</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">inode</span>*    <span class="title">host</span>;</span><span class="comment">/*指向与该address_space相关联的inode节点*/</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">radix_tree_root</span>    <span class="title">page_tree</span>;</span><span class="comment">/*所有页形成的基数树根节点*/</span></span><br><span class="line">    <span class="keyword">spinlock_t</span>    tree_lock;<span class="comment">/*保护page_tree的自旋锁*/</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span>    i_map_writable;<span class="comment">/*VM_SHARED的计数*/</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">prio_tree_root</span>    <span class="title">i_map</span>;</span>         </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>    <span class="title">i_map_nonlinear</span>;</span></span><br><span class="line">    <span class="keyword">spinlock_t</span>    i_map_lock;<span class="comment">/*保护i_map的自旋锁*/</span></span><br><span class="line">    <span class="keyword">atomic_t</span>    truncate_count;<span class="comment">/*截断计数*/</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>    nrpages;<span class="comment">/*页总数*/</span></span><br><span class="line">    <span class="keyword">pgoff_t</span>    writeback_index;<span class="comment">/*回写的起始位置*/</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">address_space_operation</span>*    <span class="title">a_ops</span>;</span><span class="comment">/*操作表*/</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>    flags;<span class="comment">/*gfp_mask掩码与错误标识*/</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">backing_dev_info</span>*    <span class="title">backing_dev_info</span>;</span><span class="comment">/*预读信息*/</span></span><br><span class="line">    <span class="keyword">spinlock_t</span>    private_lock;<span class="comment">/*私有address_space锁*/</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>    <span class="title">private_list</span>;</span><span class="comment">/*私有address_space链表*/</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">address_space</span>*    <span class="title">assoc_mapping</span>;</span><span class="comment">/*相关的缓冲*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面对address_space成员中的变量做相关的解释：</p>
+<ul>
+<li>host:  指向与该address_space相关联的inode节点，inode节点与address_space之间是一一对应关系；</li>
+<li>struct radix_tree_root:指向的host文件在该内存中映射的所有物理页形成的基数树的根节点，参考博客。</li>
+<li>struct prio_tree_root:与该地址空间相关联的所有进程的虚拟地址区间vm_area_struct所对应的整个进程地址空间mm_struct形成的优先查找树的根节点;vm_area_struct中如果有后备存储，则存在prio_tree_node结构体，通过该prio_tree_node和prio_tree_root结构体，构成了所有与该address_space相关联的进程的一棵优先查找树，便于查找所有与该address_space相关联的进程；</li>
+</ul>
+<p>下面列出struct prio_tree_root和struct  prio_tree_node的结构体。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span>  <span class="title">prio_tree_root</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">prio_tree_node</span>*  <span class="title">prio_tree_root</span>;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">short</span>              index_bits;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">prio_tree_node</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">prio_tree_node</span>*  <span class="title">left</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">prio_tree_node</span>*  <span class="title">right</span>;</span> </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">prio_tree_node</span>*  <span class="title">parent</span>;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>                start;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span>                last;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>为了便于形成页缓存、文件和进程之间关系的清晰思路，文章画出一幅图，如图2所示</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117180409.png" alt></p>
+<p>从以上可以解释可以看出，address_space成为构建页缓存和文件、页缓存和共享该文件的所有进程之间的桥梁。</p>
+<p>​        每个进程的地址空间使用mm_struct结构体标识，该结构体中包含一系列的由vm_area_struct结构体组成的连续地址空间链表。每个vm_area_struct中存在struct  file* vm_file用于指向该连续地址空间中所打开的文件，而vm_file通过struct file中的struct  path与struct  dentry相关联。  struct dentry中通过inode指针指向inode，inode与address_space一一对应，至此形成了页缓存与文件系统之间的关联；为了便于查找与某个文件相关联的所有进程，address_space中的prio_tree_root指向了所有与该页缓存相关联的进程所形成的优先查找树的根节点。关于这种关系的详细思路请参考图1，这里画出其简化图，如图3：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117180534.png" alt></p>
+<p>​        这里需要说明的linux中文件系统的一点是，内核为每个进程在其地址空间中都维护了结构体struct* fd_array[]用于维护该进程地址空间中打开的文件的指针；同时内核为所有被打开的文件还维护了系统级的一个文件描述符表用以记录该系统打开的所有文件，供所有进程之间共享；每个被打开的文件都由一个对应的inode结构体表示，由系统级的文件描述符表指向。所以，进程通过自己地址空间中的打开文件描述符表可以找到系统级的文件描述符表，进而找到文件。</p>
+<br>
+
+<h1 id="页缓存、内存、文件IO之间的关系"><a href="#页缓存、内存、文件IO之间的关系" class="headerlink" title="页缓存、内存、文件IO之间的关系"></a>页缓存、内存、文件IO之间的关系</h1><p>​        关于文件IO我们常说的两句话“普通文件IO需要复制两次，内存映射文件mmap只需要复制一次”。下面，我们对普通文件IO做详细的解释。文章对页缓存和文件IO做了详细的介绍，不过都是英文的，本文在基于对上文理解、翻译的基础上，加入自己对于页缓存的理解。读者可以选择直接去看对应的英文原版说明。</p>
+<h3 id="读"><a href="#读" class="headerlink" title="读"></a>读</h3><p>​        为了能够深入理解页缓存和文件IO操作之间的关系，假设系统中现在存在一个名为render的进程，该进程打开了文件scene.dat，并且每次读取其中的512B(一个扇区的大小)，将读取的文件数据放入到堆分配的块中（每个进程自己的地址空间对应的物理内存）。先以普通IO为例介绍一下读取数据的过程，第一次读取的过程大致如图4（图4-8来源于该文章）。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181122.png" alt></p>
+<p>进程发起读请求的过程如下：</p>
+<ol>
+<li>进程调用库函数read()向内核发起读文件的请求；</li>
+<li>内核通过检查进程的文件描述符定位到虚拟文件系统已经打开的文件列表项，调用该文件系统对VFS的read()调用提供的接口；</li>
+<li>通过文件表项链接到目录项模块，根据传入的文件路径在目录项中检索，找到该文件的inode；</li>
+<li>inode中，通过文件内容偏移量计算出要读取的页；</li>
+<li>通过该inode的i_mapping指针找到对应的address_space页缓存树—基数树，查找对应的页缓存节点；<br>（1）如果页缓存节点命中，那么直接返回文件内容；<br>（2）如果页缓存缺失，那么产生一个缺页异常，首先创建一个新的空的物理页框，通过该inode找到文件中该页的磁盘地址，读取相应的页填充该页缓存（DMA的方式将数据读取到页缓存），更新页表项；重新进行第5步的查找页缓存的过程；</li>
+<li>文件内容读取成功；</li>
+</ol>
+<blockquote>
+<p>​        也就是说，所有的文件内容的读取（无论一开始是命中页缓存还是没有命中页缓存）最终都是直接来源于页缓存。当将数据从磁盘复制到页缓存之后，还要将页缓存的数据通过CPU复制到read调用提供的缓冲区中，这就是普通文件IO需要的两次复制数据复制过程。其中第一次是通过DMA的方式将数据从磁盘复制到页缓存中，本次过程只需要CPU在一开始的时候让出总线、结束之后处理DMA中断即可，中间不需要CPU的直接干预，CPU可以去做别的事情；第二次是将数据从页缓存复制到进程自己的的地址空间对应的物理内存中，这个过程中需要CPU的全程干预，浪费CPU的时间和额外的物理内存空间。</p>
+</blockquote>
+<p>假如读取了12KB的数据之后，那么render进程的堆地址空间和相关的地址空间如图5所示（ 读取12KB数据之后，进程render的地址空间和页缓存示意图）：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181312.png" alt></p>
+<p>​        看起来该过程很简单，但是这其中存在着很多的知识点。首先，render使用了常规的read()系统调用读取了12KB的数据，现在scene.dat中三个大小为4KB的页也存在于页缓存中，就像先前所说的所有的文件IO都是通过页缓存进行的。在X86架构的linux体系中，内核以4KB大小的页为单位组织文件中的数据，所以即使你从一个文件中仅仅读取几个字节的数据，那么包含这些字节的整个页的数据都会从硬盘读入页缓存中。这对于提高硬盘的吞吐量很有帮助，并且用户通常每次读取的数据不仅仅是只有几个字节而已。页缓存记录了每个4KB中的页在文件中的位置，如图中的#0， #1等。</p>
+<p>​        然而，在一次文件读取的过程中，必须将文件的内容从页缓存拷贝到用户的空间。这个过程和缺页异常(通过DMA调入需要的页)不一样，这个拷贝过程需要通过CPU进行，因此浪费了CPU的时间。另一个弊端就是浪费了物理内存，因为需要为同样的数据在内存中维护两个副本，如图6 render进程的heap所对应的堆中的数据和页缓存中的数据存在重复，并且如果系统中有多个这样的进程的话，那么需要为每个进程维护同样的一份数据副本，严重浪费了CPU的时间和物理内存空间。</p>
+<p>​        好在，通过内存映射IO—mmap，进程不但可以直接操作文件对应的物理内存，减少从内核空间到用户空间的数据复制过程，同时可以和别的进程共享页缓存中的数据，达到节约内存的作用。关于mmap的实现请参考博客。</p>
+<p>​        当映射一个文件到内存中的时候，内核将虚拟地址直接映射到页缓存中。正如博客4中介绍的，当映射一个文件的时候，如果文件的内容不在物理内存中，操作系统不会将所映射的文件部分的全部内容直接拷贝到物理内存中，而是在使用虚拟地址访问物理内存的时候通过缺页异常将所需要的数据调入内存中。如果文件本身已经存在于页缓存中，则不再通过磁盘IO调入内存。如果采用共享映射的方式，那么数据在内存中的布局如图6所示（文件共享映射示意图）：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181428.png" alt></p>
+<h3 id="写"><a href="#写" class="headerlink" title="写"></a>写</h3><p>​        由于页缓存的架构，当一个进程调用write系统调用的时候，对于文件的更新仅仅是被写到了文件的页缓存中，相应的页被标记为dirty。具体过程如下：</p>
+<p>前面5步和读文件是一致的，在address_space中查询对应页的页缓存是否存在：</p>
+<ol start="6">
+<li><p>如果页缓存命中，直接把文件内容修改写在页缓存的页中。写文件就结束了。这时候文件修改位于页缓存，并没有写回到磁盘文件中去。</p>
+</li>
+<li><p>如果页缓存缺失，那么产生一个页缺失异常，创建一个页缓存页，同时通过inode找到该文件页的磁盘地址，读取相应的页填充页缓存。此时缓存页命中，进行第6步。</p>
+</li>
+</ol>
+<p>​        普通的IO操作需要将写的数据从自己的进程地址空间复制到页缓存中，完成对页缓存的写入；但是mmap通过虚拟地址（指针）可以直接完成对页缓存的写入，减少了从用户空间到页缓存的复制。        </p>
+<p>​        由于写操作只是写到了页缓存中，因此进程并没有被阻塞到磁盘IO发生，因此当计算机崩溃的时候，写操作所引起的改变可能并没有发生在磁盘上。所以，对于一些要求严格的写操作，比如数据库系统，就需要调用fsync等操作及时将数据同步到磁盘上（虽然这中间也可能存在磁盘的驱动程序崩溃的情况）。读操作与写不同，一般会阻塞到进程读取到数据（除非调用非阻塞IO，即使使用IO多路复用技术也是将进程阻塞在多个监听描述符上，本质上还是阻塞的）。为了减轻读操作的这种延迟，linux操作系统的内核使用了”预读”技术，也就是当从磁盘中读取你所需要的数据的时候，内核将会多读取一些页到页缓存中。</p>
+<p>​        普通文件IO中所有的文件内容的读取（无论一开始是命中页缓存还是没有命中页缓存）最终都是直接来源于页缓存。当将数据通过缺页中断从磁盘复制到页缓存之后，还要将页缓冲的数据通过CPU复制到read调用提供的缓冲区中。这样，必须通过两次数据拷贝过程，才能完成用户进程对文件内容的获取任务。写操作也是一样的，待写入的buffer在用户空间，必须将其先拷贝到内核空间对应的主存中，再写回到磁盘中，也是需要两次数据拷贝。mmap的使用减少了数据从用户空间到页缓存的复制过程，提高了IO的效率，尤其是对于大文件而言；对于比较小的文件而言，由于mmap执行了更多的内核操作，因此其效率可能比普通的文件IO更差。</p>
+<p>​        在专门介绍mmap的博客中，我们说文件映射分为私有映射(private)和共享映射（shared)两种，二者之间的区别就是一个进程对文件所做的改变能否被其他的进程所看到，且能否同步到后备的存储介质中。那么，如果一个进程仅仅是读取文件中的内容的话，那么共享映射和私有映射对应的物理内存布局如图5所示。但是，如果采用私有映射的方式，且一个进程对文件内容作出了改变，那么会发生怎样的情况呢？内核采用了写时复制技术完成私有映射下对文件内容的改动，下面举例说明。</p>
+<p>​        假设系统中存在两个进程分别为render和render3d，它们都私有映射同一个文件scene.dat到内存中，然后render进程对映射的文件做出了写操作，如图7所示（私有映射写文件示意图）：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181555.png" alt></p>
+<p>​        图6中的“只读”标志不是说映射的内容是只读的，这仅仅是内核为了节省物理内存而采用的对于物理内存的一种“欺骗手段”而已。如果两个进程只是读取文件中的内容，不做任何的改动，那么文件只在物理内存中保留一份；但是如果有一个进程，如render，要对文件中的内容做出改动，那么会触发缺页中断，内核采用写时复制技术，为要改动的内容对应的页重新分配一个物理页框，将并将被改动的内容对应的物理页框中的数据复制到新分配的物理页框中，再进行改动。此时新分配的物理页框对于render而言是它自己“私有的”，别的进程是看不到的，也不会被同步到后备的存储中。但是如果是共享映射，所有的进程都是共享同一块页缓存的，此时被映射的文件的数据在内存中只保留一份。任何一个进程对映射区进行读或者写，都不会导致对页缓冲数据的复制。</p>
+<p>​        mmap的系统调用函数原型为void* mmap(void* addr, size_t len, int prot, int flag, int fd, off_t off)。其中，flag指定了是私有映射还是共享映射，私有映射的写会引发缺页中断，然后复制对应的物理页框到新分配的页框中。prot指定了被映射的文件是可读、可写、可执行还是不可访问。如果prot指定的是可读，但是却对映射文件执行写操作，则此时却缺页中断会引起段错误，而不是进行写时复制。</p>
+<p>​        那么此时存在另一个问题就是当最后一个render进程退出之后，存储scene.dat的页缓存是不是会被马上释放掉？当然不是！在一个进程中打开一个文件使用完之后该进程退出，然后在另一个进程中使用该文件这种情况通常是很常见的，页缓存的管理中必须考虑到这种情况。况且从页缓存中读取数据的时间是ns级别，但是从硬盘中读取数据的时间是ms级别，因此如果能够在使用数据的时候命中页缓存，那么对于系统的性能将非常有帮助。那么，问题来了，什么时候该文件对应的页缓存要被换出内存呢?就是系统中的内存紧张，必须要换出一部分物理页到硬盘中或者交换区中，以腾出更多的空间给即将要使用的数据的时候。所以只要系统中存在空闲的内存，那么页缓存就不会被换出，直到到达页缓存的上限为止。是否换出某一页缓存不是由某一个进程决定的，而是由操作系统在整个系统空间中的资源分配决定的。毕竟，从页缓存中读取数据要比从硬盘上读取数据要快的多了。</p>
+<p>​        内存映射的一个典型应用就是动态共享库的加载。图8（进程动态共享库的加载）展示了两个同一份程序的两个实例使用动态共享库时，进程的虚拟地址空间及对应的物理内存空间的布局。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117181711.png" alt></p>
+<br>
+
+<h1 id="页缓存中数据如何实现和后备存储之间的同步？"><a href="#页缓存中数据如何实现和后备存储之间的同步？" class="headerlink" title="页缓存中数据如何实现和后备存储之间的同步？"></a>页缓存中数据如何实现和后备存储之间的同步？</h1><p>​        普通文件IO，都是将数据直接写在页缓存上，那么页缓存中的数据何时写回后备存储？怎么写回？</p>
+<h3 id="何时写回"><a href="#何时写回" class="headerlink" title="何时写回"></a>何时写回</h3><ol>
+<li><p>空闲内存的值低于一个指定的阈值的时候，内核必须将脏页写回到后备存储以释放内存。因为只有干净的内存页才可以回收。当脏页被写回之后就变为PG_uptodate标志，变为干净的页，内核就可以将其所占的内存回收；</p>
+</li>
+<li><p>当脏页在内存中驻留的时间超过一个指定的阈值之后，内核必须将该脏页写回到后备存储，以确定脏页不会在内存中无限期的停留；</p>
+</li>
+<li><p>当用户进程显式的调用fsync、fdatasync或者sync的时候，内核按照要求执行回写操作。</p>
+</li>
+</ol>
+<h3 id="由谁写回"><a href="#由谁写回" class="headerlink" title="由谁写回"></a>由谁写回</h3><ul>
+<li>为了能够不阻塞写操作，并且将脏页及时的写回后备存储。linux在当前的内核版本中使用了flusher线程负责将脏页回写。</li>
+<li>为了满足第一个何时回写的条件，内核在可用内存低于一个阈值的时候唤醒一个或者多个flusher线程，将脏页回写；</li>
+<li>为了满足第二个条件，内核将通过定时器定时唤醒flusher线程，将所有驻留时间超时的脏页回写。</li>
+</ul>
+<p>原文链接：<a href="https://blog.csdn.net/GDJ0001/article/details/80136364" target="_blank" rel="noopener">https://blog.csdn.net/GDJ0001/article/details/80136364</a></p>
+<h1 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h1><p>操作系统将内存按照页的进行管理，在需要的时候才把进程相应的部分调入内存。当产生缺页中断时，需要选择一个页面写入。如果要换出的页面在内存中被修改过，变成了“脏”页面，那就需要先写会到磁盘。页面置换算法，就是要选出最合适的一个页面，使得置换的效率最高。页面置换算法有很多，简单介绍几个，重点介绍比较重要的LRU及其实现算法。</p>
+<h3 id="一、最优页面置换算法"><a href="#一、最优页面置换算法" class="headerlink" title="一、最优页面置换算法"></a>一、最优页面置换算法</h3><p>最理想的状态下，我们给页面做个标记，挑选一个最远才会被再次用到的页面。当然，这样的算法不可能实现，因为不确定一个页面在何时会被用到。</p>
+<h3 id="二、最近未使用页面置换算法（NRU）"><a href="#二、最近未使用页面置换算法（NRU）" class="headerlink" title="二、最近未使用页面置换算法（NRU）"></a>二、最近未使用页面置换算法（NRU）</h3><p>系统为每一个页面设置两个标志位：当页面被访问时设置R位，当页面（修改）被写入时设置M位。当发生缺页中断时，OS检查所有的页面，并根据它们当前的R和M位的值，分为四类：</p>
+<p>（1）！R&amp;！M（2）！R&amp;M（3）R&amp;！M（4）R&amp;M</p>
+<p>编号越小的类，越被优先换出。即在最近的一个时钟滴答内，淘汰一个没有被访问但是已经被修改的页面，比淘汰一个被频繁使用但是“clean”的页面要好。</p>
+<h3 id="三、先进先出页面置换算法（FIFO）及其改进"><a href="#三、先进先出页面置换算法（FIFO）及其改进" class="headerlink" title="三、先进先出页面置换算法（FIFO）及其改进"></a>三、先进先出页面置换算法（FIFO）及其改进</h3><p>这种算法的思想和队列是一样的，OS维护一个当前在内存中的所有页面的链表，最新进入的页面在尾部，最久的在头部，每当发生缺页中断，就替换掉表头的页面并且把新调入的页面加入到链表末尾。</p>
+<p>这个算法的问题，显然是太过于“公正了”，没有考虑到实际的页面使用频率。</p>
+<p>一种合理的改进，称为第二次机会算法。即给每个页面增加一个R位，每次先从链表头开始查找，如果R置位，清除R位并且把该页面节点放到链表结尾；如果R是0，那么就是又老又没用到，替换掉。</p>
+<h3 id="四、时钟页面置换算法（clock）"><a href="#四、时钟页面置换算法（clock）" class="headerlink" title="四、时钟页面置换算法（clock）"></a>四、时钟页面置换算法（clock）</h3><p>这种算法只是模型像时钟，其实就是一个环形链表的第二次机会算法，表针指向最老的页面。缺页中断时，执行相同的操作，包括检查R位等。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117182546.png" alt></p>
+<h3 id="五、最近最少使用页面置换算法（LRU）"><a href="#五、最近最少使用页面置换算法（LRU）" class="headerlink" title="五、最近最少使用页面置换算法（LRU）"></a>五、最近最少使用页面置换算法（LRU）</h3><p>缺页中断发生时，置换未使用时间最长的页面，称为LRU（least recently used）。</p>
+<p>LRU是可以实现的，需要维护一个包含所有页面的链表，并且根据实时使用情况更新这个链表，代价是比较大的。</p>
+<p>于是，需要对这个算法进行一些改进，也可以说是简化。将每一个页面与一个计数器关联，每次时钟终端，扫描所有页面，将每个页面的R位加到计数器上，这样就大致跟踪了每个页面的使用情况。这种方法称为NFU（not frequently used，最不常用）算法。</p>
+<p>这样还是存在一个问题，即很久之前的一次使用，与最近的使用权重相等。</p>
+<p>所以，再次改进，将计数器在每次时钟滴答时，右移一位，并把R位加在最高位上。这种算法，称为老化（aging）算法，增加了最近使用的比重。</p>
+<p>老化算法只能采用有限的位数，所以可能在一定程度上精度会有所损失。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117182520.png" alt></p>
+<h3 id="六、工作集算法"><a href="#六、工作集算法" class="headerlink" title="六、工作集算法"></a>六、工作集算法</h3><p>简单来说，工作集就是在最近k次内存访问所使用过的页面的集合。原始的工作集算法同样代价很大，对它进行简化：在过去Nms的北村访问中所用到的页面的集合。</p>
+<p>所以，在实现的时候，可以给每个页面一个计时器。需要置换页面时，同实际时间进行对比，R为1，更新到现在时间；R为0，在规定阈值之外的页面可以被置换。</p>
+<p>同样，这个算法也可以用时钟的思想进行改进。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117182459.png" alt></p>
+<h3 id="七、Linux使用的页面置换算法"><a href="#七、Linux使用的页面置换算法" class="headerlink" title="七、Linux使用的页面置换算法"></a>七、Linux使用的页面置换算法</h3><p>Linux区分四种不同的页面：不可回收的、可交换的、可同步的、可丢弃的。</p>
+<p>不可回收的：保留的和锁定在内存中的页面，以及内核态栈等。</p>
+<p>可交换的：必须在回收之前写回到交换区或者分页磁盘分区。</p>
+<p>可同步的：若为脏页面，必须要先写回。</p>
+<p>可丢弃的：可以被立即回收的页面。</p>
+<p>Linux并没有像我们之前单纯讨论算法时那样，在缺页中断产生的时候才进行页面回收。Linux有一个守护进程kswapd，比较每个内存区域的高低水位来检测是否有足够的空闲页面来使用。每次运行时，仅有一个确定数量的页面被回收。这个阈值是受限的，以控制I/O压力。</p>
+<p>每次执行回收，先回收容易的，再处理难的。回收的页面会加入到空闲链表中。</p>
+<p>算法是一种改进地LRU算法，维护两组标记：活动/非活动和是否被引用。第一轮扫描清除引用位，如果第二轮运行确定被引用，就提升到一个不太可能回收的状态，否则将该页面移动到一个更可能被回收的状态。</p>
+<p>处于非活动列表的页面，自从上次检查未被引用过，因而是移除的最佳选择。被引用但不活跃的页面同样会被考虑回收，是因为一些页面是守护进程访问的，可能很长时间不再使用。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117182421.png" alt></p>
+<p>另外，内存管理还有一个守护进程pdflush，会定期醒来，写回脏页面；或者可用内存下降到一定水平后被内核唤醒。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/页缓存/" rel="tag"># 页缓存</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/algorithm/various-b-tree-compare/" rel="next" title="B树、B-树、B+树、B*树之间的关系">
+                <i class="fa fa-chevron-left"></i> B树、B-树、B+树、B*树之间的关系
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/message-queue/rocketmq/rocketmq-benchmark-test/" rel="prev" title="rocketmq基准测试_未完">
+                rocketmq基准测试_未完 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">184</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#页缓存的实现"><span class="nav-text">页缓存的实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#页缓存、内存、文件IO之间的关系"><span class="nav-text">页缓存、内存、文件IO之间的关系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#读"><span class="nav-text">读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写"><span class="nav-text">写</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#页缓存中数据如何实现和后备存储之间的同步？"><span class="nav-text">页缓存中数据如何实现和后备存储之间的同步？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#何时写回"><span class="nav-text">何时写回</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#由谁写回"><span class="nav-text">由谁写回</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#页面置换算法"><span class="nav-text">页面置换算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、最优页面置换算法"><span class="nav-text">一、最优页面置换算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、最近未使用页面置换算法（NRU）"><span class="nav-text">二、最近未使用页面置换算法（NRU）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、先进先出页面置换算法（FIFO）及其改进"><span class="nav-text">三、先进先出页面置换算法（FIFO）及其改进</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、时钟页面置换算法（clock）"><span class="nav-text">四、时钟页面置换算法（clock）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、最近最少使用页面置换算法（LRU）"><span class="nav-text">五、最近最少使用页面置换算法（LRU）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、工作集算法"><span class="nav-text">六、工作集算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、Linux使用的页面置换算法"><span class="nav-text">七、Linux使用的页面置换算法</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
