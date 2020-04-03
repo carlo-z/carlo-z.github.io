@@ -314,222 +314,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-vmstat/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-vmstat/" itemprop="url">linux vmstat命令详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
-                2016-02-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <br>
-
-<h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>​    很显然，从名字我们就可以知道 vmstat 是一个<u><strong>查看虚拟内存（Virtual Memory）使用状况的工具</strong></u>，但是怎样通过vmstat 来发现系统中的瓶颈呢？在回答这个问题前，还是让我们回顾一下Linux中关于虚拟内存的相关内容。</p>
-<br>
-
-<h1 id="二、虚拟内存"><a href="#二、虚拟内存" class="headerlink" title="二、虚拟内存"></a>二、虚拟内存</h1><p>​    在系统中运行的每个进程都需要使用到内存，但不是每个进程都需要每时每刻使用系统分配的内存空间。当系统运行所需内存超过实际的物理内存，内核会释放某些进程所占用但未使用的部分或所有物理内存，将这部分资料存储在磁盘上直到下一次调用，将释放出的内存提供给有需要的进程使用。</p>
-<p>​    在Linux内存管理中，主要通过”调页Paging“和”交换Swapping“来完成内存调度。调页算法是将内存中最近<u><strong>不常使用的页面换到磁盘上，把活动页面保留在内存中供进程使用</strong></u>。交换技术是将整个进程，而不是部分页面，全部交换到磁盘上。</p>
-<p>​    <u><strong>分页（Page）写入磁盘的过程被称为Page-Out，分页（Page）从磁盘重新回到内存的过程叫Page-In</strong></u>。当内核需要一个分页时，但发现此分页不再物理内存中（因为已经被Page-Out了），此时就发生了分页错误（Page-Fault）。</p>
-<p>​    当系统内核发现可运行内存变少时，会通过Page-Out来释放一部分物理内存。尽管Page-Out不是经常发生，但是如果Page-Out频繁不断的发生，直到当内核管理分页的时间超过运行程式的时间时，熊效能会急剧下降。这时系统已经运行非常慢或进入暂停状态，这种状态被称为 thrashing（颠簸）。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1、page fault出现的原因：</span><br><span class="line">   a). 页表中找不到对应虚拟地址的PTE(无效地址/有效地址但是没有载入主存);</span><br><span class="line">   b). 对应虚拟地址的PTE拒绝访问。</span><br><span class="line"></span><br><span class="line">2、page fault在哪里进行处理</span><br><span class="line">   page fault被CPU捕获，跳转到 page_fault_handler 进行处理。</span><br><span class="line"></span><br><span class="line">3、page fault的处理方式</span><br><span class="line">   page fault -&gt; 访问地址是否合法</span><br><span class="line">   a. 无效地址：segment fault，返回(用户地址杀死进程、内核地址杀死内核)</span><br><span class="line">   b. 有效地址：</span><br><span class="line">    1) page第一次被访问: demand_page_faults (demanding pages，请求调页)</span><br><span class="line">       检查页表中是否存在该PTE　　　　pmd_none, pte_none</span><br><span class="line">       分配新的页帧，初始化(从磁盘读入内存)</span><br><span class="line">    2) page被交换到swap分区</span><br><span class="line">       检查present标志位，如果该位为0表示不在主存中。</span><br><span class="line">       分配新的页帧，从磁盘重新读入内存。</span><br><span class="line">    3) COW(Copy-On-Write)</span><br><span class="line">        vm_area_struct允许写，但是对应的PTE禁止写操作。</span><br><span class="line"></span><br><span class="line">4、如何判断访问地址是否合法？如果地址合法有什么操作？</span><br><span class="line">   判断地址合法的方式：</span><br><span class="line">   static int __do_page_fault()函数 vma = find_vma(mm, addr);</span><br><span class="line">   根据传入的地址addr查找对应的vm_area_struct，如果没有找到证明该地址访问无效，返回segment fault。</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="三、vmstat详解"><a href="#三、vmstat详解" class="headerlink" title="三、vmstat详解"></a>三、vmstat详解</h1><h3 id="1、用法"><a href="#1、用法" class="headerlink" title="1、用法"></a>1、用法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vmstat [-a] [-n] [-S unit] [delay [ count]]</span><br><span class="line">vmstat [-s] [-n] [-S unit]</span><br><span class="line">vmstat [-m] [-n] [delay [ count]]</span><br><span class="line">vmstat [-d] [-n] [delay [ count]]</span><br><span class="line">vmstat [-p disk partition] [-n] [delay [ count]]</span><br><span class="line">vmstat [-f]</span><br><span class="line">vmstat [-V]</span><br></pre></td></tr></table></figure>
-
-<p>-a：显示活跃和非活跃内存<br>-f：显示从系统启动至今的fork数量 。<br>-m：显示slabinfo<br>-n：只在开始时显示一次各字段名称。<br>-s：显示内存相关统计信息及多种系统活动数量。<br>delay：刷新时间间隔。如果不指定，只显示一条结果。<br>count：刷新次数。如果不指定刷新次数，但指定了刷新时间间隔，这时刷新次数为无穷。<br>-d：显示磁盘相关统计信息。<br>-p：显示指定磁盘分区统计信息<br>-S：使用指定单位显示。参数有 k 、K 、m 、M ，分别代表1000、1024、1000000、1048576字节（byte）。默认单位为K（1024 bytes）<br>-V：显示vmstat版本信息。</p>
-<br>
-
-<h3 id="2、使用说明"><a href="#2、使用说明" class="headerlink" title="2、使用说明"></a>2、使用说明</h3><p><u><strong>vmstat 5 5 【在5秒时间内进行5次采样】</strong></u> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmstat 5 5</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191026111456.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">procs（进程）：</span><br><span class="line">  r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）</span><br><span class="line">  b： 等待IO的进程数量</span><br><span class="line">  </span><br><span class="line">memory（内存）：</span><br><span class="line">  swpd: 使用虚拟内存大小。注意：如果swpd的值不为0，但是si，so的值长期为0，这种情况不会影响系统性能。</span><br><span class="line">  free: 空闲物理内存大小</span><br><span class="line">  buff: 用作缓冲的内存大小</span><br><span class="line">  cache: 用作缓存的内存大小。注意：如果cache的值大的时候，说明cache处的文件数多，如果频繁访问到的文件都能被cache处，那么磁盘的读IO bi会非常小。</span><br><span class="line">  inact: 非活跃内存大小（当使用-a选项时显示）</span><br><span class="line">  active: 活跃的内存大小（当使用-a选项时显示）</span><br><span class="line">  </span><br><span class="line">swap：</span><br><span class="line">  si: 每秒从交换区写到内存的大小，由磁盘调入内存</span><br><span class="line">  so: 每秒写入交换区的内存大小，由内存调入磁盘</span><br><span class="line">  注意：内存够用的时候，这2个值都是0，如果这2个值长期大于0时，系统性能会受到影响，磁盘IO和CPU资源都会被消耗。有些朋友看到空闲内存（free）很少的或接近于0时，就认为内存不够用了，不能光看这一点，还要结合si和so，如果free很少，但是si和so也很少（大多时候是0），那么不用担心，系统性能这时不会受到影响的。</span><br><span class="line">  </span><br><span class="line">io：（现在的Linux版本块的大小为1024bytes）</span><br><span class="line">  bi: 每秒读取的块数</span><br><span class="line">  bo: 每秒写入的块数</span><br><span class="line"></span><br><span class="line">system：</span><br><span class="line">  in: 每秒中断数，包括时钟中断。【interrupt】</span><br><span class="line">  cs: 每秒上下文切换数。【count/second】</span><br><span class="line">  注意：随机磁盘读写的时候，这2个值越大（如超出1024k)，能看到CPU在IO等待的值也会越大。</span><br><span class="line"></span><br><span class="line">cpu（以百分比表示）：</span><br><span class="line">  us: 用户进程执行时间(user time)。注意： us的值比较高时，说明用户进程消耗的CPU时间多，但是如果长期超50%的使用，那么我们就该考虑优化程序算法或者进行加速。</span><br><span class="line">  sy: 系统进程执行时间(system time)。注意：sy的值高时，说明系统内核消耗的CPU资源多，这并不是良性表现，我们应该检查原因。</span><br><span class="line">  id: 空闲时间(包括IO等待时间),中央处理器的空闲时间 。</span><br><span class="line">  wa: 等待IO时间。注意：wa的值高时，说明IO等待比较严重，这可能由于磁盘大量作随机访问造成，也有可能磁盘出现瓶颈（块操作）。</span><br></pre></td></tr></table></figure>
-
-<p> <u><strong>vmstat -a 2 5 【-a 显示活跃和非活跃内存,所显示的内容除增加inact和active 】</strong></u></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191026145904.png" alt></p>
-<p> <u><strong>vmstat -f 【 linux下创建进程的系统调用是fork】</strong></u> </p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028094204.png" alt></p>
-<br>
-
-<h1 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h1><p>目前说来，对于服务器监控有用处的度量主要有：</p>
-<ul>
-<li>r（运行队列）</li>
-<li>pi（页导入）</li>
-<li>us（用户CPU）</li>
-<li>sy（系统CPU）</li>
-<li>id（空闲）</li>
-</ul>
-<p><strong>注意：如果r经常大于4 ，且id经常少于40，表示cpu的负荷很重。如果bi，bo 长期不等于0，表示内存不足。</strong></p>
-<p>通过VMSTAT识别CPU瓶颈：<br><strong>r（运行队列）展示了正在执行和等待CPU资源的任务个数。当这个值超过了CPU数目，就会出现CPU瓶颈了。</strong></p>
-<p>Linux下查看CPU核心数的命令：<br><code>cat /proc/cpuinfo|grep processor|wc -l</code></p>
-<p><strong>当r值超过了CPU个数，就会出现CPU瓶颈，解决办法大体几种：</strong></p>
-<ol>
-<li>最简单的就是增加CPU个数和核数</li>
-<li>通过调整任务执行时间，如大任务放到系统不繁忙的情况下进行执行，进尔平衡系统任务</li>
-<li>调整已有任务的优先级</li>
-</ol>
-<p>通过vmstat识别CPU满负荷：<br>    首先需要声明一点的是，vmstat中CPU的度量是百分比的。当us＋sy的值接近100的时候，表示CPU正在接近满负荷工作。但要注意的是，CPU 满负荷工作并不能说明什么，Linux总是试图要CPU尽可能的繁忙，使得任务的吞吐量最大化。唯一能够确定CPU瓶颈的还是r（运行队列）的值。</p>
-<p>通过vmstat识别RAM瓶颈：</p>
-<p>数据库服务器都只有有限的RAM，出现内存争用现象是Oracle的常见问题。</p>
-<p>首先用free查看RAM的数量：<br>[oracle@oracle-db02 ~]$ free<br>total    used    free   shared  buffers   cached<br>Mem:    2074924  2071112    3812     0   40616  1598656<br>-/+ buffers/cache:   431840  1643084<br>Swap:   3068404   195804  2872600</p>
-<p><strong>当内存的需求大于RAM的数量，服务器启动了虚拟内存机制，通过虚拟内存，可以将RAM段移到SWAP DISK的特殊磁盘段上，这样会 出现虚拟内存的页导出和页导入现象，页导出并不能说明RAM瓶颈，虚拟内存系统经常会对内存段进行页导出，但页导入操作就表明了服务器需要更多的内存了， 页导入需要从SWAP DISK上将内存段复制回RAM，导致服务器速度变慢。</strong></p>
-<p>解决的办法有几种：</p>
-<ol>
-<li>最简单的，加大RAM；</li>
-<li>改小SGA，使得对RAM需求减少；</li>
-<li>减少RAM的需求。（如：减少PGA）</li>
-</ol>
-<p>如果disk经常不等于0，且在b中的队列大于3，表示io性能不好。</p>
-<ol>
-<li>如果在processes中运行的序列(process r)是连续的大于在系统中的CPU的个数表示系统现在运行比较慢,有多数的进程等待CPU。</li>
-<li>如果r的输出数大于系统中可用CPU个数的4倍的话,则系统面临着CPU短缺的问题,或者是CPU的速率过低,系统中有多数的进程在等待CPU,造成系统中进程运行过慢。</li>
-<li>如果空闲时间(cpu id)持续为0并且系统时间(cpu sy)是用户时间的两倍(cpu us)系统则面临着CPU资源的短缺。</li>
-</ol>
-<p>解决办法:<br>当发生以上问题的时候请先调整应用程序对CPU的占用情况.使得应用程序能够更有效的使用CPU.同时可以考虑增加更多的CPU. 关于CPU的使用情况还可以结合mpstat, ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的CPU的使用情况,和那些进程在占用大量的CPU时间.一般情况下，应用程序的问题会比较大一些.比如一些sql语句不合理等等都会造成这样的现象.</p>
-<p>内存问题现象:<br>内存的瓶颈是由scan rate (sr)来决定的.scan rate是通过每秒的始终算法来进行页扫描的.如果scan rate(sr)连续的大于每秒200页则表示可能存在内存缺陷.同样的如果page项中的pi和po这两栏表示每秒页面的调入的页数和每秒调出的页数.如果该值经常为非零值,也有可能存在内存的瓶颈,当然,如果个别的时候不为0的话,属于正常的页面调度这个是虚拟内存的主要原理.</p>
-<p>解决办法:</p>
-<ol>
-<li>调节applications &amp; servers使得对内存和cache的使用更加有效.</li>
-<li>增加系统的内存.</li>
-<li>Implement priority paging in s in pre solaris 8 versions by adding line “set priority paging=1” in /etc/system. Remove this line if upgrading from Solaris 7 to 8 &amp; retaining old /etc/system file.</li>
-</ol>
-<p>关于内存的使用情况还可以结ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的内存的使用情况,和那些进程在占用大量的内存.一般情况下，如果内存的占用率比较高,但是,CPU的占用很低的时候,可以考虑是有很多的应用程序占用了内存没有释放,但是,并没有占用CPU时间,可以考虑应用程序,对于未占用CPU时间和一些后台的程序,释放内存的占用。</p>
-<br>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-keepalived/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -924,6 +708,222 @@
 <p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
 <p><a href="https://www.cnblogs.com/gongjingyun123--/p/11424424.html" target="_blank" rel="noopener">Nginx四层负载均衡</a></p>
 </blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-vmstat/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-vmstat/" itemprop="url">linux vmstat命令详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <br>
+
+<h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>​    很显然，从名字我们就可以知道 vmstat 是一个<u><strong>查看虚拟内存（Virtual Memory）使用状况的工具</strong></u>，但是怎样通过vmstat 来发现系统中的瓶颈呢？在回答这个问题前，还是让我们回顾一下Linux中关于虚拟内存的相关内容。</p>
+<br>
+
+<h1 id="二、虚拟内存"><a href="#二、虚拟内存" class="headerlink" title="二、虚拟内存"></a>二、虚拟内存</h1><p>​    在系统中运行的每个进程都需要使用到内存，但不是每个进程都需要每时每刻使用系统分配的内存空间。当系统运行所需内存超过实际的物理内存，内核会释放某些进程所占用但未使用的部分或所有物理内存，将这部分资料存储在磁盘上直到下一次调用，将释放出的内存提供给有需要的进程使用。</p>
+<p>​    在Linux内存管理中，主要通过”调页Paging“和”交换Swapping“来完成内存调度。调页算法是将内存中最近<u><strong>不常使用的页面换到磁盘上，把活动页面保留在内存中供进程使用</strong></u>。交换技术是将整个进程，而不是部分页面，全部交换到磁盘上。</p>
+<p>​    <u><strong>分页（Page）写入磁盘的过程被称为Page-Out，分页（Page）从磁盘重新回到内存的过程叫Page-In</strong></u>。当内核需要一个分页时，但发现此分页不再物理内存中（因为已经被Page-Out了），此时就发生了分页错误（Page-Fault）。</p>
+<p>​    当系统内核发现可运行内存变少时，会通过Page-Out来释放一部分物理内存。尽管Page-Out不是经常发生，但是如果Page-Out频繁不断的发生，直到当内核管理分页的时间超过运行程式的时间时，熊效能会急剧下降。这时系统已经运行非常慢或进入暂停状态，这种状态被称为 thrashing（颠簸）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1、page fault出现的原因：</span><br><span class="line">   a). 页表中找不到对应虚拟地址的PTE(无效地址/有效地址但是没有载入主存);</span><br><span class="line">   b). 对应虚拟地址的PTE拒绝访问。</span><br><span class="line"></span><br><span class="line">2、page fault在哪里进行处理</span><br><span class="line">   page fault被CPU捕获，跳转到 page_fault_handler 进行处理。</span><br><span class="line"></span><br><span class="line">3、page fault的处理方式</span><br><span class="line">   page fault -&gt; 访问地址是否合法</span><br><span class="line">   a. 无效地址：segment fault，返回(用户地址杀死进程、内核地址杀死内核)</span><br><span class="line">   b. 有效地址：</span><br><span class="line">    1) page第一次被访问: demand_page_faults (demanding pages，请求调页)</span><br><span class="line">       检查页表中是否存在该PTE　　　　pmd_none, pte_none</span><br><span class="line">       分配新的页帧，初始化(从磁盘读入内存)</span><br><span class="line">    2) page被交换到swap分区</span><br><span class="line">       检查present标志位，如果该位为0表示不在主存中。</span><br><span class="line">       分配新的页帧，从磁盘重新读入内存。</span><br><span class="line">    3) COW(Copy-On-Write)</span><br><span class="line">        vm_area_struct允许写，但是对应的PTE禁止写操作。</span><br><span class="line"></span><br><span class="line">4、如何判断访问地址是否合法？如果地址合法有什么操作？</span><br><span class="line">   判断地址合法的方式：</span><br><span class="line">   static int __do_page_fault()函数 vma = find_vma(mm, addr);</span><br><span class="line">   根据传入的地址addr查找对应的vm_area_struct，如果没有找到证明该地址访问无效，返回segment fault。</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="三、vmstat详解"><a href="#三、vmstat详解" class="headerlink" title="三、vmstat详解"></a>三、vmstat详解</h1><h3 id="1、用法"><a href="#1、用法" class="headerlink" title="1、用法"></a>1、用法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vmstat [-a] [-n] [-S unit] [delay [ count]]</span><br><span class="line">vmstat [-s] [-n] [-S unit]</span><br><span class="line">vmstat [-m] [-n] [delay [ count]]</span><br><span class="line">vmstat [-d] [-n] [delay [ count]]</span><br><span class="line">vmstat [-p disk partition] [-n] [delay [ count]]</span><br><span class="line">vmstat [-f]</span><br><span class="line">vmstat [-V]</span><br></pre></td></tr></table></figure>
+
+<p>-a：显示活跃和非活跃内存<br>-f：显示从系统启动至今的fork数量 。<br>-m：显示slabinfo<br>-n：只在开始时显示一次各字段名称。<br>-s：显示内存相关统计信息及多种系统活动数量。<br>delay：刷新时间间隔。如果不指定，只显示一条结果。<br>count：刷新次数。如果不指定刷新次数，但指定了刷新时间间隔，这时刷新次数为无穷。<br>-d：显示磁盘相关统计信息。<br>-p：显示指定磁盘分区统计信息<br>-S：使用指定单位显示。参数有 k 、K 、m 、M ，分别代表1000、1024、1000000、1048576字节（byte）。默认单位为K（1024 bytes）<br>-V：显示vmstat版本信息。</p>
+<br>
+
+<h3 id="2、使用说明"><a href="#2、使用说明" class="headerlink" title="2、使用说明"></a>2、使用说明</h3><p><u><strong>vmstat 5 5 【在5秒时间内进行5次采样】</strong></u> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmstat 5 5</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191026111456.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">procs（进程）：</span><br><span class="line">  r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）</span><br><span class="line">  b： 等待IO的进程数量</span><br><span class="line">  </span><br><span class="line">memory（内存）：</span><br><span class="line">  swpd: 使用虚拟内存大小。注意：如果swpd的值不为0，但是si，so的值长期为0，这种情况不会影响系统性能。</span><br><span class="line">  free: 空闲物理内存大小</span><br><span class="line">  buff: 用作缓冲的内存大小</span><br><span class="line">  cache: 用作缓存的内存大小。注意：如果cache的值大的时候，说明cache处的文件数多，如果频繁访问到的文件都能被cache处，那么磁盘的读IO bi会非常小。</span><br><span class="line">  inact: 非活跃内存大小（当使用-a选项时显示）</span><br><span class="line">  active: 活跃的内存大小（当使用-a选项时显示）</span><br><span class="line">  </span><br><span class="line">swap：</span><br><span class="line">  si: 每秒从交换区写到内存的大小，由磁盘调入内存</span><br><span class="line">  so: 每秒写入交换区的内存大小，由内存调入磁盘</span><br><span class="line">  注意：内存够用的时候，这2个值都是0，如果这2个值长期大于0时，系统性能会受到影响，磁盘IO和CPU资源都会被消耗。有些朋友看到空闲内存（free）很少的或接近于0时，就认为内存不够用了，不能光看这一点，还要结合si和so，如果free很少，但是si和so也很少（大多时候是0），那么不用担心，系统性能这时不会受到影响的。</span><br><span class="line">  </span><br><span class="line">io：（现在的Linux版本块的大小为1024bytes）</span><br><span class="line">  bi: 每秒读取的块数</span><br><span class="line">  bo: 每秒写入的块数</span><br><span class="line"></span><br><span class="line">system：</span><br><span class="line">  in: 每秒中断数，包括时钟中断。【interrupt】</span><br><span class="line">  cs: 每秒上下文切换数。【count/second】</span><br><span class="line">  注意：随机磁盘读写的时候，这2个值越大（如超出1024k)，能看到CPU在IO等待的值也会越大。</span><br><span class="line"></span><br><span class="line">cpu（以百分比表示）：</span><br><span class="line">  us: 用户进程执行时间(user time)。注意： us的值比较高时，说明用户进程消耗的CPU时间多，但是如果长期超50%的使用，那么我们就该考虑优化程序算法或者进行加速。</span><br><span class="line">  sy: 系统进程执行时间(system time)。注意：sy的值高时，说明系统内核消耗的CPU资源多，这并不是良性表现，我们应该检查原因。</span><br><span class="line">  id: 空闲时间(包括IO等待时间),中央处理器的空闲时间 。</span><br><span class="line">  wa: 等待IO时间。注意：wa的值高时，说明IO等待比较严重，这可能由于磁盘大量作随机访问造成，也有可能磁盘出现瓶颈（块操作）。</span><br></pre></td></tr></table></figure>
+
+<p> <u><strong>vmstat -a 2 5 【-a 显示活跃和非活跃内存,所显示的内容除增加inact和active 】</strong></u></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191026145904.png" alt></p>
+<p> <u><strong>vmstat -f 【 linux下创建进程的系统调用是fork】</strong></u> </p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028094204.png" alt></p>
+<br>
+
+<h1 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h1><p>目前说来，对于服务器监控有用处的度量主要有：</p>
+<ul>
+<li>r（运行队列）</li>
+<li>pi（页导入）</li>
+<li>us（用户CPU）</li>
+<li>sy（系统CPU）</li>
+<li>id（空闲）</li>
+</ul>
+<p><strong>注意：如果r经常大于4 ，且id经常少于40，表示cpu的负荷很重。如果bi，bo 长期不等于0，表示内存不足。</strong></p>
+<p>通过VMSTAT识别CPU瓶颈：<br><strong>r（运行队列）展示了正在执行和等待CPU资源的任务个数。当这个值超过了CPU数目，就会出现CPU瓶颈了。</strong></p>
+<p>Linux下查看CPU核心数的命令：<br><code>cat /proc/cpuinfo|grep processor|wc -l</code></p>
+<p><strong>当r值超过了CPU个数，就会出现CPU瓶颈，解决办法大体几种：</strong></p>
+<ol>
+<li>最简单的就是增加CPU个数和核数</li>
+<li>通过调整任务执行时间，如大任务放到系统不繁忙的情况下进行执行，进尔平衡系统任务</li>
+<li>调整已有任务的优先级</li>
+</ol>
+<p>通过vmstat识别CPU满负荷：<br>    首先需要声明一点的是，vmstat中CPU的度量是百分比的。当us＋sy的值接近100的时候，表示CPU正在接近满负荷工作。但要注意的是，CPU 满负荷工作并不能说明什么，Linux总是试图要CPU尽可能的繁忙，使得任务的吞吐量最大化。唯一能够确定CPU瓶颈的还是r（运行队列）的值。</p>
+<p>通过vmstat识别RAM瓶颈：</p>
+<p>数据库服务器都只有有限的RAM，出现内存争用现象是Oracle的常见问题。</p>
+<p>首先用free查看RAM的数量：<br>[oracle@oracle-db02 ~]$ free<br>total    used    free   shared  buffers   cached<br>Mem:    2074924  2071112    3812     0   40616  1598656<br>-/+ buffers/cache:   431840  1643084<br>Swap:   3068404   195804  2872600</p>
+<p><strong>当内存的需求大于RAM的数量，服务器启动了虚拟内存机制，通过虚拟内存，可以将RAM段移到SWAP DISK的特殊磁盘段上，这样会 出现虚拟内存的页导出和页导入现象，页导出并不能说明RAM瓶颈，虚拟内存系统经常会对内存段进行页导出，但页导入操作就表明了服务器需要更多的内存了， 页导入需要从SWAP DISK上将内存段复制回RAM，导致服务器速度变慢。</strong></p>
+<p>解决的办法有几种：</p>
+<ol>
+<li>最简单的，加大RAM；</li>
+<li>改小SGA，使得对RAM需求减少；</li>
+<li>减少RAM的需求。（如：减少PGA）</li>
+</ol>
+<p>如果disk经常不等于0，且在b中的队列大于3，表示io性能不好。</p>
+<ol>
+<li>如果在processes中运行的序列(process r)是连续的大于在系统中的CPU的个数表示系统现在运行比较慢,有多数的进程等待CPU。</li>
+<li>如果r的输出数大于系统中可用CPU个数的4倍的话,则系统面临着CPU短缺的问题,或者是CPU的速率过低,系统中有多数的进程在等待CPU,造成系统中进程运行过慢。</li>
+<li>如果空闲时间(cpu id)持续为0并且系统时间(cpu sy)是用户时间的两倍(cpu us)系统则面临着CPU资源的短缺。</li>
+</ol>
+<p>解决办法:<br>当发生以上问题的时候请先调整应用程序对CPU的占用情况.使得应用程序能够更有效的使用CPU.同时可以考虑增加更多的CPU. 关于CPU的使用情况还可以结合mpstat, ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的CPU的使用情况,和那些进程在占用大量的CPU时间.一般情况下，应用程序的问题会比较大一些.比如一些sql语句不合理等等都会造成这样的现象.</p>
+<p>内存问题现象:<br>内存的瓶颈是由scan rate (sr)来决定的.scan rate是通过每秒的始终算法来进行页扫描的.如果scan rate(sr)连续的大于每秒200页则表示可能存在内存缺陷.同样的如果page项中的pi和po这两栏表示每秒页面的调入的页数和每秒调出的页数.如果该值经常为非零值,也有可能存在内存的瓶颈,当然,如果个别的时候不为0的话,属于正常的页面调度这个是虚拟内存的主要原理.</p>
+<p>解决办法:</p>
+<ol>
+<li>调节applications &amp; servers使得对内存和cache的使用更加有效.</li>
+<li>增加系统的内存.</li>
+<li>Implement priority paging in s in pre solaris 8 versions by adding line “set priority paging=1” in /etc/system. Remove this line if upgrading from Solaris 7 to 8 &amp; retaining old /etc/system file.</li>
+</ol>
+<p>关于内存的使用情况还可以结ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的内存的使用情况,和那些进程在占用大量的内存.一般情况下，如果内存的占用率比较高,但是,CPU的占用很低的时候,可以考虑是有很多的应用程序占用了内存没有释放,但是,并没有占用CPU时间,可以考虑应用程序,对于未占用CPU时间和一些后台的程序,释放内存的占用。</p>
+<br>
+
 
           
         
@@ -1499,6 +1499,192 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-htop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-monitor-htop/" itemprop="url">linux htop详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
+                2016-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+<p>htop是Linux系统下一个基本文本模式的、交互式的进程查看器，主要用于控制台或shell中，可以替代top；</p>
+<p>htop和top对比：</p>
+<ul>
+<li>两者相比起来，top比较繁琐</li>
+<li>默认支持图形界面的鼠标操作</li>
+<li>可以横向或纵向滚动浏览进程列表，以便看到所有的进程和完整的命令行</li>
+<li>杀进程时不需要输入进程号等</li>
+</ul>
+<br>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install htop</span><br></pre></td></tr></table></figure>
+
+<h3 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release.noarch</span><br><span class="line">yum -y install htop</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1、安装gcc、内核库依赖库</span><br><span class="line">yum install -y gcc ncurses-deve</span><br><span class="line">2、下载源码</span><br><span class="line">wget http://sourceforge.net/projects/htop/files/latest/download</span><br><span class="line">3、解压并进入htop-1.0.2目录</span><br><span class="line">tar -zxf download</span><br><span class="line">cd htop-1.0.2</span><br><span class="line">4、编译安装(执行./configure如果执行报错 configure: error: You may want to use --disable-unicode or install libncursesw，表明缺少lib 包，安装lib包：yum install ncurses-devel -y)</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">5、验证</span><br><span class="line">htop</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108135551.png" alt></p>
+<h1 id="字段含义"><a href="#字段含义" class="headerlink" title="字段含义"></a>字段含义</h1><ul>
+<li>PID：进行的标识号</li>
+<li>USER：运行此进程的用户</li>
+<li>PRI：进程的优先级</li>
+<li>NI：进程的优先级别值，默认的为0，可以进行调整</li>
+<li>VIRT：进程占用的虚拟内存值</li>
+<li>RES：进程占用的物理内存值</li>
+<li>SHR：进程占用的共享内存值</li>
+<li>S：进程的运行状况，R表示正在运行、S表示休眠，等待唤醒、Z表示僵死状态</li>
+<li>%CPU：该进程占用的CPU使用率</li>
+<li>%MEM：该进程占用的物理内存和总内存的百分比</li>
+<li>TIME+：该进程启动后占用的总的CPU时间</li>
+<li>COMMAND：进程启动的启动命令名称</li>
+</ul>
+<br>
+
+<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop [OPTIONS]</span><br></pre></td></tr></table></figure>
+
+<h1 id="htop常用功能键"><a href="#htop常用功能键" class="headerlink" title="htop常用功能键"></a>htop常用功能键</h1><p>F1 : 查看htop使用说明<br>F2 : 设置<br>F3 : 搜索进程<br>F4 : 过滤器，按关键字搜索<br>F5 : 显示树形结构<br>F6 : 选择排序方式<br>F7 : 减少nice值，这样就可以提高对应进程的优先级<br>F8 : 增加nice值，这样可以降低对应进程的优先级<br>F9 : 杀掉选中的进程<br>F10 : 退出htop</p>
+<p>/ : 搜索字符<br>h : 显示帮助<br>l ：显示进程打开的文件: 如果安装了lsof，按此键可以显示进程所打开的文件<br>u ：显示所有用户，并可以选择某一特定用户的进程<br>s : 将调用strace追踪进程的系统调用<br>t : 显示树形结构</p>
+<p>H ：显示/隐藏用户线程<br>I ：倒转排序顺序<br>K ：显示/隐藏内核线程<br>M ：按内存占用排序<br>P ：按CPU排序<br>T ：按运行时间排序</p>
+<p>上下键或PgUP, PgDn : 移动选中进程<br>左右键或Home, End : 移动列表<br>Space(空格) : 标记/取消标记一个进程。命令可以作用于多个进程，例如 “kill”，将应用于所有已标记</p>
+<br>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-atop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1762,192 +1948,6 @@
 </ol>
 <p>其实atop开发者已经提供了以上日志保存方式，相应的atop.daily脚本可以在源码目录下找到。在atop.daily脚本中，我们可以通过修改INTERVAL变量改变atop信息采样周期(默认为10分钟)；通过修改以下命令中的数值改变日志保存天数(默认为28天)：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(sleep 3; find $LOGPATH -name 'atop_*' -mtime +28 -exec rm &#123;&#125; \; )&amp;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-htop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-monitor-htop/" itemprop="url">linux htop详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
-                2016-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-<p>htop是Linux系统下一个基本文本模式的、交互式的进程查看器，主要用于控制台或shell中，可以替代top；</p>
-<p>htop和top对比：</p>
-<ul>
-<li>两者相比起来，top比较繁琐</li>
-<li>默认支持图形界面的鼠标操作</li>
-<li>可以横向或纵向滚动浏览进程列表，以便看到所有的进程和完整的命令行</li>
-<li>杀进程时不需要输入进程号等</li>
-</ul>
-<br>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install htop</span><br></pre></td></tr></table></figure>
-
-<h3 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release.noarch</span><br><span class="line">yum -y install htop</span><br></pre></td></tr></table></figure>
-
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1、安装gcc、内核库依赖库</span><br><span class="line">yum install -y gcc ncurses-deve</span><br><span class="line">2、下载源码</span><br><span class="line">wget http://sourceforge.net/projects/htop/files/latest/download</span><br><span class="line">3、解压并进入htop-1.0.2目录</span><br><span class="line">tar -zxf download</span><br><span class="line">cd htop-1.0.2</span><br><span class="line">4、编译安装(执行./configure如果执行报错 configure: error: You may want to use --disable-unicode or install libncursesw，表明缺少lib 包，安装lib包：yum install ncurses-devel -y)</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">5、验证</span><br><span class="line">htop</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108135551.png" alt></p>
-<h1 id="字段含义"><a href="#字段含义" class="headerlink" title="字段含义"></a>字段含义</h1><ul>
-<li>PID：进行的标识号</li>
-<li>USER：运行此进程的用户</li>
-<li>PRI：进程的优先级</li>
-<li>NI：进程的优先级别值，默认的为0，可以进行调整</li>
-<li>VIRT：进程占用的虚拟内存值</li>
-<li>RES：进程占用的物理内存值</li>
-<li>SHR：进程占用的共享内存值</li>
-<li>S：进程的运行状况，R表示正在运行、S表示休眠，等待唤醒、Z表示僵死状态</li>
-<li>%CPU：该进程占用的CPU使用率</li>
-<li>%MEM：该进程占用的物理内存和总内存的百分比</li>
-<li>TIME+：该进程启动后占用的总的CPU时间</li>
-<li>COMMAND：进程启动的启动命令名称</li>
-</ul>
-<br>
-
-<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop [OPTIONS]</span><br></pre></td></tr></table></figure>
-
-<h1 id="htop常用功能键"><a href="#htop常用功能键" class="headerlink" title="htop常用功能键"></a>htop常用功能键</h1><p>F1 : 查看htop使用说明<br>F2 : 设置<br>F3 : 搜索进程<br>F4 : 过滤器，按关键字搜索<br>F5 : 显示树形结构<br>F6 : 选择排序方式<br>F7 : 减少nice值，这样就可以提高对应进程的优先级<br>F8 : 增加nice值，这样可以降低对应进程的优先级<br>F9 : 杀掉选中的进程<br>F10 : 退出htop</p>
-<p>/ : 搜索字符<br>h : 显示帮助<br>l ：显示进程打开的文件: 如果安装了lsof，按此键可以显示进程所打开的文件<br>u ：显示所有用户，并可以选择某一特定用户的进程<br>s : 将调用strace追踪进程的系统调用<br>t : 显示树形结构</p>
-<p>H ：显示/隐藏用户线程<br>I ：倒转排序顺序<br>K ：显示/隐藏内核线程<br>M ：按内存占用排序<br>P ：按CPU排序<br>T ：按运行时间排序</p>
-<p>上下键或PgUP, PgDn : 移动选中进程<br>左右键或Home, End : 移动列表<br>Space(空格) : 标记/取消标记一个进程。命令可以作用于多个进程，例如 “kill”，将应用于所有已标记</p>
-<br>
 
 
           
