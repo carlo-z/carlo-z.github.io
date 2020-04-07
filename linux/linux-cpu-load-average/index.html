@@ -100,7 +100,7 @@
 
 
 
-  <meta name="keywords" content="linux,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -111,22 +111,26 @@
 
 
 
-<meta name="description" content="dstat 介绍 dstat命令是一个用来替换vmstat、iostat、netstat、nfsstat和ifstat这些命令的工具，是一个全能系统信息统计工具。安装：yum install -y dstat   dstat使用说明：直接使用dstat，默认使用的是-cdngy参数，分别显示cpu、disk、net、page、system信息    CPU状态: CPU的使用率。显示了用户占">
-<meta name="keywords" content="linux">
+<meta name="description" content="一、查看系统负荷如果你的电脑很慢，你或许想查看一下，它的工作量是否太大了。 在Linux系统中，我们一般使用 uptime 命令查看（w命令和top命令也行）。（另外，它们在苹果公司的Mac电脑上也适用。） 你在终端窗口键入uptime，系统会返回一行信息。  这行信息的后半部分，显示 load average，它的意思是”系统的平均负荷”，里面有三个数字，我们可以从中判断系统负荷是大还是小">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux dstat 性能检测工具说明">
-<meta property="og:url" content="https://carlo-z.com/linux/linux-dstat/index.html">
+<meta property="og:title" content="Linux系统负载">
+<meta property="og:url" content="https://carlo-z.com/linux/linux-cpu-load-average/index.html">
 <meta property="og:site_name" content="CarloZ">
-<meta property="og:description" content="dstat 介绍 dstat命令是一个用来替换vmstat、iostat、netstat、nfsstat和ifstat这些命令的工具，是一个全能系统信息统计工具。安装：yum install -y dstat   dstat使用说明：直接使用dstat，默认使用的是-cdngy参数，分别显示cpu、disk、net、page、system信息    CPU状态: CPU的使用率。显示了用户占">
+<meta property="og:description" content="一、查看系统负荷如果你的电脑很慢，你或许想查看一下，它的工作量是否太大了。 在Linux系统中，我们一般使用 uptime 命令查看（w命令和top命令也行）。（另外，它们在苹果公司的Mac电脑上也适用。） 你在终端窗口键入uptime，系统会返回一行信息。  这行信息的后半部分，显示 load average，它的意思是”系统的平均负荷”，里面有三个数字，我们可以从中判断系统负荷是大还是小">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028135248.png">
-<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028142604.png">
-<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028140341.png">
-<meta property="og:updated_time" content="2020-02-11T12:09:59.026Z">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101201.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101242.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101323.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101339.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101357.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101411.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101433.png">
+<meta property="og:updated_time" content="2020-02-11T12:09:59.027Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux dstat 性能检测工具说明">
-<meta name="twitter:description" content="dstat 介绍 dstat命令是一个用来替换vmstat、iostat、netstat、nfsstat和ifstat这些命令的工具，是一个全能系统信息统计工具。安装：yum install -y dstat   dstat使用说明：直接使用dstat，默认使用的是-cdngy参数，分别显示cpu、disk、net、page、system信息    CPU状态: CPU的使用率。显示了用户占">
-<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028135248.png">
+<meta name="twitter:title" content="Linux系统负载">
+<meta name="twitter:description" content="一、查看系统负荷如果你的电脑很慢，你或许想查看一下，它的工作量是否太大了。 在Linux系统中，我们一般使用 uptime 命令查看（w命令和top命令也行）。（另外，它们在苹果公司的Mac电脑上也适用。） 你在终端窗口键入uptime，系统会返回一行信息。  这行信息的后半部分，显示 load average，它的意思是”系统的平均负荷”，里面有三个数字，我们可以从中判断系统负荷是大还是小">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101201.png">
 
 
 
@@ -156,13 +160,13 @@
 
 
 
-  <link rel="canonical" href="https://carlo-z.com/linux/linux-dstat/">
+  <link rel="canonical" href="https://carlo-z.com/linux/linux-cpu-load-average/">
 
 
 
 
 
-  <title>Linux dstat 性能检测工具说明 | CarloZ</title>
+  <title>Linux系统负载 | CarloZ</title>
   
 
 
@@ -321,7 +325,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-dstat/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-cpu-load-average/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="-CarloZ">
@@ -338,7 +342,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Linux dstat 性能检测工具说明</h1>
+          <h1 class="post-title" itemprop="name headline">Linux系统负载</h1>
         
 
         <div class="post-meta">
@@ -350,8 +354,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-02T00:00:00+08:00">
-                2016-02-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
+                2016-01-08
               </time>
             
 
@@ -413,61 +417,57 @@
         <hr>
 <br>
 
-<h1 id="dstat-介绍"><a href="#dstat-介绍" class="headerlink" title="dstat 介绍"></a>dstat 介绍</h1><p> dstat命令是一个用来替换vmstat、iostat、netstat、nfsstat和ifstat这些命令的工具，是一个全能系统信息统计工具。<br>安装：<code>yum install -y dstat</code> </p>
-<p> dstat使用说明：<br>直接使用dstat，默认使用的是-cdngy参数，分别显示cpu、disk、net、page、system信息 </p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028135248.png" alt></p>
-<ul>
-<li>CPU状态: CPU的使用率。显示了用户占比，系统占比、空闲占比、等待占比、硬中断和软中断情况。</li>
-<li>磁盘统计: 磁盘的读写，分别显示磁盘的读、写总数。</li>
-<li>网络统计: 网络设备发送和接受的数据，分别显示的网络收、发数据总数。</li>
-<li>分页统计: 系统的分页活动。分别显示换入（in）和换出（out）。</li>
-<li>系统统计: 统计中断（int）和上下文切换（csw）。</li>
-</ul>
-<p>dstat 是一个可以取代vmstat，iostat，netstat和ifstat这些命令的多功能产品。dstat克服了这些命令的局限并增加了一些另外的功能，增加了监控项，也变得更灵活了。dstat可以很方便监控系统运行状况并用于基准测试和排除故障。</p>
-<p>dstat可以让你实时地看到所有系统资源，例如，你能够通过统计IDE控制器当前状态来比较磁盘利用率，或者直接通过网络带宽数值来比较磁盘的吞吐率（在相同的时间间隔内）。</p>
-<p>dstat将以列表的形式为你提供选项信息并清晰地告诉你是在何种幅度和单位显示输出。这样更好地避免了信息混乱和误报。更重要的是，它可以让你更容易编写插件来收集你想要的数据信息，以从未有过的方式进行扩展。</p>
-<p>dstat的默认输出是专门为人们实时查看而设计的，不过你也可以将详细信息通过CSV输出到一个文件，并导入到Gnumeric或者Excel生成表格中。</p>
+<h1 id="一、查看系统负荷"><a href="#一、查看系统负荷" class="headerlink" title="一、查看系统负荷"></a>一、查看系统负荷</h1><p>如果你的电脑很慢，你或许想查看一下，它的工作量是否太大了。</p>
+<p>在Linux系统中，我们一般使用 <code>uptime</code> 命令查看（w命令和top命令也行）。（另外，它们在苹果公司的Mac电脑上也适用。）</p>
+<p>你在终端窗口键入<code>uptime</code>，系统会返回一行信息。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101201.png" alt></p>
+<p>这行信息的后半部分，显示 <code>load average</code>，它的意思是”系统的平均负荷”，里面有三个数字，我们可以从中判断系统负荷是大还是小。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101242.png" alt></p>
+<p>为什么会有三个数字呢？你从手册中查到，它们的意思分别是1分钟、5分钟、15分钟内系统的平均负荷。</p>
+<p>如果你继续看手册，它还会告诉你，当CPU完全空闲的时候，平均负荷为0；当CPU工作量饱和的时候，平均负荷为1。</p>
+<p>那么很显然，<code>load average</code> 的值越低，比如等于0.2或0.3，就说明电脑的工作量越小，系统负荷比较轻。</p>
+<p>但是，什么时候能看出系统负荷比较重呢？等于1的时候，还是等于0.5或等于1.5的时候？如果1分钟、5分钟、15分钟三个值不一样，怎么办？</p>
 <br>
 
-<h1 id="常见选项"><a href="#常见选项" class="headerlink" title="常见选项"></a>常见选项</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">-c, --cpu：开启cpu统计</span><br><span class="line">-C：该选项跟cpu的编号（0~cpu核数-1,多个用都好隔开）如：0,3,total表示分别包含cpu0、cpu3和total</span><br><span class="line">-d, --disk：开启disk统计</span><br><span class="line">-D：改选跟具体的设备名（多个用逗号隔开）如：total,hda，hdb表示分别统计total、hda、hdb设备块</span><br><span class="line">-g, --page：开启分页统计</span><br><span class="line">-i, --int：开启中断统计</span><br><span class="line">-I 5,10：没弄懂呢~巴拉巴拉</span><br><span class="line">-l, --load：开启负载均衡统计，分别是1m，5m，15m</span><br><span class="line">-m, --mem：开启内存统计，包括used，buffers，cache，free</span><br><span class="line">-n, --net：开启net统计，包括接受和发送</span><br><span class="line">-N：该选项可以跟网络设备名多个用逗号隔开，如eth1,total</span><br><span class="line">-p, --proc：开启进程统计，包括runnable, uninterruptible, new</span><br><span class="line">-r, --io：io开启请求统计，包括read requests, write requests</span><br><span class="line">-s, --swap：开启swap统计，包括used, free</span><br><span class="line">-S：该选项可以跟具体的交换区，多个用逗号隔开如swap1,total</span><br><span class="line">-t, --time：启用时间和日期输出</span><br><span class="line">-T, --epoch：启用时间计数，从epoch到现在的秒数</span><br><span class="line">-y, --sys：开启系统统计，包括中断和上下文切换</span><br><span class="line">--aio：开启同步IO统计 (asynchronous I/O)</span><br><span class="line">--fs：开启文件系统统计，包括 (open files, inodes)</span><br><span class="line">--ipc：开启ipc统计，包括 (message queue, semaphores, shared memory)</span><br><span class="line">--lock：开启文件所统计，包括 (posix, flock, read, write)</span><br><span class="line">--raw：开启raw统计 (raw sockets)</span><br><span class="line">--socket：开启sockets统计，包括 (total, tcp, udp, raw, ip-fragments)</span><br><span class="line">--tcp：开启tcp统计，包括(listen, established, syn, time_wait, close)</span><br><span class="line">--udp：开启udp统计 (listen, active)</span><br><span class="line">--unix：开启unix统计(datagram, stream, listen, active)</span><br><span class="line">--vm：开启vm统计 (hard pagefaults, soft pagefaults, allocated, free)</span><br><span class="line">--stat：通过插件名称开启插件扩展，详见命令插件 ：可能的内置插件为aio, cpu, cpu24, disk, disk24, disk24old, epoch, fs, int, int24, io, ipc, load, lock, mem, net, page, page24, proc, raw, socket, swap, swapold, sys, tcp, time,udp, unix, vm</span><br><span class="line">--list：列举内置插件扩展的名称</span><br><span class="line">-a, --all：是默认值相当于 -cdngy (default)</span><br><span class="line">-f, --full：相当于 -C, -D, -I, -N and -S</span><br><span class="line">-v, --vmstat：相当于 -pmgdsc -D total</span><br><span class="line">-bw, --blackonwhite：在白色背景终端上改变显示颜色</span><br><span class="line">--float：在屏幕上的输出强制显示为浮点值（即带小数）(相反的选项设置为 --integer)</span><br><span class="line">--integer：在屏幕上的输出强制显示为整数值，此为默认值（相反的选项设置为--float）</span><br><span class="line">--nocolor：禁用颜色(意味着选项 --noupdate)</span><br><span class="line">--noheaders：禁止重复输出header，默认会打印一屏幕输出一次header</span><br><span class="line">--noupdate：当delay&gt;1时禁止在过程中更新（即在时间间隔内不允许更新）</span><br><span class="line">--output file：可以把状态信息以csv的格式重定向到指定的文件中，以便日后查看</span><br></pre></td></tr></table></figure>
-
+<h1 id="二、一个类比"><a href="#二、一个类比" class="headerlink" title="二、一个类比"></a>二、一个类比</h1><p>判断系统负荷是否过重，必须理解load average的真正含义。下面，我根据”<a href="http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages" target="_blank" rel="noopener">Understanding Linux CPU Load</a>“这篇文章，尝试用最通俗的语言，解释这个问题。</p>
+<p>首先，假设最简单的情况，你的电脑只有一个CPU，所有的运算都必须由这个CPU来完成。</p>
+<p>那么，我们不妨把这个CPU想象成一座大桥，桥上只有一根车道，所有车辆都必须从这根车道上通过。（很显然，这座桥只能单向通行。）</p>
+<p>系统负荷为0，意味着大桥上一辆车也没有。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101323.png" alt></p>
+<p>系统负荷为0.5，意味着大桥一半的路段有车。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101339.png" alt></p>
+<p>系统负荷为1.0，意味着大桥的所有路段都有车，也就是说大桥已经”满”了。但是必须注意的是，直到此时大桥还是能顺畅通行的。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101357.png" alt></p>
+<p>系统负荷为1.7，意味着车辆太多了，大桥已经被占满了（100%），后面等着上桥的车辆为桥面车辆的70%。以此类推，系统负荷2.0，意味着等待上桥的车辆与桥面的车辆一样多；系统负荷3.0，意味着等待上桥的车辆是桥面车辆的2倍。总之，当系统负荷大于1，后面的车辆就必须等待了；系统负荷越大，过桥就必须等得越久。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101411.png" alt></p>
+<p>CPU的系统负荷，基本上等同于上面的类比。大桥的通行能力，就是CPU的最大工作量；桥梁上的车辆，就是一个个等待CPU处理的进程（process）。</p>
+<p>如果CPU每分钟最多处理100个进程，那么系统负荷0.2，意味着CPU在这1分钟里只处理20个进程；系统负荷1.0，意味着CPU在这1分钟里正好处理100个进程；系统负荷1.7，意味着除了CPU正在处理的100个进程以外，还有70个进程正排队等着CPU处理。</p>
+<p>为了电脑顺畅运行，系统负荷最好不要超过1.0，这样就没有进程需要等待了，所有进程都能第一时间得到处理。很显然，1.0是一个关键值，超过这个值，系统就不在最佳状态了，你要动手干预了。</p>
 <br>
 
-<h1 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h1><table>
-<thead>
-<tr>
-<th>参数名称</th>
-<th>参数描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>delay</td>
-<td>两次输出之间的时间间隔，默认是1s</td>
-</tr>
-<tr>
-<td>count</td>
-<td>报告输出的次数，默认是没有限制，一直输出知道ctrl+c</td>
-</tr>
-</tbody></table>
+<h1 id="三、系统负荷的经验法则"><a href="#三、系统负荷的经验法则" class="headerlink" title="三、系统负荷的经验法则"></a>三、系统负荷的经验法则</h1><p>1.0是系统负荷的理想值吗？</p>
+<p>不一定，系统管理员往往会留一点余地，当这个值达到0.7，就应当引起注意了。经验法则是这样的：</p>
+<p>当系统负荷持续大于0.7，你必须开始调查了，问题出在哪里，防止情况恶化。</p>
+<p>当系统负荷持续大于1.0，你必须动手寻找解决办法，把这个值降下来。</p>
+<p>当系统负荷达到5.0，就表明你的系统有很严重的问题，长时间没有响应，或者接近死机了。你不应该让系统达到这个值。</p>
 <br>
 
-<h1 id="命令插件"><a href="#命令插件" class="headerlink" title="命令插件"></a>命令插件</h1><p>虽然anyone可以自由的为dstat编写插件，但dstat附带大量的插件已经大大扩展其功能，下面是dstat附带插件的一个概述</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">-battery：电池电池百分比(需要ACPI)</span><br><span class="line">-battery-remain：电池剩余小时、分钟(需要ACPI)</span><br><span class="line">-cpufreq：CPU频率百分比(需要ACPI)</span><br><span class="line">-dbus：dbus连接的数量(需要python-dbus)</span><br><span class="line">-disk-util：显示某一时间磁盘的忙碌状况</span><br><span class="line">-fan：风扇转速(需要ACPI)</span><br><span class="line">-freespace：每个文件系统的磁盘使用情况</span><br><span class="line">-gpfs：gpfs读/写 I/O(需要mmpmon)</span><br><span class="line">-gpfs-ops：GPFS文件系统操作(需要mmpmon)</span><br><span class="line">-helloworld：dstat插件Hello world示例</span><br><span class="line">-innodb-buffer：显示innodb缓冲区统计</span><br><span class="line">-innodb-io：显示innodb I/O统计数据</span><br><span class="line">-innodb-ops：显示innodb操作计数器</span><br><span class="line">-lustre：显示lustreI/O吞吐量</span><br><span class="line">-memcache-hits：显示memcache 的命中和未命中的数量</span><br><span class="line">-mysql5-cmds：显示MySQL5命令统计</span><br><span class="line">-mysql5-conn：显示MySQL5连接统计</span><br><span class="line">-mysql5-io：MySQL5 I/O统计数据</span><br><span class="line">-mysql5-keys：显示MySQL5关键字统计</span><br><span class="line">-mysql-io：显示MySQL I/O统计数据</span><br><span class="line">-mysql-keys：显示MySQL关键字统计</span><br><span class="line">-net-packets：显示接收和发送的数据包的数量</span><br><span class="line">-nfs3：显示NFS v3客户端操作</span><br><span class="line">-nfs3-ops：显示扩展NFS v3客户端操作</span><br><span class="line">-nfsd3：显示NFS v3服务器操作</span><br><span class="line">-nfsd3-ops：显示扩展NFS v3服务器操作</span><br><span class="line">-ntp：显示NTP服务器的ntp时间</span><br><span class="line">-postfix：显示后缀队列大小(需要后缀)</span><br><span class="line">-power：显示电源使用量</span><br><span class="line">-proc-count：显示处理器的总数</span><br><span class="line">-rpc：显示rpc客户端调用统计</span><br><span class="line">-rpcd：显示RPC服务器调用统计</span><br><span class="line">-sendmail：显示sendmail队列大小(需要sendmail)</span><br><span class="line">-snooze：显示每秒运算次数</span><br><span class="line">-test：显示插件输出</span><br><span class="line">-thermal：热系统的温度传感器</span><br><span class="line">-top-bio：显示消耗块I/O最大的进程</span><br><span class="line">-top-cpu：显示消耗CPU最大的进程</span><br><span class="line">-top-cputime：显示使用CPU时间最大的进程(单位ms)</span><br><span class="line">-top-cputime-avg：显示使用CPU时间平均最大的进程(单位ms)</span><br><span class="line">-top-io：显示消耗I/O最大进程</span><br><span class="line">-top-latency：显示总延迟最大的进程(单位ms)</span><br><span class="line">-top-latency-avg：显示平均延时最大的进程(单位ms)</span><br><span class="line">-top-mem：显示使用内存最大的进程</span><br><span class="line">-top-oom：显示第一个被OOM结束的进程</span><br><span class="line">-utmp：显示utmp连接的数量(需要python-utmp)</span><br><span class="line">-vmk-hba：显示VMware ESX内核vmhba统计数</span><br><span class="line">-vmk-int：显示VMware ESX内核中断数据</span><br><span class="line">-vmk-nic：显示VMware ESX内核端口统计</span><br><span class="line">-vz-io：显示每个OpenVZ请求CPU使用率</span><br><span class="line">-vz-ubc：显示OpenVZ用户统计</span><br><span class="line">-wifi：无线连接质量和信号噪声比</span><br></pre></td></tr></table></figure>
-
+<h1 id="四、多处理器"><a href="#四、多处理器" class="headerlink" title="四、多处理器"></a>四、多处理器</h1><p>上面，我们假设你的电脑只有1个CPU。如果你的电脑装了2个CPU，会发生什么情况呢？</p>
+<p>2个CPU，意味着电脑的处理能力翻了一倍，能够同时处理的进程数量也翻了一倍。</p>
+<p>还是用大桥来类比，两个CPU就意味着大桥有两根车道了，通车能力翻倍了。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101433.png" alt></p>
+<p>所以，2个CPU表明系统负荷可以达到2.0，此时每个CPU都达到100%的工作量。推广开来，n个CPU的电脑，可接受的系统负荷最大为n.0。</p>
 <br>
 
-<h1 id="常用插件"><a href="#常用插件" class="headerlink" title="常用插件"></a>常用插件</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--disk-util：显示某一时间磁盘的忙碌状况</span><br><span class="line">--freespace：显示当前磁盘空间使用率</span><br><span class="line">--proc-count：显示正在运行的程序数量</span><br><span class="line">--top-bio：显示块I/O最大的进程</span><br><span class="line">--top-cpu：显示CPU占用最大的进程</span><br><span class="line">--top-io：显示正常I/O最大的进程</span><br><span class="line">--top-mem：显示占用最多内存的进程</span><br></pre></td></tr></table></figure>
+<h1 id="五、多核处理器"><a href="#五、多核处理器" class="headerlink" title="五、多核处理器"></a>五、多核处理器</h1><p>芯片厂商往往在一个CPU内部，包含多个CPU核心，这被称为多核CPU。</p>
+<p>在系统负荷方面，多核CPU与多CPU效果类似，所以考虑系统负荷的时候，必须考虑这台电脑有几个CPU、每个CPU有几个核心。然后，把系统负荷除以总的核心数，只要每个核心的负荷不超过1.0，就表明电脑正常运行。</p>
+<p>怎么知道电脑有多少个CPU核心呢？</p>
+<p><code>cat /proc/cpuinfo</code>命令，可以查看CPU信息。<code>grep -c &#39;model name&#39; /proc/cpuinfo</code>命令，直接返回CPU的总核心数。</p>
+<br>
 
-<p>例如：监控磁盘</p>
-<blockquote>
-<p>dstat -d –disk-util –disk-tps</p>
-<p>-d 分别显示磁盘的读、写总数<br>–disk-tps  #每秒每个磁盘事务(tps)统计<br>–disk-util #磁盘利用率百分比</p>
-</blockquote>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028142604.png" alt></p>
-<blockquote>
-<p>dstat -v<br>-v, –vmstat：相当于 -pmgdsc -D total</p>
-</blockquote>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028140341.png" alt></p>
+<h1 id="六、最佳观察时长"><a href="#六、最佳观察时长" class="headerlink" title="六、最佳观察时长"></a>六、最佳观察时长</h1><p>最后一个问题，”load average”一共返回三个平均值—-1分钟系统负荷、5分钟系统负荷，15分钟系统负荷，—-应该参考哪个值？</p>
+<p>如果只有1分钟的系统负荷大于1.0，其他两个时间段都小于1.0，这表明只是暂时现象，问题不大。</p>
+<p>如果15分钟内，平均系统负荷大于1.0（调整CPU核心数之后），表明问题持续存在，不是暂时现象。所以，你应该主要观察”15分钟系统负荷”，将它作为电脑正常运行的指标。</p>
 
       
     </div>
@@ -483,12 +483,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/linux/" rel="tag"># linux</a>
-          
-        </div>
-      
 
       
       
@@ -498,8 +492,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/linux/linux-strace/" rel="next" title="linux strace命令详解_未完">
-                <i class="fa fa-chevron-left"></i> linux strace命令详解_未完
+              <a href="/linux/linux-monitor-htop/" rel="next" title="linux htop详解">
+                <i class="fa fa-chevron-left"></i> linux htop详解
               </a>
             
           </div>
@@ -508,8 +502,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/java/collection/java-collection-class/" rel="prev" title="Java集合类">
-                Java集合类 <i class="fa fa-chevron-right"></i>
+              <a href="/nginx/nginx-synamic-and-static-separation/" rel="prev" title="nginx 动静分离配置">
+                nginx 动静分离配置 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -592,7 +586,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-count">189</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -614,7 +608,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-count">96</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -661,7 +655,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#dstat-介绍"><span class="nav-text">dstat 介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常见选项"><span class="nav-text">常见选项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令参数"><span class="nav-text">命令参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令插件"><span class="nav-text">命令插件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#常用插件"><span class="nav-text">常用插件</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、查看系统负荷"><span class="nav-text">一、查看系统负荷</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、一个类比"><span class="nav-text">二、一个类比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、系统负荷的经验法则"><span class="nav-text">三、系统负荷的经验法则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、多处理器"><span class="nav-text">四、多处理器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、多核处理器"><span class="nav-text">五、多核处理器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、最佳观察时长"><span class="nav-text">六、最佳观察时长</span></a></li></ol></div>
             
 
           </div>

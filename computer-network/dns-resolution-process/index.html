@@ -134,7 +134,7 @@
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135211.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135255.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135331.png">
-<meta property="og:updated_time" content="2019-12-13T12:26:21.034Z">
+<meta property="og:updated_time" content="2020-04-07T08:31:50.522Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DNS解析过程">
 <meta name="twitter:description" content="先说一下DNS的几个基本概念： 一． 根域就是所谓的“.”，其实我们的网址www.baidu.com在配置当中应该是www.baidu.com.（最后有一点），一般我们在浏览器里输入时会省略后面的点，而这也已经成为了习惯。 根域服务器我们知道有13台，但是这是错误的观点。 根域服务器只是具有13个IP地址，但机器数量却不是13台，因为这些IP地址借助了任播的技术，所以我们可以在全球设立这些">
@@ -455,6 +455,8 @@
 <p>8、ISPDNS不厌其烦的再次向baidu.com这个域的权威服务器发起请求，baidu.com收到之后，查了下有www的这台主机，就把这个IP返回给你了，</p>
 <p>9、然后ISPDNS拿到了之后，将其返回给了客户端，并且把这个保存在高速缓存中。</p>
 <p>下面我们来用 <strong>nslookup 这个工具</strong>详细来说一下解析步骤：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install bind-utils -y</span><br></pre></td></tr></table></figure>
+
 <p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132429.png" alt></p>
 <p>从上图我们可以看到:</p>
 <p>​          第一行Server是：DNS服务器的主机名–210.32.32.1</p>
@@ -635,7 +637,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-count">189</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -657,7 +659,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-count">96</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

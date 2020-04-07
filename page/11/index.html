@@ -314,6 +314,593 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/redis/redis-bloomfilter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/redis/redis-bloomfilter/" itemprop="url">redis 布隆过滤器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-03T00:00:00+08:00">
+                2018-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+
+<h1 id="1、安装bloomfiler插件"><a href="#1、安装bloomfiler插件" class="headerlink" title="1、安装bloomfiler插件"></a>1、安装bloomfiler插件</h1><br>
+
+<h1 id="2、用法"><a href="#2、用法" class="headerlink" title="2、用法"></a>2、用法</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@dn1 ~]# redis-cli -a 123456</span><br><span class="line">127.0.0.1:6379&gt; bf.add cz zhang</span><br><span class="line">127.0.0.1:6379&gt; bf.add cz wang</span><br><span class="line">127.0.0.1:6379&gt; bf.add cz li</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; bf.exists cz wang</span><br><span class="line">127.0.0.1:6379&gt; bf.mexists cz wang li</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="布隆过滤器下载安装"><a href="#布隆过滤器下载安装" class="headerlink" title="布隆过滤器下载安装"></a><strong>布隆过滤器下载安装</strong></h3><p>首先我们使用布隆过滤器那么我们需要下载布隆过滤器:</p>
+<p>下载地址:<a href="https://github.com/RedisBloom/RedisBloom" target="_blank" rel="noopener">https://github.com/RedisBloom/RedisBloom</a></p>
+<p>注意:</p>
+<ul>
+<li>需要选择和你redis版本适配的版本</li>
+<li>下载之后解压即可</li>
+</ul>
+<p>启动redis 时加载该模块:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动redisserver  使用配置文件   使用模型           模型文件位置</span></span><br><span class="line">redis-server      redis.conf   --loadmodule    ../redisbloom.so</span><br></pre></td></tr></table></figure>
+
+<h5 id="布隆过滤器全自动安装启动"><a href="#布隆过滤器全自动安装启动" class="headerlink" title="布隆过滤器全自动安装启动"></a><strong>布隆过滤器全自动安装启动</strong></h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#创建文件并编辑文件</span><br><span class="line">vim redisbloom-install.sh</span><br><span class="line">#添加内容</span><br><span class="line">cd</span><br><span class="line">cd /usr/local/redis1</span><br><span class="line">wget https://github.com/RedisLabsModules/rebloom/archive/v1.1.1.tar.gz</span><br><span class="line">cd /usr/local/redis1</span><br><span class="line">tar zxvf v1.1.1.tar.gz</span><br><span class="line">cd /usr/local/redis1/RedisBloom-1.1.1</span><br><span class="line">make</span><br><span class="line">cd</span><br><span class="line">cd /usr/local/redis1</span><br><span class="line">./redis-5.0.4/src/redis-server redis-5.0.4/redis.conf --loadmodule RedisBloom-1.1.1/rebloom.so</span><br><span class="line">#保存文件变更为可执行文件即可</span><br><span class="line">chmod +x  redisbloom-install.sh</span><br><span class="line">#运行(已经包含启动redis的命令了他会自己启动没必要去管了)</span><br><span class="line">./redisbloom-install.sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="什么是布隆过滤器"><a href="#什么是布隆过滤器" class="headerlink" title="什么是布隆过滤器"></a><strong>什么是布隆过滤器</strong></h3><p>布隆过滤器可以理解为一个不怎么精确的 set 结构，当你使用它的 contains 方法判断某个对象是否存在时，它可能会误判。但是布隆过滤器也不是特别不精确，只要参数设置的合理，它的精确度可以控制的相对足够精确，只会有小小的误判概率</p>
+<h3 id="布隆过滤器的基本使用"><a href="#布隆过滤器的基本使用" class="headerlink" title="布隆过滤器的基本使用"></a><strong>布隆过滤器的基本使用</strong></h3><p>布隆过滤器有二个基本指令，bf.add 添加元素，bf.exists 查询元素是否存在，如果想要一次添加多个，就需要用到 bf.madd 指令。同样如果需要一次查询多个元素是否存在，就需要用到 bf.mexists 指令。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200403203002.png" alt></p>
+<h3 id="布隆过滤器的进阶"><a href="#布隆过滤器的进阶" class="headerlink" title="布隆过滤器的进阶"></a><strong>布隆过滤器的进阶</strong></h3><p>上面的例子中使用的布隆过滤器只是默认参数的布隆过滤器，它在我们第一次使用bf.add 命令时自动创建的。Redis还提供了自定义参数的布隆过滤器，想要尽量减少布隆过滤器的误判，就要设置合理的参数。</p>
+<p>在使用bf.add 命令添加元素之前，使用bf.reserve命令创建一个自定义的布隆过滤器。bf.reserve命令有三个参数，分别是：</p>
+<ul>
+<li>key：键</li>
+<li>error_rate：期望错误率，期望错误率越低，需要的空间就越大。</li>
+<li>capacity：初始容量，当实际元素的数量超过这个初始化容量时，误判率上升。</li>
+</ul>
+<p>如果对应的key已经存在时，在执行bf.reserve命令就会报错。如果不使用bf.reserve命令创建，而是使用Redis自动创建的布隆过滤器，默认的error_rate是 0.001，capacity是 100。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bf.reserve text 0.0001 1000000  #示例 设置 text 精度 0.0001 空间 1000000</span><br></pre></td></tr></table></figure>
+
+<p>布隆过滤器的error_rate越小，需要的存储空间就越大，对于不需要过于精确的场景，error_rate设置稍大一点也可以。布隆过滤器的capacity设置的过大，会浪费存储空间，设置的过小，就会影响准确率，所以在使用之前一定要尽可能地精确估计好元素数量，还需要加上一定的冗余空间以避免实际元素可能会意外高出设置值很多。总之，error_rate和 capacity都需要设置一个合适的数值。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200403203026.png" alt></p>
+<h3 id="布隆过滤器的原理"><a href="#布隆过滤器的原理" class="headerlink" title="布隆过滤器的原理"></a><strong>布隆过滤器的原理</strong></h3><p>Redis中布隆过滤器的数据结构就是一个很大的位数组和几个不一样的无偏哈希函数（能把元素的哈希值算得比较平均，能让元素被哈希到位数组中的位置比较随机）。如下图，A、B、C就是三个这样的哈希函数，分别对“yunxitext”和“云析学院”这两个元素进行哈希，位数组的对应位置则被设置为1：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200403203037.png" alt></p>
+<p>向布隆过滤器中添加元素时，会使用多个无偏哈希函数对元素进行哈希，算出一个整数索引值，然后对位数组长度进行取模运算得到一个位置，每个无偏哈希函数都会得到一个不同的位置。再把位数组的这几个位置都设置为1，这就完成了bf.add命令的操作。</p>
+<p>向布隆过滤器查询元素是否存在时，和添加元素一样，也会把哈希的几个位置算出来，然后看看位数组中对应的几个位置是否都为1，只要有一个位为0，那么就说明布隆过滤器里不存在这个元素。如果这几个位置都为1，并不能完全说明这个元素就一定存在其中，有可能这些位置为1是因为其他元素的存在，这就是布隆过滤器会出现误判的原因。</p>
+<h3 id="布隆过滤器的应用"><a href="#布隆过滤器的应用" class="headerlink" title="布隆过滤器的应用"></a><strong>布隆过滤器的应用</strong></h3><ul>
+<li>解决缓存击穿的问题</li>
+</ul>
+<p>一般情况下，先查询缓存是否有该条数据，缓存中没有时，再查询数据库。当数据库也不存在该条数据时，每次查询都要访问数据库，这就是缓存击穿。缓存击穿带来的问题是，当有大量请求查询数据库不存在的数据时，就会给数据库带来压力，甚至会拖垮数据库。</p>
+<p>可以使用布隆过滤器解决缓存击穿的问题，把已存在数据的key存在布隆过滤器中。当有新的请求时，先到布隆过滤器中查询是否存在，如果不存在该条数据直接返回；如果存在该条数据再查询缓存查询数据库。</p>
+<ul>
+<li>黑名单校验</li>
+</ul>
+<p>发现存在黑名单中的，就执行特定操作。比如：识别垃圾邮件，只要是邮箱在黑名单中的邮件，就识别为垃圾邮件。假设黑名单的数量是数以亿计的，存放起来就是非常耗费存储空间的，布隆过滤器则是一个较好的解决方案。把所有黑名单都放在布隆过滤器中，再收到邮件时，判断邮件地址是否在布隆过滤器中即可。</p>
+<br>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/redis/redis-common-scenes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/redis/redis-common-scenes/" itemprop="url">redis常见场景</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T00:00:00+08:00">
+                2018-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/redis/redis-key-exprie-issues/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/redis/redis-key-exprie-issues/" itemprop="url">缓存穿透、击穿、雪崩</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T00:00:00+08:00">
+                2018-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+
+<h1 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h1><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>client 从 redis中拿某些key，但key不存在（本就不存在），从而流量到达 DB（DB中也不存在），给  DB 造成压力</p>
+<p>缓存穿透的概念很简单，用户想要查询一个数据，发现redis内存数据库没有，也就是缓存没有命中，于是向持久层数据库查询。发现也没有，于是本次查询失败。当用户很多的时候，缓存都没有命中，于是都去请求了持久层数据库。这会给持久层数据库造成很大的压力，这时候就相当于出现了缓存穿透。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200329202617.png" alt></p>
+<br>
+
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><h4 id="1）布隆过滤器"><a href="#1）布隆过滤器" class="headerlink" title="1）布隆过滤器"></a>1）布隆过滤器</h4><p>将所有可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据会被这个bitmap拦截掉，从而避免了对底层存储系统的查询压力。</p>
+<h4 id="2）设定空置"><a href="#2）设定空置" class="headerlink" title="2）设定空置"></a>2）设定空置</h4><p>如果一个查询返回的数据为空（不管是数据不存在，还是系统故障），我们仍然把这个空结果进行缓存，但它的过期时间会很短，最长不超过五分钟。通过这个直接设置的默认值存放到缓存，这样第二次到缓冲中获取就有值了，而不会继续访问数据库，这种办法最简单粗暴</p>
+<br>
+
+<h1 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h1><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>由于redis 大量key同时失效，使得客户端的来的请求 直接到达 DB，打爆 DB；</p>
+<p>缓存雪崩，是指在某一个时间段，缓存集中过期失效。</p>
+<p>　　比如在商品抢购的时候，缓存里存的商品都是在晚上12点失效，而这时候刚好大量用户来访问这些商品，这时候数据库的压力就会一下上来了</p>
+<p>　　所以在做电商项目的时候，一般是采取不同分类商品，缓存不同周期。在同一分类中的商品，加上一个随机因子。这样能尽可能分散缓存过期时间，而且，热门类目的商品缓存时间长一些，冷门类目的商品缓存时间短一些，也能节省缓存服务的资源。</p>
+<p>场景：</p>
+<p>秒杀结束，商品下架</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200329205659.png" alt></p>
+<br>
+
+<h3 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h3><h4 id="1）加锁排队（不推荐）"><a href="#1）加锁排队（不推荐）" class="headerlink" title="1）加锁排队（不推荐）"></a>1）加锁排队（不推荐）</h4><p>加锁排队只是为了减轻数据库的压力，并没有提高系统吞吐量。假设在高并发下，缓存重建期间key是锁着的，这是过来1000个请求999个都在阻塞的。同样会导致用户等待超时，这是个治标不治本的方法！</p>
+<p>注意：加锁排队的解决方式分布式环境的并发问题，有可能还要解决分布式锁的问题；线程还会被阻塞，用户体验很差！因此，在真正的高并发场景下很少使用！</p>
+<h4 id="2）缓存标记（复杂）"><a href="#2）缓存标记（复杂）" class="headerlink" title="2）缓存标记（复杂）"></a>2）缓存标记（复杂）</h4><p>给每一个缓存数据增加相应的缓存标记，记录缓存的是否失效，如果缓存标记失效，则更新数据缓存，实例伪代码如下：</p>
+<p>解释说明：</p>
+<ol>
+<li>缓存标记：记录缓存数据是否过期，如果过期会触发通知另外的线程在后台去更新实际key的缓存；</li>
+<li>缓存数据：它的过期时间比缓存标记的时间延长1倍，例：标记缓存时间30分钟，数据缓存设置为60分钟。 这样，当缓存标记key过期后，实际缓存还能把旧数据返回给调用端，直到另外的线程在后台更新完成后，才会返回新缓存。</li>
+</ol>
+<p>关于缓存崩溃的解决方法，这里提出了三种方案：使用锁或队列、设置过期标志更新缓存、为key设置不同的缓存失效时间，还有一各被称为“二级缓存”的解决方法，有兴趣的同学可以自行研究。</p>
+<h4 id="3）过期时间加随机数（非重复，间隔值较大）"><a href="#3）过期时间加随机数（非重复，间隔值较大）" class="headerlink" title="3）过期时间加随机数（非重复，间隔值较大）"></a>3）过期时间加随机数（非重复，间隔值较大）</h4><h4 id="4）延长数据时效"><a href="#4）延长数据时效" class="headerlink" title="4）延长数据时效"></a>4）延长数据时效</h4><h4 id="5）降级处理"><a href="#5）降级处理" class="headerlink" title="5）降级处理"></a>5）降级处理</h4><br>
+
+<h1 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h1><h3 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h3><p>热点key 在某一时刻失效 或 不存在（本来应该存在），导致流量打到 DB，打爆 DB</p>
+<br>
+
+<h3 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h3><p>互斥锁</p>
+<p>永不过期</p>
+<p>降级</p>
+<br>
+
+<h1 id="缓存预热"><a href="#缓存预热" class="headerlink" title="缓存预热"></a>缓存预热</h1><p>在刚启动的缓存系统中，如果缓存中没有任何数据，如果依靠用户请求的方式重建缓存数据，那么对数据库的压力非常大，而且系统的性能开销也是巨大的。</p>
+<p>此时，最好的策略是启动时就把热点数据加载好。这样，用户请求时，直接读取的就是缓存的数据，而无需去读取 DB 重建缓存数据。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200329210409.png" alt></p>
+<p>举个例子，热门的或者推荐的商品，需要提前预热到缓存中。</p>
+<p>一般来说，有如下几种方式来实现：</p>
+<ul>
+<li>数据量不大时，项目启动时，自动进行初始化。</li>
+<li>写个修复数据脚本，手动执行该脚本。</li>
+<li>写个管理界面，可以手动点击，预热对应的数据到缓存中。</li>
+</ul>
+<br>
+
+<h1 id="缓存更新"><a href="#缓存更新" class="headerlink" title="缓存更新"></a>缓存更新</h1><p>除了缓存服务器自带的缓存失效策略之外（Redis默认的有6中策略可供选择），我们还可以根据具体的业务需求进行自定义的缓存淘汰，常见的策略有两种：</p>
+<ol>
+<li>定时去清理过期的缓存；</li>
+<li>当有用户请求过来时，再判断这个请求所用到的缓存是否过期，过期的话就去底层系统得到新数据并更新缓存。</li>
+</ol>
+<p>两者各有优劣，第一种的缺点是维护大量缓存的key是比较麻烦的，第二种的缺点就是每次用户请求过来都要判断缓存失效，逻辑相对比较复杂！具体用哪种方案，大家可以根据自己的应用场景来权衡。</p>
+<br>
+
+<h1 id="缓存降级"><a href="#缓存降级" class="headerlink" title="缓存降级"></a>缓存降级</h1><p>当访问量剧增、服务出现问题（如响应时间慢或不响应）或非核心服务影响到核心流程的性能时，仍然需要保证服务还是可用的，即使是<u><strong>有损服务</strong></u>。系统可以根据一些关键数据进行自动降级，也可以配置开关实现人工降级。</p>
+<p>降级的最终目的是<u><strong>保证核心服务可用，即使是有损的</strong></u>。而且<u><strong>有些服务是无法降级的（如加入购物车、结算）</strong></u>。</p>
+<p>在进行降级之前要对系统进行梳理，看看系统是不是可以丢卒保帅；从而梳理出哪些必须誓死保护，哪些可降级；比如可以参考日志级别设置预案：</p>
+<ol>
+<li>一般：比如有些服务偶尔因为网络抖动或者服务正在上线而超时，可以自动降级；</li>
+<li>警告：有些服务在一段时间内成功率有波动（如在95~100%之间），可以自动降级或人工降级，并发送告警；</li>
+<li>错误：比如可用率低于90%，或者数据库连接池被打爆了，或者访问量突然猛增到系统能承受的最大阀值，此时可以根据情况自动降级或者人工降级；</li>
+<li>严重错误：比如因为特殊原因数据错误了，此时需要紧急人工降级。</li>
+</ol>
+<br>
+
+<h1 id="缓存热点key"><a href="#缓存热点key" class="headerlink" title="缓存热点key"></a>缓存热点key</h1><p>使用缓存 + 过期时间的策略既可以加速数据读写，又保证数据的定期更新，这种模式基本能够满足绝大部分需求。但是有两个问题如果同时出现，可能就会对应用造成致命的危害：</p>
+<p>当前 key 是一个热点 key( 可能对应应用的热卖商品、热点新闻、热点评论等），并发量非常大。</p>
+<p>重建缓存不能在短时间完成，可能是一个复杂计算，例如复杂的 SQL、多次 IO、多个依赖等。</p>
+<p>在缓存失效的瞬间，有大量线程来重建缓存 ( 如下图)，造成后端负载加大，甚至可能会让应用崩溃。 </p>
+<p> 热点 key 失效后大量线程重建缓存</p>
+<p>要解决这个问题也不是很复杂，但是不能为了解决这个问题给系统带来更多的麻烦，所以需要制定如下目标：</p>
+<ul>
+<li>减少重建缓存的次数</li>
+<li>数据尽可能一致</li>
+<li>较少的潜在危险</li>
+</ul>
+<br>
+
+<h3 id="互斥锁-mutex-key"><a href="#互斥锁-mutex-key" class="headerlink" title="互斥锁 (mutex key)"></a>互斥锁 (mutex key)</h3><p>此方法只允许一个线程重建缓存，其他线程等待重建缓存的线程执行完，重新从缓存获取数据即可，整个过程如图 ,使用互斥锁重建缓存 </p>
+<p>下面代码使用 Redis 的 setnx 命令实现上述功能，</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">//伪代码：</span><br><span class="line">String get(String key) &#123;</span><br><span class="line">    //从redis中获取key </span><br><span class="line">    String value = redis.get(key);</span><br><span class="line">    //如果value为空则开始重构缓存</span><br><span class="line">    if (value == null) &#123;</span><br><span class="line">        //只允许一个线程重构缓存，使用nx，并设置过期时间ex </span><br><span class="line">        String mutexKey = "mutex:key" + key;</span><br><span class="line">        if (redis.set(mutexKey, "1", "ex 180", "nx")) &#123;</span><br><span class="line">            //从数据源获取数据 </span><br><span class="line">            value = db.get(key);</span><br><span class="line">            //回写redis并设置过期时间</span><br><span class="line">            redis.set(key, value, timeout);</span><br><span class="line">            //删除mutexKey </span><br><span class="line">            redis.del(mutexKey);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            //其他线程睡眠50秒再重试 </span><br><span class="line">            Thread.sleep(50);</span><br><span class="line">            get(key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从 Redis 获取数据，如果值不为空，则直接返回值。</p>
+<p>如果 set(nx 和 ex) 结果为 true，说明此时没有其他线程重建缓存，那么当前线程执行缓存构建逻辑。</p>
+<p>如果 setnx(nx 和 ex) 结果为 false，说明此时已经有其他线程正在执行构建缓存的工作，那么当前线程将休息指定时间 (例如这里是 50 毫秒，取决于构建缓存的速度 ) 后，重新执行函数，直到获取到数据。</p>
+<br>
+
+<h3 id="永远不过期"><a href="#永远不过期" class="headerlink" title="永远不过期"></a>永远不过期</h3><p>永远不过期”包含两层意思：</p>
+<p>从缓存层面来看，确实没有设置过期时间，所以不会出现热点 key 过期后产生的问题，也就是“物理”不过期。</p>
+<p>从功能层面来看，为每个 value 设置一个逻辑过期时间，当发现超过逻辑过期时间后，会使用单独的线程去构建缓存。</p>
+<p>” 永远不过期 ” 策略，整个过程如下图所示： </p>
+<p> 从实战看，此方法有效杜绝了热点 key 产生的问题，但唯一不足的就是重构缓存期间，会出现数据不一致的情况，这取决于应用方是否容忍这种不一致。下面代码使用 Redis 进行模拟：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">String get(final String key) &#123;</span><br><span class="line">    V v = redis.get(key);</span><br><span class="line">    String value = v.getValue();</span><br><span class="line">    //逻辑过期时间 </span><br><span class="line">    final Long logicTimeout = v.getLogicTimeout();</span><br><span class="line">    //如果逻辑时间小于当前时间，开始重建缓存 </span><br><span class="line">    if (logicTimeout &lt;= System.currentTimeMillis()) &#123;</span><br><span class="line">        final String mutexKey = "mutex:key" + key;</span><br><span class="line">        if (redis.set(mutexKey, "1", "ex 180", "nx")) &#123;</span><br><span class="line">            //重建缓存 </span><br><span class="line">            threadPool.execute(new Runnable() &#123;</span><br><span class="line">                @Override</span><br><span class="line">                public void run() &#123;</span><br><span class="line">                    String dbValue = db.get(key);</span><br><span class="line">                    redis.set(key, (dbValue, newLogicTimeout));</span><br><span class="line">                    redis.del(mutexKey);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; return value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>作为一个并发量较大的应用，在使用缓存时有三个目标：</p>
+<p>第一，加快用户访问速度，提高用户体验。</p>
+<p>第二，降低后端负载，减少潜在的风险，保证系统平稳。</p>
+<p>第三，保证数据“尽可能”及时更新。下面将按照这三个维度对上述两种解决方案进行分析。</p>
+<p>互斥锁 (mutex key)：这种方案思路比较简单，但是存在一定的隐患，如果构建缓存过程出现问题或者时间较长，可能会存在死锁和线程池阻塞的风险，但是这种方法能够较好的降低后端存储负载并在一致性上做的比较好。</p>
+<p>” 永远不过期 “：这种方案由于没有设置真正的过期时间，实际上已经不存在热点 key 产生的一系列危害，但是会存在数据不一致的情况，同时代码复杂度会增大</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-6-cluster/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1629,1197 +2216,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/operating-system/os-virtual-memory/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/operating-system/os-virtual-memory/" itemprop="url">计算机操作系统·虚拟内存</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-04T00:00:00+08:00">
-                2017-12-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/operating-system/" itemprop="url" rel="index">
-                    <span itemprop="name">operating-system</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="3-5-虚拟内存的概念、特征以及虚拟内存的实现"><a href="#3-5-虚拟内存的概念、特征以及虚拟内存的实现" class="headerlink" title="3.5 虚拟内存的概念、特征以及虚拟内存的实现"></a>3.5 虚拟内存的概念、特征以及虚拟内存的实现</h1><h2 id="传统存储管理方式的特征"><a href="#传统存储管理方式的特征" class="headerlink" title="传统存储管理方式的特征"></a>传统存储管理方式的特征</h2><p>上一节所讨论的各种内存管理策略都是为了同时将多个进程保存在内存中以便允许多道程序设计。它们都具有以下两个共同的特征：</p>
-<h4 id="1-一次性"><a href="#1-一次性" class="headerlink" title="1) 一次性"></a>1) 一次性</h4><p>作业必须一次性全部装入内存后，方能开始运行。这会导致两种情况发生：</p>
-<ul>
-<li>当作业很大，不能全部被装入内存时，将使该作业无法运行；</li>
-<li>当大量作业要求运行时，由于内存不足以容纳所有作业，只能使少数作业先运行，导致多道程序度的下降。</li>
-</ul>
-<h4 id="2-驻留性"><a href="#2-驻留性" class="headerlink" title="2) 驻留性"></a>2) 驻留性</h4><p>作业被装入内存后，就一直驻留在内存中，其任何部分都不会被换出，直至作业运行结束。运行中的进程，会因等待I/O而被阻塞，可能处于长期等待状态。</p>
-<p>由以上分析可知，许多在程序运行中不用或暂时不用的程序（数据）占据了大量的内存空间，而一些需要运行的作业又无法装入运行，显然浪费了宝贵的内存资源。</p>
-<h2 id="局部性原理"><a href="#局部性原理" class="headerlink" title="局部性原理"></a>局部性原理</h2><p>要真正理解虚拟内存技术的思想，首先必须了解计算机中著名的局部性原理。著名的 Bill Joy (SUN公司CEO)说过：”在研究所的时候，我经常开玩笑地说高速缓存是计算机科学中唯一重要的思想。事实上，髙速缓存技术确实极大地影响了计算机系统的设计。“快表、 页高速缓存以及虚拟内存技术从广义上讲，都是属于高速缓存技术。这个技术所依赖的原理就是局部性原理。局部性原理既适用于程序结构，也适用于数据结构（更远地讲，Dijkstra 著名的关于“goto语句有害”的论文也是出于对程序局部性原理的深刻认识和理解）。</p>
-<p>局部性原理表现在以下两个方面：</p>
-<ul>
-<li><u><strong>时间局部性</strong></u>：如果程序中的<code>某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问</code>。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。</li>
-<li><u><strong>空间局部性</strong></u>：一旦程序访问了<code>某个存储单元，在不久之后，其附近的存储单元也将被访问</code>，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。</li>
-</ul>
-<p>时间局部性是通过将近来使用的指令和数据保存到高速缓存存储器中，并使用高速缓存的层次结构实现。空间局部性通常是使用较大的高速缓存，并将预取机制集成到高速缓存控制逻辑中实现。虚拟内存技术实际上就是建立了 “内存一外存”的两级存储器的结构，利用局部性原理实现髙速缓存。  </p>
-<h2 id="虚拟存储器的定义和特征"><a href="#虚拟存储器的定义和特征" class="headerlink" title="虚拟存储器的定义和特征"></a>虚拟存储器的定义和特征</h2><p>基于局部性原理，在程序装入时，可以<code>将程序的一部分装入内存，而将其余部分留在外存，就可以启动程序执行。在程序执行过程中，当所访问的信息不在内存时，由操作系统将所需要的部分调入内存,然后继续执行程序</code>。另一方面，操作系统将内存中暂时不使用的内容换出到外存上，从而腾出空间存放将要调入内存的信息。这样，系统好像为用户提供了一个比实际内存大得多的存储器，称为虚拟存储器。</p>
-<p>之所以将其称为虚拟存储器，是因为这种存储器实际上并不存在，只是由于系统提供了部分装入、请求调入和置换功能后（对用户完全透明），给用户的感觉是好像存在一个比实际物理内存大得多的存储器。虚拟存储器的大小由计算机的地址结构决定，并非是内存和外存的简单相加。虚拟存储器有以下三个主要特征：</p>
-<ul>
-<li>多次性，是指无需在作业运行时一次性地全部装入内存，而是允许被分成多次调入内存运行。</li>
-<li>对换性，是指无需在作业运行时一直常驻内存，而是允许在作业的运行过程中，进行换进和换出。</li>
-<li>虚拟性，是指从逻辑上扩充内存的容量，使用户所看到的内存容量，远大于实际的内存容量。</li>
-</ul>
-<h2 id="虚拟内存技术的实现"><a href="#虚拟内存技术的实现" class="headerlink" title="虚拟内存技术的实现"></a>虚拟内存技术的实现</h2><p>虚拟内存中，允许将一个作业分多次调入内存。釆用连续分配方式时，会使相当一部分内存空间都处于暂时或“永久”的空闲状态，造成内存资源的严重浪费，而且也无法从逻辑上扩大内存容量。因此，虚拟内存的实现需要建立在离散分配的内存管理方式的基础上。<u><strong>虚拟内存的实现有以下三种方式</strong></u>：</p>
-<ul>
-<li>请求分页存储管理。</li>
-<li>请求分段存储管理。</li>
-<li>请求段页式存储管理。</li>
-</ul>
-<p>不管哪种方式，都需要有一定的硬件支持。一般需要的支持有以下几个方面：</p>
-<ul>
-<li>一定容量的内存和外存。</li>
-<li>页表机制（或段表机制），作为主要的数据结构。</li>
-<li>中断机构，当用户程序要访问的部分尚未调入内存，则产生中断。</li>
-<li>地址变换机构，逻辑地址到物理地址的变换。</li>
-</ul>
-<br>
-
-<br>
-
-<h1 id="3-6-请求分页管理方式实现虚拟内存"><a href="#3-6-请求分页管理方式实现虚拟内存" class="headerlink" title="3.6 请求分页管理方式实现虚拟内存"></a>3.6 请求分页管理方式实现虚拟内存</h1><p>请求分页系统建立在基本分页系统基础之上，为了支持虚拟存储器功能而增加了<code>请求调页功能</code>和<code>页面置换功能</code>。请求分页是目前最常用的一种实现虚拟存储器的方法。</p>
-<p>在请求分页系统中，只要求将当前需要的一部分页面装入内存，便可以启动作业运行。在作业执行过程中，当所要访问的页面不在内存时，再通过调页功能将其调入，同时还可以通过置换功能将暂时不用的页面换出到外存上，以便腾出内存空间。</p>
-<p>为了实现请求分页，系统必须提供一定的硬件支持。除了需要一定容量的内存及外存的计算机系统，还需要有<code>页表机制、缺页中断机构和地址变换机构</code>。</p>
-<h2 id="页表机制"><a href="#页表机制" class="headerlink" title="页表机制"></a>页表机制</h2><p>请求分页系统的页表机制不同于基本分页系统，请求分页系统在一个作业运行之前不要求全部一次性调入内存，因此在作业的运行过程中，必然会出现要访问的页面不在内存的情况，如何发现和处理这种情况是请求分页系统必须解决的两个基本问题。为此，在请求页表项中增加了四个字段，如图3-24所示。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191204210522.png" alt><br>图3-24 请求分页系统中的页表项</p>
-<p>增加的四个字段说明如下：</p>
-<ul>
-<li>状态位P：用于指示该页是否已调入内存，供程序访问时参考。</li>
-<li>访问字段A：用于记录本页在一段时间内被访问的次数，或记录本页最近己有多长时间未被访问，供置换算法换出页面时参考。</li>
-<li>修改位M：标识该页在调入内存后是否被修改过。</li>
-<li>外存地址：用于指出该页在外存上的地址，通常是物理块号，供调入该页时参考。</li>
-</ul>
-<h2 id="缺页中断机构"><a href="#缺页中断机构" class="headerlink" title="缺页中断机构"></a>缺页中断机构</h2><p>在请求分页系统中，每当所要访问的页面不在内存时，便产生一个缺页中断，请求操作系统将所缺的页调入内存。此时应将缺页的进程阻塞（调页完成唤醒)，如果内存中有空闲块，则分配一个块，将要调入的页装入该块，并修改页表中相应页表项，若此时内存中没有空闲块，则要淘汰某页（若被淘汰页在内存期间被修改过，则要将其写回外存)。</p>
-<p>缺页中断作为中断同样要经历，诸如保护CPU环境、分析中断原因、转入缺页中断处理程序、恢复CPU环境等几个步骤。但与一般的中断相比，它有以下两个明显的区别：</p>
-<ul>
-<li>在指令执行期间产生和处理中断信号，而非一条指令执行完后，属于内部中断。</li>
-<li>一条指令在执行期间，可能产生多次缺页中断。</li>
-</ul>
-<h2 id="地址变换机构"><a href="#地址变换机构" class="headerlink" title="地址变换机构"></a>地址变换机构</h2><p>请求分页系统中的地址变换机构，是在分页系统地址变换机构的基础上，为实现虚拟内存，又增加了某些功能而形成的。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191204210626.png" alt><br>图3-25请求分页中的地址变换过程</p>
-<p>如图3-25所示，在进行地址变换时，先检索快表：</p>
-<ul>
-<li>若找到要访问的页，便修改页表项中的访问位（写指令则还须重置修改位)，然后利用页表项中给出的物理块号和页内地址形成物理地址。</li>
-<li>若未找到该页的页表项，应到内存中去查找页表，再对比页表项中的状态位P，看该页是否已调入内存，未调入则产生缺页中断，请求从外存把该页调入内存。</li>
-</ul>
-<br>
-
-<br>
-
-<h1 id="3-7-页面置换算法"><a href="#3-7-页面置换算法" class="headerlink" title="3.7 页面置换算法"></a>3.7 页面置换算法</h1><p>进程运行时，若其访问的页面不在内存而需将其调入，但内存已无空闲空间时，就需要从内存中调出一页程序或数据，送入磁盘的对换区。</p>
-<p>选择调出页面的算法就称为页面置换算法。好的页面置换算法应有较低的页面更换频率，也就是说，应将以后不会再访问或者以后较长时间内不会再访问的页面先调出。</p>
-<p>常见的置换算法有以下四种。</p>
-<h2 id="1-最佳置换算法-OPT"><a href="#1-最佳置换算法-OPT" class="headerlink" title="1. 最佳置换算法(OPT)"></a>1. 最佳置换算法(OPT)</h2><p>最佳(Optimal, OPT)置换算法所选择的被淘汰页面将是以后永不使用的，或者是在最长时间内不再被访问的页面,这样可以保证获得最低的缺页率。但由于人们目前无法预知进程在内存下的若千页面中哪个是未来最长时间内不再被访问的，因而该算法无法实现。</p>
-<p>最佳置换算法可以用来评价其他算法。假定系统为某进程分配了三个物理块，并考虑有以下页面号引用串：<br>  7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1</p>
-<p>进程运行时，先将7, 0, 1三个页面依次装入内存。进程要访问页面2时，产生缺页中断，根据最佳置换算法，选择第18次访问才需调入的页面7予以淘汰。然后，访问页面0时，因为已在内存中所以不必产生缺页中断。访问页面3时又会根据最佳置换算法将页面1淘汰……依此类推，如图3-26所示。从图中可以看出釆用最佳置换算法时的情况。</p>
-<p>可以看到，发生缺页中断的次数为9，页面置换的次数为6。</p>
-<table>
-<thead>
-<tr>
-<th>访问页面</th>
-<th>7</th>
-<th>0</th>
-<th>1</th>
-<th>2</th>
-<th>0</th>
-<th>3</th>
-<th>0</th>
-<th>4</th>
-<th>2</th>
-<th>3</th>
-<th>0</th>
-<th>3</th>
-<th>2</th>
-<th>1</th>
-<th>2</th>
-<th>0</th>
-<th>1</th>
-<th>7</th>
-<th>0</th>
-<th>1</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>物理块1</td>
-<td>7</td>
-<td>7</td>
-<td>7</td>
-<td>2</td>
-<td></td>
-<td>2</td>
-<td></td>
-<td>2</td>
-<td></td>
-<td></td>
-<td>2</td>
-<td></td>
-<td></td>
-<td>2</td>
-<td></td>
-<td></td>
-<td></td>
-<td>7</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>物理块2</td>
-<td></td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td></td>
-<td>0</td>
-<td></td>
-<td>4</td>
-<td></td>
-<td></td>
-<td>0</td>
-<td></td>
-<td></td>
-<td>0</td>
-<td></td>
-<td></td>
-<td></td>
-<td>0</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>物理块3</td>
-<td></td>
-<td></td>
-<td>1</td>
-<td>1</td>
-<td></td>
-<td>3</td>
-<td></td>
-<td>3</td>
-<td></td>
-<td></td>
-<td>3</td>
-<td></td>
-<td></td>
-<td>1</td>
-<td></td>
-<td></td>
-<td></td>
-<td>1</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>缺页否</td>
-<td>√</td>
-<td></td>
-<td>√</td>
-<td>√</td>
-<td></td>
-<td>√</td>
-<td></td>
-<td>√</td>
-<td></td>
-<td></td>
-<td>√</td>
-<td></td>
-<td></td>
-<td>√</td>
-<td></td>
-<td></td>
-<td></td>
-<td>√</td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<p>图3-26  利用最佳置换算法时的置换图</p>
-<h2 id="2-先进先出-FIFO-页面置换算法"><a href="#2-先进先出-FIFO-页面置换算法" class="headerlink" title="2. 先进先出(FIFO)页面置换算法"></a>2. 先进先出(FIFO)页面置换算法</h2><p>优先淘汰最早进入内存的页面，亦即在内存中驻留时间最久的页面。该算法实现简单，只需把调入内存的页面根据先后次序链接成队列，设置一个指针总指向最早的页面。但该算法与进程实际运行时的规律不适应，因为在进程中，有的页面经常被访问。</p>
-<table>
-<thead>
-<tr>
-<th>访问页面</th>
-<th>7</th>
-<th>0</th>
-<th>1</th>
-<th>2</th>
-<th>0</th>
-<th>3</th>
-<th>0</th>
-<th>4</th>
-<th>2</th>
-<th>3</th>
-<th>0</th>
-<th>3</th>
-<th>2</th>
-<th>1</th>
-<th>2</th>
-<th>0</th>
-<th>1</th>
-<th>7</th>
-<th>0</th>
-<th>1</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>物理块1</td>
-<td>7</td>
-<td>7</td>
-<td>7</td>
-<td>2</td>
-<td></td>
-<td>2</td>
-<td>2</td>
-<td>4</td>
-<td>4</td>
-<td>4</td>
-<td>0</td>
-<td></td>
-<td></td>
-<td>0</td>
-<td>0</td>
-<td></td>
-<td></td>
-<td>7</td>
-<td>7</td>
-<td>7</td>
-</tr>
-<tr>
-<td>物理块2</td>
-<td></td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td></td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td></td>
-<td></td>
-<td>1</td>
-<td>1</td>
-<td></td>
-<td></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>物理块3</td>
-<td></td>
-<td></td>
-<td>1</td>
-<td>1</td>
-<td></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>3</td>
-<td></td>
-<td></td>
-<td>3</td>
-<td>2</td>
-<td></td>
-<td></td>
-<td>2</td>
-<td>2</td>
-<td>1</td>
-</tr>
-<tr>
-<td>缺页否</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td></td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td></td>
-<td></td>
-<td>√</td>
-<td>√</td>
-<td></td>
-<td></td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-</tr>
-</tbody></table>
-<p>图3-27  利用FIFO置换算法时的置换图</p>
-<p>这里仍用上面的实例，釆用FIFO算法进行页面置换。进程访问页面2时，把最早进入内存的页面7换出。然后访问页面3时，再把2, 0, 1中最先进入内存的页换出。由图 3-27可以看出，利用FIFO算法时进行了 12次页面置换，比最佳置换算法正好多一倍。</p>
-<p>FIFO算法还会产生当所分配的物理块数增大而页故障数不减反增的异常现象，这是由 Belady于1969年发现，故称为Belady异常，如图3-28所示。只有FIFO算法可能出现Belady 异常，而LRU和OPT算法永远不会出现Belady异常。</p>
-<table>
-<thead>
-<tr>
-<th>访问页面</th>
-<th>1</th>
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>1</th>
-<th>2</th>
-<th>5</th>
-<th>1</th>
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>5</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>物理块1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>4</td>
-<td>4</td>
-<td>4</td>
-<td>5</td>
-<td></td>
-<td></td>
-<td>,5’</td>
-<td>5</td>
-<td></td>
-</tr>
-<tr>
-<td>物理块2</td>
-<td></td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td></td>
-<td></td>
-<td>3</td>
-<td>3</td>
-<td></td>
-</tr>
-<tr>
-<td>物理块3</td>
-<td></td>
-<td></td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-<td>2</td>
-<td>2</td>
-<td></td>
-<td></td>
-<td>2</td>
-<td>4</td>
-<td></td>
-</tr>
-<tr>
-<td>缺页否</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td></td>
-<td></td>
-<td>√</td>
-<td>√</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td></td>
-<td></td>
-<td>5</td>
-<td>5</td>
-<td>5</td>
-<td>5</td>
-<td>4</td>
-<td>4</td>
-</tr>
-<tr>
-<td>物理块2*</td>
-<td></td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td></td>
-<td></td>
-<td>2</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-<td>5</td>
-</tr>
-<tr>
-<td>物理块3*</td>
-<td></td>
-<td></td>
-<td>3</td>
-<td>3</td>
-<td></td>
-<td></td>
-<td>3</td>
-<td>3</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-</tr>
-<tr>
-<td>物理块4*</td>
-<td></td>
-<td></td>
-<td></td>
-<td>4</td>
-<td></td>
-<td></td>
-<td>4</td>
-<td>4</td>
-<td>4</td>
-<td>3</td>
-<td>3</td>
-<td>3</td>
-</tr>
-<tr>
-<td>缺页否</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td></td>
-<td></td>
-<td></td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-</tr>
-</tbody></table>
-<p>图 3-28  Belady 异常</p>
-<h2 id="3-最近最久未使用-LRU-置换算法"><a href="#3-最近最久未使用-LRU-置换算法" class="headerlink" title="3. 最近最久未使用(LRU)置换算法"></a>3. 最近最久未使用(LRU)置换算法</h2><p>选择最近最长时间未访问过的页面予以淘汰，它认为过去一段时间内未访问过的页面，在最近的将来可能也不会被访问。该算法为每个页面设置一个访问字段，来记录页面自上次被访问以来所经历的时间，淘汰页面时选择现有页面中值最大的予以淘汰。</p>
-<p>再对上面的实例釆用LRU算法进行页面置换，如图3-29所示。进程第一次对页面2访问时，将最近最久未被访问的页面7置换出去。然后访问页面3时，将最近最久未使用的页面1换出。</p>
-<table>
-<thead>
-<tr>
-<th>访问页面</th>
-<th>7</th>
-<th>0</th>
-<th>1</th>
-<th>2</th>
-<th>0</th>
-<th>3</th>
-<th>0</th>
-<th>4</th>
-<th>2</th>
-<th>3</th>
-<th>0</th>
-<th>3</th>
-<th>2</th>
-<th>1</th>
-<th>2</th>
-<th>0</th>
-<th>1</th>
-<th>7</th>
-<th>0</th>
-<th>1</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>物理块1</td>
-<td>7</td>
-<td>7</td>
-<td>7</td>
-<td>2</td>
-<td></td>
-<td>2</td>
-<td></td>
-<td>4</td>
-<td>4</td>
-<td>4</td>
-<td>0</td>
-<td></td>
-<td></td>
-<td>1</td>
-<td></td>
-<td>1</td>
-<td></td>
-<td>1</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>物理块2</td>
-<td></td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td></td>
-<td>0</td>
-<td></td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>3</td>
-<td></td>
-<td></td>
-<td>3</td>
-<td></td>
-<td>0</td>
-<td></td>
-<td>0</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>物理块3</td>
-<td></td>
-<td></td>
-<td>1</td>
-<td>1</td>
-<td></td>
-<td>3</td>
-<td></td>
-<td>3</td>
-<td>2</td>
-<td>2</td>
-<td>2</td>
-<td></td>
-<td></td>
-<td>2</td>
-<td></td>
-<td>2</td>
-<td></td>
-<td>7</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>缺页否</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td></td>
-<td>√</td>
-<td></td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td>√</td>
-<td></td>
-<td></td>
-<td>√</td>
-<td></td>
-<td>√</td>
-<td></td>
-<td>√</td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<p>图3-29  LRU页面置换算法时的置换图</p>
-<p>在图3-29中，前5次置换的情况与最佳置换算法相同，但两种算法并无必然联系。实际上，LRU算法根据各页以前的情况，是“向前看”的，而最佳置换算法则根据各页以后的使用情况，是“向后看”的。</p>
-<p>LRU性能较好，但需要寄存器和栈的硬件支持。LRU是堆栈类的算法。理论上可以证明，堆栈类算法不可能出现Belady异常。FIFO算法基于队列实现，不是堆栈类算法。</p>
-<h2 id="4-时钟-CLOCK-置换算法"><a href="#4-时钟-CLOCK-置换算法" class="headerlink" title="4. 时钟(CLOCK)置换算法"></a>4. 时钟(CLOCK)置换算法</h2><p>LRU算法的性能接近于OPT,但是实现起来比较困难，且开销大；FIFO算法实现简单，但性能差。所以操作系统的设计者尝试了很多算法，试图用比较小的开销接近LRU的性能，这类算法都是CLOCK算法的变体。</p>
-<p>简单的CLOCK算法是给每一帧关联一个附加位，称为使用位。当某一页首次装入主存时，该帧的使用位设置为1;当该页随后再被访问到时，它的使用位也被置为1。对于页替换算法，用于替换的候选帧集合看做一个循环缓冲区，并且有一个指针与之相关联。当某一页被替换时，该指针被设置成指向缓冲区中的下一帧。当需要替换一页时，操作系统扫描缓冲区，以查找使用位被置为0的一帧。每当遇到一个使用位为1的帧时，操作系统就将该位重新置为0；如果在这个过程开始时，缓冲区中所有帧的使用位均为0，则选择遇到的第一个帧替换；如果所有帧的使用位均为1,则指针在缓冲区中完整地循环一周，把所有使用位都置为0，并且停留在最初的位置上，替换该帧中的页。由于该算法循环地检查各页面的情况，故称为CLOCK算法，又称为最近未用(Not Recently Used, NRU)算法。</p>
-<p>CLOCK算法的性能比较接近LRU，而通过增加使用的位数目，可以使得CLOCK算法更加高效。在使用位的基础上再增加一个修改位，则得到改进型的CLOCK置换算法。这样，每一帧都处于以下四种情况之一：</p>
-<ol>
-<li>最近未被访问，也未被修改(u=0, m=0)。</li>
-<li>最近被访问，但未被修改(u=1, m=0)。</li>
-<li>最近未被访问，但被修改(u=0, m=1)。</li>
-<li>最近被访问，被修改(u=1, m=1)。</li>
-</ol>
-<p>算法执行如下操作步骤：</p>
-<ol>
-<li>从指针的当前位置开始，扫描帧缓冲区。在这次扫描过程中，对使用位不做任何修改。选择遇到的第一个帧(u=0, m=0)用于替换。</li>
-<li>如果第1)步失败，则重新扫描，查找(u=0, m=1)的帧。选择遇到的第一个这样的帧用于替换。在这个扫描过程中，对每个跳过的帧，把它的使用位设置成0。</li>
-<li>如果第2)步失败，指针将回到它的最初位置，并且集合中所有帧的使用位均为0。重复第1步，并且如果有必要，重复第2步。这样将可以找到供替换的帧。</li>
-</ol>
-<p>改进型的CLOCK算法优于简单CLOCK算法之处在于替换时首选没有变化的页。由于修改过的页在被替换之前必须写回，因而这样做会节省时间。</p>
-<br>
-
-<br>
-
-<h1 id="3-8-页面分配策略：驻留集大小、调入页面的时机以及从何处调入页面"><a href="#3-8-页面分配策略：驻留集大小、调入页面的时机以及从何处调入页面" class="headerlink" title="3.8 页面分配策略：驻留集大小、调入页面的时机以及从何处调入页面"></a>3.8 页面分配策略：驻留集大小、调入页面的时机以及从何处调入页面</h1><h2 id="驻留集大小"><a href="#驻留集大小" class="headerlink" title="驻留集大小"></a>驻留集大小</h2><p>对于分页式的虚拟内存，在准备执行时，不需要也不可能把一个进程的所有页都读取到主存，因此，操作系统必须决定读取多少页。也就是说，给特定的进程分配多大的主存空间，这需要考虑以下几点：</p>
-<ol>
-<li>分配给一个进程的存储量越小，在任何时候驻留在主存中的进程数就越多，从而可以提高处理机的时间利用效率。</li>
-<li>如果一个进程在主存中的页数过少，尽管有局部性原理，页错误率仍然会相对较高。</li>
-<li>如桌页数过多，由于局部性原理，给特定的进程分配更多的主存空间对该进程的错误率没有明显的影响。</li>
-</ol>
-<p>基于这些因素，现代操作系统通常釆用三种策略：</p>
-<ol>
-<li>固定分配局部置换。它为每个进程分配一定数目的物理块，在整个运行期间都不改变。若进程在运行中发生缺页，则只能从该进程在内存中的页面中选出一页换出，然后再调入需要的页面。实现这种策略难以确定为每个进程应分配的物理块数目：太少会频繁出现缺页中断，太多又会使CPU和其他资源利用率下降。</li>
-<li>可变分配全局置换。这是最易于实现的物理块分配和置换策略，为系统中的每个进程分配一定数目的物理块,操作系统自身也保持一个空闲物理块队列。当某进程发生缺页时，系统从空闲物理块队列中取出一个物理块分配给该进程，并将欲调入的页装入其中。</li>
-<li>可变分配局部置换。它为每个进程分配一定数目的物理块，当某进程发生缺页时，只允许从该进程在内存的页面中选出一页换出，这样就不会影响其他进程的运行。如果进程在运行中频繁地缺页，系统再为该进程分配若干物理块，直至该进程缺页率趋于适当程度； 反之，若进程在运行中缺页率特别低，则可适当减少分配给该进程的物理块。</li>
-</ol>
-<h2 id="调入页面的时机"><a href="#调入页面的时机" class="headerlink" title="调入页面的时机"></a>调入页面的时机</h2><p>为确定系统将进程运行时所缺的页面调入内存的时机，可釆取以下两种调页策略：</p>
-<ol>
-<li>预调页策略。根据局部性原理，一次调入若干个相邻的页可能会比一次调入一页更高效。但如果调入的一批页面中大多数都未被访问，则又是低效的。所以就需要釆用以预测为基础的预调页策略，将预计在不久之后便会被访问的页面预先调入内存。但目前预调页的成功率仅约50%。故这种策略主要用于进程的首次调入时，由程序员指出应该先调入哪些页。</li>
-<li>请求调页策略。进程在运行中需要访问的页面不在内存而提出请求，由系统将所需页面调入内存。由这种策略调入的页一定会被访问，且这种策略比较易于实现，故在目前的虚拟存储器中大多釆用此策略。它的缺点在于每次只调入一页，调入调出页面数多时会花费过多的I/O开销。</li>
-</ol>
-<h2 id="从何处调入页面"><a href="#从何处调入页面" class="headerlink" title="从何处调入页面"></a>从何处调入页面</h2><p>请求分页系统中的外存分为两部分：用于<code>存放文件的文件区</code>和用于<code>存放对换页面的对换区</code>。对换区通常是釆用连续分配方式，而文件区釆用离散分配方式，故对换区的磁盘I/O速度比文件区的更快。这样从何处调入页面有三种情况：</p>
-<ol>
-<li>系统拥有足够的对换区空间：可以全部从对换区调入所需页面，以提髙调页速度。为此，在进程运行前，需将与该进程有关的文件从文件区复制到对换区。</li>
-<li>系统缺少足够的对换区空间：凡不会被修改的文件都直接从文件区调入；而当换出这些页面时，由于它们未被修改而不必再将它们换出。但对于那些可能被修改的部分，在将它们换出时须调到对换区，以后需要时再从对换区调入。</li>
-<li>UNIX方式：与进程有关的文件都放在文件区，故未运行过的页面，都应从文件区调入。曾经运行过但又被换出的页面，由于是被放在对换区，因此下次调入时应从对换区调入。进程请求的共享页面若被其他进程调入内存，则无需再从对换区调入。</li>
-</ol>
-<br>
-
-<br>
-
-<h1 id="3-9-页面抖动-颠簸-和工作集-驻留集"><a href="#3-9-页面抖动-颠簸-和工作集-驻留集" class="headerlink" title="3.9 页面抖动(颠簸)和工作集(驻留集)"></a>3.9 页面抖动(颠簸)和工作集(驻留集)</h1><h2 id="页面抖动（颠簸）"><a href="#页面抖动（颠簸）" class="headerlink" title="页面抖动（颠簸）"></a>页面抖动（颠簸）</h2><p>在页面置换过程中的一种最糟糕的情形是，<code>刚刚换出的页面马上又要换入主存，刚刚换入的页面马上就要换出主存</code>，这种频繁的页面调度行为称为抖动，或颠簸。如果一个进程在换页上用的时间多于执行时间，那么这个进程就在颠簸。</p>
-<p>频繁的发生缺页中断（抖动），其主要原因是某个进程频繁访问的页面数目高于可用的物理页帧数目。虚拟内存技术可以在内存中保留更多的进程以提髙系统效率。在稳定状态，几乎主存的所有空间都被进程块占据，处理机和操作系统可以直接访问到尽可能多的进程。但如果管理不当，处理机的大部分时间都将用于交换块，即请求调入页面的操作，而不是执行进程的指令，这就会大大降低系统效率。</p>
-<h2 id="工作集（驻留集）"><a href="#工作集（驻留集）" class="headerlink" title="工作集（驻留集）"></a>工作集（驻留集）</h2><p>工作集（或驻留集）是指在某段时间间隔内，进程要访问的页面集合。经常被使用的页面需要在工作集中，而长期不被使用的页面要从工作集中被丢弃。为了防止系统出现抖动现象，需要选择合适的工作集大小。</p>
-<p>工作集模型的原理是：让操作系统跟踪每个进程的工作集，并为进程分配大于其工作集的物理块。如果还有空闲物理块，则可以再调一个进程到内存以增加多道程序数。如果所有工作集之和增加以至于超过了可用物理块的总数，那么操作系统会暂停一个进程，将其页面调出并且将其物理块分配给其他进程，防止出现抖动现象。</p>
-<p>正确选择工作集的大小，对存储器的利用率和系统吞吐量的提嵩，都将产生重要影响。</p>
-<br>
-
-<br>
-
-<h1 id="3-10-内存管理知识点总结"><a href="#3-10-内存管理知识点总结" class="headerlink" title="3.10 内存管理知识点总结"></a>3.10 内存管理知识点总结</h1><p>分页管理方式和分段管理方式在很多地方相似，比如内存中都是不连续的、都有地址变 换机构来进行地址映射等。但两者也存在着许多区别，表3-20列出了分页管理方式和分段管理方式在各个方面的对比。</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>分  页</th>
-<th>分  段</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>目 的</td>
-<td>页是信息的物理单位，分页是为实现离散分配方式，以消减内存的外零头，提髙内存的利 用率。或者说，分页仅权是由于系统管理的需要而不是用户的需要</td>
-<td>是信息的逻辑单位，它含有一组其意义相对完整的信息。分段的目的是为了能更好地满足用户的需要</td>
-</tr>
-<tr>
-<td>长 度</td>
-<td>页的大小固定且由系统决定，由系统把逻辑地址划分为页号和页内地址两部分，是由机器硬件实现的，因而在系统中只能有一种大小的页面</td>
-<td>段的长度不固定，决定于用户所编写的程序， 通常由编译程序在对流程序进行编译时，根据信息的性质来划分</td>
-</tr>
-<tr>
-<td>地址空间</td>
-<td>作业地址空间是一维的，即单一的线性地址空间，程序员只需利用一个记忆符，即可表示 一个地址</td>
-<td>作业地址空间是二维的，程序员在标识一个地址时，既需给出段名，又需给出段内地址</td>
-</tr>
-<tr>
-<td>碎 片</td>
-<td>有内部碎片  无外部碎片</td>
-<td>有外部碎片  无内部碎片</td>
-</tr>
-<tr>
-<td>”共享“和“动态链接”</td>
-<td>不容易实现</td>
-<td>容易实现</td>
-</tr>
-</tbody></table>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/spring/spring-framework-module-partition/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/java/spring/spring-framework-module-partition/" itemprop="url">spring 核心模块划分</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-04T00:00:00+08:00">
-                2017-12-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/spring/" itemprop="url" rel="index">
-                    <span itemprop="name">spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191204215530.png" alt></p>
-<p>从上面可以看出Spring主要分成六个模块：</p>
-<h1 id="1、Spring核心容器"><a href="#1、Spring核心容器" class="headerlink" title="1、Spring核心容器"></a>1、Spring核心容器</h1><p>​        核心容器是Spring框架的重要组成部分，也可以说是Spring框架的基础。他在整个框架中的作用是负责管理对象的创建，管理，配置等等的操作。其主要包含spring-core，spring-beans，spring-context，spring-expression，spring-context-support组件。</p>
-<p>​        核心容器提供spring框架的基本功能。Spring以bean的方式组织和管理Java应用中的各个组件及其关系。Spring使用BeanFactory来产生和管理Bean，它是工厂模式的实现。BeanFactory使用控制反转(IoC)模式将应用的配置和依赖性规范与实际的应用程序代码分开。BeanFactory使用依赖注入的方式提供给组件依赖。主要实现控制反转IoC和依赖注入DI、Bean配置以及加载。</p>
-<h3 id="spring-context"><a href="#spring-context" class="headerlink" title="spring context"></a>spring context</h3><p>​        Spring上下文是一个配置文件，向Spring框架提供上下文信息。Spring上下文包括企业服务，如JNDI、EJB、电子邮件、国际化、校验和调度功能。提供框架式Bean访问方式，其他程序可以通过Context访问Spring的Bean资源。</p>
-<h1 id="2、面向切面编程"><a href="#2、面向切面编程" class="headerlink" title="2、面向切面编程"></a>2、面向切面编程</h1><p>​        Spring框架还提供了面向切面编程的能力，利用面向切面编程，可以实现一些面向对象编程无法很好实现的操作。例如，将日志，事务与具体的业务逻辑解耦。其主要包含spring-aop，spring-aspects组件。</p>
-<p>​        通过配置管理特性，Spring AOP 模块直接将面向方面的编程功能集成到了Spring框架中。所以，可以很容易地使 Spring框架管理的任何对象支持 AOP。Spring AOP 模块为基于 Spring 的应用程序中的对象提供了事务管理服务。通过使用 Spring AOP，不用依赖 EJB 组件，就可以将声明性事务管理集成到应用程序中。AOP把一个业务流程分成几部分，例如权限检查、业务处理、日志记录，每个部分单独处理，然后把它们组装成完整的业务流程。每个部分被称为切面或关注点。</p>
-<p>AOP的实现原理为动态代理技术，一共有两种代理模式：</p>
-<p>（1）ProxyFactoryBean代理工厂对象</p>
-<p>Spring内置代理类，引入一个中间层，能够创建不同类型的对象，利用它可以实现任何形式的AOP。</p>
-<p>（2）TransactionProxyFactoryBean事务代理工厂对象</p>
-<p>常用在数据库编程上，Spring利用TransactionProxyFactoryBean对事务进行管理，在指定方法前利用AOP连接数据库并开启事务，然后在指定方法返回后利用AOP提交事务并断开数据库。</p>
-<h1 id="3、Instrumentation"><a href="#3、Instrumentation" class="headerlink" title="3、Instrumentation"></a>3、Instrumentation</h1><p>​        该模块提供了为JVM添加代理的功能，该模块包含spring-instrument，spring-instrument-tomcat组件，使用较少，不必过分关注。</p>
-<h1 id="4、数据访问与集成"><a href="#4、数据访问与集成" class="headerlink" title="4、数据访问与集成"></a>4、数据访问与集成</h1><p>​        Spring框架为了简化数据访问的操作，包装了很多关于数据访问的操作，提供了相应的模板。同时还提供了使用ORM框架的能力，可以与很多流行的ORM框架进行整合，如hibernate，mybatis等等的著名框架。还实现了数据事务的能力，能够支持事务。包含spring-jdbc，spring-tx，spring-orm，spring-oxm，spring-jms，spring-messaging组件。</p>
-<h3 id="Spring-ORM（Object-Relation-Mapper）对象关系映射模块"><a href="#Spring-ORM（Object-Relation-Mapper）对象关系映射模块" class="headerlink" title="Spring ORM（Object Relation Mapper）对象关系映射模块"></a>Spring ORM（Object Relation Mapper）对象关系映射模块</h3><p>​        Spring 与所有的主要的ORM框架都集成的很好，包括hibernate、JDO实现、TopLink和IBatis SQL Map等。Spring为所有的这些框架提供了模板之类的辅助类，达成了一致的编程风格。<br>Spring的ORM模块对ORM框架如Hibernate等进行了封装，Spring能够管理、维护Hibernate，使用时可直接继承HibernateDaoSupport类，该类内置一个HibernateTemplate。Hibernate的配置也转移到Spring配置文件中。</p>
-<p>（注：ORM是通过使用描述对象和数据库之间映射的元数据，ORM框架采用元数据来描述对象–关系映射细节，元数据一般采用xml格式，并且存放在专门的对象–映射文件中）</p>
-<h1 id="5、Web和远程调用"><a href="#5、Web和远程调用" class="headerlink" title="5、Web和远程调用"></a>5、Web和远程调用</h1><p>​        Spring框架支持Web开发，以及与其他应用远程交互调用的方案。包含spring-web，spring-webmvc，spring-websocket，spring-webmvc-portlet组件。</p>
-<h3 id="Spring-Web模块"><a href="#Spring-Web模块" class="headerlink" title="Spring Web模块"></a>Spring Web模块</h3><p>Web模块建立在应用程序上下文模块之上，为基于Web的应用程序提供了上下文。Web层使用Web层框架，可选的，可以是Spring自己的MVC框架，或者提供的Web框架，如Struts、Webwork、tapestry和jsf。</p>
-<p>Web模块用于整合Web框架，将Web框架也纳入Spring的管理之中。如Spring提供继承方式与代理方式整合Struts，继承方式不需要更改任何配置文件，只把Action继承自ActionSupport即可，但会对Spring产生依赖。代理方式需要在struts-config.xml中配置<controller>，由Spring全盘代理，因此可以使用Spring的各种资源、拦截器等。</controller></p>
-<h3 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h3><p>MVC框架是一个全功能的构建Web应用程序的MVC实现。通过策略接口，MVC框架变成为高度可配置的。Spring的MVC框架提供清晰的角色划分：控制器、验证器、命令对象、表单对象和模型对象、分发器、处理器映射和视图解析器。Spring支持多种视图技术。</p>
-<p>Spring MVC 的工作流程：</p>
-<p>（1） 客户端发送请求，请求到达 DispatcherServlet 主控制器。<br>（2） DispatcherServlet 控制器调用 HandlerMapping 处理。<br>（3） HandlerMapping 负责维护请求和 Controller 组件对应关系。 HandlerMapping 根据请求调用对应的 Controller 组件处理。<br>（4） 执行 Controller 组件的业务处理，需要访问数据库，可以调用 DAO 等组件。<br>（5）Controller 业务方法处理完毕后，会返回一个 ModelAndView 对象。该组件封装了模型数据和视图标识。<br>（6）Servlet 主控制器调用 ViewResolver 组件，根据 ModelAndView 信息处理。定位视图资源，生成视图响应信息。<br>（7）控制器将响应信息给用户输出。 </p>
-<h1 id="6、Spring测试"><a href="#6、Spring测试" class="headerlink" title="6、Spring测试"></a>6、Spring测试</h1><p>​        Spring框架提供了测试的模块，可以实现单元测试，集成测试等等的测试流程，整合了JUnit或者TestNG测试框架。包含spring-test组件。</p>
-<p>​        以上就是Spring框架的几个主要模块。而在实际的开发过程中，不必要引入所有的Jar包，只需要引入与自己项目相关的库就行了。例如，只需要Spring框架的容器功能，实现依赖注入，那么只需要引入核心框架的几个库就完成了，其他模块例如Aop模块的库是没有必要引入的。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/mysql-select/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/mysql/mysql-select/" itemprop="url">mysql select机制</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-02T00:00:00+08:00">
-                2017-12-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<p>很多 SQL 查询都是以 SELECT 开始的。不过，最近我跟别人解释什么是窗口函数，我在网上搜索”是否可以对窗口函数返回的结果进行过滤“这个问题，得出的结论是”窗口函数必须在 WHERE 和 GROUP BY 之后，所以不能”。于是我又想到了另一个问题：SQL 查询的执行顺序是怎样的？</p>
-<p>好像这个问题应该很好回答，毕竟自己已经写了上万个 SQL 查询了，有一些还很复杂。但事实是，我仍然很难确切地说出它的顺序是怎样的。</p>
-<h1 id="SQL-查询的执行顺序"><a href="#SQL-查询的执行顺序" class="headerlink" title="SQL 查询的执行顺序"></a>SQL 查询的执行顺序</h1><p>于是我研究了一下，发现顺序大概是这样的。SELECT 并不是最先执行的，而是在第五个。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191106101656.png" alt></p>
-<p>这张图回答了以下这些问题</p>
-<p>这张图与 SQL 查询的语义有关，让你知道一个查询会返回什么，并回答了以下这些问题：</p>
-<ul>
-<li>可以在 GRROUP BY 之后使用 WHERE 吗？（不行，WHERE 是在 GROUP BY 之后！）</li>
-<li>可以对窗口函数返回的结果进行过滤吗？（不行，窗口函数是 SELECT 语句里，而 SELECT 是在 WHERE 和 GROUP BY 之后）</li>
-<li>可以基于 GROUP BY 里的东西进行 ORDER BY 吗？（可以，ORDER BY 基本上是在最后执行的，所以可以基于任何东西进行 ORDER BY）</li>
-<li>LIMIT 是在什么时候执行？（在最后！）</li>
-<li>但数据库引擎并不一定严格按照这个顺序执行 SQL 查询，因为为了更快地执行查询，它们会做出一些优化，这些问题会在以后的文章中解释。</li>
-</ul>
-<p>所以：</p>
-<ul>
-<li>如果你想要知道一个查询语句是否合法，或者想要知道一个查询语句会返回什么，可以参考这张图；</li>
-<li>在涉及查询性能或者与索引有关的东西时，这张图就不适用了。</li>
-</ul>
-<br>
-
-<h3 id="混合因素：列别名"><a href="#混合因素：列别名" class="headerlink" title="混合因素：列别名"></a>混合因素：列别名</h3><p>有很多 SQL 实现允许你使用这样的语法：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(first_name, <span class="string">' '</span>, last_name) <span class="keyword">AS</span> full_name, <span class="keyword">count</span>(*)</span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">table</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> full_name</span><br></pre></td></tr></table></figure>
-
-<p> 从这个语句来看，好像 GROUP BY 是在 SELECT 之后执行的，因为它引用了 SELECT 中的一个别名。但实际上不一定要这样，数据库引擎可以把查询重写成这样： </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(first_name, <span class="string">' '</span>, last_name) <span class="keyword">AS</span> full_name, <span class="keyword">count</span>(*)</span><br><span class="line"><span class="keyword">FROM</span> <span class="keyword">table</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="keyword">CONCAT</span>(first_name, <span class="string">' '</span>, last_name)</span><br></pre></td></tr></table></figure>
-
-<p>这样 GROUP BY 仍然先执行。</p>
-<p>数据库引擎还会做一系列检查，确保 SELECT 和 GROUP BY 中的东西是有效的，所以会在生成执行计划之前对查询做一次整体检查。</p>
-<br>
-
-<h3 id="数据库可能不按照这个顺序执行查询（优化）"><a href="#数据库可能不按照这个顺序执行查询（优化）" class="headerlink" title="数据库可能不按照这个顺序执行查询（优化）"></a>数据库可能不按照这个顺序执行查询（优化）</h3><p>在实际当中，数据库不一定会按照 JOIN、WHERE、GROUP BY 的顺序来执行查询，因为它们会进行一系列优化，把执行顺序打乱，从而让查询执行得更快，只要不改变查询结果。</p>
-<p>这个查询说明了为什么需要以不同的顺序执行查询：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span></span><br><span class="line">owners <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> cats <span class="keyword">ON</span> owners.id = cats.owner</span><br><span class="line"><span class="keyword">WHERE</span> cats.name = <span class="string">'mr darcy'</span></span><br></pre></td></tr></table></figure>
-
-<p>如果只需要找出名字叫“mr darcy”的猫，那就没必要对两张表的所有数据执行左连接，在连接之前先进行过滤，这样查询会快得多，而且对于这个查询来说，先执行过滤并不会改变查询结果。</p>
-<p>数据库引擎还会做出其他很多优化，按照不同的顺序执行查询，不过我并不是这方面的专家，所以这里就不多说了。</p>
-<br>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2870,7 +2266,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-count">189</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2892,7 +2288,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-count">96</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -314,6 +314,281 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/redis/redis-sentinel-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/redis/redis-sentinel-setup/" itemprop="url">centos7 下 redis-sentinel 主从集群搭建</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-11T00:00:00+08:00">
+                2019-03-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h2 id="宏观上Sentinel功能的完整列表"><a href="#宏观上Sentinel功能的完整列表" class="headerlink" title="宏观上Sentinel功能的完整列表"></a>宏观上Sentinel功能的完整列表</h2><ul>
+<li><strong>监控</strong>。Sentinel会不断检查您的主实例和副本实例是否按预期工作。</li>
+<li><strong>通知</strong>。Sentinel可以通过API通知系统管理员或其他计算机程序，其中一个受监视的Redis实例出了问题。</li>
+<li><strong>自动故障转移</strong>。如果主服务器未按预期工作，则Sentinel可以启动故障转移过程，在该过程中将副本升级为主服务器，将其他附加副本重新配置为使用新的主服务器，并通知使用Redis服务器的应用程序要使用的新地址。连接时。</li>
+<li><strong>配置提供程序</strong>。Sentinel充当客户端服务发现的授权来源：客户端连接到Sentinels，以询问负责给定服务的当前Redis主服务器的地址。如果发生故障转移，Sentinels将报告新地址。</li>
+</ul>
+<br>
+
+<h2 id="Sentinel的分布式性质"><a href="#Sentinel的分布式性质" class="headerlink" title="Sentinel的分布式性质"></a>Sentinel的分布式性质</h2><p>Redis Sentinel是一个分布式系统：</p>
+<p>Sentinel本身设计为在有多个Sentinel进程协同合作的配置中运行。具有多个Sentinel进程进行协作的优点如下：</p>
+<ol>
+<li>当多个哨兵就给定的主机不再可用这一事实达成共识时，将执行故障检测。这降低了误报的可能性。</li>
+<li>即使不是所有的Sentinel进程都在工作，Sentinel仍能正常工作，从而使系统能够应对故障。毕竟，拥有故障转移系统本身就是一个单点故障</li>
+</ol>
+<br>
+
+<h2 id="部署前有关Sentinel的基本知识"><a href="#部署前有关Sentinel的基本知识" class="headerlink" title="部署前有关Sentinel的基本知识"></a>部署前有关Sentinel的基本知识</h2><ol>
+<li>一个健壮的部署至少需要<u><strong>三个Sentinel实例</strong></u>。</li>
+<li>应将三个Sentinel实例放置到被认为以独立方式发生故障的计算机或虚拟机中。因此，例如在不同的可用区域上执行的不同物理服务器或虚拟机。</li>
+<li>Sentinel + Redis分布式系统不保证在故障期间保留已确认的写入，因为Redis使用异步复制。但是，有一些部署Sentinel的方法使窗口丢失写入仅限于某些时刻，而还有其他一些不太安全的方法来部署它。</li>
+<li>您的客户需要Sentinel支持。流行的客户端库具有Sentinel支持，但不是全部。</li>
+<li>如果您不在开发环境中不时进行测试，则没有安全的HA设置，如果可以，则在生产环境中甚至可以更好地进行测试。您可能有一个错误的配置，只有在为时已晚时（主服务器停止工作的凌晨3点），该错误才会变得明显。</li>
+<li><strong>Sentinel，Docker或其他形式的网络地址转换或端口映射应</strong>格外<strong>小心</strong>：Docker执行端口重新映射，破坏Sentinel对其他Sentinel进程的自动发现以及主副本的列表。有关更多信息，请参阅本文档后面有关Sentinel和Docker的部分。</li>
+</ol>
+<br>
+
+
+
+
+
+
+
+<h2 id="1、安装redis（3台同步）"><a href="#1、安装redis（3台同步）" class="headerlink" title="1、安装redis（3台同步）"></a>1、安装redis（3台同步）</h2><p>官网文档：<a href="https://redis.io/topics/sentinel" target="_blank" rel="noopener">https://redis.io/topics/sentinel</a></p>
+<p>Github：<a href="https://github.com/antirez/redis/releases" target="_blank" rel="noopener">https://github.com/antirez/redis/releases</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1、安装gcc依赖</span></span><br><span class="line">yum install -y gcc</span><br><span class="line">yum install -y wget</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2、下载并解压安装包</span></span><br><span class="line">cd /data/soft/new/</span><br><span class="line">wget https://github.com/antirez/redis/archive/3.2.13.tar.gz -O redis-3.2.13.tar.gz</span><br><span class="line">tar -zxf redis-3.2.13.tar.gz</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3、<span class="built_in">cd</span>切换到redis解压目录下，执行编译</span></span><br><span class="line">cd redis-3.2.13</span><br><span class="line">make MALLOC=libc</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4、安装并指定安装目录</span></span><br><span class="line">make install PREFIX=/usr/local/redis</span><br><span class="line">cp redis.conf /usr/local/redis/bin/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 5、后台启动</span></span><br><span class="line">/usr/local/redis/bin/redis-server /usr/local/redis/bin/redis.conf</span><br><span class="line"><span class="meta">#</span><span class="bash"> 6、开机启动</span></span><br><span class="line">cat &gt;&gt; /etc/systemd/system/redis.service &lt;&lt; EOF</span><br><span class="line">[Unit]</span><br><span class="line">Description=redis-server</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/usr/local/redis/bin/redis-server /usr/local/redis/bin/redis.conf</span><br><span class="line">PrivateTmp=true</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 7、创建软连接</span></span><br><span class="line">ln -s /usr/local/redis/bin/redis-cli /usr/bin/redis</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl status redis.service   #查看服务当前状态</span><br><span class="line">systemctl enable redis.service   #设置开机自启动</span><br><span class="line">systemctl disable redis.service   #停止开机自启动</span><br><span class="line">systemctl start redis.service   #启动redis服务</span><br><span class="line">systemctl stop redis.service   #停止redis服务</span><br><span class="line">systemctl restart redis.service   #重新启动服务</span><br></pre></td></tr></table></figure>
+
+<p><code>make test</code> 报错解决方案：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> You need tcl 8.5 or newer <span class="keyword">in</span> order to run the Redis <span class="built_in">test</span>.</span></span><br><span class="line">wget http://downloads.sourceforge.net/tcl/tcl8.6.1-src.tar.gz</span><br><span class="line">sudo tar xzvf tcl8.6.1-src.tar.gz  -C /usr/local/</span><br><span class="line">cd  /usr/local/tcl8.6.1/unix/</span><br><span class="line">sudo ./configure</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h2 id="2、配置redis-conf"><a href="#2、配置redis-conf" class="headerlink" title="2、配置redis.conf"></a>2、配置redis.conf</h2><p>vi /usr/local/redis/bin/redis.conf</p>
+<p>scp root@dn1:/usr/local/redis/bin/redis.conf /usr/local/redis/bin/redis.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 使用 yes 启用守护进程</span></span><br><span class="line">daemonize yes</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置数据库的数量，默认数据库为0，可以使用SELECT 命令在连接上指定数据库id</span></span><br><span class="line">databases 16</span><br><span class="line">pidfile /var/run/redis.pid</span><br><span class="line">port 6379</span><br><span class="line"><span class="meta">#</span><span class="bash"> 绑定的主机地址</span></span><br><span class="line">bind 127.0.0.1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置 Redis 连接密码，如果配置了连接密码，客户端在连接 Redis 时需要通过 AUTH &lt;password&gt; 命令提供密码，默认关闭</span></span><br><span class="line">requirepass 123456</span><br><span class="line"><span class="meta">#</span><span class="bash"> 当客户端闲置多长时间后关闭连接，如果指定为 0，表示关闭该功能</span></span><br><span class="line">timeout 300</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置同一时间最大客户端连接数，默认无限制，Redis 可以同时打开的客户端连接数为 Redis 进程可以打开的最大文件描述符数，如果设置 maxclients 0，表示不作限制。当客户端连接数到达限制时，Redis 会关闭新的连接并向客户端返回 max number of clients reached 错误信息</span></span><br><span class="line">maxclients 128</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置在向客户端应答时，是否把较小的包合并为一个包发送，默认为开启</span></span><br><span class="line">glueoutputbuf yes</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定 Redis 最大内存限制，Redis 在启动时会把数据加载到内存中，达到最大内存后，Redis 会先尝试清除已到期或即将到期的 Key，当此方法处理 后，仍然到达最大内存设置，将无法再进行写入操作，但仍然可以进行读取操作。Redis 新的 vm 机制，会把 Key 存放内存，Value 会存放在 swap 区</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> maxmemory &lt;bytes&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定在超过一定的数量或者最大的元素超过某一临界值时，采用一种特殊的哈希算法</span></span><br><span class="line">hash-max-zipmap-entries 64</span><br><span class="line">hash-max-zipmap-value 512</span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定是否激活重置哈希，默认为开启（后面在介绍 Redis 的哈希算法时具体介绍）</span></span><br><span class="line">activerehashing yes</span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定包含其它的配置文件，可以在同一主机上多个Redis实例之间使用同一份配置文件，而同时各个实例又拥有自己的特定配置文件</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> include /path/to/local.conf</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定日志记录级别，Redis 总共支持四个级别：debug、verbose、notice、warning，默认为 notice</span></span><br><span class="line">loglevel notice</span><br><span class="line"><span class="meta">#</span><span class="bash"> 日志记录方式，默认为标准输出，如果配置 Redis 为守护进程方式运行，而这里又配置为日志记录方式为标准输出，则日志将会发送给 /dev/null</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> logfile stdout</span></span><br><span class="line">logfile /root/redis.log</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> rdb: 指定在多长时间内，有多少次更新操作，就将数据同步到rdb数据文件，可以多个条件配合</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> save &lt;seconds&gt; &lt;changes&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash">当有一条Keys数据被改变时，900秒刷新到Disk一次</span></span><br><span class="line">save 900 1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 当有10条Keys数据被改变时，300秒刷新到Disk一次</span></span><br><span class="line">save 300 10</span><br><span class="line"><span class="meta">#</span><span class="bash"> 当有10000条Keys数据被改变时，60秒刷新到Disk一次</span></span><br><span class="line">save 60 10000</span><br><span class="line"><span class="meta">#</span><span class="bash"> rdb: 文件是否压缩数据，默认为 yes，Redis 采用 LZF 压缩，如果为了节省 CPU 时间，可以关闭该选项，但会导致数据库文件变的巨大</span></span><br><span class="line">rdbcompression yes</span><br><span class="line"><span class="meta">#</span><span class="bash"> rdb: 指定本地RDB数据库文件名，默认值为 dump.rdb</span></span><br><span class="line">dbfilename dump.rdb</span><br><span class="line"><span class="meta">#</span><span class="bash"> rdb: 指定本地数据库存放目录</span></span><br><span class="line">dir ./</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> aof: 如果不开启，可能会在断电时导致一段时间内的数据丢失。因为 redis 本身同步数据文件是按上面 save 条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认为 no</span></span><br><span class="line">appendonly no</span><br><span class="line"><span class="meta">#</span><span class="bash"> aof: 指定更新日志文件名，默认为 appendonly.aof</span></span><br><span class="line">appendfilename "appendonly.aof"</span><br><span class="line"><span class="meta">#</span><span class="bash"> aof: 指定更新日志条件，共有 3 个可选值：</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   no：表示等操作系统进行数据缓存同步到磁盘（快）</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   always：表示每次更新操作后手动调用 fsync() 将数据写到磁盘（慢，安全）</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   everysec：表示每秒同步一次（折中，默认值）</span></span><br><span class="line">appendfsync everysec</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 指定是否启用虚拟内存机制，默认值为 no，简单的介绍一下，VM 机制将数据分页存放，由 Redis 将访问量较少的页即冷数据 swap 到磁盘上，访问多的页面由磁盘自动换出到内存中（在后面的文章我会仔细分析 Redis 的 VM 机制）</span></span><br><span class="line">vm-enabled no</span><br><span class="line"><span class="meta">#</span><span class="bash"> 虚拟内存文件路径，默认值为 /tmp/redis.swap，不可多个 Redis 实例共享</span></span><br><span class="line">vm-swap-file /tmp/redis.swap</span><br><span class="line"><span class="meta">#</span><span class="bash"> 将所有大于 vm-max-memory 的数据存入虚拟内存，无论 vm-max-memory 设置多小，所有索引数据都是内存存储的(Redis 的索引数据 就是 keys)，也就是说，当 vm-max-memory 设置为 0 的时候，其实是所有 value 都存在于磁盘。默认值为 0</span></span><br><span class="line">vm-max-memory 0</span><br><span class="line"><span class="meta">#</span><span class="bash"> Redis swap 文件分成了很多的 page，一个对象可以保存在多个 page 上面，但一个 page 上不能被多个对象共享，vm-page-size 是要根据存储的 数据大小来设定的，作者建议如果存储很多小对象，page 大小最好设置为 32 或者 64bytes；如果存储很大大对象，则可以使用更大的 page，如果不确定，就使用默认值</span></span><br><span class="line">vm-page-size 32</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置 swap 文件中的 page 数量，由于页表（一种表示页面空闲或使用的 bitmap）是在放在内存中的，，在磁盘上每 8 个 pages 将消耗 1byte 的内存</span></span><br><span class="line">vm-pages 134217728</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置访问swap文件的线程数,最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的，可能会造成比较长时间的延迟。默认值为4</span></span><br><span class="line">vm-max-threads 4</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 设置当本机为 slav 服务时，设置 master 服务的 IP 地址及端口，在 Redis 启动时，它会自动从 master 进行数据同步</span></span><br><span class="line">slaveof &lt;masterip&gt; &lt;masterport&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 当 master 服务设置了密码保护时，slav 服务连接 master 的密码</span></span><br><span class="line">masterauth &lt;master-password&gt;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h2 id="3、配置redis-sentinel集群"><a href="#3、配置redis-sentinel集群" class="headerlink" title="3、配置redis-sentinel集群"></a>3、配置redis-sentinel集群</h2><br>
+
+<blockquote>
+<p>参考链接：<a href="https://www.jianshu.com/p/06ab9daf921d" target="_blank" rel="noopener">https://www.jianshu.com/p/06ab9daf921d</a></p>
+</blockquote>
+<p>配置3个哨兵 和 2个redis集群</p>
+<table>
+<thead>
+<tr>
+<th>服务类型</th>
+<th>是否是主服务器</th>
+<th>IP地址</th>
+<th>端口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Redis</td>
+<td>是</td>
+<td>dn1</td>
+<td>6379</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>否（dn1的slave）</td>
+<td>dn2</td>
+<td>6379</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>是</td>
+<td>dn3</td>
+<td>6379</td>
+</tr>
+<tr>
+<td>Sentinel</td>
+<td>-</td>
+<td>dn1</td>
+<td>26379</td>
+</tr>
+<tr>
+<td>Sentinel</td>
+<td>-</td>
+<td>dn2</td>
+<td>26379</td>
+</tr>
+<tr>
+<td>Sentinel</td>
+<td>-</td>
+<td>dn3</td>
+<td>26379</td>
+</tr>
+</tbody></table>
+<h3 id="3-1、修改-redis-conf"><a href="#3-1、修改-redis-conf" class="headerlink" title="3.1、修改 redis.conf"></a>3.1、修改 redis.conf</h3><p>vi /usr/local/redis/bin/redis.conf</p>
+<p>scp root@dn1:/usr/local/redis/bin/redis.conf /usr/local/redis/bin/redis.conf</p>
+<h4 id="dn1-和-dn3-配置"><a href="#dn1-和-dn3-配置" class="headerlink" title="dn1 和 dn3 配置"></a>dn1 和 dn3 配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 使得Redis服务器可以跨网络访问</span></span><br><span class="line">bind 0.0.0.0</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置密码</span></span><br><span class="line">requirepass 123456</span><br><span class="line"><span class="meta">#</span><span class="bash"> 主服务器密码，注意：有关slaveof的配置只是配置从服务器，主服务器不需要配置</span></span><br><span class="line">masterauth 123456</span><br></pre></td></tr></table></figure>
+
+<h4 id="dn2-配置"><a href="#dn2-配置" class="headerlink" title="dn2 配置"></a>dn2 配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 使得Redis服务器可以跨网络访问</span></span><br><span class="line">bind 0.0.0.0</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置密码</span></span><br><span class="line">requirepass 123456</span><br><span class="line"><span class="meta">#</span><span class="bash"> 主服务器密码，注意：有关slaveof的配置只是配置从服务器，主服务器不需要配置</span></span><br><span class="line">masterauth 123456</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定主服务器，注意：有关slaveof的配置只是配置从服务器，主服务器不需要配置</span></span><br><span class="line">slaveof dn1 6379</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2、修改sentinel-conf"><a href="#3-2、修改sentinel-conf" class="headerlink" title="3.2、修改sentinel.conf"></a>3.2、修改sentinel.conf</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">\cp /data/soft/new/redis-3.2.13/sentinel.conf /usr/local/redis/bin/</span><br><span class="line">vi /usr/local/redis/bin/sentinel.conf</span><br><span class="line"><span class="meta">#</span><span class="bash"> vi编辑器如何把开头是<span class="comment">#的行全都删掉</span></span></span><br><span class="line">:g/^#/d</span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除空行</span></span><br><span class="line">:g/^$/d</span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除空行以及只有空格的行</span></span><br><span class="line">:g/^\s*$/d</span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除以 <span class="comment"># 开头或 空格# 或 tab#开头的行</span></span></span><br><span class="line">:g/^\s*#/d</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">port 26379</span><br><span class="line">daemonize yes</span><br><span class="line">dir "/root/"</span><br><span class="line">logfile "redis-sentinel.log"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 禁止保护模式</span></span><br><span class="line">protected-mode no</span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置监听的主服务器，这里sentinel monitor代表监控，master<span class="_">-a</span>代表服务器的名称，可以自定义，dn1 代表监控的主服务器，6379代表端口，2代表只有两个或两个以上的哨兵认为主服务器不可用的时候，才会进行failover操作。</span></span><br><span class="line">sentinel monitor master-a dn1 6379 2</span><br><span class="line"><span class="meta">#</span><span class="bash"> sentinel author-pass定义服务的密码，mymaster是服务名称，123456是Redis服务器密码</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sentinel auth-pass &lt;master-name&gt; &lt;password&gt;</span></span><br><span class="line">sentinel auth-pass master-a 123456</span><br><span class="line"></span><br><span class="line">sentinel monitor master-b dn3 6379 2</span><br><span class="line">sentinel auth-pass master-b 123456</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r root@dn1:/usr/local/redis/bin/sentinel.conf /usr/local/redis/bin/sentinel.conf</span><br></pre></td></tr></table></figure>
+
+<p>开机启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo '/usr/local/redis/bin/redis-sentinel /usr/local/redis/bin/sentinel.conf --sentinel' &gt;&gt; /etc/rc.local</span><br><span class="line">chmod +x /etc/rc.d/rc.local</span><br></pre></td></tr></table></figure>
+
+<p>开机启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;&gt; /etc/systemd/system/redis-sentinel.service &lt;&lt; EOF</span><br><span class="line">[Unit]</span><br><span class="line">Description=redis-sentinel</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">ExecStart=/usr/local/redis/bin/redis-sentinel /usr/local/redis/bin/sentinel.conf --sentinel</span><br><span class="line">ExecStop=/usr/local/redis/bin/redis-cli -p 26379 shutdown</span><br><span class="line">PrivateTmp=true</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl status redis-sentinel.service   #查看服务当前状态</span><br><span class="line">systemctl enable redis-sentinel.service   #设置开机自启动</span><br><span class="line">systemctl disable redis-sentinel.service   #停止开机自启动</span><br><span class="line">systemctl start redis-sentinel.service</span><br></pre></td></tr></table></figure>
+
+<p>配置环境变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo 'export PATH=$PATH:/usr/local/redis/bin' &gt;&gt; /etc/profile</span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3、启动-redis-和-sentinel"><a href="#3-3、启动-redis-和-sentinel" class="headerlink" title="3.3、启动 redis 和 sentinel"></a>3.3、启动 redis 和 sentinel</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl start redis.service   #启动redis服务</span><br><span class="line">systemctl stop redis.service   #停止redis服务</span><br><span class="line">systemctl restart redis.service   #重新启动服务</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> /usr/<span class="built_in">local</span>/redis/bin/redis-sentinel /usr/<span class="built_in">local</span>/redis/bin/sentinel.conf --sentinel</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> /usr/<span class="built_in">local</span>/redis/bin/redis-cli -p 26379 shutdown</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> /usr/<span class="built_in">local</span>/redis/bin/redis-cli -p 26379</span></span><br><span class="line">127.0.0.1:26379&gt; sentinel master master-a</span><br><span class="line">127.0.0.1:26379&gt; sentinel slaves master-a</span><br><span class="line">127.0.0.1:26379&gt; sentinel sentinels master-a</span><br><span class="line">127.0.0.1:26379&gt; sentinel get-master-addr-by-name master-a</span><br><span class="line">127.0.0.1:26379&gt; info sentinel</span><br><span class="line"><span class="meta">#</span><span class="bash"> 相对于常规的故障切换，其无需进行Sentinel节点的领导者选举。直接由当前Sentinel节点进行后续的故障切换。</span></span><br><span class="line">127.0.0.1:26379&gt;  sentinel failover master-a</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200312180842.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-8-Lucene文件检索实战-结果展示/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1914,242 +2189,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-5-Lucene查询详解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/2-5-Lucene查询详解/" itemprop="url">2.5、Lucene查询详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-03T00:05:00+08:00">
-                2019-03-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<hr>
-<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p>2.5.1、搜索入门</p>
-<p>2.5.2、多域搜索（MultiFieldQueryParse）</p>
-<p>2.5.3、词项搜索（TermQuery）</p>
-<p>2.5.4、布尔搜索（BooleanQuery）</p>
-<p>2.5.5、范围搜索（RangeQuery）</p>
-<p>2.5.6、前缀搜索（PrefixQuery）</p>
-<p>2.5.7、多关键字搜索（PhraseQuery）</p>
-<p>2.5.8、模糊搜索（FuzzyQuery）</p>
-<p>2.5.9、通配符搜索（WildcardQuery）</p>
-<p>-—————————————————</p>
-<p>文档索引完成以后就能对其进行搜索；</p>
-<p>当用户输入一个关键字，</p>
-<p>​        –&gt; 首先 对这个关键字 进行 分析和处理，  转化成后台可以理解的形式</p>
-<p>​        –&gt;  进行检索</p>
-<h1 id="2-5-1、搜索入门"><a href="#2-5-1、搜索入门" class="headerlink" title="2.5.1、搜索入门"></a>2.5.1、搜索入门</h1><p>处理关键词 &lt;==&gt;  构建Query对象的过程；</p>
-<p>搜索文档  &lt;==&gt; 实例化 IndexSearcher 对象，使用search()方法完成；</p>
-<p>​              参数：Query对象</p>
-<p>​              结果：保存在 TopDocs 类型的文档集合中；</p>
-<p>删除indexdir下的索引文件后，重新使用CreateIndex.java 生成索引</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.QueryParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.IndexSearcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.Query;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.ScoreDoc;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TopDocs;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.1、查询</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QueryParseTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line">		String field = <span class="string">"title"</span>;</span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x();</span><br><span class="line">		QueryParser parser = <span class="keyword">new</span> QueryParser(field, analyzer);</span><br><span class="line">		parser.setDefaultOperator(QueryParser.Operator.AND);</span><br><span class="line">		Query query = parser.parse(<span class="string">"农村学生"</span>);</span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125702.png" alt></p>
-<p>修改后再运行：</p>
-<p>  <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125718.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125732.png" alt></p>
-<p>​    </p>
-<h1 id="2-5-2、多域搜索（MultiFieldQueryParse）"><a href="#2-5-2、多域搜索（MultiFieldQueryParse）" class="headerlink" title="2.5.2、多域搜索（MultiFieldQueryParse）"></a>2.5.2、多域搜索（MultiFieldQueryParse）</h1><p>根据多个字段搜索</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.MultiFieldQueryParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.QueryParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.IndexSearcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.Query;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.ScoreDoc;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TopDocs;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.2、多域搜索</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MultiFieldQueryParseTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line">		String[] field = &#123;<span class="string">"title"</span>, <span class="string">"content"</span>&#125;;</span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>);</span><br><span class="line">		MultiFieldQueryParser parser = <span class="keyword">new</span> MultiFieldQueryParser(field, analyzer);</span><br><span class="line">		parser.setDefaultOperator(QueryParser.Operator.AND);</span><br><span class="line">		Query query = parser.parse(<span class="string">"美国"</span>);</span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"content: "</span> + doc.get(<span class="string">"content"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125813.png" alt></p>
-<p>​    </p>
-<h1 id="2-5-3、词项搜索（TermQuery）"><a href="#2-5-3、词项搜索（TermQuery）" class="headerlink" title="2.5.3、词项搜索（TermQuery）"></a>2.5.3、词项搜索（TermQuery）</h1><p>TermQuery 是 最常用的 Query</p>
-<p>TermQuery 是 Lucene中搜索的最基本单位</p>
-<p>本质上：一个词条就是一个 key/value 对</p>
-<p>使用TermQuery：</p>
-<ul>
-<li>首先构造一个 Term对象；Term term = new Term(“title”, “美国”);</li>
-<li>然后使用Term对象为参数，构造一个TermQuery对象；TermQuery query = new TermQuery(term);</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Term;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.IndexSearcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.ScoreDoc;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TermQuery;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TopDocs;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.3 词项搜索</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TermQueryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line"></span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		Term term = <span class="keyword">new</span> Term(<span class="string">"title"</span>, <span class="string">"美国"</span>);</span><br><span class="line">		TermQuery query = <span class="keyword">new</span> TermQuery(term);</span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125900.png" alt></p>
-<p>​    </p>
-<h1 id="2-5-4、布尔搜索（BooleanQuery）"><a href="#2-5-4、布尔搜索（BooleanQuery）" class="headerlink" title="2.5.4、布尔搜索（BooleanQuery）"></a>2.5.4、布尔搜索（BooleanQuery）</h1><p>BooleanQuery 可以 组合 其他 Query，并标明他们的逻辑关系；</p>
-<p>例如：查询 content 中包含美国，并且 title 不包含美国的文档；</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Term;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.4、布尔搜索（BooleanQuery）</span></span><br><span class="line"><span class="comment"> * 查询 content 中包含美国，并且 title 不包含美国的文档；</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BooleanQueryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		TermQuery query1 = <span class="keyword">new</span> TermQuery(<span class="keyword">new</span> Term(<span class="string">"title"</span>, <span class="string">"美国"</span>));</span><br><span class="line">		TermQuery query2 = <span class="keyword">new</span> TermQuery(<span class="keyword">new</span> Term(<span class="string">"content"</span>, <span class="string">"美国"</span>));</span><br><span class="line">		BooleanClause booleanClause1 = <span class="keyword">new</span> BooleanClause(query1, BooleanClause.Occur.MUST_NOT);</span><br><span class="line">		BooleanClause booleanClause2 = <span class="keyword">new</span> BooleanClause(query2, BooleanClause.Occur.MUST);</span><br><span class="line">		BooleanQuery query = <span class="keyword">new</span> BooleanQuery.Builder().add(booleanClause1).add(booleanClause2).build();</span><br><span class="line"></span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"content: "</span> + doc.get(<span class="string">"content"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825125942.png" alt></p>
-<p>​     </p>
-<h1 id="2-5-5、范围搜索（RangeQuery）"><a href="#2-5-5、范围搜索（RangeQuery）" class="headerlink" title="2.5.5、范围搜索（RangeQuery）"></a>2.5.5、范围搜索（RangeQuery）</h1><p>举例：查询新闻回复条数在 500~1000 之间的文档</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.IntPoint;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.IndexSearcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.Query;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.ScoreDoc;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TopDocs;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.5、范围搜索（RangeQuery）</span></span><br><span class="line"><span class="comment"> * 举例：查询新闻回复条数在 500~1000 之间的文档</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RangeQueryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line"></span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		Query query = IntPoint.newRangeQuery(<span class="string">"reply"</span>, <span class="number">500</span>, <span class="number">1000</span>);</span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"content: "</span> + doc.get(<span class="string">"content"</span>));</span><br><span class="line">			System.out.println(<span class="string">"reply: "</span> + doc.get(<span class="string">"reply_display"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825130015.png" alt></p>
-<p>​    </p>
-<h1 id="2-5-6、前缀搜索（PrefixQuery）"><a href="#2-5-6、前缀搜索（PrefixQuery）" class="headerlink" title="2.5.6、前缀搜索（PrefixQuery）"></a>2.5.6、前缀搜索（PrefixQuery）</h1><p>举例：搜索 包含以“学”开头的词项 的文档</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Term;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.6、前缀搜索（PrefixQuery）</span></span><br><span class="line"><span class="comment"> * 举例：搜索 包含以“学”开头的词项 的文档</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrefixQueryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line"></span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		Term term = <span class="keyword">new</span> Term(<span class="string">"title"</span>, <span class="string">"学"</span>);</span><br><span class="line">		Query query = <span class="keyword">new</span> PrefixQuery(term);</span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825130047.png" alt></p>
-<p>​    </p>
-<h1 id="2-5-7、多关键字搜索（PhraseQuery）"><a href="#2-5-7、多关键字搜索（PhraseQuery）" class="headerlink" title="2.5.7、多关键字搜索（PhraseQuery）"></a>2.5.7、多关键字搜索（PhraseQuery）</h1><ul>
-<li>PhraseQuery 可以 通过add方法添加多个关键字</li>
-<li>还可以通过 setSlop() 设定“坡度”，允许关键字之间 无关词汇存在量</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Term;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.IndexSearcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.PhraseQuery;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.ScoreDoc;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TopDocs;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.7、多关键字搜索（PhraseQuery）</span></span><br><span class="line"><span class="comment"> * PhraseQuery 可以 通过add方法添加多个关键字</span></span><br><span class="line"><span class="comment"> * 还可以通过 setSlop() 设定“坡度”，允许关键字之间 无关词汇存在量</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhraseQueryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line">		String str = <span class="string">"习近平会见奥巴马，学习国外经验"</span>;</span><br><span class="line"></span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		PhraseQuery.Builder builder = <span class="keyword">new</span> PhraseQuery.Builder();</span><br><span class="line">		builder.add(<span class="keyword">new</span> Term(<span class="string">"title"</span>, <span class="string">"奥巴马"</span>), str.indexOf(<span class="string">"奥巴马"</span>));</span><br><span class="line">		builder.add(<span class="keyword">new</span> Term(<span class="string">"title"</span>, <span class="string">"学习国外经验"</span>), str.indexOf(<span class="string">"学习国外经验"</span>));</span><br><span class="line">		PhraseQuery query = builder.build();</span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"content: "</span> + doc.get(<span class="string">"content"</span>));</span><br><span class="line">			System.out.println(<span class="string">"reply: "</span> + doc.get(<span class="string">"reply_display"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果(感觉没有成功)：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825130128.png" alt></p>
-<p>​    </p>
-<h1 id="2-5-8、模糊搜索（FuzzyQuery）"><a href="#2-5-8、模糊搜索（FuzzyQuery）" class="headerlink" title="2.5.8、模糊搜索（FuzzyQuery）"></a>2.5.8、模糊搜索（FuzzyQuery）</h1><p>它可以简单的识别两个相近的词语。</p>
-<p>举例：“Trump”，写成“Trmp”，拼写错误，仍然可以搜索得到正确的结果</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Term;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.8、模糊搜索（FuzzyQuery）</span></span><br><span class="line"><span class="comment"> * 它可以简单的识别两个相近的词语。</span></span><br><span class="line"><span class="comment"> * 举例：“Trump”，写成“Trmp”，拼写错误，仍然可以搜索得到正确的结果</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FuzzyQueryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		Query query = <span class="keyword">new</span> FuzzyQuery(<span class="keyword">new</span> Term(<span class="string">"title"</span>, <span class="string">"Trmp"</span>));</span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"content: "</span> + doc.get(<span class="string">"content"</span>));</span><br><span class="line">			System.out.println(<span class="string">"reply: "</span> + doc.get(<span class="string">"reply_display"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825130205.png" alt></p>
-<p>​     </p>
-<h1 id="2-5-9、通配符搜索（WildcardQuery）"><a href="#2-5-9、通配符搜索（WildcardQuery）" class="headerlink" title="2.5.9、通配符搜索（WildcardQuery）"></a>2.5.9、通配符搜索（WildcardQuery）</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.queries;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Term;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.5.9、通配符搜索（WildcardQuery）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WildcardQueryTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException </span>&#123;</span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">		Query query = <span class="keyword">new</span> WildcardQuery(<span class="keyword">new</span> Term(<span class="string">"title"</span>, <span class="string">"习?平"</span>));</span><br><span class="line">		System.out.println(<span class="string">"Query: "</span> + query.toString());  <span class="comment">// 查询关键词</span></span><br><span class="line">		<span class="comment">// 返回前10条</span></span><br><span class="line">		TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">		<span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">			Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">			System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">			System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">			System.out.println(<span class="string">"content: "</span> + doc.get(<span class="string">"content"</span>));</span><br><span class="line">			System.out.println(<span class="string">"reply: "</span> + doc.get(<span class="string">"reply_display"</span>));</span><br><span class="line">			System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">		&#125;</span><br><span class="line">		directory.close();</span><br><span class="line">		reader.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825130234.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2200,7 +2239,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">186</span>
+                  <span class="site-state-item-count">189</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2222,7 +2261,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">95</span>
+                  <span class="site-state-item-count">96</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
