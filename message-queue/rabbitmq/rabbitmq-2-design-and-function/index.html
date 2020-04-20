@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rabbitmq,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1、什么是消息中间件消息队列中间件 (Message Queue Middleware，简称为 MQ) 是指利用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，它可以在分布式环境下扩展进程间的通信。提供了以松散藕合的灵活方式集成应用程序的一种机制。它们提供了基于存储和转发的应用程序之间的异步数据发送，即应用程序彼此不直接通">
+<meta name="keywords" content="rabbitmq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rabbitmq-设计和功能">
+<meta property="og:url" content="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-2-design-and-function/index.html">
+<meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="1、什么是消息中间件消息队列中间件 (Message Queue Middleware，简称为 MQ) 是指利用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，它可以在分布式环境下扩展进程间的通信。提供了以松散藕合的灵活方式集成应用程序的一种机制。它们提供了基于存储和转发的应用程序之间的异步数据发送，即应用程序彼此不直接通">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409095450.png">
+<meta property="og:image" content="https://qqadapt.qpic.cn/txdocpic/0/c6759897ee7147a529d599df4c880a3d/0">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409150936.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200414212647.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409140015.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409140713.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410133628.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410135954.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140022.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140047.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140102.png">
+<meta property="og:updated_time" content="2020-04-14T13:27:06.187Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="rabbitmq-设计和功能">
+<meta name="twitter:description" content="1、什么是消息中间件消息队列中间件 (Message Queue Middleware，简称为 MQ) 是指利用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，它可以在分布式环境下扩展进程间的通信。提供了以松散藕合的灵活方式集成应用程序的一种机制。它们提供了基于存储和转发的应用程序之间的异步数据发送，即应用程序彼此不直接通">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409095450.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-2-design-and-function/">
+
+
+
+
+
+  <title>rabbitmq-设计和功能 | CarloZ</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">CarloZ</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-2-design-and-function/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">rabbitmq-设计和功能</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T00:00:00+08:00">
+                2017-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/message-queue/" itemprop="url" rel="index">
+                    <span itemprop="name">message-queue</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/message-queue/rabbitmq/" itemprop="url" rel="index">
+                    <span itemprop="name">rabbitmq</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<br>
+
+<h1 id="1、什么是消息中间件"><a href="#1、什么是消息中间件" class="headerlink" title="1、什么是消息中间件"></a>1、什么是消息中间件</h1><p>消息队列中间件 (Message Queue Middleware，简称为 MQ) 是指<strong>利用高效可靠的消息传递机制进行与平台无关的数据交流</strong>，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，它可以在分布式环境下扩展进程间的通信。提供了以松散藕合的灵活方式集成应用程序的一种机制。它们提供了基于存储和转发的应用程序之间的异步数据发送，即应用程序彼此不直接通信，而是与作为中介的消息中间件通信。消息中间件提供了有保证的消息发送，应用程序开发人员无须了解远程过程调用 ( RPC) 和网络通信协议的细节。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409095450.png" alt></p>
+<br>
+
+<h1 id="2、消息中间件的作用"><a href="#2、消息中间件的作用" class="headerlink" title="2、消息中间件的作用"></a>2、消息中间件的作用</h1><ul>
+<li><strong><u>异步</u></strong>（解决不必要的阻塞）：消息中间件提供了异步处理机制，允许应用把一些消息放入消息中间件中，但并不立即处理它，在之后需要的时候再慢慢处理 。</li>
+<li><strong><u>解耦</u></strong>（降低模块间的耦合关系）：消息中间件在处理过程中间插入了一个隐含的、基于数据的接口层。</li>
+<li><strong><u>削峰</u></strong>（峰值任务的平滑处理）：在访问量剧增的情况下，应用仍然需要继续发挥作用。</li>
+<li><strong><u>冗余</u></strong>（存储、补偿机制）：有些情况下，处理数据的过程会失败。消息中间件可以把数据进行持久化直到它们已经被完全处理，通过这一方式规避了数据丢失风险。</li>
+<li><u><strong>顺序保证</strong></u>：数据的处理顺序</li>
+</ul>
+<br>
+
+
+
+<h1 id="3、AMQP协议"><a href="#3、AMQP协议" class="headerlink" title="3、AMQP协议"></a>3、AMQP协议</h1><p>AMQP协议是一套开放标准，支持不同语言的不同产品。</p>
+<h3 id="AMQP组件"><a href="#AMQP组件" class="headerlink" title="AMQP组件"></a>AMQP组件</h3><ul>
+<li><p><strong>生产者</strong>：消息的创建者，将消息发送到消息中间件</p>
+</li>
+<li><p><strong>消费者</strong>：连接到消息中间件上，订阅在队列上，进行消息的消费。</p>
+</li>
+<li><p><strong>消息</strong>：包括有效载荷与标签。有效载荷：要传输的数据；标签：描述有效载荷的属性；RabbitMQ通过标签决定谁获得该消息，消费者只能得到有效载荷。</p>
+</li>
+<li><p><strong>信道</strong>：可理解为一个虚拟的连接，建立在真实的TCP/IP连接之上。所有AMQP上的消息都通过信道传输，TCP/IP连接的建立和释放 对服务器有很大的消耗、昂贵的资源。信道的创建没有数量限制，保护资源的利用。</p>
+</li>
+<li><p><strong>交换器、队列、绑定、路由键</strong>：队列通过路由键（routing key）绑定到交换器，生产者把消息发送到交换器，交换器根据绑定的路由键把消息路由到特定的队列中，再由订阅该队列的消费者进行消息的消费。</p>
+</li>
+</ul>
+<p><img src="https://qqadapt.qpic.cn/txdocpic/0/c6759897ee7147a529d599df4c880a3d/0" alt="img"></p>
+<br>
+
+<h1 id="5、客户端开发"><a href="#5、客户端开发" class="headerlink" title="5、客户端开发"></a>5、客户端开发</h1><h3 id="5-1、连接rabbitmq"><a href="#5-1、连接rabbitmq" class="headerlink" title="5.1、连接rabbitmq"></a>5.1、连接rabbitmq</h3><p>connection</p>
+<p>channel</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">connection = new AMQPStreamConnection(Yii::<span class="variable">$app</span>-&gt;params[<span class="string">'AMQP'</span>][<span class="string">'host'</span>],Yii::<span class="variable">$app</span>-&gt;params[<span class="string">'AMQP'</span>][<span class="string">'port'</span>], Yii::<span class="variable">$app</span>-&gt;params[<span class="string">'AMQP'</span>][<span class="string">'user'</span>],Yii::<span class="variable">$app</span>-&gt;params[<span class="string">'AMQP'</span>][<span class="string">'password'</span>]);</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash">channel = <span class="variable">$connection</span>-&gt;channel();</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="5-2、声明exchange和queue"><a href="#5-2、声明exchange和queue" class="headerlink" title="5.2、声明exchange和queue"></a>5.2、声明exchange和queue</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">exchange_declare</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        $exchange,  // string, 交换器名</span></span></span><br><span class="line"><span class="function"><span class="params">        $type,  // string, 例如 <span class="string">'direct'</span>, <span class="string">'fanout'</span>, <span class="string">'topic'</span></span></span></span><br><span class="line"><span class="function"><span class="params">        $passive = false,  // 如果已经存在，是否报错</span></span></span><br><span class="line"><span class="function"><span class="params">        $durable = false,  // 是否持久化</span></span></span><br><span class="line"><span class="function"><span class="params">        $auto_delete = true,  // 所有与该交换器绑定的队列都解绑以后，自动删除</span></span></span><br><span class="line"><span class="function"><span class="params">        $internal = false,  // 是否内置交换器，客户端消息无法发送到内置交换器</span></span></span><br><span class="line"><span class="function"><span class="params">        $nowait = false,  // 是否不需要broker返回结果</span></span></span><br><span class="line"><span class="function"><span class="params">        $arguments = null,  // 参数，如死信队列，ttl等</span></span></span><br><span class="line"><span class="function"><span class="params">        $ticket = null</span></span></span><br><span class="line"><span class="function"><span class="params">)</span> </span>&#123;&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">queue_declare</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        $queue = <span class="string">''</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">        $passive = false,</span></span></span><br><span class="line"><span class="function"><span class="params">        $durable = false,</span></span></span><br><span class="line"><span class="function"><span class="params">        $exclusive = false, // 是否排他，排他队列仅对首次声明它的连接可见，断开时自动删除</span></span></span><br><span class="line"><span class="function"><span class="params">        $auto_delete = true, // 自动删除，所有与这个队列连接的消费者都断开时自动删除</span></span></span><br><span class="line"><span class="function"><span class="params">        $nowait = false,</span></span></span><br><span class="line"><span class="function"><span class="params">        $arguments = null,</span></span></span><br><span class="line"><span class="function"><span class="params">        $ticket = null</span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">queue_bind</span><span class="params">($queue, $exchange, $routing_key = <span class="string">''</span>, $nowait = false, $arguments = null, $ticket = null)</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>举例</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$channel-&gt;exchange_declare(<span class="keyword">self</span>::FXC_EXCHANGE, <span class="string">'direct'</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">false</span>);</span><br><span class="line">$argsAMQ = <span class="keyword">new</span> AMQPTable();</span><br><span class="line">$argsAMQ-&gt;set(<span class="string">'x-dead-letter-exchange'</span>, <span class="keyword">self</span>::FXC_EXCHANGE);</span><br><span class="line">$argsAMQ-&gt;set(<span class="string">'x-dead-letter-routing-key'</span>, <span class="keyword">self</span>::FXC_ROUTING_ERROR);</span><br><span class="line">$channel-&gt;queue_declare(<span class="keyword">self</span>::FXC_MSG_QUEUE, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, $argsAMQ);</span><br><span class="line">$channel-&gt;queue_bind(<span class="keyword">self</span>::FXC_MSG_QUEUE, <span class="keyword">self</span>::FXC_EXCHANGE, <span class="keyword">self</span>::FXC_ROUTING_NORMAL);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="5-3、发送消息"><a href="#5-3、发送消息" class="headerlink" title="5.3、发送消息"></a>5.3、发送消息</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">basic_publish</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    $msg,</span></span></span><br><span class="line"><span class="function"><span class="params">    $exchange = <span class="string">''</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">    $routing_key = <span class="string">''</span>,  // 路由键</span></span></span><br><span class="line"><span class="function"><span class="params">    $mandatory = false,  // 交换器无法根据 exchange和路由键找到对应的队列时，$mandatory 为 true，则会basic.return给生产者；如果为false，则直接丢弃</span></span></span><br><span class="line"><span class="function"><span class="params">    $immediate = false,  // true-如果消息路由到队列以后，发现队列上没有任何消费者则返回给生产者，有消费者则立刻投递给消费者</span></span></span><br><span class="line"><span class="function"><span class="params">    $ticket = null</span></span></span><br><span class="line"><span class="function"><span class="params">)</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="5-4、消费消息"><a href="#5-4、消费消息" class="headerlink" title="5.4、消费消息"></a>5.4、消费消息</h3><h4 id="1）推模式"><a href="#1）推模式" class="headerlink" title="1）推模式"></a>1）推模式</h4><p>broker向消费者持续不断的推消息</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">basic_consume</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    $queue = <span class="string">''</span>,   // 队列名称</span></span></span><br><span class="line"><span class="function"><span class="params">    $consumer_tag = <span class="string">''</span>, // 消费者标签，用于区分多个消费者</span></span></span><br><span class="line"><span class="function"><span class="params">    $no_local = false, // 设为true表示，不能见同一个connection中生产者发送的消息传送给这个connection的消费者</span></span></span><br><span class="line"><span class="function"><span class="params">    $no_ack = false, // 是否自动确认</span></span></span><br><span class="line"><span class="function"><span class="params">    $exclusive = false, // 是否排他</span></span></span><br><span class="line"><span class="function"><span class="params">    $nowait = false,</span></span></span><br><span class="line"><span class="function"><span class="params">    $callback = null,</span></span></span><br><span class="line"><span class="function"><span class="params">    $ticket = null,</span></span></span><br><span class="line"><span class="function"><span class="params">    $arguments = array<span class="params">()</span></span></span></span><br><span class="line"><span class="function"><span class="params">)</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2）拉模式"><a href="#2）拉模式" class="headerlink" title="2）拉模式"></a>2）拉模式</h4><p>消费者一条条从broker拉取消息</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">basic_get</span><span class="params">($queue = <span class="string">''</span>, $no_ack = false, $ticket = null)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>举例</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">    $getResponse = $channel-&gt;basic_get(<span class="keyword">self</span>::FXC_MSG_QUEUE, <span class="keyword">false</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>($getResponse)) &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    $msg = json_decode($getResponse-&gt;body, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-幂等性"><a href="#3-幂等性" class="headerlink" title="3) 幂等性"></a>3) 幂等性</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(x) = f(f(x))</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="5-5、消费端的确认与拒绝"><a href="#5-5、消费端的确认与拒绝" class="headerlink" title="5.5、消费端的确认与拒绝"></a>5.5、消费端的确认与拒绝</h3><p>确认消息已消费</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">basic_ack</span><span class="params">($delivery_tag, $multiple = false)</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>拒绝消息</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 拒绝单条信息</span></span><br><span class="line"><span class="comment">// requeue true-重新放回队列供其他消费者消费，false-从队列中彻底移除（有死信队列会放入死信队列）</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">basic_reject</span><span class="params">($delivery_tag, $requeue)</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 拒绝多条信息</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">basic_nack</span><span class="params">($delivery_tag, $multiple = false, $requeue = false)</span></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="5-6、关闭连接"><a href="#5-6、关闭连接" class="headerlink" title="5.6、关闭连接"></a>5.6、关闭连接</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash">channel-&gt;close();</span></span><br><span class="line"><span class="meta">$</span><span class="bash">connection-&gt;close();</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="6、rabbitmq使用进阶"><a href="#6、rabbitmq使用进阶" class="headerlink" title="6、rabbitmq使用进阶"></a>6、rabbitmq使用进阶</h1><h3 id="6-1、消息何去何从"><a href="#6-1、消息何去何从" class="headerlink" title="6.1、消息何去何从"></a>6.1、消息何去何从</h3><p>只有交换器没有绑定队列的消息会发送到哪？</p>
+<h4 id="1）mandatory"><a href="#1）mandatory" class="headerlink" title="1）mandatory"></a>1）mandatory</h4><p>交换器无法根据 exchange和路由键找到对应的队列时，$mandatory 为 true，则会basic.return给生产者；如果为false，则直接丢弃</p>
+<h4 id="2）immediate"><a href="#2）immediate" class="headerlink" title="2）immediate"></a>2）immediate</h4><p>true-如果消息路由到队列以后，发现队列上没有任何消费者则返回给生产者，有消费者则立刻投递给消费者</p>
+<br>
+
+<h3 id="6-2、过期时间TTL"><a href="#6-2、过期时间TTL" class="headerlink" title="6.2、过期时间TTL"></a>6.2、过期时间TTL</h3><h4 id="1）设置消息的TTL"><a href="#1）设置消息的TTL" class="headerlink" title="1）设置消息的TTL"></a>1）设置消息的TTL</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x-message-ttl 6000</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="2）设置队列的TTL"><a href="#2）设置队列的TTL" class="headerlink" title="2）设置队列的TTL"></a>2）设置队列的TTL</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x-expires 180000</span><br></pre></td></tr></table></figure>
+
+<p>当队列上没有任何消费者，且过期时间内没有调用basic.get 则会被删除</p>
+<p>如果broker重启了，持久化的队列的过期时间会被重新计算</p>
+<br>
+
+<h3 id="6-3、死信队列"><a href="#6-3、死信队列" class="headerlink" title="6.3、死信队列"></a>6.3、死信队列</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x-dead-letter-exchange</span><br><span class="line">x-dead-letter-routing-key</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="6-4、延迟队列"><a href="#6-4、延迟队列" class="headerlink" title="6.4、延迟队列"></a>6.4、延迟队列</h3><p>rabbitmq本身并没有实现延迟队列，不过可以用 TTL + 死信队列 达到延迟队列的效果</p>
+<br>
+
+<h3 id="6-5、优先级队列"><a href="#6-5、优先级队列" class="headerlink" title="6.5、优先级队列"></a>6.5、优先级队列</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1. 将队列设置成优先级队列</span></span><br><span class="line">x-max-priority 10</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. 对消息设置优先级</span></span><br><span class="line">priority</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="6-6、RPC实现"><a href="#6-6、RPC实现" class="headerlink" title="6.6、RPC实现"></a>6.6、RPC实现</h3><blockquote>
+<p>文档：<a href="https://www.rabbitmq.com/tutorials/tutorial-six-python.html" target="_blank" rel="noopener">https://www.rabbitmq.com/tutorials/tutorial-six-python.html</a></p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409150936.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200414212647.png" alt></p>
+<blockquote>
+<p>RPC处理流程如下：</p>
+<ol>
+<li>客户端启动时，创建一个匿名回调队列（由rabbitmq自动创建）；</li>
+<li>客户端为RPC请求设置2个属性：replyTo用来告知RPC服务端回复请求时的目的队列，即回调队列；correlationId 用来标记一个请求；</li>
+<li>请求被发送到 rpc_queue队列中；</li>
+<li>RPC 服务端 监听 rpc_queue 队列中的请求，当请求到来时，服务端会处理并且把带有结果的消息发送给客户端。接收的队列就是 replyTo设定的回调队列；</li>
+<li>客户端监听回调队列，当有消息时，检查correlationId属性，如果与请求匹配，那就是结果了；</li>
+</ol>
+</blockquote>
+<p>RPCClient.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.rabbitmq.client.AMQP;</span><br><span class="line"><span class="keyword">import</span> com.rabbitmq.client.Channel;</span><br><span class="line"><span class="keyword">import</span> com.rabbitmq.client.Connection;</span><br><span class="line"><span class="keyword">import</span> com.rabbitmq.client.ConnectionFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.UUID;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ArrayBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.BlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeoutException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RPCClient</span> <span class="keyword">implements</span> <span class="title">AutoCloseable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Connection connection;</span><br><span class="line">    <span class="keyword">private</span> Channel channel;</span><br><span class="line">    <span class="keyword">private</span> String requestQueueName = <span class="string">"rpc_queue"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RPCClient</span><span class="params">()</span> <span class="keyword">throws</span> IOException, TimeoutException </span>&#123;</span><br><span class="line">        ConnectionFactory factory = <span class="keyword">new</span> ConnectionFactory();</span><br><span class="line">        factory.setHost(<span class="string">"localhost"</span>);</span><br><span class="line"></span><br><span class="line">        connection = factory.newConnection();</span><br><span class="line">        channel = connection.createChannel();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] argv)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> (RPCClient fibonacciRpc = <span class="keyword">new</span> RPCClient()) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++) &#123;</span><br><span class="line">                String i_str = Integer.toString(i);</span><br><span class="line">                System.out.println(<span class="string">" [x] Requesting fib("</span> + i_str + <span class="string">")"</span>);</span><br><span class="line">                String response = fibonacciRpc.call(i_str);</span><br><span class="line">                System.out.println(<span class="string">" [.] Got '"</span> + response + <span class="string">"'"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException | TimeoutException | InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">call</span><span class="params">(String message)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> String corrId = UUID.randomUUID().toString();</span><br><span class="line"></span><br><span class="line">        String replyQueueName = channel.queueDeclare().getQueue();</span><br><span class="line">        AMQP.BasicProperties props = <span class="keyword">new</span> AMQP.BasicProperties</span><br><span class="line">                .Builder()</span><br><span class="line">                .correlationId(corrId)</span><br><span class="line">                .replyTo(replyQueueName)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        channel.basicPublish(<span class="string">""</span>, requestQueueName, props, message.getBytes(<span class="string">"UTF-8"</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> BlockingQueue&lt;String&gt; response = <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        String ctag = channel.basicConsume(replyQueueName, <span class="keyword">true</span>, (consumerTag, delivery) -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (delivery.getProperties().getCorrelationId().equals(corrId)) &#123;</span><br><span class="line">                response.offer(<span class="keyword">new</span> String(delivery.getBody(), <span class="string">"UTF-8"</span>));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;, consumerTag -&gt; &#123;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        String result = response.take();</span><br><span class="line">        channel.basicCancel(ctag);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        connection.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>RPCServer.java</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">import com.rabbitmq.client.*;</span><br><span class="line"></span><br><span class="line">public class RPCServer &#123;</span><br><span class="line"></span><br><span class="line">    private static final String RPC_QUEUE_NAME = "rpc_queue";</span><br><span class="line"></span><br><span class="line">    private static int fib(int n) &#123;</span><br><span class="line">        if (n == 0) return 0;</span><br><span class="line">        if (n == 1) return 1;</span><br><span class="line">        return fib(n - 1) + fib(n - 2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] argv) throws Exception &#123;</span><br><span class="line">        ConnectionFactory factory = new ConnectionFactory();</span><br><span class="line">        factory.setHost("localhost");</span><br><span class="line"></span><br><span class="line">        try (Connection connection = factory.newConnection();</span><br><span class="line">             Channel channel = connection.createChannel()) &#123;</span><br><span class="line">            channel.queueDeclare(RPC_QUEUE_NAME, false, false, false, null);</span><br><span class="line">            channel.queuePurge(RPC_QUEUE_NAME);</span><br><span class="line"></span><br><span class="line">            channel.basicQos(1);</span><br><span class="line"></span><br><span class="line">            System.out.println(" [x] Awaiting RPC requests");</span><br><span class="line"></span><br><span class="line">            Object monitor = new Object();</span><br><span class="line">            DeliverCallback deliverCallback = (consumerTag, delivery) -&gt; &#123;</span><br><span class="line">                AMQP.BasicProperties replyProps = new AMQP.BasicProperties</span><br><span class="line">                        .Builder()</span><br><span class="line">                        .correlationId(delivery.getProperties().getCorrelationId())</span><br><span class="line">                        .build();</span><br><span class="line"></span><br><span class="line">                String response = "";</span><br><span class="line"></span><br><span class="line">                try &#123;</span><br><span class="line">                    String message = new String(delivery.getBody(), "UTF-8");</span><br><span class="line">                    int n = Integer.parseInt(message);</span><br><span class="line"></span><br><span class="line">                    System.out.println(" [.] fib(" + message + ")");</span><br><span class="line">                    response += fib(n);</span><br><span class="line">                &#125; catch (RuntimeException e) &#123;</span><br><span class="line">                    System.out.println(" [.] " + e.toString());</span><br><span class="line">                &#125; finally &#123;</span><br><span class="line">                    channel.basicPublish("", delivery.getProperties().getReplyTo(), replyProps, response.getBytes("UTF-8"));</span><br><span class="line">                    channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);</span><br><span class="line">                    // RabbitMq consumer worker thread notifies the RPC server owner thread</span><br><span class="line">                    synchronized (monitor) &#123;</span><br><span class="line">                        monitor.notify();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            channel.basicConsume(RPC_QUEUE_NAME, false, deliverCallback, (consumerTag -&gt; &#123; &#125;));</span><br><span class="line">            // Wait and be prepared to consume the message from RPC client.</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                synchronized (monitor) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        monitor.wait();</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="6-7、持久化"><a href="#6-7、持久化" class="headerlink" title="6.7、持久化"></a>6.7、持久化</h3><blockquote>
+<ul>
+<li>交换器持久化</li>
+<li>队列持久化</li>
+<li>消息持久化</li>
+</ul>
+</blockquote>
+<p>只有 queue 和 msg 都持久化，broker重启之后才会存在；</p>
+<p>queue不持久化，msg持久化，broker重启之后消息也会丢失；</p>
+<blockquote>
+<ul>
+<li>重要的消息要考虑持久化，但持久化会严重影响rabbitmq的性能。在 可靠性和吞吐量之间要做取舍；</li>
+<li>持久化并不能保证消息不会丢失。还可以考虑镜像队列、发送方确认、事务机制</li>
+</ul>
+</blockquote>
+<br>
+
+<h3 id="6-8、生产者确认"><a href="#6-8、生产者确认" class="headerlink" title="6.8、生产者确认"></a>6.8、生产者确认</h3><blockquote>
+<p>生产者将消息发送出去以后，消息是否到达了 broker呢？</p>
+</blockquote>
+<h4 id="1）事务机制"><a href="#1）事务机制" class="headerlink" title="1）事务机制"></a>1）事务机制</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    channel.txSelect();</span><br><span class="line">	channel.basicPublish();</span><br><span class="line">	channel.txCommit();</span><br><span class="line">&#125; cacth (Exception e) &#123;</span><br><span class="line">    channel.txRollback();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409140015.png" alt></p>
+<blockquote>
+<p>不足：事务机制会吸干rabbitmq的性能。所以有些场景考虑用发送方确认机制来达到相同的目的</p>
+</blockquote>
+<h4 id="2）发送方确认机制"><a href="#2）发送方确认机制" class="headerlink" title="2）发送方确认机制"></a>2）发送方确认机制</h4><p>​    生产者将新到设置为confirm模式，一旦进入confirm模式，所有在该信到上发布的消息都会被指派一个唯一ID，一旦消息被投递到匹配的队列，rabbitmq就会发送一个确认（basic.Ack）给生产者（包含唯一ID）；</p>
+<p>​    如果消息和队列是持久化的，则会在消息写入磁盘后发出。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409140713.png" alt></p>
+<blockquote>
+<p>对比</p>
+<ul>
+<li>事务机制在一条消息发送之后使发送端阻塞，以等待rabbitmq的回应，之后才能发送下一条消息；</li>
+<li>发送方确认最大的好处是它是异步的</li>
+</ul>
+</blockquote>
+<p>同步确认</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	channel.confirmSelect();</span><br><span class="line">	channel.basicPublic();</span><br><span class="line">	<span class="keyword">if</span> (!channel.waitForConfirms()) &#123;</span><br><span class="line">		println(<span class="string">"send msg fail."</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">	e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>批量确认</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    channel.confirmSelect();</span><br><span class="line">    <span class="keyword">int</span> msgCount = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">        channel.basicPublish();</span><br><span class="line">        <span class="comment">// TODO：将发送出去的消息放如缓存(List 或 BlockingQueue)</span></span><br><span class="line">        <span class="keyword">if</span> (++msgCount &gt;= BATCH_COUNT) &#123;</span><br><span class="line">            msgCount = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (channel.waitForConfirms()) &#123;</span><br><span class="line">                    <span class="comment">// <span class="doctag">TODO:</span> 将缓存中的消息清空</span></span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// TODO： 将缓存中的消息重新发送</span></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                <span class="comment">// <span class="doctag">TODO:</span> 将缓存中的消息重新发送</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>异步确认</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">channel.confirmSelect();</span><br><span class="line">channel.addConfirmListener(<span class="keyword">new</span> ConfirmListener() &#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleAck</span><span class="params">(<span class="keyword">long</span> deliveryTag, <span class="keyword">boolean</span> multiple)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (multiple) &#123;</span><br><span class="line">			confirmSet.headSet(deliveryTag + <span class="number">1</span>).clear();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			confirmSet.remove(deliveryTag);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleNack</span><span class="params">(<span class="keyword">long</span> deliveryTag, <span class="keyword">boolean</span> multiple)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (multiple) &#123;</span><br><span class="line">			confirmSet.headSet(deliveryTag + <span class="number">1</span>).clear();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			confirmSet.remove(deliveryTag);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// TODO：注意这里需要添加 消息重发的 场景</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">	<span class="keyword">long</span> nextSeqNo = channel.getnnnextPublishSeqNo();</span><br><span class="line">	channel.basicPublish(...., ConfirmConfig.msg_10B.getBytes());</span><br><span class="line">	confirmSet.add(nextSeqNo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="6-9、消费端要点确认"><a href="#6-9、消费端要点确认" class="headerlink" title="6.9、消费端要点确认"></a>6.9、消费端要点确认</h3><h4 id="1）消息分发"><a href="#1）消息分发" class="headerlink" title="1）消息分发"></a>1）消息分发</h4><p>​    默认清空下，通过轮询将消息发送给每个消费者，但如果有些消费者负载已经满了，另一些消费者空闲，就会造成整体吞吐量下降。</p>
+<p>​    可以通过 <code>channel.basicQos(n)</code> 设置信道上最大未确认消息数量，如果未确认消息数量已达到n，则不会再向这个消费者发送消息；</p>
+<blockquote>
+<p>注意：channel.BasicQos 对 拉模式无效</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">channel.basicQos(int perfetchCount);</span><br><span class="line">channel.basicQos(int perfetchCount, boolean global);</span><br><span class="line">channel.basicQos(int prefetchSize, int perfetchCount, boolean global);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>perfetchCount：预取个数，0表示无限；大于0，则信道跟队列需要协调发送的消息没有超过限定的值；</li>
+<li>prefetchSize：未确认消息个数，0表示无限；大于0，则需要协调</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>global参数</th>
+<th>AMQP 0-9-1</th>
+<th>rabbitmq</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>false</td>
+<td>信道上所有消费者都要遵循 prefetchCount 限制</td>
+<td>信道上新的消费者需要遵循prefetchCount限定</td>
+</tr>
+<tr>
+<td>true</td>
+<td>当前链路(Connection)上所有消费者都要遵循</td>
+<td>信道上所有消费者都要遵循 prefetchCount 限制</td>
+</tr>
+</tbody></table>
+<br>
+
+<h4 id="2）消息顺序性"><a href="#2）消息顺序性" class="headerlink" title="2）消息顺序性"></a>2）消息顺序性</h4><p>在只有一个生产者一个消费者的情况下，且不使用任何rabbitmq的高级特性的情况下，消息是有序的。否则需要自己保证消息有序</p>
+<br>
+
+<h4 id="3）弃用QueueingConsumer"><a href="#3）弃用QueueingConsumer" class="headerlink" title="3）弃用QueueingConsumer"></a>3）弃用QueueingConsumer</h4><ul>
+<li>有内存溢出问题</li>
+<li>会拖累一个connection下的所有信道</li>
+<li>同步递归调用会产生死锁</li>
+<li>不是时间驱动的</li>
+</ul>
+<br>
+
+<h3 id="6-10、消息传输保障"><a href="#6-10、消息传输保障" class="headerlink" title="6.10、消息传输保障"></a>6.10、消息传输保障</h3><ul>
+<li>At most once：最多一次</li>
+<li>At least once：至少一次</li>
+<li>Exactly once：恰好一次</li>
+</ul>
+<br>
+
+<h1 id="7、rabbitmq核心设计"><a href="#7、rabbitmq核心设计" class="headerlink" title="7、rabbitmq核心设计"></a>7、rabbitmq核心设计</h1><h3 id="7-1、存储机制"><a href="#7-1、存储机制" class="headerlink" title="7.1、存储机制"></a>7.1、存储机制</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bash-5.0# pwd</span><br><span class="line">/var/lib/rabbitmq/mnesia/rabbit@rabbitmq001/msg_stores/vhosts/628WB79CIFDYO9LJI6DKMI09L</span><br><span class="line">bash-5.0# ls -l</span><br><span class="line">total 20</span><br><span class="line">drwxr-xr-x    2 rabbitmq rabbitmq      4096 Jan  7 06:29 msg_store_persistent</span><br><span class="line">drwxr-xr-x    2 rabbitmq rabbitmq      4096 Jan  7 06:29 msg_store_transient</span><br><span class="line">drwxr-xr-x    3 rabbitmq rabbitmq      4096 Apr  1 04:09 queues</span><br><span class="line">-rw-r--r--    1 rabbitmq rabbitmq      5464 Jan  7 06:29 recovery.dets</span><br><span class="line">bash-5.0#</span><br></pre></td></tr></table></figure>
+
+<h4 id="1）队列的结构"><a href="#1）队列的结构" class="headerlink" title="1）队列的结构"></a>1）队列的结构</h4><p>rabbitmq 中的消息可能处于一下4中状态：</p>
+<ul>
+<li>alpha：消息内容、索引都存在内存中；</li>
+<li>beta：消息内容保存在磁盘中，索引保存在内存中；</li>
+<li>gamma：消息内容保存在磁盘中，消息索引保存在磁盘和内存中；</li>
+<li>delta：消息内容和索引都在磁盘中；</li>
+</ul>
+<p>这4种状态的主要作用是满足不同的内存和CPI需求。 alpha最耗内存，最少耗cpu；delta基本不耗内存，却最耗cpu和I/O；</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410133628.png" alt></p>
+<ul>
+<li>Q1 和 Q4 只包含 alpha 状态的消息</li>
+<li>Q2 和 Q3 包含 beta 和 gamma 状态的消息</li>
+<li>Delta 只包含 delta 状态的消息</li>
+</ul>
+<br>
+
+<h4 id="2）惰性队列"><a href="#2）惰性队列" class="headerlink" title="2）惰性队列"></a>2）惰性队列</h4><p>惰性队列会尽可能的 将消息存入磁盘，减少内存的小号，增加 I/O 的使用</p>
+<p>队列具备两种模式：default 和 lazy</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x-queue-mode lazy</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="7-2、内存和磁盘告警"><a href="#7-2、内存和磁盘告警" class="headerlink" title="7.2、内存和磁盘告警"></a>7.2、内存和磁盘告警</h3><h4 id="1）内存告警"><a href="#1）内存告警" class="headerlink" title="1）内存告警"></a>1）内存告警</h4><p>Connection 处于 blocking 或 blocked 状态下</p>
+<p>可以通过 rabbitmq.conf 来设置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vm_memory_high_watermark</span><br><span class="line">vm_memory_high_watermark_paging_ratio</span><br></pre></td></tr></table></figure>
+
+<p>因为erlang虚拟机的垃圾回收可能占用 2被的内存，所以 vm_memory_high_watermark 一般不超过 70%， 取值范围为 [0.4, 0.66]</p>
+<p>vm_memory_high_watermark_paging_ratio 表示 当 vm_memory_high_watermark 范围内的内存占用超过 vm_memory_high_watermark_paging_ratio时，就会从内存swap到磁盘上</p>
+<br>
+
+<h4 id="2）磁盘告警"><a href="#2）磁盘告警" class="headerlink" title="2）磁盘告警"></a>2）磁盘告警</h4><p>默认情况下，当系统磁盘占用只剩 50MB时，就会报警。但50MB可能不够用，一个谨慎的做法是 设置为和操作系统的内存一样大</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 建议范围 1.0 ~ 2.0 之间</span></span><br><span class="line">disk_free_limit.mem_relative = 1.0</span><br></pre></td></tr></table></figure>
+
+<p>rabbitmq 每 10s 会进行一次检测</p>
+<br>
+
+<h3 id="7-3、流控"><a href="#7-3、流控" class="headerlink" title="7.3、流控"></a>7.3、流控</h3><h4 id="1）流控的原理"><a href="#1）流控的原理" class="headerlink" title="1）流控的原理"></a>1）流控的原理</h4><p>信用证算法（credit-based algorithm）：当消息堆积到一定程度时，就会阻塞 接收上游新消息</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410135954.png" alt></p>
+<p>当 connection 、channel、queue 处于 flow 状态时，表示触发了限流，在 blocked  和 unblock 之间切换</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140022.png" alt></p>
+<ul>
+<li>rabbit_reader：connection 的 处理进程，负责接收、解析 AMQP 协议数据包；</li>
+<li>rabbit_channel： channel 处理进程，负责处理 AMQP 协议的各种方法，进而进行路由解析；</li>
+<li>rabbit_amqqueue_process：队列的处理进程，负责实现队列的所有逻辑；</li>
+<li>rabbit_msg_store：负责实现消息的持久化；</li>
+</ul>
+<br>
+
+<h4 id="2）打破队列的瓶颈"><a href="#2）打破队列的瓶颈" class="headerlink" title="2）打破队列的瓶颈"></a>2）打破队列的瓶颈</h4><p>向一个队列中推送消息时，往往会在 <code>rabbit_amqqueue_process</code> 中 产生瓶颈。</p>
+<p>提升性能方案：</p>
+<ol>
+<li>使用HiPE功能，保守估计可以提升 30%~40% 的 性能（不过erlang的版本至少为 18.X）</li>
+<li>使用多个rabbit_amqqueue_process， 负载均衡的方案（创建多个队列，不同的队列绑定不同的路由键）</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140047.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140102.png" alt></p>
+<br>
+
+<h3 id="7-4、镜像队列"><a href="#7-4、镜像队列" class="headerlink" title="7.4、镜像队列"></a>7.4、镜像队列</h3><br>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rabbitmq/" rel="tag"># rabbitmq</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/message-queue/rabbitmq/rabbitmq-1-setup/" rel="next" title="rabbitmq-安装和集群部署">
+                <i class="fa fa-chevron-left"></i> rabbitmq-安装和集群部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/message-queue/rabbitmq/rabbitmq-3-cluster-and-manager/" rel="prev" title="rabbitmq-集群运维和管理">
+                rabbitmq-集群运维和管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">192</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">97</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、什么是消息中间件"><span class="nav-text">1、什么是消息中间件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、消息中间件的作用"><span class="nav-text">2、消息中间件的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、AMQP协议"><span class="nav-text">3、AMQP协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AMQP组件"><span class="nav-text">AMQP组件</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#5、客户端开发"><span class="nav-text">5、客户端开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1、连接rabbitmq"><span class="nav-text">5.1、连接rabbitmq</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2、声明exchange和queue"><span class="nav-text">5.2、声明exchange和queue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3、发送消息"><span class="nav-text">5.3、发送消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4、消费消息"><span class="nav-text">5.4、消费消息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）推模式"><span class="nav-text">1）推模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）拉模式"><span class="nav-text">2）拉模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-幂等性"><span class="nav-text">3) 幂等性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5、消费端的确认与拒绝"><span class="nav-text">5.5、消费端的确认与拒绝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6、关闭连接"><span class="nav-text">5.6、关闭连接</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6、rabbitmq使用进阶"><span class="nav-text">6、rabbitmq使用进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1、消息何去何从"><span class="nav-text">6.1、消息何去何从</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）mandatory"><span class="nav-text">1）mandatory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）immediate"><span class="nav-text">2）immediate</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2、过期时间TTL"><span class="nav-text">6.2、过期时间TTL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）设置消息的TTL"><span class="nav-text">1）设置消息的TTL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）设置队列的TTL"><span class="nav-text">2）设置队列的TTL</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3、死信队列"><span class="nav-text">6.3、死信队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4、延迟队列"><span class="nav-text">6.4、延迟队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5、优先级队列"><span class="nav-text">6.5、优先级队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6、RPC实现"><span class="nav-text">6.6、RPC实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7、持久化"><span class="nav-text">6.7、持久化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-8、生产者确认"><span class="nav-text">6.8、生产者确认</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）事务机制"><span class="nav-text">1）事务机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）发送方确认机制"><span class="nav-text">2）发送方确认机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-9、消费端要点确认"><span class="nav-text">6.9、消费端要点确认</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）消息分发"><span class="nav-text">1）消息分发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）消息顺序性"><span class="nav-text">2）消息顺序性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3）弃用QueueingConsumer"><span class="nav-text">3）弃用QueueingConsumer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-10、消息传输保障"><span class="nav-text">6.10、消息传输保障</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7、rabbitmq核心设计"><span class="nav-text">7、rabbitmq核心设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1、存储机制"><span class="nav-text">7.1、存储机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）队列的结构"><span class="nav-text">1）队列的结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）惰性队列"><span class="nav-text">2）惰性队列</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2、内存和磁盘告警"><span class="nav-text">7.2、内存和磁盘告警</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）内存告警"><span class="nav-text">1）内存告警</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）磁盘告警"><span class="nav-text">2）磁盘告警</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3、流控"><span class="nav-text">7.3、流控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）流控的原理"><span class="nav-text">1）流控的原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）打破队列的瓶颈"><span class="nav-text">2）打破队列的瓶颈</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4、镜像队列"><span class="nav-text">7.4、镜像队列</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

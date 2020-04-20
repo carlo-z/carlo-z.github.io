@@ -448,7 +448,7 @@
 <p>　　2、但是，doublewrite buffer写入磁盘共享表空间这个过程是连续存储，是顺序写，性能非常高，(约占写的%10)，牺牲一点写性能来保证数据页的完整还是很有必要的。</p>
 <br>
 
-<h3 id="2、监控-doublewrite-工作负载"><a href="#2、监控-doublewrite-工作负载" class="headerlink" title="2、监控 doublewrite 工作负载"></a>2、监控 doublewrite 工作负载</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> show global status like '%dblwr%';</span><br><span class="line">+----------------------------+-------+</span><br><span class="line">| Variable_name              | Value |</span><br><span class="line">+----------------------------+-------+</span><br><span class="line">| Innodb_dblwr_pages_written | 92384 |</span><br><span class="line">| Innodb_dblwr_writes        | 18862 |</span><br><span class="line">+----------------------------+-------+</span><br><span class="line">2 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+<h3 id="2、监控-doublewrite-工作负载"><a href="#2、监控-doublewrite-工作负载" class="headerlink" title="2、监控 doublewrite 工作负载"></a>2、监控 doublewrite 工作负载</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> show global status like <span class="string">'%dblwr%'</span>;</span></span><br><span class="line">+----------------------------+-------+</span><br><span class="line">| Variable_name              | Value |</span><br><span class="line">+----------------------------+-------+</span><br><span class="line">| Innodb_dblwr_pages_written | 92384 |</span><br><span class="line">| Innodb_dblwr_writes        | 18862 |</span><br><span class="line">+----------------------------+-------+</span><br><span class="line">2 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
 
 <p>　　关注点：Innodb_dblwr_pages_written / Innodb_dblwr_writes</p>
 <p>　　开启doublewrite后，每次脏页刷新必须要先写doublewrite，而doublewrite存在于磁盘上的是两个连续的区，每个区由连续的页组成，一般情况下一个区最多有64个页，所以一次IO写入应该可以最多写64个页。</p>
@@ -458,7 +458,7 @@
 <h3 id="3、关闭double-write适合的场景"><a href="#3、关闭double-write适合的场景" class="headerlink" title="3、关闭double write适合的场景"></a>3、关闭double write适合的场景</h3><p>1、海量DML</p>
 <p>2、不惧怕数据损坏和丢失</p>
 <p>3、系统写负载成为主要负载</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> show variables like '%double%';</span><br><span class="line">+--------------------+-------+</span><br><span class="line">| Variable_name      | Value |</span><br><span class="line">+--------------------+-------+</span><br><span class="line">| innodb_doublewrite | ON    |</span><br><span class="line">+--------------------+-------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> show variables like <span class="string">'%double%'</span>;</span></span><br><span class="line">+--------------------+-------+</span><br><span class="line">| Variable_name      | Value |</span><br><span class="line">+--------------------+-------+</span><br><span class="line">| innodb_doublewrite | ON    |</span><br><span class="line">+--------------------+-------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
 
 <p>　　作为InnoDB的一个关键特性，doublewrite功能默认是开启的，但是在上述特殊的一些场景也可以视情况关闭，来提高数据库写性能。静态参数，配置文件修改，重启数据库。</p>
 <p>4、为什么没有把double write里面的数据写到data page里面呢？</p>
@@ -490,8 +490,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/mysql/mysql-innodb-disk-iot/" rel="next" title="mysql5.6 innodb 索引组织表">
-                <i class="fa fa-chevron-left"></i> mysql5.6 innodb 索引组织表
+              <a href="/message-queue/kafka/3-kafka-design-principle/" rel="next" title="3、kafka设计原理">
+                <i class="fa fa-chevron-left"></i> 3、kafka设计原理
               </a>
             
           </div>
@@ -500,8 +500,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/java/netty/netty-nio/" rel="prev" title="Netty-4.1.3X NIO与平台相关性">
-                Netty-4.1.3X NIO与平台相关性 <i class="fa fa-chevron-right"></i>
+              <a href="/mysql/mysql-innodb-disk-iot/" rel="prev" title="mysql5.6 innodb 索引组织表">
+                mysql5.6 innodb 索引组织表 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -584,7 +584,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">189</span>
+                  <span class="site-state-item-count">192</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -595,7 +595,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -606,7 +606,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">96</span>
+                  <span class="site-state-item-count">97</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

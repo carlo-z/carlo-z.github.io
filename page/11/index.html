@@ -314,6 +314,1201 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/springcloud/mall-swarm-deploy-by-jenkins/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/java/springcloud/mall-swarm-deploy-by-jenkins/" itemprop="url">使用jenkins自动化部署mall-swarm</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-19T00:00:00+08:00">
+                2018-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jenkins/" itemprop="url" rel="index">
+                    <span itemprop="name">jenkins</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<p>在微服务架构中，随着服务越来越多，服务的打包部署就会成为一个相当麻烦的事情。比如说我的<code>mall-swarm</code>项目目前就有8个服务需要部署，有没有什么办法让我们部署一次之后，只要点击执行就可以自动部署呢？当然有！下面我们使用Jenkins来完成一个微服务架构中的自动化部署工作。</p>
+</blockquote>
+<br>
+
+<h1 id="1、基础环境部署"><a href="#1、基础环境部署" class="headerlink" title="1、基础环境部署"></a>1、基础环境部署</h1><blockquote>
+<p><code>mall-swarm</code>运行需要的系统组件如下，Docker容器中安装这些组件的方法直接参考该文章即可：<a href="http://www.macrozheng.com/#/deploy/mall_deploy_docker" target="_blank" rel="noopener">mall在Linux环境下的部署（基于Docker容器）</a> 。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>版本号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JDK</td>
+<td>1.8</td>
+</tr>
+<tr>
+<td>Mysql</td>
+<td>5.7</td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>3.2</td>
+</tr>
+<tr>
+<td>Elasticsearch</td>
+<td>6.4.0</td>
+</tr>
+<tr>
+<td>MongoDb</td>
+<td>3.2</td>
+</tr>
+<tr>
+<td>RabbitMq</td>
+<td>3.7.15</td>
+</tr>
+<tr>
+<td>Nginx</td>
+<td>1.10</td>
+</tr>
+</tbody></table>
+<br>
+
+<h3 id="1-1、运行配置要求"><a href="#1-1、运行配置要求" class="headerlink" title="1.1、运行配置要求"></a>1.1、运行配置要求</h3><p>CenterOS7.6版本，推荐4G以上内存</p>
+<br>
+
+<h3 id="1-2、部署相关文件"><a href="#1-2、部署相关文件" class="headerlink" title="1.2、部署相关文件"></a>1.2、部署相关文件</h3><ul>
+<li>数据库脚本mall.sql：<a href="https://gitee.com/macrozheng/mall-swarm/blob/master/document/sql/mall.sql" target="_blank" rel="noopener">https://gitee.com/macrozheng/mall-swarm/blob/master/document/sql/mall.sql</a></li>
+<li>nginx配置文件nginx.conf：<a href="https://gitee.com/macrozheng/mall-swarm/blob/master/document/docker/nginx.conf" target="_blank" rel="noopener">https://gitee.com/macrozheng/mall-swarm/blob/master/document/docker/nginx.conf</a></li>
+<li>docker-compose-env.yml：<a href="https://gitee.com/macrozheng/mall-swarm/tree/master/document/docker/docker-compose-env.yml" target="_blank" rel="noopener">https://gitee.com/macrozheng/mall-swarm/tree/master/document/docker/docker-compose-env.yml</a></li>
+<li>docker-compose-app.yml：<a href="https://gitee.com/macrozheng/mall-swarm/tree/master/document/docker/docker-compose-app.yml" target="_blank" rel="noopener">https://gitee.com/macrozheng/mall-swarm/tree/master/document/docker/docker-compose-app.yml</a></li>
+</ul>
+<br>
+
+<h3 id="1-3、部署前准备"><a href="#1-3、部署前准备" class="headerlink" title="1.3、部署前准备"></a>1.3、部署前准备</h3><h4 id="1）下载所有需要安装的Docker镜像"><a href="#1）下载所有需要安装的Docker镜像" class="headerlink" title="1）下载所有需要安装的Docker镜像"></a>1）下载所有需要安装的Docker镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.7</span><br><span class="line">docker pull redis:3.2</span><br><span class="line">docker pull nginx:1.10</span><br><span class="line">docker pull rabbitmq:3.7.15-management</span><br><span class="line">docker pull elasticsearch:6.4.0</span><br><span class="line">docker pull kibana:6.4.0</span><br><span class="line">docker pull mongo:3.2</span><br></pre></td></tr></table></figure>
+
+<h4 id="2）elasticsearch"><a href="#2）elasticsearch" class="headerlink" title="2）elasticsearch"></a>2）elasticsearch</h4><ul>
+<li><p>需要设置系统内核参数，否则会因为内存不足无法启动。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 改变设置</span></span><br><span class="line">sysctl -w vm.max_map_count=262144</span><br><span class="line"><span class="meta">#</span><span class="bash"> 使之立即生效</span></span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>需要创建/carloz/data/elasticsearch/data目录并设置权限，否则会因为无权限访问而启动失败。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建目录</span></span><br><span class="line">mkdir -p /carloz/data/elasticsearch/data/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建并改变该目录权限</span></span><br><span class="line">chmod 777 /carloz/data/elasticsearch/data</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3）nginx"><a href="#3）nginx" class="headerlink" title="3）nginx"></a>3）nginx</h4><p>需要拷贝nginx配置文件，否则挂载时会因为没有配置文件而启动失败。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建目录之后将nginx.conf文件上传到该目录下面</span></span><br><span class="line">mkdir -p /carloz/data/nginx/</span><br><span class="line"></span><br><span class="line">docker run -p 80:80 --name nginx \</span><br><span class="line">-v /carloz/data/nginx/html:/usr/share/nginx/html \</span><br><span class="line">-v /carloz/data/nginx/logs:/var/log/nginx  \</span><br><span class="line">-d nginx:1.10</span><br><span class="line">docker container cp nginx:/etc/nginx/nginx.conf /carloz/data/nginx/</span><br><span class="line">docker rm -f nginx</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="1-4、执行docker-compose-env-yml脚本"><a href="#1-4、执行docker-compose-env-yml脚本" class="headerlink" title="1.4、执行docker-compose-env.yml脚本"></a>1.4、执行docker-compose-env.yml脚本</h3><blockquote>
+<p>将该文件上传的linux服务器上，执行docker-compose up命令即可启动mall所依赖的所有服务。</p>
+</blockquote>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'3'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  mysql:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">mysql:5.7</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">mysql</span></span><br><span class="line"><span class="attr">    command:</span> <span class="string">mysqld</span> <span class="bullet">--character-set-server=utf8mb4</span> <span class="bullet">--collation-server=utf8mb4_unicode_ci</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="attr">      MYSQL_ROOT_PASSWORD:</span> <span class="string">root</span> <span class="comment">#设置root帐号密码</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">3306</span><span class="string">:3306</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/mysql/data/db:/var/lib/mysql</span> <span class="comment">#数据文件挂载</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/mysql/data/conf:/etc/mysql/conf.d</span> <span class="comment">#配置文件挂载</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/mysql/log:/var/log/mysql</span> <span class="comment">#日志文件挂载</span></span><br><span class="line"><span class="attr">  redis:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">redis:3.2</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">redis</span></span><br><span class="line"><span class="attr">    command:</span> <span class="string">redis-server</span> <span class="bullet">--appendonly</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/redis/data:/data</span> <span class="comment">#数据文件挂载</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">6379</span><span class="string">:6379</span></span><br><span class="line"><span class="attr">  nginx:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">nginx:1.10</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/nginx/nginx.conf:/etc/nginx/nginx.conf</span> <span class="comment">#配置文件挂载</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/nginx/html:/usr/share/nginx/html</span> <span class="comment">#静态资源根目录挂载</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/nginx/log:/var/log/nginx</span> <span class="comment">#日志文件挂载</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">80</span><span class="string">:80</span></span><br><span class="line"><span class="attr">  rabbitmq:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">rabbitmq:3.7.15-management</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">rabbitmq</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/rabbitmq/data:/var/lib/rabbitmq</span> <span class="comment">#数据文件挂载</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/rabbitmq/log:/var/log/rabbitmq</span> <span class="comment">#日志文件挂载</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">5672</span><span class="string">:5672</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">15672</span><span class="string">:15672</span></span><br><span class="line"><span class="attr">  elasticsearch:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">elasticsearch:6.4.0</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">elasticsearch</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"cluster.name=elasticsearch"</span> <span class="comment">#设置集群名称为elasticsearch</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"discovery.type=single-node"</span> <span class="comment">#以单一节点模式启动</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"ES_JAVA_OPTS=-Xms512m -Xmx512m"</span> <span class="comment">#设置使用jvm内存大小</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/elasticsearch/plugins:/usr/share/elasticsearch/plugins</span> <span class="comment">#插件文件挂载</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/elasticsearch/data:/usr/share/elasticsearch/data</span> <span class="comment">#数据文件挂载</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">9200</span><span class="string">:9200</span></span><br><span class="line"><span class="attr">  kibana:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">kibana:6.4.0</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">kibana</span></span><br><span class="line"><span class="attr">    links:</span></span><br><span class="line"><span class="attr">      - elasticsearch:</span><span class="string">es</span> <span class="comment">#可以用es这个域名访问elasticsearch服务</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">elasticsearch</span> <span class="comment">#kibana在elasticsearch启动之后再启动</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"elasticsearch.hosts=http://es:9200"</span> <span class="comment">#设置访问elasticsearch的地址</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">5601</span><span class="string">:5601</span></span><br><span class="line"><span class="attr">  mongo:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">mongo:3.2</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">mongo</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/carloz/data/mongo/db:/data/db</span> <span class="comment">#数据文件挂载</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">27017</span><span class="string">:27017</span></span><br></pre></td></tr></table></figure>
+
+<p>上传完后在当前目录下执行如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Create and start containers</span></span><br><span class="line">docker-compose -f docker-compose-env.yml up -d</span><br><span class="line"><span class="meta">#</span><span class="bash"> Stop and remove containers, networks, images, and volumes</span></span><br><span class="line">docker-compose -f docker-compose-env.yml down</span><br><span class="line"><span class="meta">#</span><span class="bash"> stop</span></span><br><span class="line">docker-compose -f docker-compose-env.yml stop</span><br><span class="line"><span class="meta">#</span><span class="bash"> start</span></span><br><span class="line">docker-compose -f docker-compose-env.yml start</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200419204922.png" alt></p>
+<br>
+
+<h3 id="1-5、对依赖服务进行以下设置"><a href="#1-5、对依赖服务进行以下设置" class="headerlink" title="1.5、对依赖服务进行以下设置"></a>1.5、对依赖服务进行以下设置</h3><p>当所有依赖服务启动完成后，需要对以下服务进行一些设置。</p>
+<h4 id="1）mysql"><a href="#1）mysql" class="headerlink" title="1）mysql"></a>1）mysql</h4><blockquote>
+<p>需要创建mall数据库并创建一个可以远程访问的对象reader。</p>
+</blockquote>
+<ul>
+<li><p>将mall.sql文件拷贝到mysql容器的/目录下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /carloz/data/mall.sql</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载文件：https://gitee.com/macrozheng/mall-swarm/blob/master/document/sql/mall.sql</span></span><br><span class="line">docker cp /carloz/data/mall.sql mysql:/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入mysql容器并执行如下操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">进入mysql容器</span></span><br><span class="line">docker exec -it mysql /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash">连接到mysql服务</span></span><br><span class="line">mysql -uroot -proot --default-character-set=utf8</span><br><span class="line"><span class="meta">#</span><span class="bash">创建远程访问用户</span></span><br><span class="line">grant all privileges on *.* to 'reader' @'%' identified by '123456';</span><br><span class="line"><span class="meta">#</span><span class="bash">创建mall数据库</span></span><br><span class="line">create database mall character set utf8;</span><br><span class="line"><span class="meta">#</span><span class="bash">使用mall数据库</span></span><br><span class="line">use mall;</span><br><span class="line"><span class="meta">#</span><span class="bash">导入mall.sql脚本</span></span><br><span class="line">source /mall.sql;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="2）elasticsearch-1"><a href="#2）elasticsearch-1" class="headerlink" title="2）elasticsearch"></a>2）elasticsearch</h4><blockquote>
+<p>需要安装中文分词器IKAnalyzer，并重新启动。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 手动下载ik分词器，上传到docker中/usr/share/elasticsearch/plugins目录下</span></span><br><span class="line">cd /carloz/data/elasticsearch/plugins</span><br><span class="line">wget https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.4.0/elasticsearch-analysis-ik-6.4.0.zip</span><br><span class="line"></span><br><span class="line">tar -zxf elasticsearch-analysis-ik-v6.4.0.tar.gz</span><br><span class="line">rm -f elasticsearch-analysis-ik-v6.4.0.tar.gz</span><br><span class="line"></span><br><span class="line">docker exec -it elasticsearch /bin/bash</span><br><span class="line"><span class="meta">#</span><span class="bash"> 检查 /usr/share/elasticsearch/plugins 目录下的ik分词器是否存在</span></span><br><span class="line">docker restart elasticsearch</span><br><span class="line">docker logs -f elasticsearch</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420001636.png" alt></p>
+<h4 id="3）rabbitmq"><a href="#3）rabbitmq" class="headerlink" title="3）rabbitmq"></a>3）rabbitmq</h4><blockquote>
+<p>需要创建一个mall用户并设置虚拟host为/mall。</p>
+</blockquote>
+<ul>
+<li>访问管理页面地址：<a href="http://192.168.145.137:15672/" target="_blank" rel="noopener">http://192.168.145.137:15672/</a> <img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/blog/refer_screen_76.png" alt="img"></li>
+<li>输入账号密码并登录：guest guest</li>
+<li>创建帐号并设置其角色为管理员：mall mall <img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/blog/refer_screen_77.png" alt="img"></li>
+<li>创建一个新的虚拟host为：/mall <img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/blog/refer_screen_78.png" alt="img"></li>
+<li>点击mall用户进入用户配置页面 <img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/blog/refer_screen_79.png" alt="img"></li>
+<li>给mall用户配置该虚拟host的权限 <img src="http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/blog/refer_screen_80.png" alt="img"></li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420001926.png" alt></p>
+<br>
+
+<h1 id="2、可视化管理工具portainer"><a href="#2、可视化管理工具portainer" class="headerlink" title="2、可视化管理工具portainer"></a>2、可视化管理工具portainer</h1><blockquote>
+<p>Portainer 是一款轻量级的应用，它提供了图形化界面，用于方便的管理Docker环境，包括单机环境和集群环境，下面我们将用Portainer来管理Docker容器中的应用。</p>
+</blockquote>
+<ul>
+<li>官网地址：<a href="https://github.com/portainer/portainer" target="_blank" rel="noopener">https://github.com/portainer/portainer</a></li>
+<li>获取Docker镜像文件：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用docker容器运行Portainer：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 9000:9000 -p 8000:8000 --name portainer \</span><br><span class="line">--restart=always \</span><br><span class="line">-v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">-v /carloz/data/portainer/data:/data \</span><br><span class="line">-d portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>开放端口</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=9000/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=8000/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改客户端host</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\System32\drivers\etc\hosts</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件改为读写</span></span><br><span class="line">192.168.145.137     czportainer.com</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件改为只读</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>查看Portainer的DashBoard信息：</p>
+<blockquote>
+<p><a href="http://czportainer.com:9000/" target="_blank" rel="noopener">http://czportainer.com:9000</a></p>
+<p>admin/admin123</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420102430.png" alt></p>
+<br>
+
+<h1 id="3、mall-swarm部署"><a href="#3、mall-swarm部署" class="headerlink" title="3、mall-swarm部署"></a>3、mall-swarm部署</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mongodb/yunxi/mongodb-3-design-and-cluster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/mongodb/yunxi/mongodb-3-design-and-cluster/" itemprop="url">mongodb 核心设计和集群运维</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<ol>
+<li>引擎</li>
+<li>索引</li>
+<li>部署</li>
+<li>复制</li>
+<li>分片</li>
+</ol>
+</blockquote>
+<br>
+
+<h1 id="19、MongoDB存储引擎"><a href="#19、MongoDB存储引擎" class="headerlink" title="19、MongoDB存储引擎"></a>19、MongoDB存储引擎</h1><p>​    MongoDB从3.0开始引入可插拔存储引擎的概念。目前主要有MMAPv1、WiredTiger 存储引擎可供选择。3.2之前，MMAPv1是默认存储引擎，它采用linux的内存映射技术，但一直饱受诟病；3.4以上版本默认的存储引擎是 WiredTiger，相对于MMAPv1其具有如下优势：</p>
+<ul>
+<li>读写性能更好，WiredTiger能更好的发挥多核系统的处理能力；</li>
+<li>MMAPv1殷勤使用表级锁，WiredTiger使用文档级锁；</li>
+<li>相比MMAPv1存储，索引时WiredTiger使用前缀压缩，更节省对内存的损耗；</li>
+<li>提供压缩算法，可以大大降低对硬盘资源的消耗，节省60%以上的硬盘资源；</li>
+</ul>
+<h3 id="WiredTiger存储引擎"><a href="#WiredTiger存储引擎" class="headerlink" title="WiredTiger存储引擎"></a>WiredTiger存储引擎</h3><ul>
+<li>Concurrency 并发，文档级别</li>
+<li>Snapshots and Checkpoints 快照和检查点</li>
+<li>Journal 在检查点之间把操作以日志的方式写入journal，用来恢复检查点之间的数据</li>
+<li>Compression 压缩算法，节约硬盘</li>
+<li>Memory Use 使用内存</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200413153424.png" alt></p>
+<p>Journal </p>
+<p>恢复检查点之间的数据，默认压缩算法snappy 最小的记录文件128B 如果内容小于128B不会采用压缩算法</p>
+<p>压缩算法</p>
+<p>消耗CPU资源进行计算，来减少存储空间的消耗</p>
+<p>分块压缩 -&gt; 压缩collection集合的数据 -&gt; snappy压缩算法 -&gt; 索引（前缀压缩）</p>
+<p>设置collection压缩算法：storage.wiredTiger.collectionConfig.blockCompressor</p>
+<p>设置index压缩算法：storage.wiredTiger.indexConfig.prefixCompression</p>
+<p>设置可用内存大小：storage.wiredTiger.engineConfig.cacheSizeGB</p>
+<h3 id="MMAPv1存储引擎"><a href="#MMAPv1存储引擎" class="headerlink" title="MMAPv1存储引擎"></a>MMAPv1存储引擎</h3><ul>
+<li>Journal <ul>
+<li>每60s从journal写入磁盘一次</li>
+<li>storage.syncPeriodSecs 设置写Journal文件的时间间隔</li>
+<li>storage.journal.commitIntervalMs 设置写Journal文件的时间间隔</li>
+<li>这些是理论值，实际可能更快更频繁的刷新数据</li>
+</ul>
+</li>
+<li>Record Storage<ul>
+<li>MongoDB在磁盘中都是连续的存储，如果数据的修改使得空间变大或变小，就不得不移动数据，非常消耗资源</li>
+</ul>
+</li>
+<li>Memory Use</li>
+</ul>
+<h3 id="InMemory存储引擎"><a href="#InMemory存储引擎" class="headerlink" title="InMemory存储引擎"></a>InMemory存储引擎</h3><ul>
+<li>Concurrency</li>
+<li>Memory Use</li>
+</ul>
+<h1 id="20、Journal工作原理"><a href="#20、Journal工作原理" class="headerlink" title="20、Journal工作原理"></a>20、Journal工作原理</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-centos7-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/ci-cd/jenkins/jenkins-centos7-setup/" itemprop="url">centos7下安装jenkins</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/jenkins/" itemprop="url" rel="index">
+                    <span itemprop="name">jenkins</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<p>文档：<a href="https://jenkins.io/zh/doc/pipeline/tour/getting-started/" target="_blank" rel="noopener">https://jenkins.io/zh/doc/pipeline/tour/getting-started/</a></p>
+<blockquote>
+<p>重要经验：</p>
+<ol>
+<li>版本一定要下载最新版，历史版本插件支持不完善，很难下载</li>
+<li>使用主机安装可以在线升级，使用docker安装不能升级</li>
+</ol>
+</blockquote>
+<br>
+
+<h1 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h1><blockquote>
+<p>注意：一定要oraclejdk，openjdk 有 ssl 问题，解决比较麻烦</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下载</span></span><br><span class="line">https://www.oracle.com/cn/java/technologies/javase-jdk8-downloads.html</span><br><span class="line"><span class="meta">#</span><span class="bash"> 解压</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置环境变量</span></span><br><span class="line">vi /etc/profile</span><br><span class="line">export JAVA_HOME=/carloz/tools/jdk1.8.0_231</span><br><span class="line">export JAVA_BIN=$JAVA_HOME/bin</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="安装jenkins"><a href="#安装jenkins" class="headerlink" title="安装jenkins"></a>安装jenkins</h1><blockquote>
+<p>重要经验：版本一定要下载最新版，历史版本插件支持不完善，很难下载</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo</span><br><span class="line">sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key</span><br><span class="line">yum install jenkins -y</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="配置jenkins"><a href="#配置jenkins" class="headerlink" title="配置jenkins"></a>配置jenkins</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sysconfig/jenkins</span><br><span class="line">JENKINS_PORT="9090"</span><br><span class="line">JENKINS_USER="root"</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>修改目录权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chown -R root:root /var/lib/jenkins</span><br><span class="line">chown -R root:root /var/cache/jenkins</span><br><span class="line">chown -R root:root /var/log/jenkins</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ln -s /carloz/tools/jdk1.8.0_231/bin/java /usr/bin/java</span><br><span class="line">service jenkins start</span><br><span class="line"></span><br><span class="line">cat /var/lib/jenkins/secrets/initialAdminPassword</span><br><span class="line">b01d765d389a46d6a1f187b493fdb5b7</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>此安装向导会引导您完成几个快速“一次性”步骤来解锁Jenkins， 使用插件对其进行自定义，并创建第一个可以继续访问Jenkins的管理员用户。</p>
+<h3 id="解锁-Jenkins"><a href="#解锁-Jenkins" class="headerlink" title="解锁 Jenkins"></a>解锁 Jenkins</h3><p>当您第一次访问新的Jenkins实例时，系统会要求您使用自动生成的密码对其进行解锁。</p>
+<ol>
+<li>浏览到 <code>http://192.168.145.137:9090/</code>（或安装时为Jenkins配置的任何端口），并等待 <strong>解锁 Jenkins</strong> 页面出现</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415135344.png" alt></p>
+<br>
+
+<h1 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h1><p>修改源</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.145.137:9090/pluginManager/advanced</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改为：</span></span><br><span class="line">http://mirror.serverion.com/jenkins/updates/update-center.json</span><br><span class="line">https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json</span><br><span class="line">http://mirror.esuni.jp/jenkins/updates/update-center.json</span><br><span class="line">http://mirror.xmission.com/jenkins/updates/update-center.json</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>重新加载配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.145.137:9090/reload</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>安装推荐的插件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.145.137:9090/</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415194639.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415195738.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415195755.png" alt></p>
+<p>修改admin用户的密码为 admin</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415200031.png" alt></p>
+<br>
+
+<h1 id="通过web操作jenkins"><a href="#通过web操作jenkins" class="headerlink" title="通过web操作jenkins"></a>通过web操作jenkins</h1><p><a href="http://192.168.145.137:9090/restart" target="_blank" rel="noopener">http://192.168.145.137:9090/restart</a><br><a href="http://192.168.145.137:9090/reload" target="_blank" rel="noopener">http://192.168.145.137:9090/reload</a><br><a href="http://192.168.145.137:9090/exit" target="_blank" rel="noopener">http://192.168.145.137:9090/exit</a></p>
+<br>
+
+
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mongodb/yunxi/mongodb-2-dev/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/mongodb/yunxi/mongodb-2-dev/" itemprop="url">mongodb 开发</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-14T00:00:00+08:00">
+                2018-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="5、MongoDB数据类型"><a href="#5、MongoDB数据类型" class="headerlink" title="5、MongoDB数据类型"></a>5、MongoDB数据类型</h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mongodb/yunxi/mongodb-1-introduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/mongodb/yunxi/mongodb-1-introduce/" itemprop="url">mongodb 入门</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T00:00:00+08:00">
+                2018-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="1、为什么要NoSQL"><a href="#1、为什么要NoSQL" class="headerlink" title="1、为什么要NoSQL"></a>1、为什么要NoSQL</h1><h3 id="关系型数据库难以克服的问题"><a href="#关系型数据库难以克服的问题" class="headerlink" title="关系型数据库难以克服的问题"></a>关系型数据库难以克服的问题</h3><ul>
+<li>High performance 高并发读写</li>
+<li>Huge Storge 海量数据的高效率存储于访问</li>
+<li>High Scalability &amp;&amp; High Availability 高可扩展性和高可用性</li>
+</ul>
+<h3 id="关系型数据库的约束"><a href="#关系型数据库的约束" class="headerlink" title="关系型数据库的约束"></a>关系型数据库的约束</h3><ul>
+<li>数据库事务一致性需求</li>
+<li>数据库的写实时性和读实时性</li>
+<li>对复杂的 sql查询，特别是多表关联查询的需求</li>
+</ul>
+<h3 id="Nosql的特点"><a href="#Nosql的特点" class="headerlink" title="Nosql的特点"></a>Nosql的特点</h3><p>优点</p>
+<ul>
+<li>处理超大量的数据</li>
+<li>运行在便宜的PC服务器集群上</li>
+<li>打破性能瓶颈</li>
+<li>操作简单</li>
+<li>开源支持</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>不支持事务</li>
+<li>表之间关联查询很难实现</li>
+<li>运维的门槛比较高</li>
+</ul>
+<br>
+
+<h1 id="2、MongoDB简介"><a href="#2、MongoDB简介" class="headerlink" title="2、MongoDB简介"></a>2、MongoDB简介</h1><p>介于关系型DB 和非关系型DB 之间的一个产品，是非关系型DB中功能最丰富的，最像关系型DB的。它支持的结果非常松散，类似 JSON 的 BSON格式，因此可以存储比较复杂的数据类型。它最大的特点是它支持的查询语言非常强大，其语法类似于面向对象语言的查询语言，几乎可以实现类似关系数据库单表查询的绝大部分功能，而且还支持对数据建立索引。他是一个面向集合的、模式自由的文档型数据库；</p>
+<p>特点</p>
+<ul>
+<li>面向集合文档的存储；</li>
+<li>模式自由（自动可以增减）；</li>
+<li>强大的查询能力；</li>
+<li>支持索引与查询计划；</li>
+<li>支持索引与查询计划；</li>
+<li>支持自动复制和自动故障转移；</li>
+<li>支持二进制数据集 大型对象 （文件）的高效存储；</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200413145009.png" alt></p>
+<h1 id="3、应用场景"><a href="#3、应用场景" class="headerlink" title="3、应用场景"></a>3、应用场景</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200413145636.png" alt></p>
+<p>经典应用案例：</p>
+<ul>
+<li>游戏场景：存储用户信息、装备、积分等；</li>
+<li>物流场景：订单信息，订单信息在运输过程中不断更新，以MongoDB内嵌数组的形式来存储，一次查询就能将订单的所有变更读取出来；</li>
+<li>社交场景：使用MongoDB存储用户信息，以及用户发表的朋友圈信息，通过地理位置索引实现附近的人，地理位置索引等信息；</li>
+<li>物联网场景：存储所有接入的只能设备信息，以及设备上传的日志信息，并对这些信息进行多维度分析</li>
+<li>视频直播：存储用户信息、礼物信息等；</li>
+</ul>
+<p>不适用的场景：</p>
+<ul>
+<li>高度事务性系统（eg：财务系统）；</li>
+<li>传统商业智能应用（eg：复杂的关联查询）；</li>
+<li>使用SQL更方便的时候；</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/redis/redis-conf-optimize/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/redis/redis-conf-optimize/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-03T00:00:00+08:00">
+                2018-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+
+<h1 id="redis配置解读"><a href="#redis配置解读" class="headerlink" title="redis配置解读"></a>redis配置解读</h1><h1 id="优化方向"><a href="#优化方向" class="headerlink" title="优化方向"></a>优化方向</h1><p>文件编码方式</p>
+<p>持久化方式</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/redis/redis-bloomfilter/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -901,148 +2096,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-6-cluster/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/message-queue/rabbitmq/rabbitmq-6-cluster/" itemprop="url">RabbitMQ集群</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-16T00:00:00+08:00">
-                2018-03-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/rabbitmq/" itemprop="url" rel="index">
-                    <span itemprop="name">rabbitmq</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/springcloud/springcloud-thrift/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1184,1043 +2237,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/minimum-domino-rotations-for-equal-row/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/leetcode/minimum-domino-rotations-for-equal-row/" itemprop="url">行相等的最少多米诺旋转</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-05T00:00:00+08:00">
-                2018-03-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="算法：贪心算法"><a href="#算法：贪心算法" class="headerlink" title="算法：贪心算法"></a>算法：贪心算法</h1><p>贪婪算法(贪心算法)是指在对问题进行求解时，在<u>每一步选择中都采取最好或者最优(即最有利)的选择，从而希望能够导致结果是最好或者最优的算法</u>。</p>
-<p>贪婪算法所得到的结果往往不是最优的结果(有时候会是最优解)，但是都是相对近似(接近)最优解的结果。</p>
-<ul>
-<li>贪婪算法并没有固定的算法解决框架，算法的关键是贪婪策略的选择，根据不同的问题选择不同的策略。</li>
-<li>必须注意的是策略的选择必须具备无后效性，即某个状态的选择不会影响到之前的状态，只与当前状态有关，所以对采用的贪婪的策略一定要仔细分析其是否满足无后效性。</li>
-</ul>
-<p>比如前边介绍的最短路径问题(广度优先、狄克斯特拉)都属于贪婪算法，只是在其问题策略的选择上，刚好可以得到最优解。</p>
-<p><strong>基本思路:</strong></p>
-<ol>
-<li>建立数学模型来描述问题;</li>
-<li>把求解的问题分成若干个子问题;</li>
-<li>对每一子问题求解，得到子问题的局部最优解;</li>
-<li>把子问题对应的局部最优解合成原来整个问题的一个近似最优解;</li>
-</ol>
-<h1 id="题目：行相等的最少多米诺旋转"><a href="#题目：行相等的最少多米诺旋转" class="headerlink" title="题目：行相等的最少多米诺旋转"></a>题目：行相等的最少多米诺旋转</h1><p>url：<a href="https://leetcode-cn.com/problems/minimum-domino-rotations-for-equal-row/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/minimum-domino-rotations-for-equal-row/</a></p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">在一排多米诺骨牌中，<span class="selector-tag">A</span><span class="selector-attr">[i]</span> 和 <span class="selector-tag">B</span><span class="selector-attr">[i]</span> 分别代表第 <span class="selector-tag">i</span> 个多米诺骨牌的上半部分和下半部分。（一个多米诺是两个从 1 到 6 的数字同列平铺形成的 —— 该平铺的每一半上都有一个数字。）</span><br><span class="line"></span><br><span class="line">我们可以旋转第 <span class="selector-tag">i</span> 张多米诺，使得 <span class="selector-tag">A</span><span class="selector-attr">[i]</span> 和 <span class="selector-tag">B</span><span class="selector-attr">[i]</span> 的值交换。</span><br><span class="line"></span><br><span class="line">返回能使 <span class="selector-tag">A</span> 中所有值或者 <span class="selector-tag">B</span> 中所有值都相同的最小旋转次数。</span><br><span class="line"></span><br><span class="line">如果无法做到，返回 <span class="selector-tag">-1</span>.</span><br></pre></td></tr></table></figure>
-
-<p>示例1：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190828092948.png" alt></p>
-<p>输入：A = [2,1,2,4,2,2], B = [5,2,6,2,3,2]<br>输出：2<br>解释：<br>图一表示：在我们旋转之前， A 和 B 给出的多米诺牌。<br>如果我们旋转第二个和第四个多米诺骨牌，我们可以使上面一行中的每个值都等于 2，如图二所示。</p>
-<p>示例 2：<br>输入：A = [3,5,1,2,3], B = [3,6,3,3,4]<br>输出：-1<br>解释：<br>在这种情况下，不可能旋转多米诺牌使一行的值相等。</p>
-<p>提示：<br>1 &lt;= A[i], B[i] &lt;= 6<br>2 &lt;= A.length == B.length &lt;= 20000</p>
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>分别统计A数组和B数组中每种牌出现的次数； </p>
-<p>如果 ”A中出现的次数 x + B中出现的次数 y“ &gt;= A数组的长度，则算是一种解；</p>
-<p>找出所有的解，并返回 最小的 x 或者最小的 y；</p>
-<p>如果没有满足条件的解则返回 -1；</p>
-<p>上述求出的解是伪最优解，还需要逐个确认每个解是不是真最优解</p>
-<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDominoRotations</span><span class="params">(<span class="keyword">int</span>[] A, <span class="keyword">int</span>[] B)</span> </span>&#123;</span><br><span class="line">		TreeMap&lt;Integer,Integer&gt; mapA = <span class="keyword">new</span> TreeMap&lt;Integer,Integer&gt;();</span><br><span class="line">		TreeMap&lt;Integer,Integer&gt; mapB = <span class="keyword">new</span> TreeMap&lt;Integer,Integer&gt;();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;A.length; ++i) &#123;</span><br><span class="line">			mapA.put(A[i], mapA.getOrDefault(A[i], <span class="number">0</span>)+<span class="number">1</span>);</span><br><span class="line">			mapB.put(B[i], mapB.getOrDefault(B[i], <span class="number">0</span>)+<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">int</span> resA = minDominoRotations(A, B, mapA, mapB);</span><br><span class="line">		<span class="keyword">int</span> resB = minDominoRotations(B, A, mapB, mapA);</span><br><span class="line">		<span class="keyword">if</span> (-<span class="number">1</span> != resA &amp;&amp; -<span class="number">1</span> != resB) &#123;</span><br><span class="line">			<span class="keyword">return</span> Math.min(resA, resB);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> Math.max(resA, resB);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minDominoRotations</span><span class="params">(<span class="keyword">int</span>[] A, <span class="keyword">int</span>[] B, TreeMap&lt;Integer,Integer&gt; mapA, </span></span></span><br><span class="line"><span class="function"><span class="params">                                  TreeMap&lt;Integer,Integer&gt; mapB)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> len = A.length, res=-<span class="number">1</span>;</span><br><span class="line">		TreeMap&lt;Integer,Integer&gt; pseudoPptimalSolution = <span class="keyword">new</span> TreeMap&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span>(Map.Entry&lt;Integer,Integer&gt; entry : mapA.entrySet()) &#123;</span><br><span class="line">			<span class="keyword">int</span> x = entry.getValue(), y = mapB.getOrDefault(entry.getKey(),<span class="number">0</span>);</span><br><span class="line">			<span class="keyword">if</span>(x + y &gt;= len) &#123;</span><br><span class="line">				pseudoPptimalSolution.put(entry.getKey(), len-x);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>(Map.Entry&lt;Integer,Integer&gt; entry : pseudoPptimalSolution.entrySet()) &#123;</span><br><span class="line">			<span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;len; ++i) &#123;</span><br><span class="line">				<span class="keyword">if</span> (A[i] != entry.getKey() &amp;&amp; B[i] == entry.getKey()) &#123;</span><br><span class="line">					count++;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (count == entry.getValue()) &#123;</span><br><span class="line">				res = (-<span class="number">1</span>==res) ? count : Math.min(count, res);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> res;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/distribution/zookeeper/zookeeper-yunxi/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/distribution/zookeeper/zookeeper-yunxi/" itemprop="url">zookeeper</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-03T00:00:00+08:00">
-                2018-03-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/distribution/" itemprop="url" rel="index">
-                    <span itemprop="name">distribution</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/distribution/zookeeper/" itemprop="url" rel="index">
-                    <span itemprop="name">zookeeper</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<table>
-<thead>
-<tr>
-<th>分布式架构及一致性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>ZooKeeper安装配置及使用</td>
-</tr>
-<tr>
-<td>ZooKeeper基础核心：数据模型、Node、Watch、版本、ACL</td>
-</tr>
-<tr>
-<td>ZooKeeper基础核心：服务器角色、会话与客户端、数据与存储</td>
-</tr>
-<tr>
-<td>Zookeeper编程手册：ZkClient、Curator</td>
-</tr>
-<tr>
-<td>ZooKeeper硬核深入：Paxos算法及ZAB协议</td>
-</tr>
-<tr>
-<td>ZooKeeper源码深入：Leader选举解析、序列化与通信协议</td>
-</tr>
-<tr>
-<td>ZooKeeper应用实战：分布式锁、Master选举、配置中心、服务注册</td>
-</tr>
-</tbody></table>
-<p>分布式数据一致性解决方案</p>
-<p>分布式协调服务，保证系统的各种数据（配置/状态）在分布式环境中的一致性</p>
-<p>硬件、软件 分布式部署在网络上的不同计算机上，消息传递进行通讯和协调</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200303203522.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200303213501.png" alt></p>
-<p>分布式中的问题</p>
-<ol>
-<li>故障总会发生：宕机/网络</li>
-<li>时钟同步：分布式ID生成</li>
-</ol>
-<p>CAP</p>
-<p>C：Consistency 一致性</p>
-<p>A：Availability 可用性</p>
-<p>P：Partition Tolerance 分区一致性</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200303213501.png" alt></p>
-<p>BASE理论 —— 解决数据一致性的问题</p>
-<p>BA：basic 基本可用 ——&gt; 服务降级</p>
-<p>S：soft 软状态</p>
-<p>E： 最终一致性</p>
-<p>ACID</p>
-<p>Atomicity：原子性</p>
-<p>Consistency：一致性</p>
-<p>Isolution：事务隔离性</p>
-<p>Durability：持久性</p>
-<p>2PC</p>
-<p>3PC</p>
-<h1 id="三、Zookeeper安装配置"><a href="#三、Zookeeper安装配置" class="headerlink" title="三、Zookeeper安装配置"></a>三、Zookeeper安装配置</h1><p>环境需求：JDK 1.7以上</p>
-<p>集群模式：单机模式、集群模式，伪分布式模式</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200303215343.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200303220717.png" alt></p>
-<p>nnnn同步端口，mmmm选举端口</p>
-<p>下载解压</p>
-<h3 id="动态变更配置"><a href="#动态变更配置" class="headerlink" title="动态变更配置"></a>动态变更配置</h3><p>zookeeper 3.5 开始支持</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306200921.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306201450.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200310212332.png" alt></p>
-<h3 id="查找主节点"><a href="#查找主节点" class="headerlink" title="查找主节点"></a>查找主节点</h3><p>命令：<code>[root@dn3 zookeeper]# bin/zkServer.sh status conf/zoo.cfg</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@dn3 ~]# service zookeeper status</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /data/soft/new/zookeeper-3.4.14/bin/../conf/zoo.cfg</span><br><span class="line">Mode: leader</span><br></pre></td></tr></table></figure>
-
-<h1 id="四、核心基础"><a href="#四、核心基础" class="headerlink" title="四、核心基础"></a>四、核心基础</h1><h3 id="数据如何同步"><a href="#数据如何同步" class="headerlink" title="数据如何同步"></a>数据如何同步</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306203759.png" alt></p>
-<p>Leader：读、写、选举</p>
-<p>Follower：读、选举</p>
-<p>Observer：读</p>
-<p>客户端</p>
-<p><code>[root@dn3 zookeeper]# bin/zkCli.sh</code></p>
-<h3 id="过半机制"><a href="#过半机制" class="headerlink" title="过半机制"></a>过半机制</h3><p>3节点的集群至少有2台集群才能工作，少于两台则会罢工</p>
-<p>它的判断机制是 节点数 &gt;= n/2</p>
-<p>4台过半，则是2台；所以偶数台则容易脑裂</p>
-<h3 id="脑裂"><a href="#脑裂" class="headerlink" title="脑裂"></a>脑裂</h3><p>过半机制 + 奇数个节点服务器 解决脑裂问题</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306205450.png" alt></p>
-<h3 id="ZAB协议"><a href="#ZAB协议" class="headerlink" title="ZAB协议"></a>ZAB协议</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306205953.png" alt></p>
-<h3 id="ZK命令行"><a href="#ZK命令行" class="headerlink" title="ZK命令行"></a>ZK命令行</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 1] help</span><br><span class="line">ZooKeeper -server host:port cmd args</span><br><span class="line">	stat path [watch]</span><br><span class="line">	set path data [version]</span><br><span class="line">	ls path [watch]</span><br><span class="line">	delquota [-n|-b] path</span><br><span class="line">	ls2 path [watch]</span><br><span class="line">	setAcl path acl</span><br><span class="line">	setquota -n|-b val path</span><br><span class="line">	history </span><br><span class="line">	redo cmdno</span><br><span class="line">	printwatches on|off</span><br><span class="line">	delete path [version]</span><br><span class="line">	sync path</span><br><span class="line">	listquota path</span><br><span class="line">	rmr path</span><br><span class="line">	get path [watch]</span><br><span class="line">	create [-s] [-e] path data acl</span><br><span class="line">	addauth scheme auth</span><br><span class="line">	quit </span><br><span class="line">	getAcl path</span><br><span class="line">	close </span><br><span class="line">	connect host:port</span><br></pre></td></tr></table></figure>
-
-<p><u><strong>create</strong></u></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">create [-s] [-e] path data acl</span><br><span class="line">-s: 节点是否有序</span><br><span class="line">-e: 创建临时节点，临时节点只在session有效，断开就消失</span><br><span class="line"></span><br><span class="line">[zk: localhost:2181(CONNECTED) 3] create -s -e /cz 001    </span><br><span class="line">Created /cz0000000000</span><br><span class="line">[zk: localhost:2181(CONNECTED) 4] create -s -e /cz 002</span><br><span class="line">Created /cz0000000001</span><br><span class="line">[zk: localhost:2181(CONNECTED) 5] create -s -e /cz 003</span><br><span class="line">Created /cz0000000002</span><br></pre></td></tr></table></figure>
-
-<img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306213014.png">
-
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 7] create -e /cz 005   </span><br><span class="line">Created /cz</span><br><span class="line"><span class="meta">#</span><span class="bash"> 临时节点不能有子节点</span></span><br><span class="line">[zk: localhost:2181(CONNECTED) 8] create -e /cz/001 005</span><br><span class="line">Ephemerals cannot have children: /cz/001</span><br><span class="line"><span class="meta">#</span><span class="bash"> 持久节点不能级联创建，只能一个一个创建</span></span><br><span class="line">[zk: localhost:2181(CONNECTED) 9] create /czq/001 005   </span><br><span class="line">Ephemerals cannot have children: /cz/001</span><br><span class="line"></span><br><span class="line">[zk: localhost:2181(CONNECTED) 12] create /czq 1</span><br><span class="line">Created /czq</span><br><span class="line">[zk: localhost:2181(CONNECTED) 13] create /czq/001 123</span><br><span class="line">Created /czq/001</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306213841.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306213255.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 9] get /czq/001</span><br><span class="line">123</span><br><span class="line">cZxid = 0x70000000e</span><br><span class="line">ctime = Fri Mar 06 21:37:11 CST 2020</span><br><span class="line">mZxid = 0x70000000e</span><br><span class="line">mtime = Fri Mar 06 21:37:11 CST 2020</span><br><span class="line">pZxid = 0x70000000e</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 3</span><br><span class="line">numChildren = 0</span><br><span class="line">[zk: localhost:2181(CONNECTED) 10] create -e /czq/002 456</span><br><span class="line">Created /czq/002</span><br><span class="line">[zk: localhost:2181(CONNECTED) 11] get /czq/002</span><br><span class="line">456</span><br><span class="line">cZxid = 0x700000011</span><br><span class="line">ctime = Fri Mar 06 21:43:46 CST 2020</span><br><span class="line">mZxid = 0x700000011</span><br><span class="line">mtime = Fri Mar 06 21:43:46 CST 2020</span><br><span class="line">pZxid = 0x700000011</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x3000000469d0002</span><br><span class="line">dataLength = 3</span><br><span class="line">numChildren = 0</span><br></pre></td></tr></table></figure>
-
-<h3 id="两大神兽：Znode-和-Watcher"><a href="#两大神兽：Znode-和-Watcher" class="headerlink" title="两大神兽：Znode 和 Watcher"></a>两大神兽：Znode 和 Watcher</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200306214637.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在 session1 启用监听</span></span><br><span class="line">[zk: localhost:2181(CONNECTED) 13] ls /czq watch</span><br><span class="line">[001, 002]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 在 session2 创建新节点</span></span><br><span class="line">[zk: localhost:2181(CONNECTED) 1] create -e /czq/003 003</span><br><span class="line">Created /czq/003</span><br><span class="line">[zk: localhost:2181(CONNECTED) 2]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看session1，可以看到，监听到了事件</span></span><br><span class="line">[zk: localhost:2181(CONNECTED) 14] </span><br><span class="line">WATCHER::</span><br><span class="line">WatchedEvent state:SyncConnected type:NodeChildrenChanged path:/czq</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 监听变更</span></span><br><span class="line">[zk: localhost:2181(CONNECTED) 18] get /czq/003 watch</span><br><span class="line">[zk: localhost:2181(CONNECTED) 19] </span><br><span class="line">WATCHER::</span><br><span class="line">WatchedEvent state:SyncConnected type:NodeDataChanged path:/czq/003</span><br></pre></td></tr></table></figure>
-
-<p>官方API：注册一次watch只能监听一次事件</p>
-<p>客户端 ZooInspector</p>
-<h3 id="ACL-访问控制等级"><a href="#ACL-访问控制等级" class="headerlink" title="ACL 访问控制等级"></a>ACL 访问控制等级</h3><p>ACL（Access Control Level）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create [-s] [-e] path data acl</span><br><span class="line">setAcl path acl</span><br><span class="line">getAcl path</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>权限模式 Schema</li>
-<li>授权对象  ID</li>
-<li>权限 Permission</li>
-</ul>
-<p>示例</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 3] getAcl /</span><br><span class="line">'world,'anyone</span><br><span class="line">: cdrwa</span><br></pre></td></tr></table></figure>
-
-<p>权限模式 Schema</p>
-<ol>
-<li>world 只有一个id， anyone world：anyone</li>
-<li>Authorware 通过了ZK验证的用户都有权限 username/password</li>
-<li><code>Digest username:password</code>, <code>Base64(SHA1(username:password))=username:password</code></li>
-<li>ip或ip段</li>
-<li>超级管理员 Super：cdrwa</li>
-</ol>
-<p>权限 Permission（cdrwa）</p>
-<ul>
-<li>Create</li>
-<li>Delete</li>
-<li>Read</li>
-<li>Write</li>
-<li>Admin</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 11] setAcl /czq/001  ip:192.168.56.105:cdrw</span><br><span class="line">[zk: localhost:2181(CONNECTED) 12] getAcl /czq/001</span><br><span class="line">Authentication is not valid : /czq/001</span><br><span class="line"></span><br><span class="line">[zk: localhost:2181(CONNECTED) 18] addauth digest test:123456</span><br><span class="line">[zk: localhost:2181(CONNECTED) 19] create -e /czq/001 001  digest:test:123456:cdrw</span><br><span class="line">Created /czq/001</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 没有权限的可以delete，不能rmr</span></span><br><span class="line">[zk: localhost:2181(CONNECTED) 15] delete /czq/001</span><br><span class="line">[zk: localhost:2181(CONNECTED) 16] ls /czq</span><br><span class="line">[]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 17]</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200308203935.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200308204021.png" alt></p>
-<h3 id="会话与客户端"><a href="#会话与客户端" class="headerlink" title="会话与客户端"></a>会话与客户端</h3><p>zk 的 server 和 client 之间是基于 netty 的长连接</p>
-<p>tickTime</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200308204545.png" alt></p>
-<h4 id="会话激活"><a href="#会话激活" class="headerlink" title="会话激活"></a>会话激活</h4><h4 id="会话分桶"><a href="#会话分桶" class="headerlink" title="会话分桶"></a>会话分桶</h4><h3 id="数据和存储"><a href="#数据和存储" class="headerlink" title="数据和存储"></a>数据和存储</h3><p>内存数据、磁盘数据（日志、快照）</p>
-<ul>
-<li>内存数据 ==&gt; 定期生成快照 </li>
-<li>操作日志</li>
-<li>快照  + 操作日志 ==&gt; 用于崩溃恢复</li>
-</ul>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200308213504.png" alt></p>
-<p>DataTree</p>
-<p>ZKDatabase</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200308213802.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200308214013.png" alt></p>
-<p>log.xxxxxxxxxxx  当前事务日志的第一条记录zxid（64位，高32位，低32位）</p>
-<p>64M，第一条默认是4K大小，超过以后 扩容到64M</p>
-<p>解析日志：</p>
-<h1 id="五、zk客户端"><a href="#五、zk客户端" class="headerlink" title="五、zk客户端"></a>五、zk客户端</h1><h3 id="1、zk原生API"><a href="#1、zk原生API" class="headerlink" title="1、zk原生API"></a>1、zk原生API</h3><p>zk如何做负载均衡？</p>
-<p>在初始化zk对象的时候，将传入的zk服务器列表打散，形成一个环形队列</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200310201656.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200310202836.png" alt></p>
-<h3 id="2、zkClient"><a href="#2、zkClient" class="headerlink" title="2、zkClient"></a>2、zkClient</h3><h3 id="3、Curator"><a href="#3、Curator" class="headerlink" title="3、Curator"></a>3、Curator</h3><p>API使用建造者模式，链式调用，非常友好</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200310211206.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200310212829.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200310213820.png" alt></p>
-<h1 id="六、zk用途"><a href="#六、zk用途" class="headerlink" title="六、zk用途"></a>六、zk用途</h1><h3 id="1、配置中心"><a href="#1、配置中心" class="headerlink" title="1、配置中心"></a>1、配置中心</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200310215205.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200310220351.png" alt></p>
-<h3 id="2、"><a href="#2、" class="headerlink" title="2、"></a>2、</h3><h3 id="3、分布式锁"><a href="#3、分布式锁" class="headerlink" title="3、分布式锁"></a>3、分布式锁</h3><h1 id="七、深入了解"><a href="#七、深入了解" class="headerlink" title="七、深入了解"></a>七、深入了解</h1><h3 id="1、Leader选举过程"><a href="#1、Leader选举过程" class="headerlink" title="1、Leader选举过程"></a>1、Leader选举过程</h3><p>zk内部源码：Leader、Follower、Observer</p>
-<h3 id="2、Master选举"><a href="#2、Master选举" class="headerlink" title="2、Master选举"></a>2、Master选举</h3><p>zk的应用场景</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200313204417.png" alt></p>
-<h3 id="3、分布式锁-1"><a href="#3、分布式锁-1" class="headerlink" title="3、分布式锁"></a>3、分布式锁</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200313204808.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200313205014.png" alt></p>
-<h3 id="4、服务注册发现"><a href="#4、服务注册发现" class="headerlink" title="4、服务注册发现"></a>4、服务注册发现</h3><p>为了解耦，实现服务的动态发布。动态感知服务上下线</p>
-<p>provider，consumer</p>
-<p>其他组件：zookeeper、consul、eureka</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200313212656.png" alt></p>
-<p>用到的服务：dubbo，</p>
-<h3 id="Paxos-ZAB"><a href="#Paxos-ZAB" class="headerlink" title="Paxos + ZAB"></a>Paxos + ZAB</h3><p>崩溃恢复和Leader选举</p>
-<p>ZAB（Zookeeper Atomic Broadcast）</p>
-<h1 id="八、源码"><a href="#八、源码" class="headerlink" title="八、源码"></a>八、源码</h1><p>leader选举</p>
-<p>Election：选举接口</p>
-<p>FastLeaderElection：选举实现类</p>
-<p>ClientConxn：客户端交互 (Packet 包)</p>
-<p>ServerCnxn：</p>
-<p>QuorumPeer（extends ZooKeeperThread）：集群节点</p>
-<p>QuorumPeerMain：启动入口</p>
-<p>ZKDatabase：zk内存数据库</p>
-<p>FileTxnSnapLog：事务快照日志</p>
-<p>启动入口：<code>org.apache.zookeeper.server.quorum.QuorumPeerMain</code></p>
-<p><code>org/apache/zookeeper/server/quorum/QuorumPeer.java</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!getView().containsKey(myid)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"My id "</span> + myid + <span class="string">" not in the peer list"</span>);</span><br><span class="line">     &#125;</span><br><span class="line">    loadDataBase();</span><br><span class="line">    startServerCnxnFactory();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        adminServer.start();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (AdminServerException e) &#123;</span><br><span class="line">        LOG.warn(<span class="string">"Problem starting AdminServer"</span>, e);</span><br><span class="line">        System.out.println(e);</span><br><span class="line">    &#125;</span><br><span class="line">    startLeaderElection();</span><br><span class="line">    <span class="keyword">super</span>.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="paxos实现"><a href="#paxos实现" class="headerlink" title="paxos实现"></a>paxos实现</h3><p>lookForLeader</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/route-manager/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/computer-network/route-manager/" itemprop="url">route：静态路由管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T14:17:09+08:00">
-                2018-01-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/computer-network/" itemprop="url" rel="index">
-                    <span itemprop="name">computer-network</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/computer-network/route/" itemprop="url" rel="index">
-                    <span itemprop="name">route</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="Centos7-路由管理"><a href="#Centos7-路由管理" class="headerlink" title="Centos7 路由管理"></a>Centos7 路由管理</h1><h3 id="跟踪路由"><a href="#跟踪路由" class="headerlink" title="跟踪路由"></a>跟踪路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[root@nauru-084 ~]# traceroute www.baidu.com</span><br><span class="line">traceroute to www.baidu.com (180.101.49.11), 30 hops max, 60 byte packets</span><br><span class="line"> 1  gateway (172.18.1.254)  0.299 ms  0.236 ms  0.209 ms</span><br><span class="line"> 2  172.16.200.12 (172.16.200.12)  0.303 ms  0.243 ms  0.307 ms</span><br><span class="line"> 3  36.110.61.81 (36.110.61.81)  1.813 ms  4.255 ms  1.630 ms</span><br><span class="line"> 4  9.235.120.106.static.bjtelecom.net (106.120.235.9)  2.082 ms  1.695 ms *</span><br><span class="line"> 5  bj141-152-69.bjtelecom.net (219.141.152.69)  2.983 ms  3.016 ms  2.987 ms</span><br><span class="line"> 6  202.97.97.254 (202.97.97.254)  24.578 ms 202.97.33.30 (202.97.33.30)  29.937 ms 202.97.98.146 (202.97.98.146)  18.506 ms</span><br><span class="line"> 7  58.213.94.82 (58.213.94.82)  28.225 ms 58.213.95.2 (58.213.95.2)  20.308 ms 58.213.95.106 (58.213.95.106)  19.223 ms</span><br><span class="line"> 8  * * *</span><br><span class="line"> 9  58.213.96.110 (58.213.96.110)  21.148 ms 58.213.96.62 (58.213.96.62)  18.620 ms 58.213.96.126 (58.213.96.126)  28.067 ms</span><br><span class="line">10  * * *</span><br><span class="line">11  * * *</span><br><span class="line">12  * * *</span><br><span class="line">13  * * *</span><br><span class="line">14  * * *</span><br><span class="line">15  * * *</span><br><span class="line">16  * * *</span><br><span class="line">17  * * *</span><br><span class="line">18  * * *</span><br><span class="line">19  * * *</span><br><span class="line">20  * * *</span><br><span class="line">21  * * *</span><br><span class="line">22  * * *</span><br><span class="line">23  * * *</span><br><span class="line">24  * * *</span><br><span class="line">25  * * *</span><br><span class="line">26  * * *</span><br><span class="line">27  * * *</span><br><span class="line">28  * * *</span><br><span class="line">29  * * *</span><br><span class="line">30  * * *</span><br></pre></td></tr></table></figure>
-
-<h3 id="查看路由"><a href="#查看路由" class="headerlink" title="查看路由"></a>查看路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@nauru-084 ~]# route -n</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824210009.png" alt></p>
-<br>
-
-<h3 id="添加路由"><a href="#添加路由" class="headerlink" title="添加路由"></a>添加路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route add -host 10.10.87.38 gw 172.18.1.89</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="删除路由"><a href="#删除路由" class="headerlink" title="删除路由"></a>删除路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route del 10.10.87.38</span><br></pre></td></tr></table></figure>
-
-<h3 id="帮助文档"><a href="#帮助文档" class="headerlink" title="帮助文档"></a>帮助文档</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># man route</span></span><br><span class="line"></span><br><span class="line">NAME</span><br><span class="line">       route - show / manipulate the IP routing table</span><br><span class="line"></span><br><span class="line">SYNOPSIS</span><br><span class="line">       route [-CFvnNee] [-A family |-<span class="number">4</span>|-<span class="number">6</span>]</span><br><span class="line"></span><br><span class="line">       route  [-v] [-A family |-<span class="number">4</span>|-<span class="number">6</span>] add [-net|-host] target [netmask Nm] [gw Gw] [metric N] [mss M] [window W] [irtt I] [reject] [mod] [dyn] [reinstate] [[dev] If]</span><br><span class="line"></span><br><span class="line">       route  [-v] [-A family |-<span class="number">4</span>|-<span class="number">6</span>] del [-net|-host] target [gw Gw] [netmask Nm] [metric N] [[dev] If]</span><br><span class="line"></span><br><span class="line">       route  [-V] [--version] [-h] [--help]</span><br><span class="line"></span><br><span class="line">EXAMPLES</span><br><span class="line">       route add -net <span class="number">127.0</span>.<span class="number">0.0</span> netmask <span class="number">255.0</span>.<span class="number">0.0</span> dev lo</span><br><span class="line">              adds the normal loopback entry, using netmask <span class="number">255.0</span>.<span class="number">0.0</span> and associated with the <span class="string">"lo"</span> device (assuming this device was previously set up correctly with ifconfig(<span class="number">8</span>)).</span><br><span class="line"></span><br><span class="line">       route add -net <span class="number">192.56</span>.<span class="number">76.0</span> netmask <span class="number">255.255</span>.<span class="number">255.0</span> dev eth0</span><br><span class="line">              adds a route to the local network <span class="number">192.56</span>.<span class="number">76</span>.x via <span class="string">"eth0"</span>.  The word <span class="string">"dev"</span> can be omitted here.</span><br><span class="line"></span><br><span class="line">       route del default</span><br><span class="line">              deletes the current default route, which is labeled <span class="string">"default"</span> or <span class="number">0.0</span>.<span class="number">0.0</span> <span class="keyword">in</span> the destination field of the current routing table.</span><br><span class="line"></span><br><span class="line">       route add default gw mango-gw</span><br><span class="line">              adds  a  default  route  (which will be used <span class="keyword">if</span> no other route matches).  All packets using this route will be gatewayed through <span class="string">"mango-gw"</span>. The device which will actually be</span><br><span class="line">              used <span class="keyword">for</span> that route depends on how we can reach <span class="string">"mango-gw"</span> - the static route to <span class="string">"mango-gw"</span> will have to be set up before.</span><br><span class="line"></span><br><span class="line">       route add ipx4 sl0</span><br><span class="line">              Adds the route to the <span class="string">"ipx4"</span> host via the SLIP interface (assuming that <span class="string">"ipx4"</span> is the SLIP host).</span><br><span class="line"></span><br><span class="line">       route add -net <span class="number">192.57</span>.<span class="number">66.0</span> netmask <span class="number">255.255</span>.<span class="number">255.0</span> gw ipx4</span><br><span class="line">              This command adds the net <span class="string">"192.57.66.x"</span> to be gatewayed through the former route to the SLIP interface.</span><br><span class="line"></span><br><span class="line">       route add -net <span class="number">224.0</span>.<span class="number">0.0</span> netmask <span class="number">240.0</span>.<span class="number">0.0</span> dev eth0</span><br><span class="line">              This is an obscure one documented so people know how to <span class="keyword">do</span> it. This sets all of the class D (multicast) IP routes to go via <span class="string">"eth0"</span>. This is the correct  normal  configuration</span><br><span class="line">              line with a multicasting kernel.</span><br><span class="line"></span><br><span class="line">       route add -net <span class="number">10.0</span>.<span class="number">0.0</span> netmask <span class="number">255.0</span>.<span class="number">0.0</span> reject</span><br><span class="line">              This installs a rejecting route <span class="keyword">for</span> the private network <span class="string">"10.x.x.x."</span></span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="Windows-路由管理"><a href="#Windows-路由管理" class="headerlink" title="Windows 路由管理"></a>Windows 路由管理</h1><h3 id="跟踪路由-1"><a href="#跟踪路由-1" class="headerlink" title="跟踪路由"></a>跟踪路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\ThinKPad&gt;tracert 10.1.53.2</span><br><span class="line"></span><br><span class="line">通过最多 30 个跃点跟踪</span><br><span class="line">到 ThinKPad-PC [10.1.53.2] 的路由:</span><br><span class="line"></span><br><span class="line">  1    17 ms    13 ms    11 ms  ThinKPad-PC [10.202.0.1]</span><br><span class="line">  2    10 ms     9 ms     9 ms  bogon [172.23.128.12]</span><br><span class="line">  3    22 ms    13 ms    14 ms  bogon [172.23.180.113]</span><br><span class="line">  4    21 ms    12 ms    14 ms  bogon [192.168.111.111]</span><br><span class="line">  5    13 ms    13 ms    12 ms  ThinKPad-PC [10.1.53.2]</span><br><span class="line"></span><br><span class="line">跟踪完成。</span><br></pre></td></tr></table></figure>
-
-<h3 id="查看路由-1"><a href="#查看路由-1" class="headerlink" title="查看路由"></a>查看路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route print -4</span><br></pre></td></tr></table></figure>
-
-<h3 id="添加路由-1"><a href="#添加路由-1" class="headerlink" title="添加路由"></a>添加路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">route add -p 目标IP mask 网段  网关</span><br><span class="line">route add -p 10.1.53.79 mask 255.255.255.255 10.10.113.81</span><br></pre></td></tr></table></figure>
-
-<h3 id="删除路由-1"><a href="#删除路由-1" class="headerlink" title="删除路由"></a>删除路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route delete 10.1.53.79</span><br></pre></td></tr></table></figure>
-
-<h3 id="帮助文档-1"><a href="#帮助文档-1" class="headerlink" title="帮助文档"></a>帮助文档</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\ThinKPad&gt;route \help</span><br><span class="line"></span><br><span class="line">操作网络路由表。</span><br><span class="line"></span><br><span class="line">ROUTE [-f] [-p] [-4|-6] command [destination]</span><br><span class="line">                  [MASK netmask]  [gateway] [METRIC metric]  [IF interface]</span><br><span class="line"></span><br><span class="line">  -f           清除所有网关项的路由表。如果与某个</span><br><span class="line">               命令结合使用，在运行该命令前，</span><br><span class="line">               应清除路由表。</span><br><span class="line"></span><br><span class="line">  -p           与 ADD 命令结合使用时，将路由设置为</span><br><span class="line">               在系统引导期间保持不变。默认情况下，重新启动系统时，</span><br><span class="line">               不保存路由。忽略所有其他命令，</span><br><span class="line">               这始终会影响相应的永久路由。Windows 95</span><br><span class="line">               不支持此选项。</span><br><span class="line"></span><br><span class="line">  -4           强制使用 IPv4。</span><br><span class="line"></span><br><span class="line">  -6           强制使用 IPv6。</span><br><span class="line"></span><br><span class="line">  command      其中之一:</span><br><span class="line">                 PRINT     打印路由</span><br><span class="line">                 ADD       添加路由</span><br><span class="line">                 DELETE    删除路由</span><br><span class="line">                 CHANGE    修改现有路由</span><br><span class="line">  destination  指定主机。</span><br><span class="line">  MASK         指定下一个参数为“网络掩码”值。</span><br><span class="line">  netmask      指定此路由项的子网掩码值。</span><br><span class="line">               如果未指定，其默认设置为 255.255.255.255。</span><br><span class="line">  gateway      指定网关。</span><br><span class="line">  interface    指定路由的接口号码。</span><br><span class="line">  METRIC       指定跃点数，例如目标的成本。</span><br><span class="line"></span><br><span class="line">用于目标的所有符号名都可以在网络数据库</span><br><span class="line">文件 NETWORKS 中进行查找。用于网关的符号名称都可以在主机名称</span><br><span class="line">数据库文件 HOSTS 中进行查找。</span><br><span class="line"></span><br><span class="line">如果命令为 PRINT 或 DELETE。目标或网关可以为通配符，</span><br><span class="line">(通配符指定为星号“*”)，否则可能会忽略网关参数。</span><br><span class="line"></span><br><span class="line">如果 Dest 包含一个 * 或 ?，则会将其视为 Shell 模式，并且只</span><br><span class="line">打印匹配目标路由。“*”匹配任意字符串，</span><br><span class="line">而“?”匹配任意一个字符。示例: 157.*.1、157.*、127.*、*224*。</span><br><span class="line"></span><br><span class="line">只有在 PRINT 命令中才允许模式匹配。</span><br><span class="line">诊断信息注释:</span><br><span class="line">    无效的 MASK 产生错误，即当 (DEST &amp; MASK) != DEST 时。</span><br><span class="line">    示例: &gt; route ADD 157.0.0.0 MASK 155.0.0.0 157.55.80.1 IF 1</span><br><span class="line">             路由添加失败: 指定的掩码参数无效。</span><br><span class="line">             (Destination &amp; Mask) != Destination。</span><br><span class="line"></span><br><span class="line">示例:</span><br><span class="line"></span><br><span class="line">    &gt; route PRINT</span><br><span class="line">    &gt; route PRINT -4</span><br><span class="line">    &gt; route PRINT -6</span><br><span class="line">    &gt; route PRINT 157*          .... 只打印那些匹配  157* 的项</span><br><span class="line"></span><br><span class="line">    &gt; route ADD 157.0.0.0 MASK 255.0.0.0  157.55.80.1 METRIC 3 IF 2</span><br><span class="line">             destination^      ^mask      ^gateway     metric^    ^</span><br><span class="line">                                                         Interface^</span><br><span class="line">      如果未给出 IF，它将尝试查找给定网关的最佳</span><br><span class="line">      接口。</span><br><span class="line">    &gt; route ADD 3ffe::/32 3ffe::1</span><br><span class="line"></span><br><span class="line">    &gt; route CHANGE 157.0.0.0 MASK 255.0.0.0 157.55.80.5 METRIC 2 IF 2</span><br><span class="line"></span><br><span class="line">      CHANGE 只用于修改网关和/或跃点数。</span><br><span class="line"></span><br><span class="line">    &gt; route DELETE 157.0.0.0</span><br><span class="line">    &gt; route DELETE 3ffe::/32</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/jvm/jvisualvm-plugins/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/java/jvm/jvisualvm-plugins/" itemprop="url">jvisualvm 插件</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-11T00:00:00+08:00">
-                2018-01-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="jvisualvm-无法下载插件解决方案"><a href="#jvisualvm-无法下载插件解决方案" class="headerlink" title="jvisualvm 无法下载插件解决方案"></a>jvisualvm 无法下载插件解决方案</h1><p>各版本 jvisualvm 插件地址：</p>
-<p><a href="https://visualvm.github.io/pluginscenters.html" target="_blank" rel="noopener">https://visualvm.github.io/pluginscenters.html</a></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190927214304.png" alt></p>
-<p>更改配置中心的地址：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190927214133.png" alt></p>
-<br>
-
-<br>
-
-<h1 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h1><p>在“可用插件”里选择对应的插件即可安装</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190927214436.png" alt></p>
-<h1 id="有用的插件"><a href="#有用的插件" class="headerlink" title="有用的插件"></a>有用的插件</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190927215459.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190927215420.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190927214624.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190927214801.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/jvm/jstack-and-top-hp/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/java/jvm/jstack-and-top-hp/" itemprop="url">top + jstack 定位java线程问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-10T00:00:00+08:00">
-                2017-12-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/jvm/" itemprop="url" rel="index">
-                    <span itemprop="name">jvm</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<blockquote>
-<p>jps -l</p>
-</blockquote>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191210172617.png" alt></p>
-<h1 id="定位CPU高问题"><a href="#定位CPU高问题" class="headerlink" title="定位CPU高问题"></a>定位CPU高问题</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1. 使用 top 定位到占用CPU高的进程PID</span></span><br><span class="line">top</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2. 获取线程信息，并找到占用CPU高的线程</span></span><br><span class="line">top -Hp pid</span><br><span class="line">ps -mp pid -o THREAD,tid,time | sort -rn</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3. 将需要的线程ID转换为16进制格式</span></span><br><span class="line">printf "%x\n" tid</span><br><span class="line"><span class="meta">#</span><span class="bash"> 4. 打印线程的堆栈信息</span></span><br><span class="line">jstack pid | grep tid -A 30</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="top-Hp-pid"><a href="#top-Hp-pid" class="headerlink" title="top -Hp pid"></a>top -Hp pid</h1><p>top -Hp pid 可以查看某个进程的线程信息</p>
-<p>-H 显示线程信息，-p指定pid</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191210172754.png" alt></p>
-<p>可以看到 线程 26096 已经运行了17个小时，将 26096 转化为 16进制：65f0；</p>
-<blockquote>
-<p>[root@localhost ~]# printf “%x\n” 27565</p>
-<p>线程 27565 对应的 16进制编码为：6bad</p>
-</blockquote>
-<h3 id="各字段含义"><a href="#各字段含义" class="headerlink" title="各字段含义"></a>各字段含义</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">统计信息区前五行是系统整体的统计信息。第一行是任务队列信息，同 uptime 命令的执行结果。其内容如下：</span><br><span class="line">01:06:48    当前时间</span><br><span class="line">up 1:22    系统运行时间，格式为时:分</span><br><span class="line">1 user    当前登录用户数</span><br><span class="line">load average: 0.06, 0.60, 0.48    系统负载，即任务队列的平均长度。三个数值分别为 1分钟、5分钟、15分钟前到现在的平均值。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">第二、三行为进程和CPU的信息。当有多个CPU时，这些内容可能会超过两行。内容如下：</span><br><span class="line">total 进程总数</span><br><span class="line">running 正在运行的进程数</span><br><span class="line">sleeping 睡眠的进程数</span><br><span class="line">stopped 停止的进程数</span><br><span class="line">zombie 僵尸进程数</span><br><span class="line">Cpu(s): </span><br><span class="line">0.3% us 用户空间占用CPU百分比</span><br><span class="line">1.0% sy 内核空间占用CPU百分比</span><br><span class="line">0.0% ni 用户进程空间内改变过优先级的进程占用CPU百分比</span><br><span class="line">98.7% id 空闲CPU百分比</span><br><span class="line">0.0% wa 等待输入输出的CPU时间百分比</span><br><span class="line">0.0%hi：硬件CPU中断占用百分比</span><br><span class="line">0.0%si：软中断占用百分比</span><br><span class="line">0.0%st：虚拟机占用百分比</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">最后两行为内存信息。内容如下：</span><br><span class="line">Mem:</span><br><span class="line">191272k total    物理内存总量</span><br><span class="line">173656k used    使用的物理内存总量</span><br><span class="line">17616k free    空闲内存总量</span><br><span class="line">22052k buffers    用作内核缓存的内存量</span><br><span class="line">Swap: </span><br><span class="line">192772k total    交换区总量</span><br><span class="line">0k used    使用的交换区总量</span><br><span class="line">192772k free    空闲交换区总量</span><br><span class="line">123988k cached    缓冲的交换区总量,内存中的内容被换出到交换区，而后又被换入到内存，但使用过的交换区尚未被覆盖，该数值即为这些内容已存在于内存中的交换区的大小,相应的内存再次被换出时可不必再对交换区写入。</span><br><span class="line"> </span><br><span class="line">怎么看内存有多少空闲呢？</span><br><span class="line">totalfree = free17616 + buffers22052 + cached123988</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">进程信息区统计信息区域的下方显示了各个进程的详细信息。首先来认识一下各列的含义。</span><br><span class="line">序号  列名    含义</span><br><span class="line">a    PID     进程id</span><br><span class="line">b    PPID    父进程id</span><br><span class="line">c    RUSER   Real user name</span><br><span class="line">d    UID     进程所有者的用户id</span><br><span class="line">e    USER    进程所有者的用户名</span><br><span class="line">f    GROUP   进程所有者的组名</span><br><span class="line">g    TTY     启动进程的终端名。不是从终端启动的进程则显示为 ?</span><br><span class="line">h    PR      优先级</span><br><span class="line">i    NI      nice值。负值表示高优先级，正值表示低优先级</span><br><span class="line">j    P       最后使用的CPU，仅在多CPU环境下有意义</span><br><span class="line">k    %CPU    上次更新到现在的CPU时间占用百分比</span><br><span class="line">l    TIME    进程使用的CPU时间总计，单位秒</span><br><span class="line">m    TIME+   进程使用的CPU时间总计，单位1/100秒</span><br><span class="line">n    %MEM    进程使用的物理内存百分比</span><br><span class="line">o    VIRT    进程使用的虚拟内存总量，单位kb。VIRT=SWAP+RES</span><br><span class="line">p    SWAP    进程使用的虚拟内存中，被换出的大小，单位kb。</span><br><span class="line">q    RES     进程使用的、未被换出的物理内存大小，单位kb。RES=CODE+DATA</span><br><span class="line">r    CODE    可执行代码占用的物理内存大小，单位kb</span><br><span class="line">s    DATA    可执行代码以外的部分(数据段+栈)占用的物理内存大小，单位kb</span><br><span class="line">t    SHR     共享内存大小，单位kb</span><br><span class="line">u    nFLT    页面错误次数</span><br><span class="line">v    nDRT    最后一次写入到现在，被修改过的页面数。</span><br><span class="line">w    S       进程状态(D=不可中断的睡眠状态,R=运行,S=睡眠,T=跟踪/停止,Z=僵尸进程)</span><br><span class="line">x    COMMAND 命令名/命令行</span><br><span class="line">y    WCHAN   若该进程在睡眠，则显示睡眠中的系统函数名</span><br><span class="line">z    Flags   任务标志，参考 sched.h</span><br><span class="line"> </span><br><span class="line">cpu使用率很高，所以首先找到该进程，通过top命令，监控该进程的使用率，然后通过H，查看各个线程的cpu使用率情况，记下cpu使用率高的线程id，然后通过jstack pid,获取各个线程栈，听过top获取的线程id转化成16进制后</span><br></pre></td></tr></table></figure>
-
-<h1 id="jstack-pid"><a href="#jstack-pid" class="headerlink" title="jstack pid"></a>jstack pid</h1><h3 id="jstack-用法"><a href="#jstack-用法" class="headerlink" title="jstack 用法"></a>jstack 用法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/opt/java8/bin/jstack</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">    jstack [-l] &lt;pid&gt;</span><br><span class="line">        (to connect to running process) 连接活动线程</span><br><span class="line">    jstack -F [-m] [-l] &lt;pid&gt;</span><br><span class="line">        (to connect to a hung process) 连接阻塞线程</span><br><span class="line">    jstack [-m] [-l] &lt;executable&gt; &lt;core&gt;</span><br><span class="line">        (to connect to a core file) 连接dump的文件</span><br><span class="line">    jstack [-m] [-l] [server_id@]&lt;remote server IP or hostname&gt;</span><br><span class="line">        (to connect to a remote debug server) 连接远程服务器</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">    -F  to force a thread dump. Use when jstack &lt;pid&gt; does not respond (process is hung)</span><br><span class="line">    -m  to print both java and native frames (mixed mode)</span><br><span class="line">    -l  long listing. Prints additional information about locks</span><br><span class="line">    -h or -help to print this help message</span><br></pre></td></tr></table></figure>
-
-<p>使用 jstack 打印 进程 26080 的线程堆栈</p>
-<blockquote>
-<p>jstack 26080  &gt; aaa.log</p>
-</blockquote>
-<br>
-
-<h3 id="正向推导"><a href="#正向推导" class="headerlink" title="正向推导"></a>正向推导</h3><blockquote>
-<p>jstack 26080 | grep 6bad -A 30</p>
-</blockquote>
-<p>线程 26080（16进制：6bad） 的线程堆栈如下：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191211095724.png" alt></p>
-<h4 id="各字段含义-1"><a href="#各字段含义-1" class="headerlink" title="各字段含义"></a>各字段含义</h4><blockquote>
-<ul>
-<li>pool-1-thread-3：线程名；</li>
-<li>prio：应该是线程的优先级；</li>
-<li>os_prio：对应的操作系统的 线程优先级；</li>
-<li>tid：jvm 中 的线程id；</li>
-<li>nid： tid映射的操作系统中的线程id,非常有用,不过这里是用16进制的表示。可以通过 printf “%x\n” 十进制数字 查找一个十进制数字的十六进制表示；</li>
-<li>waiting for condition：等待资源ID；</li>
-<li>TIMED_WAITING：当前线程状态；</li>
-</ul>
-</blockquote>
-<br>
-
-<h3 id="反向推导"><a href="#反向推导" class="headerlink" title="反向推导"></a>反向推导</h3><p>同理，nid=0x6f44 对应的线程ID 为 28484：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191210173724.png" alt></p>
-<blockquote>
-<p>top -Hp 26080 | grep 28484</p>
-</blockquote>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191210173936.png" alt></p>
-<br>
-
-<h3 id="jstack解析示例"><a href="#jstack解析示例" class="headerlink" title="jstack解析示例"></a>jstack解析示例</h3><h4 id="0、线程状态"><a href="#0、线程状态" class="headerlink" title="0、线程状态"></a>0、线程状态</h4><p>jstack dump 日志文件中，值得关注的线程状态有：</p>
-<ol>
-<li>死锁，Deadlock（重点关注） </li>
-<li>执行中，Runnable   </li>
-<li>等待资源，Waiting on condition（重点关注） </li>
-<li>等待获取监视器，Waiting on monitor entry（重点关注）</li>
-<li>暂停，Suspended</li>
-<li>对象等待中，Object.wait() 或 TIMED_WAITING</li>
-<li>阻塞，Blocked（重点关注）  </li>
-<li>停止，Parked</li>
-</ol>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191211101250.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191211155822.png" alt></p>
-<blockquote>
-<ul>
-<li>pool-1-thread-3：线程名；</li>
-<li>prio：应该是线程的优先级；</li>
-<li>os_prio：对应的操作系统的 线程优先级；</li>
-<li>tid：jvm 中 的线程id；</li>
-<li>nid： tid映射的操作系统中的线程id,非常有用,不过这里是用16进制的表示。可以通过 printf “%x\n” 十进制数字 查找一个十进制数字的十六进制表示；</li>
-<li>waiting for condition：等待资源ID；</li>
-<li>TIMED_WAITING：当前线程状态；</li>
-</ul>
-</blockquote>
-<h4 id="1、Object-wait-locked"><a href="#1、Object-wait-locked" class="headerlink" title="1、Object.wait() + locked"></a>1、Object.wait() + locked</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">"Timer-0" #22 daemon prio=5 os_prio=0 tid=0x00007fc29cb23800 nid=0x65ff in Object.wait() [0x00007fc28474c000]</span><br><span class="line">   java.lang.Thread.State: TIMED_WAITING (on object monitor)</span><br><span class="line">        at java.lang.Object.wait(Native Method)</span><br><span class="line">        at java.util.TimerThread.mainLoop(Timer.java:552)</span><br><span class="line">        - locked &lt;0x00000006c064fa10&gt; (a java.util.TaskQueue)</span><br><span class="line">        at java.util.TimerThread.run(Timer.java:505)</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>locked：线程拿到了 synchornized 锁 Object；</li>
-<li>Object.wait()：线程调用了 wait(n)，释放了锁，进入到<code>Wait Set</code>队列；</li>
-<li>TIMED_WAITING：线程处于 TIMED_WAITING 状态；</li>
-</ol>
-<h4 id="2、waiting-on-condition"><a href="#2、waiting-on-condition" class="headerlink" title="2、waiting on condition"></a>2、waiting on condition</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">"pool-1-thread-1" #19 prio=5 os_prio=0 tid=0x00007fc220003800 nid=0x65fa waiting on condition [0x00007fc2851bb000]</span><br><span class="line">   java.lang.Thread.State: WAITING (parking)</span><br><span class="line">        at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">        - parking to wait for  &lt;0x00000006c0414240&gt; (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)</span><br><span class="line">        at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)</span><br><span class="line">        at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)</span><br><span class="line">        at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)</span><br><span class="line">        at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)</span><br><span class="line">        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)</span><br><span class="line">        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)</span><br><span class="line">        at java.lang.Thread.run(Thread.java:745)</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>ConditionObject.await：线程调用了 Condition 的 await 方法，释放了锁，同时进入WAITING 状态；</li>
-<li>线程在 等待 其他线程 使用 Condition.signal() 将它唤醒 </li>
-</ol>
-<h4 id="3、runnable"><a href="#3、runnable" class="headerlink" title="3、runnable"></a>3、runnable</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">"1414013111@qtp-802771878-1 - Acceptor0 SocketConnector@0.0.0.0:8081" #21 prio=5 os_prio=0 tid=0x00007fc29cb14800 nid=0x65fe runnable [0x00007fc28484d000]</span><br><span class="line">   java.lang.Thread.State: RUNNABLE</span><br><span class="line">        at java.net.PlainSocketImpl.socketAccept(Native Method)</span><br><span class="line">        at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)</span><br><span class="line">        at java.net.ServerSocket.implAccept(ServerSocket.java:545)</span><br><span class="line">        at java.net.ServerSocket.accept(ServerSocket.java:513)</span><br><span class="line">        at org.mortbay.jetty.bio.SocketConnector.accept(SocketConnector.java:99)</span><br><span class="line">        at org.mortbay.jetty.AbstractConnector$Acceptor.run(AbstractConnector.java:708)</span><br><span class="line">        at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)</span><br></pre></td></tr></table></figure>
-
-<p>RUNNABLE：线程处于可运行状态 或 正在运行；</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2266,7 +2287,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">189</span>
+                  <span class="site-state-item-count">192</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2277,7 +2298,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2288,7 +2309,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">96</span>
+                  <span class="site-state-item-count">97</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

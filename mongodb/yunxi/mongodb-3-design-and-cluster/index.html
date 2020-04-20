@@ -100,7 +100,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="mongodb,">
 
 
 
@@ -111,14 +111,20 @@
 
 
 
-<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
-<meta property="og:type" content="website">
-<meta property="og:title" content="CarloZ">
-<meta property="og:url" content="https://carlo-z.com/archives/2020/04/index.html">
+<meta name="description" content="引擎 索引 部署 复制 分片     19、MongoDB存储引擎​    MongoDB从3.0开始引入可插拔存储引擎的概念。目前主要有MMAPv1、WiredTiger 存储引擎可供选择。3.2之前，MMAPv1是默认存储引擎，它采用linux的内存映射技术，但一直饱受诟病；3.4以上版本默认的存储引擎是 WiredTiger，相对于MMAPv1其具有如下优势：  读写性能更好，Wi">
+<meta name="keywords" content="mongodb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mongodb 核心设计和集群运维">
+<meta property="og:url" content="https://carlo-z.com/mongodb/yunxi/mongodb-3-design-and-cluster/index.html">
 <meta property="og:site_name" content="CarloZ">
+<meta property="og:description" content="引擎 索引 部署 复制 分片     19、MongoDB存储引擎​    MongoDB从3.0开始引入可插拔存储引擎的概念。目前主要有MMAPv1、WiredTiger 存储引擎可供选择。3.2之前，MMAPv1是默认存储引擎，它采用linux的内存映射技术，但一直饱受诟病；3.4以上版本默认的存储引擎是 WiredTiger，相对于MMAPv1其具有如下优势：  读写性能更好，Wi">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200413153424.png">
+<meta property="og:updated_time" content="2020-04-13T13:39:35.400Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CarloZ">
+<meta name="twitter:title" content="mongodb 核心设计和集群运维">
+<meta name="twitter:description" content="引擎 索引 部署 复制 分片     19、MongoDB存储引擎​    MongoDB从3.0开始引入可插拔存储引擎的概念。目前主要有MMAPv1、WiredTiger 存储引擎可供选择。3.2之前，MMAPv1是默认存储引擎，它采用linux的内存映射技术，但一直饱受诟病；3.4以上版本默认的存储引擎是 WiredTiger，相对于MMAPv1其具有如下优势：  读写性能更好，Wi">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200413153424.png">
 
 
 
@@ -148,13 +154,13 @@
 
 
 
-  <link rel="canonical" href="https://carlo-z.com/archives/2020/04/">
+  <link rel="canonical" href="https://carlo-z.com/mongodb/yunxi/mongodb-3-design-and-cluster/">
 
 
 
 
 
-  <title>归档 | CarloZ</title>
+  <title>mongodb 核心设计和集群运维 | CarloZ</title>
   
 
 
@@ -173,7 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -299,71 +305,227 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-         
-          
-        非常好! 目前共计 189 篇日志。 继续努力。
-      </span>
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
-
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mongodb/yunxi/mongodb-3-design-and-cluster/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/linux/linux-mem-oom-killer/" itemprop="url">
-              
-                <span itemprop="name">未命名</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">mongodb 核心设计和集群运维</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-04-03T21:35:29+08:00" content="2020-04-03">
-          04-03
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mongodb/" itemprop="url" rel="index">
+                    <span itemprop="name">mongodb</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <hr>
+<br>
+
+<blockquote>
+<ol>
+<li>引擎</li>
+<li>索引</li>
+<li>部署</li>
+<li>复制</li>
+<li>分片</li>
+</ol>
+</blockquote>
+<br>
+
+<h1 id="19、MongoDB存储引擎"><a href="#19、MongoDB存储引擎" class="headerlink" title="19、MongoDB存储引擎"></a>19、MongoDB存储引擎</h1><p>​    MongoDB从3.0开始引入可插拔存储引擎的概念。目前主要有MMAPv1、WiredTiger 存储引擎可供选择。3.2之前，MMAPv1是默认存储引擎，它采用linux的内存映射技术，但一直饱受诟病；3.4以上版本默认的存储引擎是 WiredTiger，相对于MMAPv1其具有如下优势：</p>
+<ul>
+<li>读写性能更好，WiredTiger能更好的发挥多核系统的处理能力；</li>
+<li>MMAPv1殷勤使用表级锁，WiredTiger使用文档级锁；</li>
+<li>相比MMAPv1存储，索引时WiredTiger使用前缀压缩，更节省对内存的损耗；</li>
+<li>提供压缩算法，可以大大降低对硬盘资源的消耗，节省60%以上的硬盘资源；</li>
+</ul>
+<h3 id="WiredTiger存储引擎"><a href="#WiredTiger存储引擎" class="headerlink" title="WiredTiger存储引擎"></a>WiredTiger存储引擎</h3><ul>
+<li>Concurrency 并发，文档级别</li>
+<li>Snapshots and Checkpoints 快照和检查点</li>
+<li>Journal 在检查点之间把操作以日志的方式写入journal，用来恢复检查点之间的数据</li>
+<li>Compression 压缩算法，节约硬盘</li>
+<li>Memory Use 使用内存</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200413153424.png" alt></p>
+<p>Journal </p>
+<p>恢复检查点之间的数据，默认压缩算法snappy 最小的记录文件128B 如果内容小于128B不会采用压缩算法</p>
+<p>压缩算法</p>
+<p>消耗CPU资源进行计算，来减少存储空间的消耗</p>
+<p>分块压缩 -&gt; 压缩collection集合的数据 -&gt; snappy压缩算法 -&gt; 索引（前缀压缩）</p>
+<p>设置collection压缩算法：storage.wiredTiger.collectionConfig.blockCompressor</p>
+<p>设置index压缩算法：storage.wiredTiger.indexConfig.prefixCompression</p>
+<p>设置可用内存大小：storage.wiredTiger.engineConfig.cacheSizeGB</p>
+<h3 id="MMAPv1存储引擎"><a href="#MMAPv1存储引擎" class="headerlink" title="MMAPv1存储引擎"></a>MMAPv1存储引擎</h3><ul>
+<li>Journal <ul>
+<li>每60s从journal写入磁盘一次</li>
+<li>storage.syncPeriodSecs 设置写Journal文件的时间间隔</li>
+<li>storage.journal.commitIntervalMs 设置写Journal文件的时间间隔</li>
+<li>这些是理论值，实际可能更快更频繁的刷新数据</li>
+</ul>
+</li>
+<li>Record Storage<ul>
+<li>MongoDB在磁盘中都是连续的存储，如果数据的修改使得空间变大或变小，就不得不移动数据，非常消耗资源</li>
+</ul>
+</li>
+<li>Memory Use</li>
+</ul>
+<h3 id="InMemory存储引擎"><a href="#InMemory存储引擎" class="headerlink" title="InMemory存储引擎"></a>InMemory存储引擎</h3><ul>
+<li>Concurrency</li>
+<li>Memory Use</li>
+</ul>
+<h1 id="20、Journal工作原理"><a href="#20、Journal工作原理" class="headerlink" title="20、Journal工作原理"></a>20、Journal工作原理</h1>
+      
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongodb/" rel="tag"># mongodb</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/devops/ci-cd/jenkins/jenkins-centos7-setup/" rel="next" title="centos7下安装jenkins">
+                <i class="fa fa-chevron-left"></i> centos7下安装jenkins
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/java/springcloud/mall-swarm-deploy-by-jenkins/" rel="prev" title="使用jenkins自动化部署mall-swarm">
+                使用jenkins自动化部署mall-swarm <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -371,6 +533,15 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -391,8 +562,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -407,7 +587,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">189</span>
+                  <span class="site-state-item-count">192</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -418,7 +598,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -429,7 +609,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">96</span>
+                  <span class="site-state-item-count">97</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -466,6 +646,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#19、MongoDB存储引擎"><span class="nav-text">19、MongoDB存储引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WiredTiger存储引擎"><span class="nav-text">WiredTiger存储引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MMAPv1存储引擎"><span class="nav-text">MMAPv1存储引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InMemory存储引擎"><span class="nav-text">InMemory存储引擎</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#20、Journal工作原理"><span class="nav-text">20、Journal工作原理</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -595,6 +791,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -623,6 +823,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

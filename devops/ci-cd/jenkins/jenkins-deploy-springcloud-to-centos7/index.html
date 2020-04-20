@@ -100,7 +100,7 @@
 
 
 
-  <meta name="keywords" content="rabbitmq,">
+  <meta name="keywords" content="jenkins,springcloud,">
 
 
 
@@ -111,18 +111,38 @@
 
 
 
-<meta name="description" content="1、什么是消息中间件  2、消息中间件的作用  3、JMS协议  4、AMQP协议  5、RabbitMQ简介  6、RabbitMQ安装  7、HelloWorld">
-<meta name="keywords" content="rabbitmq">
+<meta name="description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/m">
+<meta name="keywords" content="jenkins,springcloud">
 <meta property="og:type" content="article">
-<meta property="og:title" content="rabbitmq-消息中间件基础">
-<meta property="og:url" content="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-4/index.html">
+<meta property="og:title" content="jenkins发布springcloud项目到centos7服务器">
+<meta property="og:url" content="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/index.html">
 <meta property="og:site_name" content="CarloZ">
-<meta property="og:description" content="1、什么是消息中间件  2、消息中间件的作用  3、JMS协议  4、AMQP协议  5、RabbitMQ简介  6、RabbitMQ安装  7、HelloWorld">
+<meta property="og:description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/m">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-16T01:48:10.622Z">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415200830.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415201901.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415204838.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415205131.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415232314.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000630.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000547.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233807.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415221745.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415231246.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222743.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222412.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415225732.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415225935.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415230007.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233528.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233948.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234106.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234321.png">
+<meta property="og:updated_time" content="2020-04-15T16:47:43.191Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="rabbitmq-消息中间件基础">
-<meta name="twitter:description" content="1、什么是消息中间件  2、消息中间件的作用  3、JMS协议  4、AMQP协议  5、RabbitMQ简介  6、RabbitMQ安装  7、HelloWorld">
+<meta name="twitter:title" content="jenkins发布springcloud项目到centos7服务器">
+<meta name="twitter:description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/m">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415200830.png">
 
 
 
@@ -152,13 +172,13 @@
 
 
 
-  <link rel="canonical" href="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-4/">
+  <link rel="canonical" href="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/">
 
 
 
 
 
-  <title>rabbitmq-消息中间件基础 | CarloZ</title>
+  <title>jenkins发布springcloud项目到centos7服务器 | CarloZ</title>
   
 
 
@@ -317,7 +337,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rabbitmq/rabbitmq-4/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="-CarloZ">
@@ -334,7 +354,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">rabbitmq-消息中间件基础</h1>
+          <h1 class="post-title" itemprop="name headline">jenkins发布springcloud项目到centos7服务器</h1>
         
 
         <div class="post-meta">
@@ -346,8 +366,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T02:28:42+08:00">
-                2017-04-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T00:00:00+08:00">
+                2019-04-15
               </time>
             
 
@@ -356,39 +376,6 @@
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/" itemprop="url" rel="index">
-                    <span itemprop="name">mq</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/rabbitmq/" itemprop="url" rel="index">
-                    <span itemprop="name">rabbitmq</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -420,24 +407,145 @@
         <hr>
 <br>
 
-<h1 id="1、什么是消息中间件"><a href="#1、什么是消息中间件" class="headerlink" title="1、什么是消息中间件"></a>1、什么是消息中间件</h1><br>
+<h1 id="宿主机软件安装"><a href="#宿主机软件安装" class="headerlink" title="宿主机软件安装"></a>宿主机软件安装</h1><h3 id="jdk"><a href="#jdk" class="headerlink" title="jdk"></a>jdk</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz tools]# whereis java</span><br><span class="line">java: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java</span><br></pre></td></tr></table></figure>
 
-<h1 id="2、消息中间件的作用"><a href="#2、消息中间件的作用" class="headerlink" title="2、消息中间件的作用"></a>2、消息中间件的作用</h1><br>
+<h3 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h3><ol>
+<li>下载解压</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /carloz/tools/</span><br><span class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">tar -zxf apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">mv apache-maven-3.6.3 maven-3.6.3</span><br><span class="line">cd maven-3.6.3/</span><br><span class="line">pwd</span><br><span class="line">/carloz/tools/maven-3.6.3</span><br></pre></td></tr></table></figure>
 
-<h1 id="3、JMS协议"><a href="#3、JMS协议" class="headerlink" title="3、JMS协议"></a>3、JMS协议</h1><br>
+<ol start="2">
+<li>配置环境变量</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br><span class="line">MAVEN_HOME=/carloz/tools/maven-3.6.3</span><br><span class="line">export PATH=$&#123;MAVEN_HOME&#125;/bin:$&#123;PATH&#125;</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
 
-<h1 id="4、AMQP协议"><a href="#4、AMQP协议" class="headerlink" title="4、AMQP协议"></a>4、AMQP协议</h1><br>
+<ol start="3">
+<li>查看结果</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn -v</span><br></pre></td></tr></table></figure>
 
-<h1 id="5、RabbitMQ简介"><a href="#5、RabbitMQ简介" class="headerlink" title="5、RabbitMQ简介"></a>5、RabbitMQ简介</h1><br>
+<ol start="4">
+<li>替换阿里源</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br></pre></td></tr></table></figure>
 
-<h1 id="6、RabbitMQ安装"><a href="#6、RabbitMQ安装" class="headerlink" title="6、RabbitMQ安装"></a>6、RabbitMQ安装</h1><br>
+<p>找到<code>&lt;mirrors&gt;&lt;/mirrors&gt;</code>标签对，添加一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mirror&gt;</span><br><span class="line">     &lt;id&gt;alimaven&lt;/id&gt;</span><br><span class="line">     &lt;name&gt;aliyun maven&lt;/name&gt;</span><br><span class="line">     &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;</span><br><span class="line">     &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;</span><br><span class="line">&lt;/mirror&gt;</span><br></pre></td></tr></table></figure>
 
-<h1 id="7、HelloWorld"><a href="#7、HelloWorld" class="headerlink" title="7、HelloWorld"></a>7、HelloWorld</h1><br>
+<ol start="5">
+<li>指定下载资源位置</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/maven-repo</span><br><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br><span class="line">&lt;localRepository&gt;/data/maven-repo&lt;/localRepository&gt;</span><br></pre></td></tr></table></figure>
 
+<ol start="6">
+<li>指定jdk版本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br><span class="line"></span><br><span class="line">&lt;profile&gt;</span><br><span class="line">	 &lt;id&gt;jdk-1.8&lt;/id&gt;</span><br><span class="line">	 &lt;activation&gt;</span><br><span class="line">		 &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;</span><br><span class="line">		 &lt;jdk&gt;1.8&lt;/jdk&gt;</span><br><span class="line">	 &lt;/activation&gt;</span><br><span class="line">	 &lt;properties&gt;</span><br><span class="line">		 &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;</span><br><span class="line">		 &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;</span><br><span class="line">		 &lt;maven.compiler.compilerVersion&gt;1.8&lt;/maven.compiler.compilerVersion&gt;</span><br><span class="line">	 &lt;/properties&gt;</span><br><span class="line">&lt;/profile&gt;</span><br></pre></td></tr></table></figure>
 
+<h3 id="git"><a href="#git" class="headerlink" title="git"></a>git</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz ~]# yum install -y git</span><br><span class="line">[root@centos7cz ~]# whereis git</span><br><span class="line">git: /usr/bin/git /usr/share/man/man1/git.1.gz</span><br><span class="line">[root@centos7cz ~]# git --version</span><br><span class="line">git version 1.8.3.1</span><br><span class="line">[root@centos7cz ~]#</span><br></pre></td></tr></table></figure>
 
+<h1 id="jenkins做常规配置"><a href="#jenkins做常规配置" class="headerlink" title="jenkins做常规配置"></a>jenkins做常规配置</h1><p>点击系统管理-&gt;插件管理，进行一些自定义的插件安装：</p>
+<h3 id="角色管理权限插件"><a href="#角色管理权限插件" class="headerlink" title="角色管理权限插件"></a>角色管理权限插件</h3><p>Role-based Authorization Strategy</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415200830.png" alt></p>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><p>安装ssh插件</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415201901.png" alt></p>
+<p>配置公钥凭证</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415204838.png" alt></p>
+<p>在系统管理-&gt;系统配置中添加全局ssh的配置，这样Jenkins使用ssh就可以执行远程的linux脚本了：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415205131.png" alt></p>
+<h3 id="jdk-1"><a href="#jdk-1" class="headerlink" title="jdk"></a>jdk</h3><p>路径： 系统管理 -&gt; 全局工具配置 -&gt; JDK</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415232314.png" alt></p>
+<h3 id="maven-1"><a href="#maven-1" class="headerlink" title="maven"></a>maven</h3><p>通过系统管理-&gt;全局工具配置来进行全局工具的配置，比如maven的配置</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000630.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000547.png" alt></p>
+<h3 id="git-1"><a href="#git-1" class="headerlink" title="git"></a>git</h3><p>安装插件：</p>
+<ul>
+<li><p>Build With Parameters</p>
+</li>
+<li><p>Git Parameter</p>
+</li>
+</ul>
+<p>git可执行文件配置</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233807.png" alt></p>
+<h1 id="执行脚本准备"><a href="#执行脚本准备" class="headerlink" title="执行脚本准备"></a>执行脚本准备</h1><blockquote>
+<p>首先我们先把需要远程执行的脚本准备好。</p>
+</blockquote>
+<p>脚本文件都存放在了<code>mall-swarm</code>项目的<code>/document/sh</code>目录下</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415221745.png" alt></p>
+<p>上传脚本前在IDEA中修改所有脚本文件的换行符格式为<code>LF</code>，否则脚本会无法执行；</p>
+<p>将所有脚本文件上传到指定目录，这里我们上传到<code>/data/carloz/mall-swarm</code>目录下；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/carloz/mall-swarm-sh</span><br><span class="line">cd /data/carloz/mall-swarm-sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将所有脚本文件都修改为可执行文件:</span></span><br><span class="line">chmod +x ./mall-*</span><br></pre></td></tr></table></figure>
 
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415231246.png" alt></p>
+<h1 id="Jenkins中创建任务"><a href="#Jenkins中创建任务" class="headerlink" title="Jenkins中创建任务"></a>Jenkins中创建任务</h1><blockquote>
+<p>接下来我们将通过在Jenkins中创建任务来实现自动化部署。由于我们的<code>mall-swarm</code>是个多模块的项目，部署上面和曾经的单模块项目还是有所区别的</p>
+</blockquote>
+<p>创建gitee登录凭据</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222743.png" alt></p>
+<h3 id="mall-admin"><a href="#mall-admin" class="headerlink" title="mall-admin"></a>mall-admin</h3><blockquote>
+<p>由于各个模块的执行任务的创建都大同小异，下面将详细讲解mall-admin模块任务的创建，其他模块将简略讲解。</p>
+</blockquote>
+<ul>
+<li>首先我们选择<code>构建一个自由风格的软件项目</code>，然后输入任务名称为mall-admin，配置其Git仓库地址，这里我直接使用了Gitee上面的地址：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222412.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415225732.png" alt></p>
+<ul>
+<li>之后我们创建一个构建，构建<code>mall-swarm</code>项目中的依赖模块，否则当构建可运行的服务模块时会因为无法找到这些模块而构建失败；</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只install mall-common,mall-mbg,mall-security三个模块</span></span><br><span class="line">clean install -pl mall-common,mall-mbg,mall-security -am</span><br></pre></td></tr></table></figure>
 
+<ul>
+<li>依赖项目构建示意图：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415225935.png" alt></p>
+<ul>
+<li>再创建一个构建，单独构建并打包mall-admin模块：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415230007.png" alt></p>
+<ul>
+<li>添加一个构建来通过SSH去执行远程任务，用于执行mall-admin的运行脚本：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233528.png" alt></p>
+<ul>
+<li>点击保存，完成mall-admin的执行任务创建</li>
+</ul>
+<h3 id="mall-registry"><a href="#mall-registry" class="headerlink" title="mall-registry"></a>mall-registry</h3><blockquote>
+<p>mall-registry和其他模块与mall-admin创建任务方式基本一致，只需修改构建模块时的<code>pom.xml</code>文件位置和<code>执行脚本</code>位置即可。</p>
+</blockquote>
+<ul>
+<li>我们可以直接从mall-admin模块的任务复制一个过来创建：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233948.png" alt></p>
+<ul>
+<li>修改第二个构建中的pom.xml文件位置，改为：<code>${WORKSPACE}/mall-registry/pom.xml</code></li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234106.png" alt></p>
+<ul>
+<li>修改第三个构建中的SSH执行脚本文件位置，改为：<code>/data/carloz/mall-swarm-sh/mall-registry.sh</code></li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234321.png" alt></p>
+<ul>
+<li>点击保存，完成mall-registry的执行任务创建。</li>
+<li>尝试构建 mall-registry 模块，如果构建成功，再创建其他模块的构建任务</li>
+</ul>
+<h3 id="其他模块"><a href="#其他模块" class="headerlink" title="其他模块"></a>其他模块</h3><p>其他模块的执行任务创建，参考mall-admin和mall-registry的创建即可。</p>
+<h3 id="模块启动顺序问题"><a href="#模块启动顺序问题" class="headerlink" title="模块启动顺序问题"></a>模块启动顺序问题</h3><blockquote>
+<p>关于各个模块的启动顺序问题，<code>mall-registry</code>模块必须第一个启动，<code>mall-config</code>模块必须第二个启动，其他模块没有启动顺序限制。</p>
+</blockquote>
+<p>推荐启动顺序：</p>
+<ul>
+<li>mall-registry</li>
+<li>mall-config</li>
+<li>mall-monitor</li>
+<li>mall-gateway</li>
+<li>mall-admin</li>
+<li>mall-portal</li>
+<li>mall-search</li>
+<li>mall-demo</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我们通过在Jenkins中创建任务，完成了微服务架构中服务的打包部署工作，这样当我们每次修改完代码后，只需点击启动任务，就可以实现一键打包部署，省去了频繁打包部署的麻烦。</p>
+<h1 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h1><p><a href="https://github.com/macrozheng/mall-swarm" target="_blank" rel="noopener">https://github.com/macrozheng/mall-swarm</a></p>
 
       
     </div>
@@ -455,7 +563,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/rabbitmq/" rel="tag"># rabbitmq</a>
+            <a href="/tags/jenkins/" rel="tag"># jenkins</a>
+          
+            <a href="/tags/springcloud/" rel="tag"># springcloud</a>
           
         </div>
       
@@ -468,8 +578,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/message-queue/rabbitmq/rabbitmq-5/" rel="next" title="rabbitmq-消息中间件基础">
-                <i class="fa fa-chevron-left"></i> rabbitmq-消息中间件基础
+              <a href="/elasticsearch/elasticsearch-heavy-and-difficult-points/" rel="next" title="elasticsearch 重难点解析">
+                <i class="fa fa-chevron-left"></i> elasticsearch 重难点解析
               </a>
             
           </div>
@@ -478,8 +588,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/message-queue/rabbitmq/rabbitmq-1-setup/" rel="prev" title="rabbitmq-消息中间件基础">
-                rabbitmq-消息中间件基础 <i class="fa fa-chevron-right"></i>
+              <a href="/devops/docker/harbor-setup/" rel="prev" title="docker仓库Harbor安装配置">
+                docker仓库Harbor安装配置 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -562,7 +672,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">189</span>
+                  <span class="site-state-item-count">192</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -573,7 +683,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -584,7 +694,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">96</span>
+                  <span class="site-state-item-count">97</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -631,7 +741,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、什么是消息中间件"><span class="nav-text">1、什么是消息中间件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、消息中间件的作用"><span class="nav-text">2、消息中间件的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、JMS协议"><span class="nav-text">3、JMS协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、AMQP协议"><span class="nav-text">4、AMQP协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5、RabbitMQ简介"><span class="nav-text">5、RabbitMQ简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6、RabbitMQ安装"><span class="nav-text">6、RabbitMQ安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7、HelloWorld"><span class="nav-text">7、HelloWorld</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#宿主机软件安装"><span class="nav-text">宿主机软件安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk"><span class="nav-text">jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven"><span class="nav-text">maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git"><span class="nav-text">git</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#jenkins做常规配置"><span class="nav-text">jenkins做常规配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#角色管理权限插件"><span class="nav-text">角色管理权限插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh"><span class="nav-text">ssh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk-1"><span class="nav-text">jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven-1"><span class="nav-text">maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-1"><span class="nav-text">git</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行脚本准备"><span class="nav-text">执行脚本准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jenkins中创建任务"><span class="nav-text">Jenkins中创建任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mall-admin"><span class="nav-text">mall-admin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mall-registry"><span class="nav-text">mall-registry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他模块"><span class="nav-text">其他模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块启动顺序问题"><span class="nav-text">模块启动顺序问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目地址"><span class="nav-text">项目地址</span></a></li></div>
             
 
           </div>

@@ -314,319 +314,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/algorithm/backoff-algorighm/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/algorithm/backoff-algorighm/" itemprop="url">退避算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-06T00:00:00+08:00">
-                2019-09-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>CSMA/CD采用二进制指数退避算法，又称为二元指数<a href="https://baike.baidu.com/item/后退算法/6714023" target="_blank" rel="noopener">后退算法</a>。退避算法是以冲突窗口大小为基准的，每个节点有一个冲突计数器C。退避的时间与冲突次数具有指数关系，冲突次数越多，退避的时间就可能越长，若达到限定的冲突次数，该节点就停止发送数据。</p>
-<br>
-
-<br>
-
-
-
-<h1 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h1><p><a href="https://baike.baidu.com/item/二进制/361457" target="_blank" rel="noopener">二进制</a>退避技术（Binary Exponential Back off）. 指在遇到重复的冲突时，站点将重复传输，但在每一次冲突之后，随着<a href="https://baike.baidu.com/item/时延/8668446" target="_blank" rel="noopener">时延</a>的平均值将加倍。二进制指数退避算法提供了一个处理重负荷的方法。尝试传输的重复失败导致更长的退避时间，这将有助于负荷的平滑。如果没有这样的退避，以下状况可能发生：两个或多站点同时尝试传输，这将导致冲突，之后这些站点又立即尝试重传，导致一个新冲突。</p>
-<br>
-
-<br>
-
-
-
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><p>在<a href="https://baike.baidu.com/item/CSMA%2FCD协议" target="_blank" rel="noopener">CSMA/CD协议</a>中，一旦检测到冲突，为降低再冲突的概率，需要等待一个随机时间，然后再使用<a href="https://baike.baidu.com/item/CSMA/3112334" target="_blank" rel="noopener">CSMA</a>方法试图传输。为了保证这种退避维持稳定，采用了二进制指数退避算法的技术，其算法过程如下：</p>
-<ol>
-<li><p>确定基本退避时间，一般为端到端的往返时间为2t，2t也称为冲突窗口或争用期。</p>
-</li>
-<li><p>定义参数k，k与冲突次数有关，规定k不能超过10，k=Min[冲突次数，10]。在冲突次数大于10，小于16时，k不再增大，一直取值为10。</p>
-</li>
-<li><p>从离散的整数集合[0,1,2，……，(2^k-1)]中随机的取出一个数r，等待的时延为r倍的基本退避时间，等于r x 2t。r的取值范围与冲突次数k有关，r可选的随机取值为2^k个、这也是称为二进制退避算法的起因。</p>
-</li>
-<li><p>当冲突次数大于10以后，都是从0—2^10-1个2t中随机选择一个作为等待时间。</p>
-</li>
-<li><p>当冲突次数超过16次后，发送失败，丢弃传输的帧，发送错误报告。</p>
-</li>
-</ol>
-<p><strong>举例</strong></p>
-<p>如果第二次发生碰撞：</p>
-<p>n = 2</p>
-<p>k = MIN(2,10) = 2</p>
-<p>R = {0, 1, 2, 3)</p>
-<p>延迟时间 = R * 512 * Bit-time</p>
-<p>其中：Bit-time = 1 / Debit</p>
-<p>例如：</p>
-<p>对于传输速率Debit = 10 Mbit/s,</p>
-<p>那么Bit-time = 0.1 us</p>
-<p>延迟时间={0, 51.2 us, 102.4 us, 153.6 us} 其中任取一</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/tcpdump-manual-analysis-network-package/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/computer-network/tcpdump-manual-analysis-network-package/" itemprop="url">tcpdump 捕获中文传输数据包，并手动解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-05T17:43:01+08:00">
-                2019-08-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="开启tcpdump抓包"><a href="#开启tcpdump抓包" class="headerlink" title="开启tcpdump抓包"></a>开启tcpdump抓包</h1><p>centos7 下 ，只抓有数据的包：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i eth0 '((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) != 0' and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX</span><br></pre></td></tr></table></figure>
-
-<p><br><br></p>
-<h1 id="示例（1）输入“中国a”"><a href="#示例（1）输入“中国a”" class="headerlink" title="示例（1）输入“中国a”"></a>示例（1）输入“中国a”</h1><p>centos7 下 netcat 输入：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824201628.png" alt></p>
-<p><br><br></p>
-<h1 id="抓包结果放在-WireShark中分析"><a href="#抓包结果放在-WireShark中分析" class="headerlink" title="抓包结果放在 WireShark中分析"></a>抓包结果放在 WireShark中分析</h1><p> tcpdump抓包：<img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824201929.png" alt></p>
-<p>wireshark分析抓到的文件：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202144.png" alt></p>
-<p>可以看到 中文的16进制编码为 d6 d0 b9 fa 61 0a，</p>
-<p>查看 控制台的编码：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202204.png" alt></p>
-<p>可知，中文经过GBK编码以后的 16进制表示为： d6 d0 b9 fa 61 0a；</p>
-<p>GBK的编码规则如下：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202247.png" alt></p>
-<p>d6d0 b9fa 610a 按双字节表示转换为：D6D0 B9FA  610A</p>
-<p>GBK对照表：<a href="http://ff.163.com/newflyff/gbk-list/" target="_blank" rel="noopener">http://ff.163.com/newflyff/gbk-list/</a></p>
-<p>D6D0 对应的中文为：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202325.png" alt></p>
-<p>B9FA 对应的中文为：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202339.png" alt></p>
-<p>610A 对应的中文为：</p>
-<p>搜索没有对应的GBK编码</p>
-<p>ASCII码对照表：<a href="http://ascii.911cha.com/" target="_blank" rel="noopener">http://ascii.911cha.com/</a></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202358.png" alt></p>
-<p>0A 为换行符；</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202416.png" alt></p>
-<p><br><br></p>
-<h1 id="示例（2）输入“asdf123”"><a href="#示例（2）输入“asdf123”" class="headerlink" title="示例（2）输入“asdf123”"></a>示例（2）输入“asdf123”</h1><p>输入：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202532.png" alt></p>
-<p>抓包：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202544.png" alt></p>
-<p>解析：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202624.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/tcpdump-and-wireshark/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2144,6 +1831,526 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/docker/harbor-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/docker/harbor-setup/" itemprop="url">docker仓库Harbor安装配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-20T00:00:00+08:00">
+                2019-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h1><h3 id="开源Docker-Registry的不足"><a href="#开源Docker-Registry的不足" class="headerlink" title="开源Docker Registry的不足"></a>开源Docker Registry的不足</h3><p>同很多团队进行容器云构建的初始阶段一样，一开始我们并不太注重安全，容器仓库一般都是配置成insecure-registry直接使用。这次，我们决定加强安全方面的控制。我们发现了它的一些不足如下：</p>
+<ul>
+<li><p><u><strong>用户与鉴权</strong></u>：Docker Registry V2可以基于htpasswd文件进行简单的用户管理，但是维护不便，也没有对外的API可供集成。</p>
+</li>
+<li><p><u><strong>缺少日志与审记</strong></u>：Docker Registry没有日志收集能力，也缺少审记。</p>
+</li>
+<li><p><u><strong>复制与同步</strong></u>：在不同的Registry实例之间复制镜像是十分普遍的需求，但Docker Registry只支持将公有Registry的镜像同步至私有仓库 。</p>
+</li>
+<li><p><u><strong>镜像删除不便</strong></u>：Docker客户端没有提供删除仓库镜像的命令，删除仓库中的镜像，只能通过其它工具调用rest api 。</p>
+</li>
+<li><p><u><strong>缺少图形化的管理界面</strong></u>：要想补上这些缺点，需要在自已的容器云中做一些加强，需要工作量。除了Docker Registry，还有没有其它的选择，已经补齐了这些能力，或部分补齐了呢？于是，我们做了一点小了解。</p>
+</li>
+</ul>
+<h3 id="业界可选的Registry"><a href="#业界可选的Registry" class="headerlink" title="业界可选的Registry"></a>业界可选的Registry</h3><ul>
+<li><p>Docker Hub 提供了直观的界面、自动化构建、私有仓库以及众多官方镜像。这是官方的公有库，下载镜像必须联接外网。</p>
+</li>
+<li><p>Docker Registry 最流行的开源registry。你可以在自己的设施上运行或者使用Docker Hub。</p>
+</li>
+<li><p>Quay.io 最初由一个两人工作室开发的产品，专注于Docker私有库。目前已被Coreos收购。</p>
+</li>
+<li><p>CoreOS Enterprise Registry Coreos收购Quay.io之后推出的企业级Containger Registry，提供细化权限和审计跟踪。</p>
+</li>
+<li><p>Nexus 3.0 nexus原来只是一个maven的仓库服务器，升级到3.0之后，也可以使用它对docker的镜像进行管理。</p>
+</li>
+<li><p>Harbor vmware开源的企业级容器registry，基于开源的Docker Registry进行增强。</p>
+</li>
+</ul>
+<p>Docker Hub相信大家都不陌生，用来做私库的源库是可以的，可以将一些基础镜像从这个云库拉到私库中。它并不适合在容器云中直接使用，下载镜像时需要连外网，速度也是个大问题。</p>
+<p>Docker Registry就不说了，接下来的Quay.io，CoreOS Enterprise Registry是付费的，或者是商业付费的，不考虑。Nexus 3有图形化的管理页面可以操作镜像，但其它的能力与Docker Registry差不多。最后看到的harbor，则令我们眼前一亮。</p>
+<h1 id="新的选择–Harbor"><a href="#新的选择–Harbor" class="headerlink" title="新的选择–Harbor"></a>新的选择–Harbor</h1><p>Harbor是VMware公司于2016年开源的企业级Docker Registry项目。它是一个用于存储和分发Docker镜像的企业级Registry服务器，通过添加一些企业必需的功能特性，例如安全、标识和管理等，扩展了开源Docker Distribution。</p>
+<p>作为一个企业级私有Registry服务器，Harbor提供了更好的性能和安全。提升用户使用Registry构建和运行环境传输镜像的效率。Harbor支持安装在多个Registry节点的镜像资源复制，镜像全部保存在私有Registry中， 确保数据和知识产权在公司内部网络中管控。另外，Harbor也提供了高级的安全特性，诸如用户管理，访问控制和活动审计等。</p>
+<h3 id="Harbor的特点"><a href="#Harbor的特点" class="headerlink" title="Harbor的特点"></a>Harbor的特点</h3><ul>
+<li><p>基于角色的访问控制：用户与Docker镜像仓库通过“项目”进行组织管理，一个用户可以对多个镜像仓库在同一命名空间（project）里有不同的权限。</p>
+</li>
+<li><p>镜像复制：镜像可以在多个Registry实例中复制（同步）。尤其适合于负载均衡，高可用，混合云和多云的场景。</p>
+</li>
+<li><p>图形化用户界面：用户可以通过浏览器来浏览，检索当前Docker镜像仓库，管理项目和命名空间。</p>
+</li>
+<li><p>AD/LDAP 支持：Harbor可以集成企业内部已有的AD/LDAP，用于鉴权认证管理。</p>
+</li>
+<li><p>审计管理：所有针对镜像仓库的操作都可以被记录追溯，用于审计管理。</p>
+</li>
+<li><p>国际化：已拥有英文、中文、德文、日文和俄文的本地化版本。更多的语言将会添加进来。</p>
+</li>
+<li><p>RESTful API：RESTful API 提供给管理员对于Harbor更多的操控, 使得与其它管理软件集成变得更容易。</p>
+</li>
+<li><p>部署简单：提供在线和离线两种安装工具，也可以安装到vSphere平台(OVA方式)虚拟设备。</p>
+</li>
+</ul>
+<h3 id="Harbor的整体架构"><a href="#Harbor的整体架构" class="headerlink" title="Harbor的整体架构"></a>Harbor的整体架构</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135610.png" alt></p>
+<p>Harbor在架构上主要由五个组件构成：</p>
+<ul>
+<li><p>Proxy：Harbor的registry, UI, token等服务，通过一个前置的反向代理统一接收浏览器、Docker客户端的请求，并将请求转发给后端不同的服务。</p>
+</li>
+<li><p>Registry：负责储存Docker镜像，并处理dockerpush/pull 命令。由于我们要对用户进行访问控制，即不同用户对Docker image有不同的读写权限，Registry会指向一个token服务，强制用户的每次docker pull/push请求都要携带一个合法的token,Registry会通过公钥对token 进行解密验证。</p>
+</li>
+<li><p>Core services：这是Harbor的核心功能，主要提供以下服务：UI：提供图形化界面，帮助用户管理registry上的镜像（image）, 并对用户进行授权。 webhook：为了及时获取registry上image状态变化的情况， 在Registry上配置webhook，把状态变化传递给UI模块。token服务：负责根据用户权限给每个docker push/pull命令签发token.Docker客户端向Regiøstry服务发起的请求,如果不包含token，会被重定向到这里，获得token后再重新向Registry进行请求。</p>
+</li>
+<li><p>Database：为core-services提供数据库服务，负责储存用户权限、审计日志、Docker image分组信息等数据。</p>
+</li>
+<li><p>Log collector：为了帮助监控Harbor运行，负责收集其他组件的log，供日后进行分析。</p>
+</li>
+</ul>
+<h3 id="harbor的核心概念"><a href="#harbor的核心概念" class="headerlink" title="harbor的核心概念"></a>harbor的核心概念</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135701.png" alt></p>
+<p>以上是Harbor的核心概念。一个项目可以看成一个用户的小私库，项目成员按照其角色，可以上传，下载，删除镜像，或添加删除成员等。系统管理员可以创建镜像库复制目标，为项目设置复制策略，可以从其它的镜像库复制镜像过来。复制策略会产生复制任务。项目下面可拥有多个镜像，而每个镜像则可以有多个镜像标签。项目包含日志。</p>
+<h1 id="Harbor安装"><a href="#Harbor安装" class="headerlink" title="Harbor安装"></a>Harbor安装</h1><h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>docker 和 docker-compose 安装完成</p>
+<h3 id="创建-https-证书"><a href="#创建-https-证书" class="headerlink" title="创建 https 证书"></a>创建 https 证书</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建证书目录，并赋予权限</span></span><br><span class="line">mkdir -p /data/cert &amp;&amp; chmod -R 777 /data/cert &amp;&amp; cd /data/cert</span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成私钥，需要设置密码</span></span><br><span class="line">openssl genrsa -des3 -out harbor.key 2048</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成CA证书，需要输入密码</span></span><br><span class="line">openssl req -sha512 -new \</span><br><span class="line">    -subj "/C=CN/ST=JS/L=WX/O=zwx/OU=jhmy/CN=hub.jhmy.com" \</span><br><span class="line">    -key harbor.key \</span><br><span class="line">    -out harbor.csr</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 备份证书</span></span><br><span class="line">cp harbor.key harbor.key.org</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 退掉私钥密码，以便docker访问（也可以参考官方进行双向认证）</span></span><br><span class="line">openssl rsa -in harbor.key.org -out harbor.key</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用证书进行签名</span></span><br><span class="line">openssl x509 -req -days 365 -in harbor.csr -signkey harbor.key -out harbor.crt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420152329.png" alt></p>
+<ul>
+<li>安装文档</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://goharbor.io/docs/1.10/install-config/</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载解压"><a href="#下载解压" class="headerlink" title="下载解压"></a>下载解压</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/goharbor/harbor/releases</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /data/tools</span><br><span class="line">tar -zxf harbor-offline-installer-v1.10.1.tgz</span><br><span class="line">cd /data/tools/harbor</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420151637.png" alt></p>
+<ul>
+<li>配置harbor.yml</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hostname: 192.168.145.130</span><br><span class="line"></span><br><span class="line">http:</span><br><span class="line">  port: 80</span><br><span class="line"></span><br><span class="line">https:</span><br><span class="line">  port: 443</span><br><span class="line">  certificate: /data/cert/harbor.crt</span><br><span class="line">  private_key: /data/cert/harbor.key</span><br><span class="line"></span><br><span class="line">harbor_admin_password: 123456</span><br><span class="line"></span><br><span class="line">database:</span><br><span class="line">  password: 123456</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420154307.png" alt></p>
+<ul>
+<li>安装</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420173201.png" alt></p>
+<ul>
+<li>卸载</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker-compose -f /data/tools/harbor/docker-compose.yml down</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  "insecure-registries": ["192.168.145.130"]</span><br><span class="line">&#125;</span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动-amp-停止"><a href="#启动-amp-停止" class="headerlink" title="启动&amp;停止"></a>启动&amp;停止</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml stop</span><br><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml start</span><br></pre></td></tr></table></figure>
+
+<h1 id="设置host解析"><a href="#设置host解析" class="headerlink" title="设置host解析"></a>设置host解析</h1><h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts</span><br><span class="line">192.168.145.130 czharbor.com</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+<h3 id="win7"><a href="#win7" class="headerlink" title="win7"></a>win7</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\System32\drivers\etc\hosts</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件改为读写</span></span><br><span class="line">192.168.145.130 czharbor.com</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件改为只读</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="访问验证"><a href="#访问验证" class="headerlink" title="访问验证"></a>访问验证</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://czharbor.com/harbor/registries</span><br><span class="line">admin/123456</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420204651.png" alt></p>
+<h3 id="自定义仓库"><a href="#自定义仓库" class="headerlink" title="自定义仓库"></a>自定义仓库</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420214517.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420215346.png" alt></p>
+<h3 id="上传测试镜像"><a href="#上传测试镜像" class="headerlink" title="上传测试镜像"></a>上传测试镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker login -u admin -p 123456 czharbor.com</span><br><span class="line">docker tag redis:3.2 czharbor.com/dev/redis:3.2</span><br><span class="line">docker push czharbor.com/dev/redis:3.2</span><br><span class="line"><span class="meta">#</span><span class="bash"> docker <span class="built_in">logout</span> czharbor.com</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420215536.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/" itemprop="url">jenkins发布springcloud项目到centos7服务器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T00:00:00+08:00">
+                2019-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="宿主机软件安装"><a href="#宿主机软件安装" class="headerlink" title="宿主机软件安装"></a>宿主机软件安装</h1><h3 id="jdk"><a href="#jdk" class="headerlink" title="jdk"></a>jdk</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz tools]# whereis java</span><br><span class="line">java: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java</span><br></pre></td></tr></table></figure>
+
+<h3 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h3><ol>
+<li>下载解压</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /carloz/tools/</span><br><span class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">tar -zxf apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">mv apache-maven-3.6.3 maven-3.6.3</span><br><span class="line">cd maven-3.6.3/</span><br><span class="line">pwd</span><br><span class="line">/carloz/tools/maven-3.6.3</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置环境变量</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br><span class="line">MAVEN_HOME=/carloz/tools/maven-3.6.3</span><br><span class="line">export PATH=$&#123;MAVEN_HOME&#125;/bin:$&#123;PATH&#125;</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>查看结果</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn -v</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>替换阿里源</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br></pre></td></tr></table></figure>
+
+<p>找到<code>&lt;mirrors&gt;&lt;/mirrors&gt;</code>标签对，添加一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mirror&gt;</span><br><span class="line">     &lt;id&gt;alimaven&lt;/id&gt;</span><br><span class="line">     &lt;name&gt;aliyun maven&lt;/name&gt;</span><br><span class="line">     &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;</span><br><span class="line">     &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;</span><br><span class="line">&lt;/mirror&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>指定下载资源位置</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/maven-repo</span><br><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br><span class="line">&lt;localRepository&gt;/data/maven-repo&lt;/localRepository&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>指定jdk版本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br><span class="line"></span><br><span class="line">&lt;profile&gt;</span><br><span class="line">	 &lt;id&gt;jdk-1.8&lt;/id&gt;</span><br><span class="line">	 &lt;activation&gt;</span><br><span class="line">		 &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;</span><br><span class="line">		 &lt;jdk&gt;1.8&lt;/jdk&gt;</span><br><span class="line">	 &lt;/activation&gt;</span><br><span class="line">	 &lt;properties&gt;</span><br><span class="line">		 &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;</span><br><span class="line">		 &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;</span><br><span class="line">		 &lt;maven.compiler.compilerVersion&gt;1.8&lt;/maven.compiler.compilerVersion&gt;</span><br><span class="line">	 &lt;/properties&gt;</span><br><span class="line">&lt;/profile&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="git"><a href="#git" class="headerlink" title="git"></a>git</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz ~]# yum install -y git</span><br><span class="line">[root@centos7cz ~]# whereis git</span><br><span class="line">git: /usr/bin/git /usr/share/man/man1/git.1.gz</span><br><span class="line">[root@centos7cz ~]# git --version</span><br><span class="line">git version 1.8.3.1</span><br><span class="line">[root@centos7cz ~]#</span><br></pre></td></tr></table></figure>
+
+<h1 id="jenkins做常规配置"><a href="#jenkins做常规配置" class="headerlink" title="jenkins做常规配置"></a>jenkins做常规配置</h1><p>点击系统管理-&gt;插件管理，进行一些自定义的插件安装：</p>
+<h3 id="角色管理权限插件"><a href="#角色管理权限插件" class="headerlink" title="角色管理权限插件"></a>角色管理权限插件</h3><p>Role-based Authorization Strategy</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415200830.png" alt></p>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><p>安装ssh插件</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415201901.png" alt></p>
+<p>配置公钥凭证</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415204838.png" alt></p>
+<p>在系统管理-&gt;系统配置中添加全局ssh的配置，这样Jenkins使用ssh就可以执行远程的linux脚本了：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415205131.png" alt></p>
+<h3 id="jdk-1"><a href="#jdk-1" class="headerlink" title="jdk"></a>jdk</h3><p>路径： 系统管理 -&gt; 全局工具配置 -&gt; JDK</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415232314.png" alt></p>
+<h3 id="maven-1"><a href="#maven-1" class="headerlink" title="maven"></a>maven</h3><p>通过系统管理-&gt;全局工具配置来进行全局工具的配置，比如maven的配置</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000630.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000547.png" alt></p>
+<h3 id="git-1"><a href="#git-1" class="headerlink" title="git"></a>git</h3><p>安装插件：</p>
+<ul>
+<li><p>Build With Parameters</p>
+</li>
+<li><p>Git Parameter</p>
+</li>
+</ul>
+<p>git可执行文件配置</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233807.png" alt></p>
+<h1 id="执行脚本准备"><a href="#执行脚本准备" class="headerlink" title="执行脚本准备"></a>执行脚本准备</h1><blockquote>
+<p>首先我们先把需要远程执行的脚本准备好。</p>
+</blockquote>
+<p>脚本文件都存放在了<code>mall-swarm</code>项目的<code>/document/sh</code>目录下</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415221745.png" alt></p>
+<p>上传脚本前在IDEA中修改所有脚本文件的换行符格式为<code>LF</code>，否则脚本会无法执行；</p>
+<p>将所有脚本文件上传到指定目录，这里我们上传到<code>/data/carloz/mall-swarm</code>目录下；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/carloz/mall-swarm-sh</span><br><span class="line">cd /data/carloz/mall-swarm-sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将所有脚本文件都修改为可执行文件:</span></span><br><span class="line">chmod +x ./mall-*</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415231246.png" alt></p>
+<h1 id="Jenkins中创建任务"><a href="#Jenkins中创建任务" class="headerlink" title="Jenkins中创建任务"></a>Jenkins中创建任务</h1><blockquote>
+<p>接下来我们将通过在Jenkins中创建任务来实现自动化部署。由于我们的<code>mall-swarm</code>是个多模块的项目，部署上面和曾经的单模块项目还是有所区别的</p>
+</blockquote>
+<p>创建gitee登录凭据</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222743.png" alt></p>
+<h3 id="mall-admin"><a href="#mall-admin" class="headerlink" title="mall-admin"></a>mall-admin</h3><blockquote>
+<p>由于各个模块的执行任务的创建都大同小异，下面将详细讲解mall-admin模块任务的创建，其他模块将简略讲解。</p>
+</blockquote>
+<ul>
+<li>首先我们选择<code>构建一个自由风格的软件项目</code>，然后输入任务名称为mall-admin，配置其Git仓库地址，这里我直接使用了Gitee上面的地址：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222412.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415225732.png" alt></p>
+<ul>
+<li>之后我们创建一个构建，构建<code>mall-swarm</code>项目中的依赖模块，否则当构建可运行的服务模块时会因为无法找到这些模块而构建失败；</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只install mall-common,mall-mbg,mall-security三个模块</span></span><br><span class="line">clean install -pl mall-common,mall-mbg,mall-security -am</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>依赖项目构建示意图：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415225935.png" alt></p>
+<ul>
+<li>再创建一个构建，单独构建并打包mall-admin模块：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415230007.png" alt></p>
+<ul>
+<li>添加一个构建来通过SSH去执行远程任务，用于执行mall-admin的运行脚本：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233528.png" alt></p>
+<ul>
+<li>点击保存，完成mall-admin的执行任务创建</li>
+</ul>
+<h3 id="mall-registry"><a href="#mall-registry" class="headerlink" title="mall-registry"></a>mall-registry</h3><blockquote>
+<p>mall-registry和其他模块与mall-admin创建任务方式基本一致，只需修改构建模块时的<code>pom.xml</code>文件位置和<code>执行脚本</code>位置即可。</p>
+</blockquote>
+<ul>
+<li>我们可以直接从mall-admin模块的任务复制一个过来创建：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233948.png" alt></p>
+<ul>
+<li>修改第二个构建中的pom.xml文件位置，改为：<code>${WORKSPACE}/mall-registry/pom.xml</code></li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234106.png" alt></p>
+<ul>
+<li>修改第三个构建中的SSH执行脚本文件位置，改为：<code>/data/carloz/mall-swarm-sh/mall-registry.sh</code></li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234321.png" alt></p>
+<ul>
+<li>点击保存，完成mall-registry的执行任务创建。</li>
+<li>尝试构建 mall-registry 模块，如果构建成功，再创建其他模块的构建任务</li>
+</ul>
+<h3 id="其他模块"><a href="#其他模块" class="headerlink" title="其他模块"></a>其他模块</h3><p>其他模块的执行任务创建，参考mall-admin和mall-registry的创建即可。</p>
+<h3 id="模块启动顺序问题"><a href="#模块启动顺序问题" class="headerlink" title="模块启动顺序问题"></a>模块启动顺序问题</h3><blockquote>
+<p>关于各个模块的启动顺序问题，<code>mall-registry</code>模块必须第一个启动，<code>mall-config</code>模块必须第二个启动，其他模块没有启动顺序限制。</p>
+</blockquote>
+<p>推荐启动顺序：</p>
+<ul>
+<li>mall-registry</li>
+<li>mall-config</li>
+<li>mall-monitor</li>
+<li>mall-gateway</li>
+<li>mall-admin</li>
+<li>mall-portal</li>
+<li>mall-search</li>
+<li>mall-demo</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我们通过在Jenkins中创建任务，完成了微服务架构中服务的打包部署工作，这样当我们每次修改完代码后，只需点击启动任务，就可以实现一键打包部署，省去了频繁打包部署的麻烦。</p>
+<h1 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h1><p><a href="https://github.com/macrozheng/mall-swarm" target="_blank" rel="noopener">https://github.com/macrozheng/mall-swarm</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/elasticsearch-heavy-and-difficult-points/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2292,7 +2499,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2338,7 +2545,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">189</span>
+                  <span class="site-state-item-count">192</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2349,7 +2556,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">47</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2360,7 +2567,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">96</span>
+                  <span class="site-state-item-count">97</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
