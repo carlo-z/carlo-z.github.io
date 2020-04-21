@@ -111,14 +111,15 @@
 
 
 
-<meta name="description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/m">
+<meta name="description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/">
 <meta name="keywords" content="jenkins,springcloud">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jenkins发布springcloud项目到centos7服务器">
-<meta property="og:url" content="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/index.html">
+<meta property="og:title" content="jenkins+harbor+gitee">
+<meta property="og:url" content="https://carlo-z.com/devops/jenkins/jenkins-deploy-springcloud-to-centos7/index.html">
 <meta property="og:site_name" content="CarloZ">
-<meta property="og:description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/m">
+<meta property="og:description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421202616.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415200830.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415201901.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415204838.png">
@@ -127,6 +128,8 @@
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000630.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000547.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233807.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421174729.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421175307.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415221745.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415231246.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222743.png">
@@ -138,11 +141,11 @@
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233948.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234106.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234321.png">
-<meta property="og:updated_time" content="2020-04-15T16:47:43.191Z">
+<meta property="og:updated_time" content="2020-04-21T12:26:30.169Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="jenkins发布springcloud项目到centos7服务器">
-<meta name="twitter:description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/m">
-<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415200830.png">
+<meta name="twitter:title" content="jenkins+harbor+gitee">
+<meta name="twitter:description" content="宿主机软件安装jdk12[root@centos7cz tools]# whereis javajava: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java  maven 下载解压  1234567cd /carloz/tools/wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421202616.png">
 
 
 
@@ -172,13 +175,13 @@
 
 
 
-  <link rel="canonical" href="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/">
+  <link rel="canonical" href="https://carlo-z.com/devops/jenkins/jenkins-deploy-springcloud-to-centos7/">
 
 
 
 
 
-  <title>jenkins发布springcloud项目到centos7服务器 | CarloZ</title>
+  <title>jenkins+harbor+gitee | CarloZ</title>
   
 
 
@@ -337,7 +340,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/jenkins/jenkins-deploy-springcloud-to-centos7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="-CarloZ">
@@ -354,7 +357,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">jenkins发布springcloud项目到centos7服务器</h1>
+          <h1 class="post-title" itemprop="name headline">jenkins+harbor+gitee</h1>
         
 
         <div class="post-meta">
@@ -407,6 +410,7 @@
         <hr>
 <br>
 
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421202616.png" alt></p>
 <h1 id="宿主机软件安装"><a href="#宿主机软件安装" class="headerlink" title="宿主机软件安装"></a>宿主机软件安装</h1><h3 id="jdk"><a href="#jdk" class="headerlink" title="jdk"></a>jdk</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz tools]# whereis java</span><br><span class="line">java: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java</span><br></pre></td></tr></table></figure>
 
 <h3 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h3><ol>
@@ -467,6 +471,40 @@
 </ul>
 <p>git可执行文件配置</p>
 <p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233807.png" alt></p>
+<h3 id="gitee"><a href="#gitee" class="headerlink" title="gitee"></a>gitee</h3><p>在线安装</p>
+<ul>
+<li>前往 Manage Jenkins -&gt; Manage Plugins -&gt; Available</li>
+<li>右侧 Filter 输入： Gitee</li>
+<li>下方可选列表中勾选 Gitee（如列表中不存在 Gitee，则点击 Check now 更新插件列表）</li>
+<li>点击 Download now and install after restart</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421174729.png" alt></p>
+<p>添加码云链接配置</p>
+<ol>
+<li><p>前往 Jenkins -&gt; Manage Jenkins -&gt; Configure System -&gt; Gitee Configuration -&gt; Gitee connections</p>
+</li>
+<li><p>在 <code>Connection name</code> 中输入 <code>Gitee</code> 或者你想要的名字</p>
+</li>
+<li><p><code>Gitee host URL</code> 中输入码云完整 URL地址： <code>https://gitee.com</code> （码云私有化客户输入部署的域名）</p>
+</li>
+<li><p><code>Credentials</code>  中如还未配置码云 APIV5 私人令牌，点击<code>Add- &gt; Jenkins</code></p>
+<ol>
+<li><code>Domain</code> 选择 <code>Global credentials</code></li>
+<li><code>Kind</code> 选择 <code>Gitee API Token</code></li>
+<li><code>Scope</code> 选择你需要的范围</li>
+<li><code>Gitee API Token</code> 输入你的码云私人令牌，获取地址：<a href="https://gitee.com/profile/personal_access_tokens" target="_blank" rel="noopener">https://gitee.com/profile/personal_access_tokens</a></li>
+<li><code>ID</code>, <code>Descripiton</code> 中输入你想要的 ID 和描述即可。</li>
+</ol>
+</li>
+<li><p><code>Credentials</code> 选择配置好的 Gitee APIV5 Token</p>
+</li>
+<li><p>点击 <code>Advanced</code> ，可配置是否忽略 SSL 错误（适您的Jenkins环境是否支持），并可设置链接测超时时间（适您的网络环境而定）</p>
+</li>
+<li><p>点击 <code>Test Connection</code> 测试链接是否成功，如失败请检查以上 3，5，6 步骤。</p>
+</li>
+</ol>
+<p>配置成功后如图所示：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421175307.png" alt></p>
 <h1 id="执行脚本准备"><a href="#执行脚本准备" class="headerlink" title="执行脚本准备"></a>执行脚本准备</h1><blockquote>
 <p>首先我们先把需要远程执行的脚本准备好。</p>
 </blockquote>
@@ -741,7 +779,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#宿主机软件安装"><span class="nav-text">宿主机软件安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk"><span class="nav-text">jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven"><span class="nav-text">maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git"><span class="nav-text">git</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#jenkins做常规配置"><span class="nav-text">jenkins做常规配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#角色管理权限插件"><span class="nav-text">角色管理权限插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh"><span class="nav-text">ssh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk-1"><span class="nav-text">jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven-1"><span class="nav-text">maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-1"><span class="nav-text">git</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行脚本准备"><span class="nav-text">执行脚本准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jenkins中创建任务"><span class="nav-text">Jenkins中创建任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mall-admin"><span class="nav-text">mall-admin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mall-registry"><span class="nav-text">mall-registry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他模块"><span class="nav-text">其他模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块启动顺序问题"><span class="nav-text">模块启动顺序问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目地址"><span class="nav-text">项目地址</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#宿主机软件安装"><span class="nav-text">宿主机软件安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk"><span class="nav-text">jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven"><span class="nav-text">maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git"><span class="nav-text">git</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#jenkins做常规配置"><span class="nav-text">jenkins做常规配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#角色管理权限插件"><span class="nav-text">角色管理权限插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh"><span class="nav-text">ssh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk-1"><span class="nav-text">jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#maven-1"><span class="nav-text">maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-1"><span class="nav-text">git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gitee"><span class="nav-text">gitee</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行脚本准备"><span class="nav-text">执行脚本准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Jenkins中创建任务"><span class="nav-text">Jenkins中创建任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#mall-admin"><span class="nav-text">mall-admin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mall-registry"><span class="nav-text">mall-registry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他模块"><span class="nav-text">其他模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块启动顺序问题"><span class="nav-text">模块启动顺序问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目地址"><span class="nav-text">项目地址</span></a></li></div>
             
 
           </div>

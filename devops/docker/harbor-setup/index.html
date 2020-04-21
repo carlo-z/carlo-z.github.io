@@ -120,6 +120,7 @@
 <meta property="og:description" content="技术选型开源Docker Registry的不足同很多团队进行容器云构建的初始阶段一样，一开始我们并不太注重安全，容器仓库一般都是配置成insecure-registry直接使用。这次，我们决定加强安全方面的控制。我们发现了它的一些不足如下：  用户与鉴权：Docker Registry V2可以基于htpasswd文件进行简单的用户管理，但是维护不便，也没有对外的API可供集成。  缺少日">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135610.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421171733.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135701.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420152329.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420151637.png">
@@ -129,7 +130,7 @@
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420214517.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420215346.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420215536.png">
-<meta property="og:updated_time" content="2020-04-20T14:00:58.322Z">
+<meta property="og:updated_time" content="2020-04-21T09:20:03.976Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker仓库Harbor安装配置">
 <meta name="twitter:description" content="技术选型开源Docker Registry的不足同很多团队进行容器云构建的初始阶段一样，一开始我们并不太注重安全，容器仓库一般都是配置成insecure-registry直接使用。这次，我们决定加强安全方面的控制。我们发现了它的一些不足如下：  用户与鉴权：Docker Registry V2可以基于htpasswd文件进行简单的用户管理，但是维护不便，也没有对外的API可供集成。  缺少日">
@@ -470,6 +471,7 @@
 </li>
 </ul>
 <h3 id="Harbor的整体架构"><a href="#Harbor的整体架构" class="headerlink" title="Harbor的整体架构"></a>Harbor的整体架构</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135610.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421171733.png" alt></p>
 <p>Harbor在架构上主要由五个组件构成：</p>
 <ul>
 <li><p>Proxy：Harbor的registry, UI, token等服务，通过一个前置的反向代理统一接收浏览器、Docker客户端的请求，并将请求转发给后端不同的服务。</p>
@@ -521,6 +523,11 @@
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  "insecure-registries": ["192.168.145.130"]</span><br><span class="line">&#125;</span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
 
+<ul>
+<li>端口开放</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=80/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=443/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=5000/tcp</span><br><span class="line">firewall-cmd --reload</span><br><span class="line">firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
+
 <h3 id="启动-amp-停止"><a href="#启动-amp-停止" class="headerlink" title="启动&amp;停止"></a>启动&amp;停止</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml stop</span><br><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml start</span><br></pre></td></tr></table></figure>
 
 <h1 id="设置host解析"><a href="#设置host解析" class="headerlink" title="设置host解析"></a>设置host解析</h1><h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts</span><br><span class="line">192.168.145.130 czharbor.com</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
@@ -559,8 +566,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/" rel="next" title="jenkins发布springcloud项目到centos7服务器">
-                <i class="fa fa-chevron-left"></i> jenkins发布springcloud项目到centos7服务器
+              <a href="/devops/jenkins/jenkins-deploy-springcloud-to-centos7/" rel="next" title="jenkins+harbor+gitee">
+                <i class="fa fa-chevron-left"></i> jenkins+harbor+gitee
               </a>
             
           </div>

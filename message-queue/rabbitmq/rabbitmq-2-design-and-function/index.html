@@ -121,6 +121,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409095450.png">
 <meta property="og:image" content="https://qqadapt.qpic.cn/txdocpic/0/c6759897ee7147a529d599df4c880a3d/0">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421212543.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409150936.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200414212647.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200409140015.png">
@@ -130,7 +131,7 @@
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140022.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140047.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200410140102.png">
-<meta property="og:updated_time" content="2020-04-14T13:27:06.187Z">
+<meta property="og:updated_time" content="2020-04-21T13:26:32.934Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rabbitmq-设计和功能">
 <meta name="twitter:description" content="1、什么是消息中间件消息队列中间件 (Message Queue Middleware，简称为 MQ) 是指利用高效可靠的消息传递机制进行与平台无关的数据交流，并基于数据通信来进行分布式系统的集成。通过提供消息传递和消息排队模型，它可以在分布式环境下扩展进程间的通信。提供了以松散藕合的灵活方式集成应用程序的一种机制。它们提供了基于存储和转发的应用程序之间的异步数据发送，即应用程序彼此不直接通">
@@ -478,6 +479,7 @@
 
 <h3 id="5-3、发送消息"><a href="#5-3、发送消息" class="headerlink" title="5.3、发送消息"></a>5.3、发送消息</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">basic_publish</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    $msg,</span></span></span><br><span class="line"><span class="function"><span class="params">    $exchange = <span class="string">''</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">    $routing_key = <span class="string">''</span>,  // 路由键</span></span></span><br><span class="line"><span class="function"><span class="params">    $mandatory = false,  // 交换器无法根据 exchange和路由键找到对应的队列时，$mandatory 为 true，则会basic.return给生产者；如果为false，则直接丢弃</span></span></span><br><span class="line"><span class="function"><span class="params">    $immediate = false,  // true-如果消息路由到队列以后，发现队列上没有任何消费者则返回给生产者，有消费者则立刻投递给消费者</span></span></span><br><span class="line"><span class="function"><span class="params">    $ticket = null</span></span></span><br><span class="line"><span class="function"><span class="params">)</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
 
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421212543.png" alt></p>
 <br>
 
 <h3 id="5-4、消费消息"><a href="#5-4、消费消息" class="headerlink" title="5.4、消费消息"></a>5.4、消费消息</h3><h4 id="1）推模式"><a href="#1）推模式" class="headerlink" title="1）推模式"></a>1）推模式</h4><p>broker向消费者持续不断的推消息</p>

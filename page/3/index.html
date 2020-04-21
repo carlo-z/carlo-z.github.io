@@ -1977,6 +1977,7 @@
 </li>
 </ul>
 <h3 id="Harbor的整体架构"><a href="#Harbor的整体架构" class="headerlink" title="Harbor的整体架构"></a>Harbor的整体架构</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135610.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421171733.png" alt></p>
 <p>Harbor在架构上主要由五个组件构成：</p>
 <ul>
 <li><p>Proxy：Harbor的registry, UI, token等服务，通过一个前置的反向代理统一接收浏览器、Docker客户端的请求，并将请求转发给后端不同的服务。</p>
@@ -2027,6 +2028,11 @@
 <li>配置</li>
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  "insecure-registries": ["192.168.145.130"]</span><br><span class="line">&#125;</span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>端口开放</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=80/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=443/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=5000/tcp</span><br><span class="line">firewall-cmd --reload</span><br><span class="line">firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
 
 <h3 id="启动-amp-停止"><a href="#启动-amp-停止" class="headerlink" title="启动&amp;停止"></a>启动&amp;停止</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml stop</span><br><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml start</span><br></pre></td></tr></table></figure>
 
@@ -2090,7 +2096,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/jenkins/jenkins-deploy-springcloud-to-centos7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="-CarloZ">
@@ -2109,7 +2115,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/devops/ci-cd/jenkins/jenkins-deploy-springcloud-to-centos7/" itemprop="url">jenkins发布springcloud项目到centos7服务器</a></h1>
+                <a class="post-title-link" href="/devops/jenkins/jenkins-deploy-springcloud-to-centos7/" itemprop="url">jenkins+harbor+gitee</a></h1>
         
 
         <div class="post-meta">
@@ -2164,6 +2170,7 @@
             <hr>
 <br>
 
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421202616.png" alt></p>
 <h1 id="宿主机软件安装"><a href="#宿主机软件安装" class="headerlink" title="宿主机软件安装"></a>宿主机软件安装</h1><h3 id="jdk"><a href="#jdk" class="headerlink" title="jdk"></a>jdk</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz tools]# whereis java</span><br><span class="line">java: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java</span><br></pre></td></tr></table></figure>
 
 <h3 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h3><ol>
@@ -2224,6 +2231,40 @@
 </ul>
 <p>git可执行文件配置</p>
 <p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233807.png" alt></p>
+<h3 id="gitee"><a href="#gitee" class="headerlink" title="gitee"></a>gitee</h3><p>在线安装</p>
+<ul>
+<li>前往 Manage Jenkins -&gt; Manage Plugins -&gt; Available</li>
+<li>右侧 Filter 输入： Gitee</li>
+<li>下方可选列表中勾选 Gitee（如列表中不存在 Gitee，则点击 Check now 更新插件列表）</li>
+<li>点击 Download now and install after restart</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421174729.png" alt></p>
+<p>添加码云链接配置</p>
+<ol>
+<li><p>前往 Jenkins -&gt; Manage Jenkins -&gt; Configure System -&gt; Gitee Configuration -&gt; Gitee connections</p>
+</li>
+<li><p>在 <code>Connection name</code> 中输入 <code>Gitee</code> 或者你想要的名字</p>
+</li>
+<li><p><code>Gitee host URL</code> 中输入码云完整 URL地址： <code>https://gitee.com</code> （码云私有化客户输入部署的域名）</p>
+</li>
+<li><p><code>Credentials</code>  中如还未配置码云 APIV5 私人令牌，点击<code>Add- &gt; Jenkins</code></p>
+<ol>
+<li><code>Domain</code> 选择 <code>Global credentials</code></li>
+<li><code>Kind</code> 选择 <code>Gitee API Token</code></li>
+<li><code>Scope</code> 选择你需要的范围</li>
+<li><code>Gitee API Token</code> 输入你的码云私人令牌，获取地址：<a href="https://gitee.com/profile/personal_access_tokens" target="_blank" rel="noopener">https://gitee.com/profile/personal_access_tokens</a></li>
+<li><code>ID</code>, <code>Descripiton</code> 中输入你想要的 ID 和描述即可。</li>
+</ol>
+</li>
+<li><p><code>Credentials</code> 选择配置好的 Gitee APIV5 Token</p>
+</li>
+<li><p>点击 <code>Advanced</code> ，可配置是否忽略 SSL 错误（适您的Jenkins环境是否支持），并可设置链接测超时时间（适您的网络环境而定）</p>
+</li>
+<li><p>点击 <code>Test Connection</code> 测试链接是否成功，如失败请检查以上 3，5，6 步骤。</p>
+</li>
+</ol>
+<p>配置成功后如图所示：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421175307.png" alt></p>
 <h1 id="执行脚本准备"><a href="#执行脚本准备" class="headerlink" title="执行脚本准备"></a>执行脚本准备</h1><blockquote>
 <p>首先我们先把需要远程执行的脚本准备好。</p>
 </blockquote>

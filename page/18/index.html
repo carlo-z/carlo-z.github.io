@@ -841,192 +841,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-htop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-monitor-htop/" itemprop="url">linux htop详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
-                2016-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-<p>htop是Linux系统下一个基本文本模式的、交互式的进程查看器，主要用于控制台或shell中，可以替代top；</p>
-<p>htop和top对比：</p>
-<ul>
-<li>两者相比起来，top比较繁琐</li>
-<li>默认支持图形界面的鼠标操作</li>
-<li>可以横向或纵向滚动浏览进程列表，以便看到所有的进程和完整的命令行</li>
-<li>杀进程时不需要输入进程号等</li>
-</ul>
-<br>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install htop</span><br></pre></td></tr></table></figure>
-
-<h3 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release.noarch</span><br><span class="line">yum -y install htop</span><br></pre></td></tr></table></figure>
-
-<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1、安装gcc、内核库依赖库</span><br><span class="line">yum install -y gcc ncurses-deve</span><br><span class="line">2、下载源码</span><br><span class="line">wget http://sourceforge.net/projects/htop/files/latest/download</span><br><span class="line">3、解压并进入htop-1.0.2目录</span><br><span class="line">tar -zxf download</span><br><span class="line">cd htop-1.0.2</span><br><span class="line">4、编译安装(执行./configure如果执行报错 configure: error: You may want to use --disable-unicode or install libncursesw，表明缺少lib 包，安装lib包：yum install ncurses-devel -y)</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">5、验证</span><br><span class="line">htop</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108135551.png" alt></p>
-<h1 id="字段含义"><a href="#字段含义" class="headerlink" title="字段含义"></a>字段含义</h1><ul>
-<li>PID：进行的标识号</li>
-<li>USER：运行此进程的用户</li>
-<li>PRI：进程的优先级</li>
-<li>NI：进程的优先级别值，默认的为0，可以进行调整</li>
-<li>VIRT：进程占用的虚拟内存值</li>
-<li>RES：进程占用的物理内存值</li>
-<li>SHR：进程占用的共享内存值</li>
-<li>S：进程的运行状况，R表示正在运行、S表示休眠，等待唤醒、Z表示僵死状态</li>
-<li>%CPU：该进程占用的CPU使用率</li>
-<li>%MEM：该进程占用的物理内存和总内存的百分比</li>
-<li>TIME+：该进程启动后占用的总的CPU时间</li>
-<li>COMMAND：进程启动的启动命令名称</li>
-</ul>
-<br>
-
-<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop [OPTIONS]</span><br></pre></td></tr></table></figure>
-
-<h1 id="htop常用功能键"><a href="#htop常用功能键" class="headerlink" title="htop常用功能键"></a>htop常用功能键</h1><p>F1 : 查看htop使用说明<br>F2 : 设置<br>F3 : 搜索进程<br>F4 : 过滤器，按关键字搜索<br>F5 : 显示树形结构<br>F6 : 选择排序方式<br>F7 : 减少nice值，这样就可以提高对应进程的优先级<br>F8 : 增加nice值，这样可以降低对应进程的优先级<br>F9 : 杀掉选中的进程<br>F10 : 退出htop</p>
-<p>/ : 搜索字符<br>h : 显示帮助<br>l ：显示进程打开的文件: 如果安装了lsof，按此键可以显示进程所打开的文件<br>u ：显示所有用户，并可以选择某一特定用户的进程<br>s : 将调用strace追踪进程的系统调用<br>t : 显示树形结构</p>
-<p>H ：显示/隐藏用户线程<br>I ：倒转排序顺序<br>K ：显示/隐藏内核线程<br>M ：按内存占用排序<br>P ：按CPU排序<br>T ：按运行时间排序</p>
-<p>上下键或PgUP, PgDn : 移动选中进程<br>左右键或Home, End : 移动列表<br>Space(空格) : 标记/取消标记一个进程。命令可以作用于多个进程，例如 “kill”，将应用于所有已标记</p>
-<br>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-atop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1698,6 +1512,192 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-htop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CarloZ">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-monitor-htop/" itemprop="url">linux htop详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
+                2016-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+<p>htop是Linux系统下一个基本文本模式的、交互式的进程查看器，主要用于控制台或shell中，可以替代top；</p>
+<p>htop和top对比：</p>
+<ul>
+<li>两者相比起来，top比较繁琐</li>
+<li>默认支持图形界面的鼠标操作</li>
+<li>可以横向或纵向滚动浏览进程列表，以便看到所有的进程和完整的命令行</li>
+<li>杀进程时不需要输入进程号等</li>
+</ul>
+<br>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h3 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install htop</span><br></pre></td></tr></table></figure>
+
+<h3 id="CentOS"><a href="#CentOS" class="headerlink" title="CentOS"></a>CentOS</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release.noarch</span><br><span class="line">yum -y install htop</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1、安装gcc、内核库依赖库</span><br><span class="line">yum install -y gcc ncurses-deve</span><br><span class="line">2、下载源码</span><br><span class="line">wget http://sourceforge.net/projects/htop/files/latest/download</span><br><span class="line">3、解压并进入htop-1.0.2目录</span><br><span class="line">tar -zxf download</span><br><span class="line">cd htop-1.0.2</span><br><span class="line">4、编译安装(执行./configure如果执行报错 configure: error: You may want to use --disable-unicode or install libncursesw，表明缺少lib 包，安装lib包：yum install ncurses-devel -y)</span><br><span class="line">./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">5、验证</span><br><span class="line">htop</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108135551.png" alt></p>
+<h1 id="字段含义"><a href="#字段含义" class="headerlink" title="字段含义"></a>字段含义</h1><ul>
+<li>PID：进行的标识号</li>
+<li>USER：运行此进程的用户</li>
+<li>PRI：进程的优先级</li>
+<li>NI：进程的优先级别值，默认的为0，可以进行调整</li>
+<li>VIRT：进程占用的虚拟内存值</li>
+<li>RES：进程占用的物理内存值</li>
+<li>SHR：进程占用的共享内存值</li>
+<li>S：进程的运行状况，R表示正在运行、S表示休眠，等待唤醒、Z表示僵死状态</li>
+<li>%CPU：该进程占用的CPU使用率</li>
+<li>%MEM：该进程占用的物理内存和总内存的百分比</li>
+<li>TIME+：该进程启动后占用的总的CPU时间</li>
+<li>COMMAND：进程启动的启动命令名称</li>
+</ul>
+<br>
+
+<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htop [OPTIONS]</span><br></pre></td></tr></table></figure>
+
+<h1 id="htop常用功能键"><a href="#htop常用功能键" class="headerlink" title="htop常用功能键"></a>htop常用功能键</h1><p>F1 : 查看htop使用说明<br>F2 : 设置<br>F3 : 搜索进程<br>F4 : 过滤器，按关键字搜索<br>F5 : 显示树形结构<br>F6 : 选择排序方式<br>F7 : 减少nice值，这样就可以提高对应进程的优先级<br>F8 : 增加nice值，这样可以降低对应进程的优先级<br>F9 : 杀掉选中的进程<br>F10 : 退出htop</p>
+<p>/ : 搜索字符<br>h : 显示帮助<br>l ：显示进程打开的文件: 如果安装了lsof，按此键可以显示进程所打开的文件<br>u ：显示所有用户，并可以选择某一特定用户的进程<br>s : 将调用strace追踪进程的系统调用<br>t : 显示树形结构</p>
+<p>H ：显示/隐藏用户线程<br>I ：倒转排序顺序<br>K ：显示/隐藏内核线程<br>M ：按内存占用排序<br>P ：按CPU排序<br>T ：按运行时间排序</p>
+<p>上下键或PgUP, PgDn : 移动选中进程<br>左右键或Home, End : 移动列表<br>Space(空格) : 标记/取消标记一个进程。命令可以作用于多个进程，例如 “kill”，将应用于所有已标记</p>
+<br>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/architecture/cache-design/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1847,7 +1847,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/architecture/esb/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/architecture/microservice/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="-CarloZ">
@@ -1866,7 +1866,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/architecture/esb/" itemprop="url">ESB架构</a></h1>
+                <a class="post-title-link" href="/architecture/microservice/" itemprop="url">微服务架构</a></h1>
         
 
         <div class="post-meta">
@@ -1991,7 +1991,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/architecture/microservice/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/architecture/esb/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="-CarloZ">
@@ -2010,7 +2010,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/architecture/microservice/" itemprop="url">微服务架构</a></h1>
+                <a class="post-title-link" href="/architecture/esb/" itemprop="url">ESB架构</a></h1>
         
 
         <div class="post-meta">
