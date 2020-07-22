@@ -500,6 +500,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-iotop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-monitor-iotop/" itemprop="url">linux iotop详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
+                2016-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+
+<p><strong>iotop命令</strong> 是一个用来监视磁盘I/O使用状况的top类工具。iotop具有与top相似的UI，其中包括PID、用户、I/O、进程等相关信息。Linux下的IO统计工具如iostat，nmon等大多数是只能统计到per设备的读写情况，如果你想知道每个进程是如何使用IO的就比较麻烦，使用iotop命令可以很方便的查看。</p>
+<p>iotop使用Python语言编写而成，要求Python2.5（及以上版本）和Linux kernel2.6.20（及以上版本）。iotop提供有源代码及rpm包，可从其官方主页下载。</p>
+<br>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p><strong>Ubuntu</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install iotop</span><br></pre></td></tr></table></figure>
+
+<p><strong>CentOS</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install iotop -y</span><br></pre></td></tr></table></figure>
+
+<p><strong>编译安装</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget http://guichaz.free.fr/iotop/files/iotop-0.4.4.tar.gz    </span><br><span class="line">tar zxf iotop-0.4.4.tar.gz    </span><br><span class="line">python setup.py build    </span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">iotop [OPTIONS]</span><br><span class="line"></span><br><span class="line">-o：只显示有io操作的进程</span><br><span class="line">-p PID：监控的进程pid。</span><br><span class="line">-u USER：监控的进程用户。</span><br><span class="line"></span><br><span class="line">-b：批量显示，无交互，主要用作记录到文件。</span><br><span class="line">-n NUM：显示NUM次，主要用于非交互式模式。</span><br><span class="line">-d SEC：间隔SEC秒显示一次。</span><br></pre></td></tr></table></figure>
+
+<h1 id="iotop常用快捷键"><a href="#iotop常用快捷键" class="headerlink" title="iotop常用快捷键"></a>iotop常用快捷键</h1><ol>
+<li>左右箭头：改变排序方式，默认是按IO排序。</li>
+<li>r：改变排序顺序。</li>
+<li>o：只显示有IO输出的进程。</li>
+<li>p：进程/线程的显示方式的切换。</li>
+<li>a：显示累积使用量。</li>
+<li>q：退出。</li>
+</ol>
+<br>
+
+<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>直接执行iotop就可以看到效果了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iotop</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108103813.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-iftop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -634,183 +811,6 @@
 
 <br>
 
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-iotop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-monitor-iotop/" itemprop="url">linux iotop详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
-                2016-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-
-<p><strong>iotop命令</strong> 是一个用来监视磁盘I/O使用状况的top类工具。iotop具有与top相似的UI，其中包括PID、用户、I/O、进程等相关信息。Linux下的IO统计工具如iostat，nmon等大多数是只能统计到per设备的读写情况，如果你想知道每个进程是如何使用IO的就比较麻烦，使用iotop命令可以很方便的查看。</p>
-<p>iotop使用Python语言编写而成，要求Python2.5（及以上版本）和Linux kernel2.6.20（及以上版本）。iotop提供有源代码及rpm包，可从其官方主页下载。</p>
-<br>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p><strong>Ubuntu</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install iotop</span><br></pre></td></tr></table></figure>
-
-<p><strong>CentOS</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install iotop -y</span><br></pre></td></tr></table></figure>
-
-<p><strong>编译安装</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget http://guichaz.free.fr/iotop/files/iotop-0.4.4.tar.gz    </span><br><span class="line">tar zxf iotop-0.4.4.tar.gz    </span><br><span class="line">python setup.py build    </span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="选项"><a href="#选项" class="headerlink" title="选项"></a>选项</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">iotop [OPTIONS]</span><br><span class="line"></span><br><span class="line">-o：只显示有io操作的进程</span><br><span class="line">-p PID：监控的进程pid。</span><br><span class="line">-u USER：监控的进程用户。</span><br><span class="line"></span><br><span class="line">-b：批量显示，无交互，主要用作记录到文件。</span><br><span class="line">-n NUM：显示NUM次，主要用于非交互式模式。</span><br><span class="line">-d SEC：间隔SEC秒显示一次。</span><br></pre></td></tr></table></figure>
-
-<h1 id="iotop常用快捷键"><a href="#iotop常用快捷键" class="headerlink" title="iotop常用快捷键"></a>iotop常用快捷键</h1><ol>
-<li>左右箭头：改变排序方式，默认是按IO排序。</li>
-<li>r：改变排序顺序。</li>
-<li>o：只显示有IO输出的进程。</li>
-<li>p：进程/线程的显示方式的切换。</li>
-<li>a：显示累积使用量。</li>
-<li>q：退出。</li>
-</ol>
-<br>
-
-<h1 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h1><p>直接执行iotop就可以看到效果了：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iotop</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108103813.png" alt></p>
 
           
         
@@ -1440,7 +1440,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/3-nginx-architecture-design/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/1-nginx-setup-and-conf/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Focus-1">
@@ -1459,7 +1459,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/nginx/3-nginx-architecture-design/" itemprop="url">nginx 架构设计</a></h1>
+                <a class="post-title-link" href="/nginx/1-nginx-setup-and-conf/" itemprop="url">nginx 安装配置</a></h1>
         
 
         <div class="post-meta">
@@ -1535,6 +1535,71 @@
           
             <hr>
 <br>
+
+<h1 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h1><p>nginx 能够支持 5W 并发连接，并且 cpu、内存 等资源消费非常低，运行非常稳定。</p>
+<br>
+
+<h1 id="2、环境配置"><a href="#2、环境配置" class="headerlink" title="2、环境配置"></a>2、环境配置</h1><p>1、安装 gcc 环境</p>
+<p>2、安装第三方开发包 PCRE ：解析 正则表达式</p>
+<p>3、安装 zlib：提供压缩和解压，zlib用来对http包进行gzip</p>
+<p>4、安装 OpenSSL：用来支持 https</p>
+<br>
+
+<h1 id="3、安装nginx"><a href="#3、安装nginx" class="headerlink" title="3、安装nginx"></a>3、安装nginx</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107200903.png" alt></p>
+<h3 id="启动nginx"><a href="#启动nginx" class="headerlink" title="启动nginx"></a>启动nginx</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107201852.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -9  master_pid</span><br></pre></td></tr></table></figure>
+
+<p>只会杀死 master进程，woker 进程仍然在运行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>如果 woker进程 他爹 不是主进程（woker进程id不连续）， 要通过 reload 重启一下；</p>
+<h3 id="停止nginx"><a href="#停止nginx" class="headerlink" title="停止nginx"></a>停止nginx</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107204209.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./nginx -g TERM|INT|QUIT</span><br><span class="line"><span class="meta">#</span><span class="bash"> TERM|INT：用于快速停止</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> QUIT: 用于平缓停止</span></span><br><span class="line"></span><br><span class="line">kill TERM|INT|QUIT /nginx/logs/nginx.pid</span><br><span class="line"><span class="meta">#</span><span class="bash"> 一般不建议 <span class="built_in">kill</span> -9 Pid 去停止</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107204555.png" alt></p>
+<br>
+
+<h1 id="4、conf-文件详解"><a href="#4、conf-文件详解" class="headerlink" title="4、conf 文件详解"></a>4、conf 文件详解</h1><p><a href="https://blog.csdn.net/tjiyu/article/details/53027619" target="_blank" rel="noopener">https://blog.csdn.net/tjiyu/article/details/53027619</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">user  nginx; # 配置用户、工作组</span><br><span class="line">user  nobody;</span><br><span class="line">worker_processes  1; # woker 进程数量</span><br><span class="line"></span><br><span class="line">error_log  /var/log/nginx/error.log;</span><br><span class="line">error_log  /var/log/nginx/error.log notice; # 日志切割</span><br><span class="line">error_log  /var/log/nginx/error.log warn; # 日志等级</span><br><span class="line"></span><br><span class="line">pid        /var/run/nginx.pid; # master进程 pid</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 事件驱动相关</span></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;  # 线程数</span><br><span class="line">    use method; # 时间驱动模型 select，poll，epoll，kqueue</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       /etc/nginx/mime.types;  # 扫描外部的配置文件，包含了浏览器能识别的所有文件格式</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '</span><br><span class="line">                      '$status $body_bytes_sent "$http_referer" '</span><br><span class="line">                      '"$http_user_agent" "$http_x_forwarded_for"';</span><br><span class="line"></span><br><span class="line">    access_log  /var/log/nginx/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;  # 静群</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    multi_accept  off;  # 默认off，一次只允许一个网络连接进来</span><br><span class="line"></span><br><span class="line">    #gzip  on;  # 是否使用http压缩</span><br><span class="line">    use method;</span><br><span class="line"></span><br><span class="line">    include /etc/nginx/conf.d/*.conf;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    #charset koi8-r;</span><br><span class="line">    #access_log  /var/log/nginx/host.access.log  main;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        root   /usr/share/nginx/html;</span><br><span class="line">        index  index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #error_page  404              /404.html;</span><br><span class="line"></span><br><span class="line">    # redirect server error pages to the static page /50x.html</span><br><span class="line">    #</span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   /usr/share/nginx/html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # proxy the PHP scripts to Apache listening on 127.0.0.1:80</span><br><span class="line">    #</span><br><span class="line">    #location ~ \.php$ &#123;</span><br><span class="line">    #    proxy_pass   http://127.0.0.1;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line">    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">    #</span><br><span class="line">    #location ~ \.php$ &#123;</span><br><span class="line">    #    root           html;</span><br><span class="line">    #    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    #    fastcgi_index  index.php;</span><br><span class="line">    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span><br><span class="line">    #    include        fastcgi_params;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line">    # deny access to .htaccess files, if Apache's document root</span><br><span class="line">    # concurs with nginx's one</span><br><span class="line">    #</span><br><span class="line">    #location ~ /\.ht &#123;</span><br><span class="line">    #    deny  all;</span><br><span class="line">    #&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107211659.png" alt></p>
+<p><code>tcp_nopush</code>： 静群效应，默认开启</p>
+<p><code>accept_mutex</code>：当一个新连接到达时，如果激活了accept_mutex，那么多个Worker将以串行方式来处理，其中有一个Worker会被唤醒，其他的Worker继续保持休眠状态；如果没有激活accept_mutex，那么所有的Worker都会被唤醒，不过只有一个Worker能获取新连接，其它的Worker会重新进入休眠状态，这就是「<a href="http://en.wikipedia.org/wiki/Thundering_herd_problem" target="_blank" rel="noopener">惊群问题</a>」。</p>
+<p>nginx缺省激活了accept_mutex，是一种保守的选择。如果关闭了它，可能会引起一定程度的惊群问题，表现为上下文切换增多（sar -w）或者负载上升，但是如果你的网站访问量比较大，为了系统的吞吐量，我还是建议大家关闭它。</p>
+<p><code>multi_accept</code>：告诉nginx收到一个新连接通知后接受尽可能多的连接，默认是on，设置为on后，多个worker按串行方式来处理连接，也就是一个连接只有一个worker被唤醒，其他的处于休眠状态，设置为off后，多个worker按并行方式来处理连接，也就是一个连接会唤醒所有的worker，直到连接分配完毕，没有取得连接的继续休眠。当你的服务器连接数不多时，开启这个参数会让负载有一定的降低，但是当服务器的吞吐量很大时，为了效率，可以关闭这个参数。</p>
+<p><code>use epoll;</code> ：nginx采用epoll事件模型，处理效率高</p>
+<p><code>work_connections</code>: 单个worker进程允许客户端最大连接数，这个数值一般根据服务器性能和内存来制定，实际最大值就是worker进程数乘以work_connections</p>
+<br>
+
+<h1 id="5、功能"><a href="#5、功能" class="headerlink" title="5、功能"></a>5、功能</h1><h3 id="1、-动静分离"><a href="#1、-动静分离" class="headerlink" title="1、 动静分离"></a>1、 动静分离</h3><br>
+
+<h3 id="2、负载均衡"><a href="#2、负载均衡" class="headerlink" title="2、负载均衡"></a>2、负载均衡</h3><br>
+
+<h3 id="3、反向代理"><a href="#3、反向代理" class="headerlink" title="3、反向代理"></a>3、反向代理</h3><br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
           
@@ -1742,7 +1807,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/1-nginx-setup-and-conf/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/3-nginx-architecture-design/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Focus-1">
@@ -1761,7 +1826,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/nginx/1-nginx-setup-and-conf/" itemprop="url">nginx 安装配置</a></h1>
+                <a class="post-title-link" href="/nginx/3-nginx-architecture-design/" itemprop="url">nginx 架构设计</a></h1>
         
 
         <div class="post-meta">
@@ -1837,71 +1902,6 @@
           
             <hr>
 <br>
-
-<h1 id="1、概述"><a href="#1、概述" class="headerlink" title="1、概述"></a>1、概述</h1><p>nginx 能够支持 5W 并发连接，并且 cpu、内存 等资源消费非常低，运行非常稳定。</p>
-<br>
-
-<h1 id="2、环境配置"><a href="#2、环境配置" class="headerlink" title="2、环境配置"></a>2、环境配置</h1><p>1、安装 gcc 环境</p>
-<p>2、安装第三方开发包 PCRE ：解析 正则表达式</p>
-<p>3、安装 zlib：提供压缩和解压，zlib用来对http包进行gzip</p>
-<p>4、安装 OpenSSL：用来支持 https</p>
-<br>
-
-<h1 id="3、安装nginx"><a href="#3、安装nginx" class="headerlink" title="3、安装nginx"></a>3、安装nginx</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107200903.png" alt></p>
-<h3 id="启动nginx"><a href="#启动nginx" class="headerlink" title="启动nginx"></a>启动nginx</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107201852.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill -9  master_pid</span><br></pre></td></tr></table></figure>
-
-<p>只会杀死 master进程，woker 进程仍然在运行</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./nginx -s reload</span><br></pre></td></tr></table></figure>
-
-<p>如果 woker进程 他爹 不是主进程（woker进程id不连续）， 要通过 reload 重启一下；</p>
-<h3 id="停止nginx"><a href="#停止nginx" class="headerlink" title="停止nginx"></a>停止nginx</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107204209.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">./nginx -g TERM|INT|QUIT</span><br><span class="line"><span class="meta">#</span><span class="bash"> TERM|INT：用于快速停止</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> QUIT: 用于平缓停止</span></span><br><span class="line"></span><br><span class="line">kill TERM|INT|QUIT /nginx/logs/nginx.pid</span><br><span class="line"><span class="meta">#</span><span class="bash"> 一般不建议 <span class="built_in">kill</span> -9 Pid 去停止</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107204555.png" alt></p>
-<br>
-
-<h1 id="4、conf-文件详解"><a href="#4、conf-文件详解" class="headerlink" title="4、conf 文件详解"></a>4、conf 文件详解</h1><p><a href="https://blog.csdn.net/tjiyu/article/details/53027619" target="_blank" rel="noopener">https://blog.csdn.net/tjiyu/article/details/53027619</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">user  nginx; # 配置用户、工作组</span><br><span class="line">user  nobody;</span><br><span class="line">worker_processes  1; # woker 进程数量</span><br><span class="line"></span><br><span class="line">error_log  /var/log/nginx/error.log;</span><br><span class="line">error_log  /var/log/nginx/error.log notice; # 日志切割</span><br><span class="line">error_log  /var/log/nginx/error.log warn; # 日志等级</span><br><span class="line"></span><br><span class="line">pid        /var/run/nginx.pid; # master进程 pid</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 事件驱动相关</span></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;  # 线程数</span><br><span class="line">    use method; # 时间驱动模型 select，poll，epoll，kqueue</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       /etc/nginx/mime.types;  # 扫描外部的配置文件，包含了浏览器能识别的所有文件格式</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '</span><br><span class="line">                      '$status $body_bytes_sent "$http_referer" '</span><br><span class="line">                      '"$http_user_agent" "$http_x_forwarded_for"';</span><br><span class="line"></span><br><span class="line">    access_log  /var/log/nginx/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;  # 静群</span><br><span class="line"></span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line">    multi_accept  off;  # 默认off，一次只允许一个网络连接进来</span><br><span class="line"></span><br><span class="line">    #gzip  on;  # 是否使用http压缩</span><br><span class="line">    use method;</span><br><span class="line"></span><br><span class="line">    include /etc/nginx/conf.d/*.conf;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    #charset koi8-r;</span><br><span class="line">    #access_log  /var/log/nginx/host.access.log  main;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        root   /usr/share/nginx/html;</span><br><span class="line">        index  index.html index.htm;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    #error_page  404              /404.html;</span><br><span class="line"></span><br><span class="line">    # redirect server error pages to the static page /50x.html</span><br><span class="line">    #</span><br><span class="line">    error_page   500 502 503 504  /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root   /usr/share/nginx/html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # proxy the PHP scripts to Apache listening on 127.0.0.1:80</span><br><span class="line">    #</span><br><span class="line">    #location ~ \.php$ &#123;</span><br><span class="line">    #    proxy_pass   http://127.0.0.1;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line">    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">    #</span><br><span class="line">    #location ~ \.php$ &#123;</span><br><span class="line">    #    root           html;</span><br><span class="line">    #    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    #    fastcgi_index  index.php;</span><br><span class="line">    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;</span><br><span class="line">    #    include        fastcgi_params;</span><br><span class="line">    #&#125;</span><br><span class="line"></span><br><span class="line">    # deny access to .htaccess files, if Apache's document root</span><br><span class="line">    # concurs with nginx's one</span><br><span class="line">    #</span><br><span class="line">    #location ~ /\.ht &#123;</span><br><span class="line">    #    deny  all;</span><br><span class="line">    #&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200107211659.png" alt></p>
-<p><code>tcp_nopush</code>： 静群效应，默认开启</p>
-<p><code>accept_mutex</code>：当一个新连接到达时，如果激活了accept_mutex，那么多个Worker将以串行方式来处理，其中有一个Worker会被唤醒，其他的Worker继续保持休眠状态；如果没有激活accept_mutex，那么所有的Worker都会被唤醒，不过只有一个Worker能获取新连接，其它的Worker会重新进入休眠状态，这就是「<a href="http://en.wikipedia.org/wiki/Thundering_herd_problem" target="_blank" rel="noopener">惊群问题</a>」。</p>
-<p>nginx缺省激活了accept_mutex，是一种保守的选择。如果关闭了它，可能会引起一定程度的惊群问题，表现为上下文切换增多（sar -w）或者负载上升，但是如果你的网站访问量比较大，为了系统的吞吐量，我还是建议大家关闭它。</p>
-<p><code>multi_accept</code>：告诉nginx收到一个新连接通知后接受尽可能多的连接，默认是on，设置为on后，多个worker按串行方式来处理连接，也就是一个连接只有一个worker被唤醒，其他的处于休眠状态，设置为off后，多个worker按并行方式来处理连接，也就是一个连接会唤醒所有的worker，直到连接分配完毕，没有取得连接的继续休眠。当你的服务器连接数不多时，开启这个参数会让负载有一定的降低，但是当服务器的吞吐量很大时，为了效率，可以关闭这个参数。</p>
-<p><code>use epoll;</code> ：nginx采用epoll事件模型，处理效率高</p>
-<p><code>work_connections</code>: 单个worker进程允许客户端最大连接数，这个数值一般根据服务器性能和内存来制定，实际最大值就是worker进程数乘以work_connections</p>
-<br>
-
-<h1 id="5、功能"><a href="#5、功能" class="headerlink" title="5、功能"></a>5、功能</h1><h3 id="1、-动静分离"><a href="#1、-动静分离" class="headerlink" title="1、 动静分离"></a>1、 动静分离</h3><br>
-
-<h3 id="2、负载均衡"><a href="#2、负载均衡" class="headerlink" title="2、负载均衡"></a>2、负载均衡</h3><br>
-
-<h3 id="3、反向代理"><a href="#3、反向代理" class="headerlink" title="3、反向代理"></a>3、反向代理</h3><br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-<br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
           

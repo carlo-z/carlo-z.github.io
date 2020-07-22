@@ -1027,6 +1027,192 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rocketmq/rocketmq-how-to-submit-pr/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/message-queue/rocketmq/rocketmq-how-to-submit-pr/" itemprop="url">如何向rocketmq提交pr</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-13T00:00:00+08:00">
+                2020-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/github/" itemprop="url" rel="index">
+                    <span itemprop="name">github</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="1、fork仓库到自己账号下"><a href="#1、fork仓库到自己账号下" class="headerlink" title="1、fork仓库到自己账号下"></a>1、fork仓库到自己账号下</h1><p>官方仓库：<a href="https://github.com/apache/rocketmq" target="_blank" rel="noopener">https://github.com/apache/rocketmq</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113224109.png" alt></p>
+<h1 id="2、clone代码到本地"><a href="#2、clone代码到本地" class="headerlink" title="2、clone代码到本地"></a>2、clone代码到本地</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /d/github</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试是否可以连接</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh -T git@github.com</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ~/.ssh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen -t rsa</span></span><br></pre></td></tr></table></figure>
+
+<p>将公钥添加到 github</p>
+<p>github -&gt; Settings -&gt; SSH and GPG keys -&gt; New SSH key</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113225754.png" alt></p>
+<p>再测试一下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh -T git@github.com</span></span><br><span class="line">Hi carlo-z! You've successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
+
+<p>clone 代码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> git@github.com:carlo-z/rocketmq.git</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113231711.png" alt></p>
+<p>查看仓库状态，提示现在是 master 分支</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> rocketmq/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with 'origin/master'</span><br></pre></td></tr></table></figure>
+
+<p>用<code>git remote -v</code>命令，可以看到此时只与自己的远程仓库建立了连接</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git remote -v</span></span><br><span class="line">origin  git@github.com:carlo-z/rocketmq.git (fetch)</span><br><span class="line">origin  git@github.com:carlo-z/rocketmq.git (push)</span><br></pre></td></tr></table></figure>
+
+<h1 id="3、与官方仓库建立连接"><a href="#3、与官方仓库建立连接" class="headerlink" title="3、与官方仓库建立连接"></a>3、与官方仓库建立连接</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git remote add upstream https://github.com/apache/rocketmq.git</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote -v</span></span><br><span class="line">origin  git@github.com:carlo-z/rocketmq.git (fetch)</span><br><span class="line">origin  git@github.com:carlo-z/rocketmq.git (push)</span><br><span class="line">upstream        https://github.com/apache/rocketmq.git (fetch)</span><br><span class="line">upstream        https://github.com/apache/rocketmq.git (push)</span><br></pre></td></tr></table></figure>
+
+<p>再用<code>git remote -v</code>可以看到 已经与官方仓库建立了连接</p>
+<h1 id="4、创建新分支用于修改"><a href="#4、创建新分支用于修改" class="headerlink" title="4、创建新分支用于修改"></a>4、创建新分支用于修改</h1><p>接着上面的运行命令：<code>git checkout -b rocketmq-read</code>，这个命令的意思是创建一个叫 rocketmq-read 的分支，运行这个命令后bash将自动切换到新的分支下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b rocketmq-read</span></span><br><span class="line">Switched to a new branch 'rocketmq-read'</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改代码"><a href="#修改代码" class="headerlink" title="修改代码"></a>修改代码</h3><h3 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h3><h1 id="5、提交pr"><a href="#5、提交pr" class="headerlink" title="5、提交pr"></a>5、提交pr</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113233008.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113233121.png" alt></p>
+<p>然后点<code>Create pull request</code></p>
+<p>写好名字，写好说明，提交，就OK啦。</p>
+<h1 id="6、后期同步代码"><a href="#6、后期同步代码" class="headerlink" title="6、后期同步代码"></a>6、后期同步代码</h1><p>所以每次提交pr前，都要先从做代码同步。过程如下：</p>
+<p>先fetch</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git fetch upstream</span></span><br></pre></td></tr></table></figure>
+
+<p>再 rebase</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git rebase upstream/master</span></span><br></pre></td></tr></table></figure>
+
+<p>再 push master</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git push origin master</span></span><br></pre></td></tr></table></figure>
+
+<p>push完后，远程仓库便可看到你的branch版本和master分支一致了，否则这个位置会显示与master相差了多少次commit。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113233631.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/jvm/arthas-docs/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1175,192 +1361,6 @@
 </blockquote>
 <p>生成一个web，通过浏览器访问</p>
 <h3 id="MAT分析dump文件"><a href="#MAT分析dump文件" class="headerlink" title="MAT分析dump文件"></a>MAT分析dump文件</h3>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rocketmq/rocketmq-how-to-submit-pr/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/message-queue/rocketmq/rocketmq-how-to-submit-pr/" itemprop="url">如何向rocketmq提交pr</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-13T00:00:00+08:00">
-                2020-01-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/github/" itemprop="url" rel="index">
-                    <span itemprop="name">github</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="1、fork仓库到自己账号下"><a href="#1、fork仓库到自己账号下" class="headerlink" title="1、fork仓库到自己账号下"></a>1、fork仓库到自己账号下</h1><p>官方仓库：<a href="https://github.com/apache/rocketmq" target="_blank" rel="noopener">https://github.com/apache/rocketmq</a></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113224109.png" alt></p>
-<h1 id="2、clone代码到本地"><a href="#2、clone代码到本地" class="headerlink" title="2、clone代码到本地"></a>2、clone代码到本地</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /d/github</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 测试是否可以连接</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh -T git@github.com</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> ~/.ssh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ssh-keygen -t rsa</span></span><br></pre></td></tr></table></figure>
-
-<p>将公钥添加到 github</p>
-<p>github -&gt; Settings -&gt; SSH and GPG keys -&gt; New SSH key</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113225754.png" alt></p>
-<p>再测试一下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh -T git@github.com</span></span><br><span class="line">Hi carlo-z! You've successfully authenticated, but GitHub does not provide shell access.</span><br></pre></td></tr></table></figure>
-
-<p>clone 代码</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> git@github.com:carlo-z/rocketmq.git</span></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113231711.png" alt></p>
-<p>查看仓库状态，提示现在是 master 分支</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> rocketmq/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line">On branch master</span><br><span class="line">Your branch is up to date with 'origin/master'</span><br></pre></td></tr></table></figure>
-
-<p>用<code>git remote -v</code>命令，可以看到此时只与自己的远程仓库建立了连接</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git remote -v</span></span><br><span class="line">origin  git@github.com:carlo-z/rocketmq.git (fetch)</span><br><span class="line">origin  git@github.com:carlo-z/rocketmq.git (push)</span><br></pre></td></tr></table></figure>
-
-<h1 id="3、与官方仓库建立连接"><a href="#3、与官方仓库建立连接" class="headerlink" title="3、与官方仓库建立连接"></a>3、与官方仓库建立连接</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git remote add upstream https://github.com/apache/rocketmq.git</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote -v</span></span><br><span class="line">origin  git@github.com:carlo-z/rocketmq.git (fetch)</span><br><span class="line">origin  git@github.com:carlo-z/rocketmq.git (push)</span><br><span class="line">upstream        https://github.com/apache/rocketmq.git (fetch)</span><br><span class="line">upstream        https://github.com/apache/rocketmq.git (push)</span><br></pre></td></tr></table></figure>
-
-<p>再用<code>git remote -v</code>可以看到 已经与官方仓库建立了连接</p>
-<h1 id="4、创建新分支用于修改"><a href="#4、创建新分支用于修改" class="headerlink" title="4、创建新分支用于修改"></a>4、创建新分支用于修改</h1><p>接着上面的运行命令：<code>git checkout -b rocketmq-read</code>，这个命令的意思是创建一个叫 rocketmq-read 的分支，运行这个命令后bash将自动切换到新的分支下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b rocketmq-read</span></span><br><span class="line">Switched to a new branch 'rocketmq-read'</span><br></pre></td></tr></table></figure>
-
-<h3 id="修改代码"><a href="#修改代码" class="headerlink" title="修改代码"></a>修改代码</h3><h3 id="提交"><a href="#提交" class="headerlink" title="提交"></a>提交</h3><h1 id="5、提交pr"><a href="#5、提交pr" class="headerlink" title="5、提交pr"></a>5、提交pr</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113233008.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113233121.png" alt></p>
-<p>然后点<code>Create pull request</code></p>
-<p>写好名字，写好说明，提交，就OK啦。</p>
-<h1 id="6、后期同步代码"><a href="#6、后期同步代码" class="headerlink" title="6、后期同步代码"></a>6、后期同步代码</h1><p>所以每次提交pr前，都要先从做代码同步。过程如下：</p>
-<p>先fetch</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git fetch upstream</span></span><br></pre></td></tr></table></figure>
-
-<p>再 rebase</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git rebase upstream/master</span></span><br></pre></td></tr></table></figure>
-
-<p>再 push master</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> git push origin master</span></span><br></pre></td></tr></table></figure>
-
-<p>push完后，远程仓库便可看到你的branch版本和master分支一致了，否则这个位置会显示与master相差了多少次commit。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200113233631.png" alt></p>
-
           
         
       

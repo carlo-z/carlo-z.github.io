@@ -1518,261 +1518,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/k8s/rancher-docker-install/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/devops/k8s/rancher-docker-install/" itemprop="url">Rancher 2.x docker安装</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-12T00:00:00+08:00">
-                2019-07-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/devops/" itemprop="url" rel="index">
-                    <span itemprop="name">devops</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/devops/rancher/" itemprop="url" rel="index">
-                    <span itemprop="name">rancher</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <br>
-
-<blockquote>
-<p>中文文档：<a href="https://docs.rancher.cn/rancher2x/" target="_blank" rel="noopener">https://docs.rancher.cn/rancher2x/</a></p>
-<p><a href="https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/" target="_blank" rel="noopener">https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/</a></p>
-</blockquote>
-<h1 id="安装-Docker"><a href="#安装-Docker" class="headerlink" title="安装 Docker"></a>安装 Docker</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://releases.rancher.com/install-docker/18.09.sh | sh</span><br></pre></td></tr></table></figure>
-
-<p>要了解某个 Docker 版本是否有可用的安装脚本，请参考这个<a href="https://github.com/rancher/install-docker" target="_blank" rel="noopener">GitHub 仓库</a>，这里包含了 Rancher 的所有 Docker 安装脚本。</p>
-<h1 id="安装-Rancher-2-x"><a href="#安装-Rancher-2-x" class="headerlink" title="安装 Rancher 2.x"></a>安装 Rancher 2.x</h1><p>首先连接到主机，然后使用 shell 安装 Rancher。</p>
-<ol>
-<li><p>使用 shell 工具（如 PuTTy 或其他连接工具）登录 Linux 主机。</p>
-</li>
-<li><p>执行以下命令：</p>
-</li>
-</ol>
-<p>   sudo docker run -d –restart=unless-stopped -p 80:80 -p 443:443 rancher/rancher</p>
-<p><strong>结果：</strong> Rancher 已经安装在了 Linux 主机上。</p>
-<h1 id="登录-Rancher-界面并配置初始设置"><a href="#登录-Rancher-界面并配置初始设置" class="headerlink" title="登录 Rancher 界面并配置初始设置"></a>登录 Rancher 界面并配置初始设置</h1><p>您需要先登录 Rancher，然后再开始使用 Rancher。登录以后，您需要完成一些一次性的配置。</p>
-<ol>
-<li><p>打开浏览器，输入主机的 IP 地址：<code>https://&lt;SERVER_IP&gt;</code></p>
-<p>请使用真实的主机 IP 地址替换 <code>&lt;SERVER_IP&gt;</code> 。</p>
-</li>
-<li><p>首次登录时，请按照页面提示设置登录密码。</p>
-</li>
-<li><p>设置 <strong>Rancher Server URL</strong>。URL 既可以是一个 IP 地址，也可以是一个主机名称。请确保您在集群内添加的每个节点都可以连接到这个 URL。如果您使用的是主机名称，请保证主机名称可以被节点的 DNS 服务器成功解析。</p>
-</li>
-</ol>
-<p><strong>结果：</strong>完成 Rancher 管理员用户的密码设置和访问地址设置。下次使用 Rancher 时，可以输入 IP 地址或主机地址访问 Rancher 界面，然后输入管理员用户名<code>admin</code>和您设置的密码登录 Rancher 界面。</p>
-<blockquote>
-<p><a href="https://local-rancher/" target="_blank" rel="noopener">https://local-rancher/</a></p>
-<p>设置密码：admin/123456</p>
-</blockquote>
-<h1 id="创建业务集群"><a href="#创建业务集群" class="headerlink" title="创建业务集群"></a>创建业务集群</h1><p>完成安装和登录 Rancher 的步骤之后，您现在可以参考以下步骤，在 Rancher 中创建第一个 Kubernetes 集群。</p>
-<p>在这个任务中，您可以使用<strong>自定义集群</strong>选项，使用的<strong>任意</strong> Linux 主机（云主机、虚拟机或裸金属服务器）创建集群。</p>
-<ol>
-<li>访问<strong>集群</strong>页面，单击<strong>添加集群</strong>。</li>
-<li>选择<strong>自定义</strong>选项。</li>
-<li>输入<strong>集群名称</strong>。</li>
-<li>跳过<strong>集群角色</strong>和<strong>集群选项</strong>。</li>
-<li>单击<strong>下一步</strong>。</li>
-<li>勾选<strong>主机选项 - 角色选择</strong>中的所有角色： <strong>Etcd</strong>、 <strong>Control</strong> 和 <strong>Worker</strong>。</li>
-<li><strong>可选：</strong> Rancher 会自动探查用于 Rancher 通信和集群通信的 IP 地址。您可以通过<strong>主机选项 &gt; 显示高级选项</strong>中的<code>公网地址</code>和<code>内网地址</code>指定 IP 地址。</li>
-<li>跳过<strong>主机标签</strong>参数，因为对快速入门来说，这部分的参数不太重要。</li>
-<li>复制代码框中的命令。</li>
-<li>登录您的 Linux 主机，打开命令行工具，粘贴命令，单击回车键运命令。</li>
-<li>运行完成后，回到 Rancher 界面，单击<strong>完成</strong>。</li>
-</ol>
-<p><strong>结果：</strong> 在 Rancher 中创建了一个 Kubernetes 集群。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200709022046.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.4.5 --server https://local-rancher --token htxp8hrk95jjghg74zngg2j8bj2bkwxc9s7rxcv7dgs7lx42lddd9f --ca-checksum 7fb6276d3eefaf30a82c9dd0a40e0d1118863a640f37939fd5b168aa6392e7dc --etcd --controlplane --worker</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200712203348.png" alt></p>
-<h1 id="部署带有-Ingress-的工作负载"><a href="#部署带有-Ingress-的工作负载" class="headerlink" title="部署带有 Ingress 的工作负载"></a>部署带有 Ingress 的工作负载</h1><h2 id="先决条件"><a href="#先决条件" class="headerlink" title="#先决条件"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#先决条件" target="_blank" rel="noopener">#</a>先决条件</h2><p>已经有一个正在运行的集群，且集群中有至少一个节点</p>
-<h2 id="部署工作负载"><a href="#部署工作负载" class="headerlink" title="#部署工作负载"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#部署工作负载" target="_blank" rel="noopener">#</a>部署工作负载</h2><p>参考前文完成 <a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/_index" target="_blank" rel="noopener">Rancher Server 的快速部署</a>后，您可以创建 <em>工作负载</em>。工作负载即 Kubernetes 对一组 Pod 的抽象模型，用于描述业务的运行载体，包括 Deployment、Statefulset、Daemonset、Job、CronJob 等多种类型，详情请参考<a href="https://rancher2.docs.rancher.cn/docs/overview/glossary/_index" target="_blank" rel="noopener">名词解释</a>。</p>
-<p>以下步骤讲解了如何在 Rancher Server 中部署带有 Ingress 的工作负载。本文部署的工作负载是一个“Hello-World”应用。</p>
-<ol>
-<li><p>访问<strong>集群</strong>页面，选择您刚刚创建的集群，进入集群页面。</p>
-</li>
-<li><p>从集群页面的主菜单中选择<strong>项目/命名空间</strong>。</p>
-</li>
-<li><p>打开 <strong>项目：Default</strong>。</p>
-</li>
-<li><p>单击<strong>资源 &gt; 工作负载</strong>。如果您使用的是 v2.3.0 之前的版本，请单击 <strong>工作负载 &gt; 工作负载</strong>。</p>
-</li>
-<li><p>单击<strong>部署</strong>。</p>
-<p><strong>结果：</strong> 打开<strong>部署工作负载</strong> 页面。</p>
-</li>
-<li><p>输入工作负载的名称。</p>
-</li>
-<li><p>在<strong>Docker 镜像</strong>一栏，输入<code>rancher/hello-world</code>，请注意区分大小写字母。</p>
-</li>
-<li><p>余下的选项保持默认配置即可。</p>
-</li>
-<li><p>单击<strong>运行</strong>。</p>
-</li>
-</ol>
-<p><strong>结果：</strong></p>
-<ul>
-<li>部署了工作负载。这个过程可能需要几分钟完成。</li>
-<li>当您的工作负载部署完成后，它的状态将变为<strong>Active</strong>，您可以从项目的<strong>工作负载</strong>页面查看工作负载当前的状态。</li>
-</ul>
-<h2 id="暴露服务"><a href="#暴露服务" class="headerlink" title="#暴露服务"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#暴露服务" target="_blank" rel="noopener">#</a>暴露服务</h2><p>上述步骤帮助您完成了工作负载的部署，现在您需要将服务暴露出来，让其他服务可以通过网络连接和调用这个工作负载。</p>
-<ol>
-<li>访问<strong>集群</strong>页面，选择您刚刚创建的集群，进入集群页面。</li>
-<li>从集群页面的主菜单中选择<strong>项目/命名空间</strong>。</li>
-<li>打开 <strong>项目 &gt; Default</strong>。</li>
-<li>单击<strong>资源 &gt; 工作负载 &gt; 负载均衡</strong>。如果您使用的是 v2.3.0 之前的版本，请单击 <strong>工作负载 &gt; 负载均衡</strong>。</li>
-<li>单击<strong>添加 Ingress</strong></li>
-<li>输入 Ingress 负载均衡的名称，如 “hello”。</li>
-<li>在<strong>目标</strong>一栏，从下拉菜单选择您服务的名称。</li>
-<li>在<strong>端口</strong>一栏输入 <code>80</code>。</li>
-<li>余下的选项保持默认配置即可，单击<strong>保存</strong>。</li>
-</ol>
-<p><strong>结果：</strong> 这个工作负载分配到了一个<code>xip.io</code>地址，已经暴露出去了。可能需要 1~2 分钟完成服务关联。</p>
-<h2 id="查看您的应用"><a href="#查看您的应用" class="headerlink" title="#查看您的应用"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#查看您的应用" target="_blank" rel="noopener">#</a>查看您的应用</h2><p>从<strong>负载均衡</strong>页面单击目标链接<code>hello.default.xxx.xxx.xxx.xxx.xip.io &gt; hello-world</code>，您的应用会在一个新窗口中打开。</p>
-<h2 id="结果"><a href="#结果" class="headerlink" title="#结果"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#结果" target="_blank" rel="noopener">#</a>结果</h2><p>成功部署工作负载并通过 Ingress 暴露该工作负载。</p>
-<h2 id="后续操作"><a href="#后续操作" class="headerlink" title="#后续操作"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#后续操作" target="_blank" rel="noopener">#</a>后续操作</h2><p>使用完您通过快速入门搭建的 Rancher 沙盒后，您可能想要清理遗留在环境中与 Rancher 相关的资源，并删除 Rancher Server 和您的集群，请单击下方链接查看操作指导。</p>
-<ul>
-<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/amazon-aws-qs/_index" target="_blank" rel="noopener">清理环境：Amazon AWS</a></li>
-<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/digital-ocean-qs/_index" target="_blank" rel="noopener">清理环境：DigitalOcean</a></li>
-<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/quickstart-vagrant/_index" target="_blank" rel="noopener">清理环境：Vagrant</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/k8s/rancher-devops/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2053,6 +1798,261 @@
 <p>成功：</p>
 <p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200715020933.png" alt></p>
 <br>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/k8s/rancher-docker-install/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/k8s/rancher-docker-install/" itemprop="url">Rancher 2.x docker安装</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-12T00:00:00+08:00">
+                2019-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/rancher/" itemprop="url" rel="index">
+                    <span itemprop="name">rancher</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <br>
+
+<blockquote>
+<p>中文文档：<a href="https://docs.rancher.cn/rancher2x/" target="_blank" rel="noopener">https://docs.rancher.cn/rancher2x/</a></p>
+<p><a href="https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/" target="_blank" rel="noopener">https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/</a></p>
+</blockquote>
+<h1 id="安装-Docker"><a href="#安装-Docker" class="headerlink" title="安装 Docker"></a>安装 Docker</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://releases.rancher.com/install-docker/18.09.sh | sh</span><br></pre></td></tr></table></figure>
+
+<p>要了解某个 Docker 版本是否有可用的安装脚本，请参考这个<a href="https://github.com/rancher/install-docker" target="_blank" rel="noopener">GitHub 仓库</a>，这里包含了 Rancher 的所有 Docker 安装脚本。</p>
+<h1 id="安装-Rancher-2-x"><a href="#安装-Rancher-2-x" class="headerlink" title="安装 Rancher 2.x"></a>安装 Rancher 2.x</h1><p>首先连接到主机，然后使用 shell 安装 Rancher。</p>
+<ol>
+<li><p>使用 shell 工具（如 PuTTy 或其他连接工具）登录 Linux 主机。</p>
+</li>
+<li><p>执行以下命令：</p>
+</li>
+</ol>
+<p>   sudo docker run -d –restart=unless-stopped -p 80:80 -p 443:443 rancher/rancher</p>
+<p><strong>结果：</strong> Rancher 已经安装在了 Linux 主机上。</p>
+<h1 id="登录-Rancher-界面并配置初始设置"><a href="#登录-Rancher-界面并配置初始设置" class="headerlink" title="登录 Rancher 界面并配置初始设置"></a>登录 Rancher 界面并配置初始设置</h1><p>您需要先登录 Rancher，然后再开始使用 Rancher。登录以后，您需要完成一些一次性的配置。</p>
+<ol>
+<li><p>打开浏览器，输入主机的 IP 地址：<code>https://&lt;SERVER_IP&gt;</code></p>
+<p>请使用真实的主机 IP 地址替换 <code>&lt;SERVER_IP&gt;</code> 。</p>
+</li>
+<li><p>首次登录时，请按照页面提示设置登录密码。</p>
+</li>
+<li><p>设置 <strong>Rancher Server URL</strong>。URL 既可以是一个 IP 地址，也可以是一个主机名称。请确保您在集群内添加的每个节点都可以连接到这个 URL。如果您使用的是主机名称，请保证主机名称可以被节点的 DNS 服务器成功解析。</p>
+</li>
+</ol>
+<p><strong>结果：</strong>完成 Rancher 管理员用户的密码设置和访问地址设置。下次使用 Rancher 时，可以输入 IP 地址或主机地址访问 Rancher 界面，然后输入管理员用户名<code>admin</code>和您设置的密码登录 Rancher 界面。</p>
+<blockquote>
+<p><a href="https://local-rancher/" target="_blank" rel="noopener">https://local-rancher/</a></p>
+<p>设置密码：admin/123456</p>
+</blockquote>
+<h1 id="创建业务集群"><a href="#创建业务集群" class="headerlink" title="创建业务集群"></a>创建业务集群</h1><p>完成安装和登录 Rancher 的步骤之后，您现在可以参考以下步骤，在 Rancher 中创建第一个 Kubernetes 集群。</p>
+<p>在这个任务中，您可以使用<strong>自定义集群</strong>选项，使用的<strong>任意</strong> Linux 主机（云主机、虚拟机或裸金属服务器）创建集群。</p>
+<ol>
+<li>访问<strong>集群</strong>页面，单击<strong>添加集群</strong>。</li>
+<li>选择<strong>自定义</strong>选项。</li>
+<li>输入<strong>集群名称</strong>。</li>
+<li>跳过<strong>集群角色</strong>和<strong>集群选项</strong>。</li>
+<li>单击<strong>下一步</strong>。</li>
+<li>勾选<strong>主机选项 - 角色选择</strong>中的所有角色： <strong>Etcd</strong>、 <strong>Control</strong> 和 <strong>Worker</strong>。</li>
+<li><strong>可选：</strong> Rancher 会自动探查用于 Rancher 通信和集群通信的 IP 地址。您可以通过<strong>主机选项 &gt; 显示高级选项</strong>中的<code>公网地址</code>和<code>内网地址</code>指定 IP 地址。</li>
+<li>跳过<strong>主机标签</strong>参数，因为对快速入门来说，这部分的参数不太重要。</li>
+<li>复制代码框中的命令。</li>
+<li>登录您的 Linux 主机，打开命令行工具，粘贴命令，单击回车键运命令。</li>
+<li>运行完成后，回到 Rancher 界面，单击<strong>完成</strong>。</li>
+</ol>
+<p><strong>结果：</strong> 在 Rancher 中创建了一个 Kubernetes 集群。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200709022046.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.4.5 --server https://local-rancher --token htxp8hrk95jjghg74zngg2j8bj2bkwxc9s7rxcv7dgs7lx42lddd9f --ca-checksum 7fb6276d3eefaf30a82c9dd0a40e0d1118863a640f37939fd5b168aa6392e7dc --etcd --controlplane --worker</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200712203348.png" alt></p>
+<h1 id="部署带有-Ingress-的工作负载"><a href="#部署带有-Ingress-的工作负载" class="headerlink" title="部署带有 Ingress 的工作负载"></a>部署带有 Ingress 的工作负载</h1><h2 id="先决条件"><a href="#先决条件" class="headerlink" title="#先决条件"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#先决条件" target="_blank" rel="noopener">#</a>先决条件</h2><p>已经有一个正在运行的集群，且集群中有至少一个节点</p>
+<h2 id="部署工作负载"><a href="#部署工作负载" class="headerlink" title="#部署工作负载"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#部署工作负载" target="_blank" rel="noopener">#</a>部署工作负载</h2><p>参考前文完成 <a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/_index" target="_blank" rel="noopener">Rancher Server 的快速部署</a>后，您可以创建 <em>工作负载</em>。工作负载即 Kubernetes 对一组 Pod 的抽象模型，用于描述业务的运行载体，包括 Deployment、Statefulset、Daemonset、Job、CronJob 等多种类型，详情请参考<a href="https://rancher2.docs.rancher.cn/docs/overview/glossary/_index" target="_blank" rel="noopener">名词解释</a>。</p>
+<p>以下步骤讲解了如何在 Rancher Server 中部署带有 Ingress 的工作负载。本文部署的工作负载是一个“Hello-World”应用。</p>
+<ol>
+<li><p>访问<strong>集群</strong>页面，选择您刚刚创建的集群，进入集群页面。</p>
+</li>
+<li><p>从集群页面的主菜单中选择<strong>项目/命名空间</strong>。</p>
+</li>
+<li><p>打开 <strong>项目：Default</strong>。</p>
+</li>
+<li><p>单击<strong>资源 &gt; 工作负载</strong>。如果您使用的是 v2.3.0 之前的版本，请单击 <strong>工作负载 &gt; 工作负载</strong>。</p>
+</li>
+<li><p>单击<strong>部署</strong>。</p>
+<p><strong>结果：</strong> 打开<strong>部署工作负载</strong> 页面。</p>
+</li>
+<li><p>输入工作负载的名称。</p>
+</li>
+<li><p>在<strong>Docker 镜像</strong>一栏，输入<code>rancher/hello-world</code>，请注意区分大小写字母。</p>
+</li>
+<li><p>余下的选项保持默认配置即可。</p>
+</li>
+<li><p>单击<strong>运行</strong>。</p>
+</li>
+</ol>
+<p><strong>结果：</strong></p>
+<ul>
+<li>部署了工作负载。这个过程可能需要几分钟完成。</li>
+<li>当您的工作负载部署完成后，它的状态将变为<strong>Active</strong>，您可以从项目的<strong>工作负载</strong>页面查看工作负载当前的状态。</li>
+</ul>
+<h2 id="暴露服务"><a href="#暴露服务" class="headerlink" title="#暴露服务"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#暴露服务" target="_blank" rel="noopener">#</a>暴露服务</h2><p>上述步骤帮助您完成了工作负载的部署，现在您需要将服务暴露出来，让其他服务可以通过网络连接和调用这个工作负载。</p>
+<ol>
+<li>访问<strong>集群</strong>页面，选择您刚刚创建的集群，进入集群页面。</li>
+<li>从集群页面的主菜单中选择<strong>项目/命名空间</strong>。</li>
+<li>打开 <strong>项目 &gt; Default</strong>。</li>
+<li>单击<strong>资源 &gt; 工作负载 &gt; 负载均衡</strong>。如果您使用的是 v2.3.0 之前的版本，请单击 <strong>工作负载 &gt; 负载均衡</strong>。</li>
+<li>单击<strong>添加 Ingress</strong></li>
+<li>输入 Ingress 负载均衡的名称，如 “hello”。</li>
+<li>在<strong>目标</strong>一栏，从下拉菜单选择您服务的名称。</li>
+<li>在<strong>端口</strong>一栏输入 <code>80</code>。</li>
+<li>余下的选项保持默认配置即可，单击<strong>保存</strong>。</li>
+</ol>
+<p><strong>结果：</strong> 这个工作负载分配到了一个<code>xip.io</code>地址，已经暴露出去了。可能需要 1~2 分钟完成服务关联。</p>
+<h2 id="查看您的应用"><a href="#查看您的应用" class="headerlink" title="#查看您的应用"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#查看您的应用" target="_blank" rel="noopener">#</a>查看您的应用</h2><p>从<strong>负载均衡</strong>页面单击目标链接<code>hello.default.xxx.xxx.xxx.xxx.xip.io &gt; hello-world</code>，您的应用会在一个新窗口中打开。</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="#结果"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#结果" target="_blank" rel="noopener">#</a>结果</h2><p>成功部署工作负载并通过 Ingress 暴露该工作负载。</p>
+<h2 id="后续操作"><a href="#后续操作" class="headerlink" title="#后续操作"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#后续操作" target="_blank" rel="noopener">#</a>后续操作</h2><p>使用完您通过快速入门搭建的 Rancher 沙盒后，您可能想要清理遗留在环境中与 Rancher 相关的资源，并删除 Rancher Server 和您的集群，请单击下方链接查看操作指导。</p>
+<ul>
+<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/amazon-aws-qs/_index" target="_blank" rel="noopener">清理环境：Amazon AWS</a></li>
+<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/digital-ocean-qs/_index" target="_blank" rel="noopener">清理环境：DigitalOcean</a></li>
+<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/quickstart-vagrant/_index" target="_blank" rel="noopener">清理环境：Vagrant</a></li>
+</ul>
+
           
         
       
