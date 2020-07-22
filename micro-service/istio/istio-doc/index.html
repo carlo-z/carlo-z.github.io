@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="官方文档：https://istio.io/zh/docs/  概念Istio 是什么？云平台令使用它们的公司受益匪浅。但不可否认的是，上云会给 DevOps 团队带来压力。为了可移植性，开发人员必须使用微服务来构建应用，同时运维人员也正在管理着极端庞大的混合云和多云的部署环境。 Istio 允许您连接、保护、控制和观察服务。 从较高的层面来说，Istio 有助于降低这些部署的复杂性，并减轻">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Istio 介绍">
+<meta property="og:url" content="https://carlo-z.com/micro-service/istio/istio-doc/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="官方文档：https://istio.io/zh/docs/  概念Istio 是什么？云平台令使用它们的公司受益匪浅。但不可否认的是，上云会给 DevOps 团队带来压力。为了可移植性，开发人员必须使用微服务来构建应用，同时运维人员也正在管理着极端庞大的混合云和多云的部署环境。 Istio 允许您连接、保护、控制和观察服务。 从较高的层面来说，Istio 有助于降低这些部署的复杂性，并减轻">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-05T13:17:51.461Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Istio 介绍">
+<meta name="twitter:description" content="官方文档：https://istio.io/zh/docs/  概念Istio 是什么？云平台令使用它们的公司受益匪浅。但不可否认的是，上云会给 DevOps 团队带来压力。为了可移植性，开发人员必须使用微服务来构建应用，同时运维人员也正在管理着极端庞大的混合云和多云的部署环境。 Istio 允许您连接、保护、控制和观察服务。 从较高的层面来说，Istio 有助于降低这些部署的复杂性，并减轻">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/micro-service/istio/istio-doc/">
+
+
+
+
+
+  <title>Istio 介绍 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/micro-service/istio/istio-doc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Istio 介绍</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-05T21:17:51+08:00">
+                2020-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<blockquote>
+<p>官方文档：<a href="https://istio.io/zh/docs/" target="_blank" rel="noopener">https://istio.io/zh/docs/</a></p>
+</blockquote>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><h2 id="Istio-是什么？"><a href="#Istio-是什么？" class="headerlink" title="Istio 是什么？"></a>Istio 是什么？</h2><p>云平台令使用它们的公司受益匪浅。但不可否认的是，上云会给 DevOps 团队带来压力。为了可移植性，开发人员必须使用微服务来构建应用，同时运维人员也正在管理着极端庞大的混合云和多云的部署环境。 Istio 允许您连接、保护、控制和观察服务。</p>
+<p>从较高的层面来说，Istio 有助于降低这些部署的复杂性，并减轻开发团队的压力。它是一个完全开源的服务网格，作为透明的一层接入到现有的分布式应用程序里。它也是一个平台，拥有可以集成任何日志、遥测和策略系统的 API 接口。Istio 多样化的特性使您能够成功且高效地运行分布式微服务架构，并提供保护、连接和监控微服务的统一方法。</p>
+<h2 id="服务网格是什么？"><a href="#服务网格是什么？" class="headerlink" title="服务网格是什么？"></a>服务网格是什么？</h2><p>Istio 解决了开发人员和运维人员所面临的从单体应用向分布式微服务架构转变的挑战。了解它是如何做到这一点的可以让我们更详细地理解 Istio 的服务网格。</p>
+<p>术语<strong>服务网格</strong>用来描述组成这些应用程序的微服务网络以及它们之间的交互。随着服务网格的规模和复杂性不断的增长，它将会变得越来越难以理解和管理。它的需求包括服务发现、负载均衡、故障恢复、度量和监控等。服务网格通常还有更复杂的运维需求，比如 A/B 测试、金丝雀发布、速率限制、访问控制和端到端认证。</p>
+<p>Istio 提供了对整个服务网格的行为洞察和操作控制的能力，以及一个完整的满足微服务应用各种需求的解决方案。</p>
+<h2 id="为什么使用-Istio？"><a href="#为什么使用-Istio？" class="headerlink" title="为什么使用 Istio？"></a>为什么使用 Istio？</h2><p>通过负载均衡、服务间的身份验证、监控等方法，Istio 可以轻松地创建一个已经部署了服务的网络，而服务的代码只需<a href="https://istio.io/zh/docs/tasks/observability/distributed-tracing/overview/#trace-context-propagation" target="_blank" rel="noopener">很少</a>更改甚至无需更改。通过在整个环境中部署一个特殊的 sidecar 代理为服务添加 Istio 的支持，而代理会拦截微服务之间的所有网络通信，然后使用其控制平面的功能来配置和管理 Istio，这包括：</p>
+<ul>
+<li>为 HTTP、gRPC、WebSocket 和 TCP 流量自动负载均衡。</li>
+<li>通过丰富的路由规则、重试、故障转移和故障注入对流量行为进行细粒度控制。</li>
+<li>可插拔的策略层和配置 API，支持访问控制、速率限制和配额。</li>
+<li>集群内（包括集群的入口和出口）所有流量的自动化度量、日志记录和追踪。</li>
+<li>在具有强大的基于身份验证和授权的集群中实现安全的服务间通信。</li>
+</ul>
+<p>Istio 为可扩展性而设计，可以满足不同的部署需求。</p>
+<h2 id="核心特性"><a href="#核心特性" class="headerlink" title="核心特性"></a>核心特性</h2><p>Istio 以统一的方式提供了许多跨服务网络的关键功能：</p>
+<h3 id="流量管理"><a href="#流量管理" class="headerlink" title="流量管理"></a>流量管理</h3><p>Istio 简单的规则配置和流量路由允许您控制服务之间的流量和 API 调用过程。Istio 简化了服务级属性（如熔断器、超时和重试）的配置，并且让它轻而易举的执行重要的任务（如 A/B 测试、金丝雀发布和按流量百分比划分的分阶段发布）。</p>
+<p>有了更好的对流量的可视性和开箱即用的故障恢复特性，您就可以在问题产生之前捕获它们，无论面对什么情况都可以使调用更可靠，网络更健壮。</p>
+<p>请参考<a href="https://istio.io/zh/docs/concepts/traffic-management/" target="_blank" rel="noopener">流量管理文档</a>获取更多细节。</p>
+<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p>Istio 的安全特性解放了开发人员，使其只需要专注于应用程序级别的安全。Istio 提供了底层的安全通信通道，并为大规模的服务通信管理认证、授权和加密。有了 Istio，服务通信在默认情况下就是受保护的，可以让您在跨不同协议和运行时的情况下实施一致的策略——而所有这些都只需要很少甚至不需要修改应用程序。</p>
+<p>Istio 是独立于平台的，可以与 Kubernetes（或基础设施）的网络策略一起使用。但它更强大，能够在网络和应用层面保护pod到 pod 或者服务到服务之间的通信。</p>
+<p>请参考<a href="https://istio.io/zh/docs/concepts/security/" target="_blank" rel="noopener">安全文档</a>获取更多细节。</p>
+<h3 id="可观察性"><a href="#可观察性" class="headerlink" title="可观察性"></a>可观察性</h3><p>Istio 健壮的追踪、监控和日志特性让您能够深入的了解服务网格部署。通过 Istio 的监控能力，可以真正的了解到服务的性能是如何影响上游和下游的；而它的定制 Dashboard 提供了对所有服务性能的可视化能力，并让您看到它如何影响其他进程。</p>
+<p>Istio 的 Mixer 组件负责策略控制和遥测数据收集。它提供了后端抽象和中介，将一部分 Istio 与后端的基础设施实现细节隔离开来，并为运维人员提供了对网格与后端基础实施之间交互的细粒度控制。</p>
+<p>所有这些特性都使您能够更有效地设置、监控和加强服务的 SLO。当然，底线是您可以快速有效地检测到并修复出现的问题。</p>
+<p>请参考<a href="https://istio.io/zh/docs/concepts/observability/" target="_blank" rel="noopener">可观察性文档</a>获取更多细节。</p>
+<h2 id="平台支持"><a href="#平台支持" class="headerlink" title="平台支持"></a>平台支持</h2><p>Istio 独立于平台，被设计为可以在各种环境中运行，包括跨云、内部环境、Kubernetes、Mesos 等等。您可以在 Kubernetes 或是装有 Consul 的 Nomad 环境上部署 Istio。Istio 目前支持：</p>
+<ul>
+<li>Kubernetes 上的服务部署</li>
+<li>基于 Consul 的服务注册</li>
+<li>服务运行在独立的虚拟机上</li>
+</ul>
+<h2 id="整合和定制"><a href="#整合和定制" class="headerlink" title="整合和定制"></a>整合和定制</h2><p>Istio 的策略实施组件可以扩展和定制，与现有的 ACL、日志、监控、配额、审查等解决方案集成。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>要开始使用 Istio，只需遵循以下三个步骤：</p>
+<ol>
+<li><a href="https://istio.io/zh/docs/setup/getting-started/#platform" target="_blank" rel="noopener">搭建平台</a></li>
+<li><a href="https://istio.io/zh/docs/setup/getting-started/#download" target="_blank" rel="noopener">下载 Istio</a></li>
+<li><a href="https://istio.io/zh/docs/setup/getting-started/#install" target="_blank" rel="noopener">安装 Istio</a></li>
+</ol>
+<h2 id="搭建平台"><a href="#搭建平台" class="headerlink" title="搭建平台"></a>搭建平台</h2><p>在安装 Istio 之前，需要一个运行着 Kubernetes 的兼容版本的 cluster。</p>
+<p>Istio 1.6 已经在 Kubernetes 版本 1.15, 1.16, 1.17, 1.18 中测试过。</p>
+<ul>
+<li>通过选择合适的 <a href="https://istio.io/zh/docs/setup/platform-setup/" target="_blank" rel="noopener">platform-specific setup instructions</a> 来创建一个集群。</li>
+</ul>
+<p>有些平台提供了 managed control plane，您可以使用它来代替手动安装 Istio。如果您选择的平台支持这种方式，并且您选择使用它，那么，在创建完集群后，您将完成 Istio 的安装。因此，可以跳过以下说明。</p>
+<h2 id="下载-Istio"><a href="#下载-Istio" class="headerlink" title="下载 Istio"></a>下载 Istio</h2><p>下载 Istio，下载内容将包含：安装文件、示例和 <a href="https://istio.io/zh/docs/reference/commands/istioctl/" target="_blank" rel="noopener">istioctl</a> 命令行工具。</p>
+<ol>
+<li><p>访问 <a href="https://github.com/istio/istio/releases/tag/1.6.0" target="_blank" rel="noopener">Istio release</a> 页面下载与您操作系统对应的安装文件。在 macOS 或 Linux 系统中，也可以通过以下命令下载最新版本的 Istio：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://istio.io/downloadIstio | sh -</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p>切换到 Istio 包所在目录下。例如：Istio 包名为 <code>istio-1.6.0</code>，则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cd istio-1.6.0</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<p>   安装目录包含如下内容：</p>
+<ul>
+<li><code>install/kubernetes</code> 目录下，有 Kubernetes 相关的 YAML 安装文件</li>
+<li><code>samples/</code> 目录下，有示例应用程序</li>
+<li><code>bin/</code> 目录下，包含 <a href="https://istio.io/zh/docs/reference/commands/istioctl" target="_blank" rel="noopener"><code>istioctl</code></a> 的客户端文件。<code>istioctl</code> 工具用于手动注入 Envoy sidecar 代理。</li>
+</ul>
+<ol start="3">
+<li><p>将 <code>istioctl</code> 客户端路径增加到 path 环境变量中，macOS 或 Linux 系统的增加方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ export PATH=$PWD/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="4">
+<li>在使用 bash 或 ZSH 控制台时，可以选择启动 <a href="https://istio.io/zh/docs/ops/diagnostic-tools/istioctl#enabling-auto-completion" target="_blank" rel="noopener">auto-completion option</a>。</li>
+</ol>
+<h2 id="安装-Istio"><a href="#安装-Istio" class="headerlink" title="安装 Istio"></a>安装 Istio</h2><p>请按照以下步骤在您所选的平台上使用 <code>demo</code> 配置文件安装 Istio。</p>
+<ol>
+<li><p>安装 <code>demo</code> 配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> istioctl manifest apply --<span class="built_in">set</span> profile=demo</span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p>为了验证是否安装成功，需要先确保以下 Kubernetes 服务正确部署，然后验证除 <code>jaeger-agent</code> 服务外的其他服务，是否均有正确的 <code>CLUSTER-IP</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get svc -n istio-system</span></span><br><span class="line">NAME                     TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)                                                                                                                                      AGE</span><br><span class="line">grafana                  ClusterIP      172.21.211.123   &lt;none&gt;          3000/TCP                                                                                                                                     2m</span><br><span class="line">istio-citadel            ClusterIP      172.21.177.222   &lt;none&gt;          8060/TCP,15014/TCP                                                                                                                           2m</span><br><span class="line">istio-egressgateway      ClusterIP      172.21.113.24    &lt;none&gt;          80/TCP,443/TCP,15443/TCP                                                                                                                     2m</span><br><span class="line">istio-galley             ClusterIP      172.21.132.247   &lt;none&gt;          443/TCP,15014/TCP,9901/TCP                                                                                                                   2m</span><br><span class="line">istio-ingressgateway     LoadBalancer   172.21.144.254   52.116.22.242   15020:31831/TCP,80:31380/TCP,443:31390/TCP,31400:31400/TCP,15029:30318/TCP,15030:32645/TCP,15031:31933/TCP,15032:31188/TCP,15443:30838/TCP   2m</span><br><span class="line">istio-pilot              ClusterIP      172.21.105.205   &lt;none&gt;          15010/TCP,15011/TCP,8080/TCP,15014/TCP                                                                                                       2m</span><br><span class="line">istio-policy             ClusterIP      172.21.14.236    &lt;none&gt;          9091/TCP,15004/TCP,15014/TCP                                                                                                                 2m</span><br><span class="line">istio-sidecar-injector   ClusterIP      172.21.155.47    &lt;none&gt;          443/TCP,15014/TCP                                                                                                                            2m</span><br><span class="line">istio-telemetry          ClusterIP      172.21.196.79    &lt;none&gt;          9091/TCP,15004/TCP,15014/TCP,42422/TCP                                                                                                       2m</span><br><span class="line">jaeger-agent             ClusterIP      None             &lt;none&gt;          5775/UDP,6831/UDP,6832/UDP                                                                                                                   2m</span><br><span class="line">jaeger-collector         ClusterIP      172.21.135.51    &lt;none&gt;          14267/TCP,14268/TCP                                                                                                                          2m</span><br><span class="line">jaeger-query             ClusterIP      172.21.26.187    &lt;none&gt;          16686/TCP                                                                                                                                    2m</span><br><span class="line">kiali                    ClusterIP      172.21.155.201   &lt;none&gt;          20001/TCP                                                                                                                                    2m</span><br><span class="line">prometheus               ClusterIP      172.21.63.159    &lt;none&gt;          9090/TCP                                                                                                                                     2m</span><br><span class="line">tracing                  ClusterIP      172.21.2.245     &lt;none&gt;          80/TCP                                                                                                                                       2m</span><br><span class="line">zipkin                   ClusterIP      172.21.182.245   &lt;none&gt;          9411/TCP                                                                                                                                     2m</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+</li>
+</ol>
+<p>   如果集群运行在一个不支持外部负载均衡器的环境中（例如：minikube），<code>istio-ingressgateway</code> 的 <code>EXTERNAL-IP</code> 将显示为 `` 状态。请使用服务的 <code>NodePort</code> 或 端口转发来访问网关。</p>
+<p>   请确保关联的 Kubernetes pod 已经部署，并且 <code>STATUS</code> 为 <code>Running</code>：</p>
+   <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get pods -n istio-system</span></span><br><span class="line">NAME                                                           READY   STATUS      RESTARTS   AGE</span><br><span class="line">grafana-f8467cc6-rbjlg                                         1/1     Running     0          1m</span><br><span class="line">istio-citadel-78df5b548f-g5cpw                                 1/1     Running     0          1m</span><br><span class="line">istio-egressgateway-78569df5c4-zwtb5                           1/1     Running     0          1m</span><br><span class="line">istio-galley-74d5f764fc-q7nrk                                  1/1     Running     0          1m</span><br><span class="line">istio-ingressgateway-7ddcfd665c-dmtqz                          1/1     Running     0          1m</span><br><span class="line">istio-pilot-f479bbf5c-qwr28                                    1/1     Running     0          1m</span><br><span class="line">istio-policy-6fccc5c868-xhblv                                  1/1     Running     2          1m</span><br><span class="line">istio-sidecar-injector-78499d85b8-x44m6                        1/1     Running     0          1m</span><br><span class="line">istio-telemetry-78b96c6cb6-ldm9q                               1/1     Running     2          1m</span><br><span class="line">istio-tracing-69b5f778b7-s2zvw                                 1/1     Running     0          1m</span><br><span class="line">kiali-99f7467dc-6rvwp                                          1/1     Running     0          1m</span><br><span class="line">prometheus-67cdb66cbb-9w2hm                                    1/1     Running     0          1m</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="后续步骤"><a href="#后续步骤" class="headerlink" title="后续步骤"></a>后续步骤</h2><p>安装 Istio 后，就可以部署您自己的服务，或部署安装程序中系统的任意一个示例应用。</p>
+<p>应用程序必须使用 HTTP/1.1 或 HTTP/2.0 协议用于 HTTP 通信；HTTP/1.0 不支持。</p>
+<p>当使用 <code>kubectl apply</code> 来部署应用时，如果 pod 启动在标有 <code>istio-injection=enabled</code> 的命名空间中，那么，<a href="https://istio.io/zh/docs/setup/additional-setup/sidecar-injection/#automatic-sidecar-injection" target="_blank" rel="noopener">Istio sidecar 注入器</a>将自动注入 Envoy 容器到应用的 pod 中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl label namespace &lt;namespace&gt; istio-injection=enabled</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> kubectl create -n &lt;namespace&gt; -f &lt;your-app-spec&gt;.yaml</span></span><br></pre></td></tr></table></figure>
+
+<p>在没有 <code>istio-injection</code> 标记的命名空间中，在部署前可以使用 <a href="https://istio.io/zh/docs/reference/commands/istioctl/#istioctl-kube-inject" target="_blank" rel="noopener"><code>istioctl kube-inject</code></a> 命令将 Envoy 容器手动注入到应用的 pod 中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> istioctl kube-inject -f &lt;your-app-spec&gt;.yaml | kubectl apply -f -</span></span><br></pre></td></tr></table></figure>
+
+<p>如果您不确定要从哪开始，可以先<a href="https://istio.io/zh/docs/examples/bookinfo/" target="_blank" rel="noopener">部署 Bookinfo 示例</a>，它会让您体验到 Istio 的流量路由、故障注入、速率限制等功能。 然后您可以根据您的兴趣浏览各种各样的 <a href="https://istio.io/zh/docs/tasks/" target="_blank" rel="noopener">Istio 任务</a>。</p>
+<p>下列任务都是初学者开始学习的好入口：</p>
+<ul>
+<li><a href="https://istio.io/zh/docs/tasks/traffic-management/request-routing/" target="_blank" rel="noopener">请求路由</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/traffic-management/fault-injection/" target="_blank" rel="noopener">故障注入</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/traffic-management/traffic-shifting/" target="_blank" rel="noopener">流量转移</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/observability/metrics/querying-metrics/" target="_blank" rel="noopener">查询指标</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/observability/metrics/using-istio-dashboard/" target="_blank" rel="noopener">可视化指标</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/observability/logs/collecting-logs/" target="_blank" rel="noopener">日志收集</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/policy-enforcement/rate-limiting/" target="_blank" rel="noopener">速率限制</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/traffic-management/ingress/ingress-control/" target="_blank" rel="noopener">Ingress 网关</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/traffic-management/egress/egress-control/" target="_blank" rel="noopener">访问外部服务</a></li>
+<li><a href="https://istio.io/zh/docs/tasks/observability/kiali/" target="_blank" rel="noopener">可视化您的网格</a></li>
+</ul>
+<p>下一步，可以定制 Istio 并部署您自己的应用。在您开始自定义 Istio 来适配您的平台或者其他用途之前，请查看以下资源：</p>
+<ul>
+<li><a href="https://istio.io/zh/docs/ops/deployment/deployment-models/" target="_blank" rel="noopener">部署模型</a></li>
+<li><a href="https://istio.io/zh/docs/ops/best-practices/deployment/" target="_blank" rel="noopener">部署最佳实践</a></li>
+<li><a href="https://istio.io/zh/docs/ops/deployment/requirements/" target="_blank" rel="noopener">Pod 需求</a></li>
+<li><a href="https://istio.io/zh/docs/setup/" target="_blank" rel="noopener">常规安装说明</a></li>
+</ul>
+<h1 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h1><h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h1 id="运维"><a href="#运维" class="headerlink" title="运维"></a>运维</h1>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/java/sharding-sphere/vitness/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/flink/flink-sql/" rel="prev" title="深入分析Flink SQL的工作机制">
+                深入分析Flink SQL的工作机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概念"><span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Istio-是什么？"><span class="nav-text">Istio 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务网格是什么？"><span class="nav-text">服务网格是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么使用-Istio？"><span class="nav-text">为什么使用 Istio？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心特性"><span class="nav-text">核心特性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#流量管理"><span class="nav-text">流量管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全"><span class="nav-text">安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可观察性"><span class="nav-text">可观察性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#平台支持"><span class="nav-text">平台支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整合和定制"><span class="nav-text">整合和定制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建平台"><span class="nav-text">搭建平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载-Istio"><span class="nav-text">下载 Istio</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装-Istio"><span class="nav-text">安装 Istio</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续步骤"><span class="nav-text">后续步骤</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#任务"><span class="nav-text">任务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例"><span class="nav-text">示例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运维"><span class="nav-text">运维</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

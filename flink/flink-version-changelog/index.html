@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="https://ci.apache.org/projects/flink/flink-docs-release-1.10/release-notes/  Flink 1.10Clusters &amp;amp; DeploymentFileSystems should be loaded via Plugin Architecture (FLINK-11956)s3-hadoop and s3-pr">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flink 各版本 changelog">
+<meta property="og:url" content="https://carlo-z.com/flink/flink-version-changelog/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="https://ci.apache.org/projects/flink/flink-docs-release-1.10/release-notes/  Flink 1.10Clusters &amp;amp; DeploymentFileSystems should be loaded via Plugin Architecture (FLINK-11956)s3-hadoop and s3-pr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-14T12:00:17.210Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flink 各版本 changelog">
+<meta name="twitter:description" content="https://ci.apache.org/projects/flink/flink-docs-release-1.10/release-notes/  Flink 1.10Clusters &amp;amp; DeploymentFileSystems should be loaded via Plugin Architecture (FLINK-11956)s3-hadoop and s3-pr">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/flink/flink-version-changelog/">
+
+
+
+
+
+  <title>Flink 各版本 changelog | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/flink/flink-version-changelog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flink 各版本 changelog</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-11T00:00:00+08:00">
+                2018-06-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/flink/" itemprop="url" rel="index">
+                    <span itemprop="name">flink</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<blockquote>
+<p><a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/release-notes/" target="_blank" rel="noopener">https://ci.apache.org/projects/flink/flink-docs-release-1.10/release-notes/</a></p>
+</blockquote>
+<h1 id="Flink-1-10"><a href="#Flink-1-10" class="headerlink" title="Flink 1.10"></a>Flink 1.10</h1><h3 id="Clusters-amp-Deployment"><a href="#Clusters-amp-Deployment" class="headerlink" title="Clusters &amp; Deployment"></a>Clusters &amp; Deployment</h3><h4 id="FileSystems-should-be-loaded-via-Plugin-Architecture-FLINK-11956"><a href="#FileSystems-should-be-loaded-via-Plugin-Architecture-FLINK-11956" class="headerlink" title="FileSystems should be loaded via Plugin Architecture (FLINK-11956)"></a>FileSystems should be loaded via Plugin Architecture (<a href="https://issues.apache.org/jira/browse/FLINK-11956" target="_blank" rel="noopener">FLINK-11956</a>)</h4><p>s3-hadoop and s3-presto filesystems do no longer use class relocations and need to be loaded through <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/filesystems/#pluggable-file-systems" target="_blank" rel="noopener">plugins</a> but now seamlessly integrate with all credential providers. Other filesystems are strongly recommended to be only used as plugins as we will continue to remove relocations.</p>
+<h4 id="Flink-Client-respects-Classloading-Policy-FLINK-13749"><a href="#Flink-Client-respects-Classloading-Policy-FLINK-13749" class="headerlink" title="Flink Client respects Classloading Policy (FLINK-13749)"></a>Flink Client respects Classloading Policy (<a href="https://issues.apache.org/jira/browse/FLINK-13749" target="_blank" rel="noopener">FLINK-13749</a>)</h4><p>The Flink client now also respects the configured classloading policy, i.e., <code>parent-first</code> or <code>child-first</code> classloading. Previously, only cluster components such as the job manager or task manager supported this setting. This does mean that users might get different behaviour in their programs, in which case they should configure the classloading policy explicitly to use <code>parent-first</code> classloading, which was the previous (hard-coded) behaviour.</p>
+<h4 id="Enable-spreading-out-Tasks-evenly-across-all-TaskManagers-FLINK-12122"><a href="#Enable-spreading-out-Tasks-evenly-across-all-TaskManagers-FLINK-12122" class="headerlink" title="Enable spreading out Tasks evenly across all TaskManagers (FLINK-12122)"></a>Enable spreading out Tasks evenly across all TaskManagers (<a href="https://issues.apache.org/jira/browse/FLINK-12122" target="_blank" rel="noopener">FLINK-12122</a>)</h4><p>When <a href="https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=65147077" target="_blank" rel="noopener">FLIP-6</a> was rolled out with Flink 1.5.0, we changed how slots are allocated from TaskManagers (TMs). Instead of evenly allocating the slots from all registered TMs, we had the tendency to exhaust a TM before using another one. To use a scheduling strategy that is more similar to the pre-FLIP-6 behaviour, where Flink tries to spread out the workload across all currently available TMs, one can set <code>cluster.evenly-spread-out-slots: true</code> in the <code>flink-conf.yaml</code>.</p>
+<h4 id="Directory-Structure-Change-for-highly-available-Artifacts-FLINK-13633"><a href="#Directory-Structure-Change-for-highly-available-Artifacts-FLINK-13633" class="headerlink" title="Directory Structure Change for highly available Artifacts (FLINK-13633)"></a>Directory Structure Change for highly available Artifacts (<a href="https://issues.apache.org/jira/browse/FLINK-13633" target="_blank" rel="noopener">FLINK-13633</a>)</h4><p>All highly available artifacts stored by Flink will now be stored under <code>HA_STORAGE_DIR/HA_CLUSTER_ID</code> with <code>HA_STORAGE_DIR</code> configured by <code>high-availability.storageDir</code> and <code>HA_CLUSTER_ID</code> configured by <code>high-availability.cluster-id</code>.</p>
+<h4 id="Resources-and-JARs-shipped-via-–yarnship-will-be-ordered-in-the-Classpath-FLINK-13127"><a href="#Resources-and-JARs-shipped-via-–yarnship-will-be-ordered-in-the-Classpath-FLINK-13127" class="headerlink" title="Resources and JARs shipped via –yarnship will be ordered in the Classpath (FLINK-13127)"></a>Resources and JARs shipped via –yarnship will be ordered in the Classpath (<a href="https://issues.apache.org/jira/browse/FLINK-13127" target="_blank" rel="noopener">FLINK-13127</a>)</h4><p>When using the <code>--yarnship</code> command line option, resource directories and jar files will be added to the classpath in lexicographical order with resources directories appearing first.</p>
+<h4 id="Removal-of-–yn-–yarncontainer-Command-Line-Options-FLINK-12362"><a href="#Removal-of-–yn-–yarncontainer-Command-Line-Options-FLINK-12362" class="headerlink" title="Removal of –yn/–yarncontainer Command Line Options (FLINK-12362)"></a>Removal of –yn/–yarncontainer Command Line Options (<a href="https://issues.apache.org/jira/browse/FLINK-12362" target="_blank" rel="noopener">FLINK-12362</a>)</h4><p>The Flink CLI no longer supports the deprecated command line options <code>-yn/--yarncontainer</code>, which were used to specify the number of containers to start on YARN. This option has been deprecated since the introduction of <a href="https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=65147077" target="_blank" rel="noopener">FLIP-6</a>. All Flink users are advised to remove this command line option.</p>
+<h4 id="Removal-of-–yst-–yarnstreaming-Command-Line-Options-FLINK-14957"><a href="#Removal-of-–yst-–yarnstreaming-Command-Line-Options-FLINK-14957" class="headerlink" title="Removal of –yst/–yarnstreaming Command Line Options (FLINK-14957)"></a>Removal of –yst/–yarnstreaming Command Line Options (<a href="https://issues.apache.org/jira/browse/FLINK-14957" target="_blank" rel="noopener">FLINK-14957</a>)</h4><p>The Flink CLI no longer supports the deprecated command line options <code>-yst/--yarnstreaming</code>, which were used to disable eager pre-allocation of memory. All Flink users are advised to remove this command line option.</p>
+<h4 id="Mesos-Integration-will-reject-expired-Offers-faster-FLINK-14029"><a href="#Mesos-Integration-will-reject-expired-Offers-faster-FLINK-14029" class="headerlink" title="Mesos Integration will reject expired Offers faster (FLINK-14029)"></a>Mesos Integration will reject expired Offers faster (<a href="https://issues.apache.org/jira/browse/FLINK-14029" target="_blank" rel="noopener">FLINK-14029</a>)</h4><p>Flink’s Mesos integration now rejects all expired offers instead of only 4. This improves the situation where Fenzo holds on to a lot of expired offers without giving them back to the Mesos resource manager.</p>
+<h4 id="Scheduler-Rearchitecture-FLINK-14651"><a href="#Scheduler-Rearchitecture-FLINK-14651" class="headerlink" title="Scheduler Rearchitecture (FLINK-14651)"></a>Scheduler Rearchitecture (<a href="https://issues.apache.org/jira/browse/FLINK-14651" target="_blank" rel="noopener">FLINK-14651</a>)</h4><p>Flink’s scheduler was refactored with the goal of making scheduling strategies customizable in the future. Using the legacy scheduler is discouraged as it will be removed in a future release. However, users that experience issues related to scheduling can fallback to the legacy scheduler by setting <code>jobmanager.scheduler</code> to <code>legacy</code> in their <code>flink-conf.yaml</code> for the time being. Note, however, that using the legacy scheduler with the <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/dev/task_failure_recovery.html#restart-pipelined-region-failover-strategy" target="_blank" rel="noopener">Pipelined Region Failover Strategy</a> enabled has the following caveats:</p>
+<ul>
+<li>Exceptions that caused a job to restart will not be shown on the job overview page of the Web UI (<a href="https://issues.apache.org/jira/browse/FLINK-15917" target="_blank" rel="noopener">FLINK-15917</a>). However, exceptions that cause a job to fail (e.g., when all restart attempts exhausted) will still be shown.</li>
+<li>The <code>uptime</code> metric will not be reset after restarting a job due to task failure (<a href="https://issues.apache.org/jira/browse/FLINK-15918" target="_blank" rel="noopener">FLINK-15918</a>).</li>
+</ul>
+<p>Note that in the default <code>flink-conf.yaml</code>, the Pipelined Region Failover Strategy is already enabled. That is, users that want to use the legacy scheduler and cannot accept aforementioned caveats should make sure that <code>jobmanager.execution.failover-strategy</code> is set to <code>full</code> or not set at all.</p>
+<h4 id="Java-11-Support-FLINK-10725"><a href="#Java-11-Support-FLINK-10725" class="headerlink" title="Java 11 Support (FLINK-10725)"></a>Java 11 Support (<a href="https://issues.apache.org/jira/browse/FLINK-10725" target="_blank" rel="noopener">FLINK-10725</a>)</h4><p>Beginning from this release, Flink can be compiled and run with Java 11. All Java 8 artifacts can be also used with Java 11. This means that users that want to run Flink with Java 11 do not have to compile Flink themselves.</p>
+<p>When starting Flink with Java 11, the following warnings may be logged:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">WARNING: An illegal reflective access operation has occurred</span><br><span class="line">WARNING: Illegal reflective access by org.apache.flink.core.memory.MemoryUtils (file:/opt/flink/flink-1.10.0/lib/flink-dist_2.11-1.10.0.jar) to constructor java.nio.DirectByteBuffer(long,int)</span><br><span class="line">WARNING: Please consider reporting this to the maintainers of org.apache.flink.core.memory.MemoryUtils</span><br><span class="line">WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations</span><br><span class="line">WARNING: All illegal access operations will be denied in a future release</span><br><span class="line"></span><br><span class="line">WARNING: An illegal reflective access operation has occurred</span><br><span class="line">WARNING: Illegal reflective access by org.apache.flink.api.java.ClosureCleaner (file:/home/flinkuser/.m2/repository/org/apache/flink/flink-core/1.10.0/flink-core-1.10.0.jar) to field java.lang.String.value</span><br><span class="line">WARNING: Please consider reporting this to the maintainers of org.apache.flink.api.java.ClosureCleaner</span><br><span class="line">WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations</span><br><span class="line">WARNING: All illegal access operations will be denied in a future release</span><br><span class="line"></span><br><span class="line">WARNING: An illegal reflective access operation has occurred</span><br><span class="line">WARNING: Illegal reflective access by org.jboss.netty.util.internal.ByteBufferUtil (file:/home/flinkuser/.m2/repository/io/netty/netty/3.10.6.Final/netty-3.10.6.Final.jar) to method java.nio.DirectByteBuffer.cleaner()</span><br><span class="line">WARNING: Please consider reporting this to the maintainers of org.jboss.netty.util.internal.ByteBufferUtil</span><br><span class="line">WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations</span><br><span class="line">WARNING: All illegal access operations will be denied in a future release</span><br><span class="line"></span><br><span class="line">WARNING: An illegal reflective access operation has occurred</span><br><span class="line">WARNING: Illegal reflective access by com.esotericsoftware.kryo.util.UnsafeUtil (file:/home/flinkuser/.m2/repository/com/esotericsoftware/kryo/kryo/2.24.0/kryo-2.24.0.jar) to constructor java.nio.DirectByteBuffer(long,int,java.lang.Object)</span><br><span class="line">WARNING: Please consider reporting this to the maintainers of com.esotericsoftware.kryo.util.UnsafeUtil</span><br><span class="line">WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations</span><br><span class="line">WARNING: All illegal access operations will be denied in a future release</span><br></pre></td></tr></table></figure>
+
+<p>These warnings are considered harmless and will be addressed in future Flink releases.</p>
+<p>Lastly, note that the connectors for Cassandra, Hive, HBase, and Kafka 0.8–0.11 have not been tested with Java 11 because the respective projects did not provide Java 11 support at the time of the Flink 1.10.0 release.</p>
+<h3 id="Memory-Management"><a href="#Memory-Management" class="headerlink" title="Memory Management"></a>Memory Management</h3><h4 id="New-Task-Executor-Memory-Model-FLINK-13980"><a href="#New-Task-Executor-Memory-Model-FLINK-13980" class="headerlink" title="New Task Executor Memory Model (FLINK-13980)"></a>New Task Executor Memory Model (<a href="https://issues.apache.org/jira/browse/FLINK-13980" target="_blank" rel="noopener">FLINK-13980</a>)</h4><p>With <a href="https://cwiki.apache.org/confluence/display/FLINK/FLIP-49%3A+Unified+Memory+Configuration+for+TaskExecutors" target="_blank" rel="noopener">FLIP-49</a>, a new memory model has been introduced for the task executor. New configuration options have been introduced to control the memory consumption of the task executor process. This affects all types of deployments: standalone, YARN, Mesos, and the new active Kubernetes integration. The memory model of the job manager process has not been changed yet but it is planned to be updated as well.</p>
+<p>If you try to reuse your previous Flink configuration without any adjustments, the new memory model can result in differently computed memory parameters for the JVM and, thus, performance changes.</p>
+<p>Please, check <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/memory/mem_setup.html" target="_blank" rel="noopener">the user documentation</a> for more details.</p>
+<h5 id="Deprecation-and-breaking-changes"><a href="#Deprecation-and-breaking-changes" class="headerlink" title="Deprecation and breaking changes"></a>Deprecation and breaking changes</h5><p>The following options have been removed and have no effect anymore:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Deprecated/removed config option</th>
+<th align="left">Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">taskmanager.memory.fraction</td>
+<td align="left">Check also the description of the new option <code>taskmanager.memory.managed.fraction</code> but it has different semantics and the value of the deprecated option usually has to be adjusted</td>
+</tr>
+<tr>
+<td align="left">taskmanager.memory.off-heap</td>
+<td align="left">Support for on-heap managed memory has been removed, leaving off-heap managed memory as the only possibility</td>
+</tr>
+<tr>
+<td align="left">taskmanager.memory.preallocate</td>
+<td align="left">Pre-allocation is no longer supported, and managed memory is always allocated lazily</td>
+</tr>
+</tbody></table>
+<p>The following options, if used, are interpreted as other new options in order to maintain backwards compatibility where it makes sense:</p>
+<table>
+<thead>
+<tr>
+<th align="left">Deprecated config option</th>
+<th align="left">Interpreted as</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">taskmanager.heap.size</td>
+<td align="left">taskmanager.memory.flink.size for standalone deploymenttaskmanager.memory.process.size for containerized deployments</td>
+</tr>
+<tr>
+<td align="left">taskmanager.memory.size</td>
+<td align="left">taskmanager.memory.managed.size</td>
+</tr>
+<tr>
+<td align="left">taskmanager.network.memory.min</td>
+<td align="left">taskmanager.memory.network.min</td>
+</tr>
+<tr>
+<td align="left">taskmanager.network.memory.max</td>
+<td align="left">taskmanager.memory.network.max</td>
+</tr>
+<tr>
+<td align="left">taskmanager.network.memory.fraction</td>
+<td align="left">taskmanager.memory.network.fraction</td>
+</tr>
+</tbody></table>
+<p>The container cut-off configuration options, <code>containerized.heap-cutoff-ratio</code> and <code>containerized.heap-cutoff-min</code>, have no effect for task executor processes anymore but they still have the same semantics for the JobManager process.</p>
+<h4 id="RocksDB-State-Backend-Memory-Control-FLINK-7289"><a href="#RocksDB-State-Backend-Memory-Control-FLINK-7289" class="headerlink" title="RocksDB State Backend Memory Control (FLINK-7289)"></a>RocksDB State Backend Memory Control (<a href="https://issues.apache.org/jira/browse/FLINK-7289" target="_blank" rel="noopener">FLINK-7289</a>)</h4><p>Together with the introduction of the <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/release-notes/flink-1.10.html#new-task-executor-memory-model-flink-13980" target="_blank" rel="noopener">new Task Executor Memory Model</a>, the memory consumption of the RocksDB state backend will be limited by the total amount of Flink Managed Memory, which can be configured via <code>taskmanager.memory.managed.size</code> or <code>taskmanager.memory.managed.fraction</code>. Furthermore, users can tune RocksDB’s write/read memory ratio (<code>state.backend.rocksdb.memory.write-buffer-ratio</code>, by default <code>0.5</code>) and the reserved memory fraction for indices/filters (<code>state.backend.rocksdb.memory.high-prio-pool-ratio</code>, by default <code>0.1</code>). More details and advanced configuration options can be found in the <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/state/large_state_tuning.html#tuning-rocksdb-memory" target="_blank" rel="noopener">Flink user documentation</a>.</p>
+<h4 id="Fine-grained-Operator-Resource-Management-FLINK-14058"><a href="#Fine-grained-Operator-Resource-Management-FLINK-14058" class="headerlink" title="Fine-grained Operator Resource Management (FLINK-14058)"></a>Fine-grained Operator Resource Management (<a href="https://issues.apache.org/jira/browse/FLINK-14058" target="_blank" rel="noopener">FLINK-14058</a>)</h4><p>Config options <code>table.exec.resource.external-buffer-memory</code>, <code>table.exec.resource.hash-agg.memory</code>, <code>table.exec.resource.hash-join.memory</code>, and <code>table.exec.resource.sort.memory</code> have been deprecated. Beginning from Flink 1.10, these config options are interpreted as weight hints instead of absolute memory requirements. Flink choses sensible default weight hints which should not be adjustment by users.</p>
+<h3 id="Table-API-amp-SQL"><a href="#Table-API-amp-SQL" class="headerlink" title="Table API &amp; SQL"></a>Table API &amp; SQL</h3><h4 id="Rename-of-ANY-Type-to-RAW-Type-FLINK-14904"><a href="#Rename-of-ANY-Type-to-RAW-Type-FLINK-14904" class="headerlink" title="Rename of ANY Type to RAW Type (FLINK-14904)"></a>Rename of ANY Type to RAW Type (<a href="https://issues.apache.org/jira/browse/FLINK-14904" target="_blank" rel="noopener">FLINK-14904</a>)</h4><p>The identifier <code>raw</code> is a reserved keyword now and must be escaped with backticks when used as a SQL field or function name.</p>
+<h4 id="Rename-of-Table-Connector-Properties-FLINK-14649"><a href="#Rename-of-Table-Connector-Properties-FLINK-14649" class="headerlink" title="Rename of Table Connector Properties (FLINK-14649)"></a>Rename of Table Connector Properties (<a href="https://issues.apache.org/jira/browse/FLINK-14649" target="_blank" rel="noopener">FLINK-14649</a>)</h4><p>Some indexed properties for table connectors have been flattened and renamed for a better user experience when writing DDL statements. This affects the Kafka Connector properties <code>connector.properties</code> and <code>connector.specific-offsets</code>. Furthermore, the Elasticsearch Connector property <code>connector.hosts</code> is affected. The aforementioned, old properties are deprecated and will be removed in future versions. Please consult the <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/dev/table/connect.html#table-connectors" target="_blank" rel="noopener">Table Connectors documentation</a> for the new property names.</p>
+<h4 id="Methods-for-interacting-with-temporary-Tables-amp-Views-FLINK-14490"><a href="#Methods-for-interacting-with-temporary-Tables-amp-Views-FLINK-14490" class="headerlink" title="Methods for interacting with temporary Tables &amp; Views (FLINK-14490)"></a>Methods for interacting with temporary Tables &amp; Views (<a href="https://issues.apache.org/jira/browse/FLINK-14490" target="_blank" rel="noopener">FLINK-14490</a>)</h4><p>Methods <code>registerTable()</code>/<code>registerDataStream()</code>/<code>registerDataSet()</code> have been deprecated in favor of <code>createTemporaryView()</code>, which better adheres to the corresponding SQL term.</p>
+<p>The <code>scan()</code> method has been deprecated in favor of the <code>from()</code> method.</p>
+<p>Methods <code>registerTableSource()</code>/<code>registerTableSink()</code> become deprecated in favor of <code>ConnectTableDescriptor#createTemporaryTable()</code>. The <code>ConnectTableDescriptor</code> approach expects only a set of string properties as a description of a TableSource or TableSink instead of an instance of a class in case of the deprecated methods. This in return makes it possible to reliably store those definitions in catalogs.</p>
+<p>Method <code>insertInto(String path, String... pathContinued)</code> has been removed in favor of in <code>insertInto(String path)</code>.</p>
+<p>All the newly introduced methods accept a String identifier which will be parsed into a 3-part identifier. The parser supports quoting the identifier. It also requires escaping any reserved SQL keywords.</p>
+<h4 id="Removal-of-ExternalCatalog-API-FLINK-13697"><a href="#Removal-of-ExternalCatalog-API-FLINK-13697" class="headerlink" title="Removal of ExternalCatalog API (FLINK-13697)"></a>Removal of ExternalCatalog API (<a href="https://issues.apache.org/jira/browse/FLINK-13697" target="_blank" rel="noopener">FLINK-13697</a>)</h4><p>The deprecated <code>ExternalCatalog</code> API has been dropped. This includes:</p>
+<ul>
+<li><code>ExternalCatalog</code> (and all dependent classes, e.g., <code>ExternalTable</code>)</li>
+<li><code>SchematicDescriptor</code>, <code>MetadataDescriptor</code>, <code>StatisticsDescriptor</code></li>
+</ul>
+<p>Users are advised to use the <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/dev/table/catalogs.html#catalog-api" target="_blank" rel="noopener">new Catalog API</a>.</p>
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><h4 id="Introduction-of-Type-Information-for-ConfigOptions-FLINK-14493"><a href="#Introduction-of-Type-Information-for-ConfigOptions-FLINK-14493" class="headerlink" title="Introduction of Type Information for ConfigOptions (FLINK-14493)"></a>Introduction of Type Information for ConfigOptions (<a href="https://issues.apache.org/jira/browse/FLINK-14493" target="_blank" rel="noopener">FLINK-14493</a>)</h4><p>Getters of <code>org.apache.flink.configuration.Configuration</code> throw <code>IllegalArgumentException</code> now if the configured value cannot be parsed into the required type. In previous Flink releases the default value was returned in such cases.</p>
+<h4 id="Increase-of-default-Restart-Delay-FLINK-13884"><a href="#Increase-of-default-Restart-Delay-FLINK-13884" class="headerlink" title="Increase of default Restart Delay (FLINK-13884)"></a>Increase of default Restart Delay (<a href="https://issues.apache.org/jira/browse/FLINK-13884" target="_blank" rel="noopener">FLINK-13884</a>)</h4><p>The default restart delay for all shipped restart strategies, i.e., <code>fixed-delay</code> and <code>failure-rate</code>, has been raised to 1 s (from originally 0 s).</p>
+<h4 id="Simplification-of-Cluster-Level-Restart-Strategy-Configuration-FLINK-13921"><a href="#Simplification-of-Cluster-Level-Restart-Strategy-Configuration-FLINK-13921" class="headerlink" title="Simplification of Cluster-Level Restart Strategy Configuration (FLINK-13921)"></a>Simplification of Cluster-Level Restart Strategy Configuration (<a href="https://issues.apache.org/jira/browse/FLINK-13921" target="_blank" rel="noopener">FLINK-13921</a>)</h4><p>Previously, if the user had set <code>restart-strategy.fixed-delay.attempts</code> or <code>restart-strategy.fixed-delay.delay</code> but had not configured the option <code>restart-strategy</code>, the cluster-level restart strategy would have been <code>fixed-delay</code>. Now the cluster-level restart strategy is only determined by the config option <code>restart-strategy</code> and whether checkpointing is enabled. See <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/dev/task_failure_recovery.html" target="_blank" rel="noopener"><em>“Task Failure Recovery”</em></a> for details.</p>
+<h4 id="Disable-memory-mapped-BoundedBlockingSubpartition-by-default-FLINK-14952"><a href="#Disable-memory-mapped-BoundedBlockingSubpartition-by-default-FLINK-14952" class="headerlink" title="Disable memory-mapped BoundedBlockingSubpartition by default (FLINK-14952)"></a>Disable memory-mapped BoundedBlockingSubpartition by default (<a href="https://issues.apache.org/jira/browse/FLINK-14952" target="_blank" rel="noopener">FLINK-14952</a>)</h4><p>The config option <code>taskmanager.network.bounded-blocking-subpartition-type</code> has been renamed to <code>taskmanager.network.blocking-shuffle.type</code>. Moreover, the default value of the aforementioned config option has been changed from <code>auto</code> to <code>file</code>. The reason is that TaskManagers running on YARN with <code>auto</code>, could easily exceed the memory budget of their container, due to incorrectly accounted memory-mapped files memory usage.</p>
+<h4 id="Removal-of-non-credit-based-Network-Flow-Control-FLINK-14516"><a href="#Removal-of-non-credit-based-Network-Flow-Control-FLINK-14516" class="headerlink" title="Removal of non-credit-based Network Flow Control (FLINK-14516)"></a>Removal of non-credit-based Network Flow Control (<a href="https://issues.apache.org/jira/browse/FLINK-14516" target="_blank" rel="noopener">FLINK-14516</a>)</h4><p>The non-credit-based network flow control code was removed alongside of the configuration option <code>taskmanager.network.credit-model</code>. Flink will now always use credit-based flow control.</p>
+<h4 id="Removal-of-HighAvailabilityOptions-HA-JOB-DELAY-FLINK-13885"><a href="#Removal-of-HighAvailabilityOptions-HA-JOB-DELAY-FLINK-13885" class="headerlink" title="Removal of HighAvailabilityOptions#HA_JOB_DELAY (FLINK-13885)"></a>Removal of HighAvailabilityOptions#HA_JOB_DELAY (<a href="https://issues.apache.org/jira/browse/FLINK-13885" target="_blank" rel="noopener">FLINK-13885</a>)</h4><p>The configuration option <code>high-availability.job.delay</code> has been removed since it is no longer used.</p>
+<h3 id="State"><a href="#State" class="headerlink" title="State"></a>State</h3><h4 id="Enable-Background-Cleanup-of-State-with-TTL-by-default-FLINK-14898"><a href="#Enable-Background-Cleanup-of-State-with-TTL-by-default-FLINK-14898" class="headerlink" title="Enable Background Cleanup of State with TTL by default (FLINK-14898)"></a>Enable Background Cleanup of State with TTL by default (<a href="https://issues.apache.org/jira/browse/FLINK-14898" target="_blank" rel="noopener">FLINK-14898</a>)</h4><p><a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/dev/stream/state/state.html#cleanup-of-expired-state" target="_blank" rel="noopener">Background cleanup of expired state with TTL</a> is activated by default now for all state backends shipped with Flink. Note that the RocksDB state backend implements background cleanup by employing a compaction filter. This has the caveat that even if a Flink job does not store state with TTL, a minor performance penalty during compaction is incurred. Users that experience noticeable performance degradation during RocksDB compaction can disable the TTL compaction filter by setting the config option <code>state.backend.rocksdb.ttl.compaction.filter.enabled</code> to <code>false</code>.</p>
+<h4 id="Deprecation-of-StateTtlConfig-Builder-cleanupInBackground-FLINK-15606"><a href="#Deprecation-of-StateTtlConfig-Builder-cleanupInBackground-FLINK-15606" class="headerlink" title="Deprecation of StateTtlConfig#Builder#cleanupInBackground() (FLINK-15606)"></a>Deprecation of StateTtlConfig#Builder#cleanupInBackground() (<a href="https://issues.apache.org/jira/browse/FLINK-15606" target="_blank" rel="noopener">FLINK-15606</a>)</h4><p><code>StateTtlConfig#Builder#cleanupInBackground()</code> has been deprecated because the background cleanup of state with TTL is already enabled by default.</p>
+<h4 id="Timers-are-stored-in-RocksDB-by-default-when-using-RocksDBStateBackend-FLINK-15637"><a href="#Timers-are-stored-in-RocksDB-by-default-when-using-RocksDBStateBackend-FLINK-15637" class="headerlink" title="Timers are stored in RocksDB by default when using RocksDBStateBackend (FLINK-15637)"></a>Timers are stored in RocksDB by default when using RocksDBStateBackend (<a href="https://issues.apache.org/jira/browse/FLINK-15637" target="_blank" rel="noopener">FLINK-15637</a>)</h4><p>The default timer store has been changed from Heap to RocksDB for the RocksDB state backend to support asynchronous snapshots for timer state and better scalability, with less than 5% performance cost. Users that find the performance decline critical can set <code>state.backend.rocksdb.timer-service.factory</code> to <code>HEAP</code> in <code>flink-conf.yaml</code> to restore the old behavior.</p>
+<h4 id="Removal-of-StateTtlConfig-TimeCharacteristic-FLINK-15605"><a href="#Removal-of-StateTtlConfig-TimeCharacteristic-FLINK-15605" class="headerlink" title="Removal of StateTtlConfig#TimeCharacteristic (FLINK-15605)"></a>Removal of StateTtlConfig#TimeCharacteristic (<a href="https://issues.apache.org/jira/browse/FLINK-15605" target="_blank" rel="noopener">FLINK-15605</a>)</h4><p><code>StateTtlConfig#TimeCharacteristic</code> has been removed in favor of <code>StateTtlConfig#TtlTimeCharacteristic</code>.</p>
+<h4 id="New-efficient-Method-to-check-if-MapState-is-empty-FLINK-13034"><a href="#New-efficient-Method-to-check-if-MapState-is-empty-FLINK-13034" class="headerlink" title="New efficient Method to check if MapState is empty (FLINK-13034)"></a>New efficient Method to check if MapState is empty (<a href="https://issues.apache.org/jira/browse/FLINK-13034" target="_blank" rel="noopener">FLINK-13034</a>)</h4><p>We have added a new method <code>MapState#isEmpty()</code> which enables users to check whether a map state is empty. The new method is 40% faster than <code>mapState.keys().iterator().hasNext()</code> when using the RocksDB state backend.</p>
+<h4 id="RocksDB-Upgrade-FLINK-14483"><a href="#RocksDB-Upgrade-FLINK-14483" class="headerlink" title="RocksDB Upgrade (FLINK-14483)"></a>RocksDB Upgrade (<a href="https://issues.apache.org/jira/browse/FLINK-14483" target="_blank" rel="noopener">FLINK-14483</a>)</h4><p>We have again released our own RocksDB build (FRocksDB) which is based on RocksDB version 5.17.2 with several feature backports for the <a href="https://github.com/facebook/rocksdb/wiki/Write-Buffer-Manager" target="_blank" rel="noopener">Write Buffer Manager</a> to enable limiting RocksDB’s memory usage. The decision to release our own RocksDB build was made because later RocksDB versions suffer from a <a href="https://github.com/facebook/rocksdb/issues/5774" target="_blank" rel="noopener">performance regression under certain workloads</a>.</p>
+<h4 id="RocksDB-Logging-disabled-by-default-FLINK-15068"><a href="#RocksDB-Logging-disabled-by-default-FLINK-15068" class="headerlink" title="RocksDB Logging disabled by default (FLINK-15068)"></a>RocksDB Logging disabled by default (<a href="https://issues.apache.org/jira/browse/FLINK-15068" target="_blank" rel="noopener">FLINK-15068</a>)</h4><p>Logging in RocksDB (e.g., logging related to flush, compaction, memtable creation, etc.) has been disabled by default to prevent disk space from being filled up unexpectedly. Users that need to enable logging should implement their own <code>RocksDBOptionsFactory</code> that creates <code>DBOptions</code> instances with <code>InfoLogLevel</code> set to <code>INFO_LEVEL</code>.</p>
+<h4 id="Improved-RocksDB-Savepoint-Recovery-FLINK-12785"><a href="#Improved-RocksDB-Savepoint-Recovery-FLINK-12785" class="headerlink" title="Improved RocksDB Savepoint Recovery (FLINK-12785)"></a>Improved RocksDB Savepoint Recovery (<a href="https://issues.apache.org/jira/browse/FLINK-12785" target="_blank" rel="noopener">FLINK-12785</a>)</h4><p>In previous Flink releases users may encounter an <code>OutOfMemoryError</code> when restoring from a RocksDB savepoint containing large KV pairs. For that reason we introduced a configurable memory limit in the <code>RocksDBWriteBatchWrapper</code> with a default value of 2 MB. RocksDB’s WriteBatch will flush before the consumed memory limit is reached. If needed, the limit can be tuned via the <code>state.backend.rocksdb.write-batch-size</code> config option in <code>flink-conf.yaml</code>.</p>
+<h3 id="PyFlink"><a href="#PyFlink" class="headerlink" title="PyFlink"></a>PyFlink</h3><h4 id="Python-2-Support-dropped-FLINK-14469"><a href="#Python-2-Support-dropped-FLINK-14469" class="headerlink" title="Python 2 Support dropped (FLINK-14469)"></a>Python 2 Support dropped (<a href="https://issues.apache.org/jira/browse/FLINK-14469" target="_blank" rel="noopener">FLINK-14469</a>)</h4><p>Beginning from this release, PyFlink does not support Python 2. This is because <a href="https://www.python.org/doc/sunset-python-2/" target="_blank" rel="noopener">Python 2 has reached end of life on January 1, 2020</a>, and several third-party projects that PyFlink depends on are also dropping Python 2 support.</p>
+<h3 id="Monitoring"><a href="#Monitoring" class="headerlink" title="Monitoring"></a>Monitoring</h3><h4 id="InfluxdbReporter-skips-Inf-and-NaN-FLINK-12147"><a href="#InfluxdbReporter-skips-Inf-and-NaN-FLINK-12147" class="headerlink" title="InfluxdbReporter skips Inf and NaN (FLINK-12147)"></a>InfluxdbReporter skips Inf and NaN (<a href="https://issues.apache.org/jira/browse/FLINK-12147" target="_blank" rel="noopener">FLINK-12147</a>)</h4><p>The <code>InfluxdbReporter</code> now silently skips values that are unsupported by InfluxDB, such as <code>Double.POSITIVE_INFINITY</code>, <code>Double.NEGATIVE_INFINITY</code>, <code>Double.NaN</code>, etc.</p>
+<h3 id="Connectors"><a href="#Connectors" class="headerlink" title="Connectors"></a>Connectors</h3><h4 id="Kinesis-Connector-License-Change-FLINK-12847"><a href="#Kinesis-Connector-License-Change-FLINK-12847" class="headerlink" title="Kinesis Connector License Change (FLINK-12847)"></a>Kinesis Connector License Change (<a href="https://issues.apache.org/jira/browse/FLINK-12847" target="_blank" rel="noopener">FLINK-12847</a>)</h4><p>flink-connector-kinesis is now licensed under the Apache License, Version 2.0, and its artifacts will be deployed to Maven central as part of the Flink releases. Users no longer need to build the Kinesis connector from source themselves.</p>
+<h3 id="Miscellaneous-Interface-Changes"><a href="#Miscellaneous-Interface-Changes" class="headerlink" title="Miscellaneous Interface Changes"></a>Miscellaneous Interface Changes</h3><h4 id="ExecutionConfig-getGlobalJobParameters-cannot-return-null-anymore-FLINK-9787"><a href="#ExecutionConfig-getGlobalJobParameters-cannot-return-null-anymore-FLINK-9787" class="headerlink" title="ExecutionConfig#getGlobalJobParameters() cannot return null anymore (FLINK-9787)"></a>ExecutionConfig#getGlobalJobParameters() cannot return null anymore (<a href="https://issues.apache.org/jira/browse/FLINK-9787" target="_blank" rel="noopener">FLINK-9787</a>)</h4><p><code>ExecutionConfig#getGlobalJobParameters</code> has been changed to never return <code>null</code>. Conversely, <code>ExecutionConfig#setGlobalJobParameters(GlobalJobParameters)</code> will not accept <code>null</code> values anymore.</p>
+<h4 id="Change-of-contract-in-MasterTriggerRestoreHook-interface-FLINK-14344"><a href="#Change-of-contract-in-MasterTriggerRestoreHook-interface-FLINK-14344" class="headerlink" title="Change of contract in MasterTriggerRestoreHook interface (FLINK-14344)"></a>Change of contract in MasterTriggerRestoreHook interface (<a href="https://issues.apache.org/jira/browse/FLINK-14344" target="_blank" rel="noopener">FLINK-14344</a>)</h4><p>Implementations of <code>MasterTriggerRestoreHook#triggerCheckpoint(long, long, Executor)</code> must be non-blocking now. Any blocking operation should be executed asynchronously, e.g., using the given executor.</p>
+<h4 id="Client-and-Server-Side-Separation-of-HA-Services-FLINK-13750"><a href="#Client-and-Server-Side-Separation-of-HA-Services-FLINK-13750" class="headerlink" title="Client-/ and Server-Side Separation of HA Services (FLINK-13750)"></a>Client-/ and Server-Side Separation of HA Services (<a href="https://issues.apache.org/jira/browse/FLINK-13750" target="_blank" rel="noopener">FLINK-13750</a>)</h4><p>The <code>HighAvailabilityServices</code> have been split up into client-side <code>ClientHighAvailabilityServices</code> and cluster-side <code>HighAvailabilityServices</code>. When implementing custom high availability services, users should follow this separation by overriding the factory method <code>HighAvailabilityServicesFactory#createClientHAServices(Configuration)</code>. Moreover, <code>HighAvailabilityServices#getWebMonitorLeaderRetriever()</code> should no longer be implemented since it has been deprecated.</p>
+<h4 id="Deprecation-of-HighAvailabilityServices-getWebMonitorLeaderElectionService-FLINK-13977"><a href="#Deprecation-of-HighAvailabilityServices-getWebMonitorLeaderElectionService-FLINK-13977" class="headerlink" title="Deprecation of HighAvailabilityServices#getWebMonitorLeaderElectionService() (FLINK-13977)"></a>Deprecation of HighAvailabilityServices#getWebMonitorLeaderElectionService() (<a href="https://issues.apache.org/jira/browse/FLINK-13977" target="_blank" rel="noopener">FLINK-13977</a>)</h4><p>Implementations of <code>HighAvailabilityServices</code> should implement <code>HighAvailabilityServices#getClusterRestEndpointLeaderElectionService()</code> instead of <code>HighAvailabilityServices#getWebMonitorLeaderElectionService()</code>.</p>
+<h4 id="Interface-Change-in-LeaderElectionService-FLINK-14287"><a href="#Interface-Change-in-LeaderElectionService-FLINK-14287" class="headerlink" title="Interface Change in LeaderElectionService (FLINK-14287)"></a>Interface Change in LeaderElectionService (<a href="https://issues.apache.org/jira/browse/FLINK-14287" target="_blank" rel="noopener">FLINK-14287</a>)</h4><p><code>LeaderElectionService#confirmLeadership(UUID, String)</code> now takes an additional second argument, which is the address under which the leader will be reachable. All custom <code>LeaderElectionService</code> implementations will need to be updated accordingly.</p>
+<h4 id="Deprecation-of-Checkpoint-Lock-FLINK-14857"><a href="#Deprecation-of-Checkpoint-Lock-FLINK-14857" class="headerlink" title="Deprecation of Checkpoint Lock (FLINK-14857)"></a>Deprecation of Checkpoint Lock (<a href="https://issues.apache.org/jira/browse/FLINK-14857" target="_blank" rel="noopener">FLINK-14857</a>)</h4><p>The method <code>org.apache.flink.streaming.runtime.tasks.StreamTask#getCheckpointLock()</code> is deprecated now. Users should use <code>MailboxExecutor</code> to run actions that require synchronization with the task’s thread (e.g. collecting output produced by an external thread). The methods <code>MailboxExecutor#yield()</code> or <code>MailboxExecutor#tryYield()</code> can be used for actions that need to give up control to other actions temporarily, e.g., if the current operator is blocked. The <code>MailboxExecutor</code> can be accessed by using <code>YieldingOperatorFactory</code> (see <code>AsyncWaitOperator</code> for an example usage).</p>
+<h4 id="Deprecation-of-OptionsFactory-and-ConfigurableOptionsFactory-interfaces-FLINK-14926"><a href="#Deprecation-of-OptionsFactory-and-ConfigurableOptionsFactory-interfaces-FLINK-14926" class="headerlink" title="Deprecation of OptionsFactory and ConfigurableOptionsFactory interfaces (FLINK-14926)"></a>Deprecation of OptionsFactory and ConfigurableOptionsFactory interfaces (<a href="https://issues.apache.org/jira/browse/FLINK-14926" target="_blank" rel="noopener">FLINK-14926</a>)</h4><p>Interfaces <code>OptionsFactory</code> and <code>ConfigurableOptionsFactory</code> have been deprecated in favor of <code>RocksDBOptionsFactory</code> and <code>ConfigurableRocksDBOptionsFactory</code>, respectively.</p>
+<h1 id="Flink-1-9"><a href="#Flink-1-9" class="headerlink" title="Flink 1.9"></a>Flink 1.9</h1><h2 id="Known-shortcomings-or-limitations-for-new-features"><a href="#Known-shortcomings-or-limitations-for-new-features" class="headerlink" title="Known shortcomings or limitations for new features"></a>Known shortcomings or limitations for new features</h2><h3 id="New-Table-SQL-Blink-planner"><a href="#New-Table-SQL-Blink-planner" class="headerlink" title="New Table / SQL Blink planner"></a>New Table / SQL Blink planner</h3><p>Flink 1.9.0 provides support for two planners for the Table API, namely Flink’s original planner and the new Blink planner. The original planner maintains same behaviour as previous releases, while the new Blink planner is still considered experimental and has the following limitations:</p>
+<ul>
+<li>The Blink planner can not be used with <code>BatchTableEnvironment</code>, and therefore Table programs ran with the planner can not be transformed to <code>DataSet</code> programs. This is by design and will also not be supported in the future. Therefore, if you want to run a batch job with the Blink planner, please use the new <code>TableEnvironment</code>. For streaming jobs, both <code>StreamTableEnvironment</code> and <code>TableEnvironment</code> works.</li>
+<li>Implementations of <code>StreamTableSink</code> should implement the <code>consumeDataStream</code> method instead of <code>emitDataStream</code> if it is used with the Blink planner. Both methods work with the original planner. This is by design to make the returned <code>DataStreamSink</code> accessible for the planner.</li>
+<li>Due to a bug with how transformations are not being cleared on execution, <code>TableEnvironment</code> instances should not be reused across multiple SQL statements when using the Blink planner.</li>
+<li><code>Table.flatAggregate</code> is not supported</li>
+<li>Session and count windows are not supported when running batch jobs.</li>
+<li>The Blink planner only supports the new <code>Catalog</code> API, and does not support <code>ExternalCatalog</code> which is now deprecated.</li>
+</ul>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13708" target="_blank" rel="noopener">FLINK-13708: Transformations should be cleared because a table environment could execute multiple job</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13473" target="_blank" rel="noopener">FLINK-13473: Add GroupWindowed FlatAggregate support to stream Table API (Blink planner), i.e, align with Flink planner</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13735" target="_blank" rel="noopener">FLINK-13735: Support session window with Blink planner in batch mode</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13736" target="_blank" rel="noopener">FLINK-13736: Support count window with Blink planner in batch mode</a></li>
+</ul>
+<h3 id="SQL-DDL"><a href="#SQL-DDL" class="headerlink" title="SQL DDL"></a>SQL DDL</h3><p>In Flink 1.9.0, the community also added a preview feature about SQL DDL, but only for batch style DDLs. Therefore, all streaming related concepts are not supported yet, for example watermarks.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13661" target="_blank" rel="noopener">FLINK-13661: Add a stream specific CREATE TABLE SQL DDL</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13568" target="_blank" rel="noopener">FLINK-13568: DDL create table doesn’t allow STRING data type</a></li>
+</ul>
+<h3 id="Java-9-support"><a href="#Java-9-support" class="headerlink" title="Java 9 support"></a>Java 9 support</h3><p>Since Flink 1.9.0, Flink can now be compiled and run on Java 9. Note that certain components interacting with external systems (connectors, filesystems, metric reporters, etc.) may not work since the respective projects may have skipped Java 9 support.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-8033" target="_blank" rel="noopener">FLINK-8033: JDK 9 support</a></li>
+</ul>
+<h3 id="Memory-management"><a href="#Memory-management" class="headerlink" title="Memory management"></a>Memory management</h3><p>In Fink 1.9.0 and prior version, the managed memory fraction of taskmanager is controlled by <code>taskmanager.memory.fraction</code>, and with 0.7 as the default value. However, sometimes this will cause OOMs due to the fact that the default value of JVM parameter <code>NewRatio</code> is 2, which means the old generation occupied only 2/3 (0.66) of the heap memory. So if you run into this case, please manually change this value to a lower value.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-14123" target="_blank" rel="noopener">FLINK-14123: Lower the default value of taskmanager.memory.fraction</a></li>
+</ul>
+<h2 id="Deprecations-and-breaking-changes"><a href="#Deprecations-and-breaking-changes" class="headerlink" title="Deprecations and breaking changes"></a>Deprecations and breaking changes</h2><h3 id="Scala-expression-DSL-for-Table-API-moved-to-flink-table-api-scala"><a href="#Scala-expression-DSL-for-Table-API-moved-to-flink-table-api-scala" class="headerlink" title="Scala expression DSL for Table API moved to flink-table-api-scala"></a>Scala expression DSL for Table API moved to <code>flink-table-api-scala</code></h3><p>Since 1.9.0, the implicit conversions for the Scala expression DSL for the Table API has been moved to <code>flink-table-api-scala</code>. This requires users to update the imports in their Table programs.</p>
+<p>Users of pure Table programs should define their imports like:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.flink.table.api._</span><br><span class="line"></span><br><span class="line">TableEnvironment.create(...)</span><br></pre></td></tr></table></figure>
+
+<p>Users of the DataStream API should define their imports like:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import org.apache.flink.table.api._</span><br><span class="line">import org.apache.flink.table.api.scala._</span><br><span class="line"></span><br><span class="line">StreamTableEnvironment.create(...)</span><br></pre></td></tr></table></figure>
+
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13045" target="_blank" rel="noopener">FLINK-13045: Move Scala expression DSL to flink-table-api-scala</a></li>
+</ul>
+<h3 id="Failover-strategies"><a href="#Failover-strategies" class="headerlink" title="Failover strategies"></a>Failover strategies</h3><p>As a result of completing fine-grained recovery (<a href="https://cwiki.apache.org/confluence/display/FLINK/FLIP-1+%3A+Fine+Grained+Recovery+from+Task+Failures" target="_blank" rel="noopener">FLIP-1</a>), Flink will now attempt to only restart tasks that are connected to failed tasks through a pipelined connection. By default, the <code>region</code> failover strategy is used.</p>
+<p>Users who were not using a restart strategy or have already configured a failover strategy should not be affected. Moreover, users who already enabled the <code>region</code> failover strategy, along with a restart strategy that enforces a certain number of restarts or introduces a restart delay, will see changes in behavior. The <code>region</code> failover strategy now correctly respects constraints that are defined by the restart strategy.</p>
+<p>Streaming users who were not using a failover strategy may be affected if their jobs are embarrassingly parallel or contain multiple independent jobs. In this case, only the failed parallel pipeline or affected jobs will be restarted.</p>
+<p>Batch users may be affected if their job contains blocking exchanges (usually happens for shuffles) or the <code>ExecutionMode</code> was set to <code>BATCH</code> or <code>BATCH_FORCED</code> via the <code>ExecutionConfig</code>.</p>
+<p>Overall, users should see an improvement in performance.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13223" target="_blank" rel="noopener">FLINK-13223: Set jobmanager.execution.failover-strategy to region in default flink-conf.yaml</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13060" target="_blank" rel="noopener">FLINK-13060: FailoverStrategies should respect restart constraints</a></li>
+</ul>
+<h3 id="Job-termination-via-CLI"><a href="#Job-termination-via-CLI" class="headerlink" title="Job termination via CLI"></a>Job termination via CLI</h3><p>With the support of graceful job termination with savepoints for semantic correctness (<a href="https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=103090212" target="_blank" rel="noopener">FLIP-34</a>), a few changes related to job termination has been made to the CLI.</p>
+<p>From now on, the <code>stop</code> command with no further arguments stops the job with a savepoint targeted at the default savepoint location (as configured via the <code>state.savepoints.dir</code> property in the job configuration), or a location explicitly specified using the <code>-p</code> option. Please make sure to configure the savepoint path using either one of these options.</p>
+<p>Since job terminations are now always accompanied with a savepoint, stopping jobs is expected to take longer now.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13123" target="_blank" rel="noopener">FLINK-13123: Align Stop/Cancel Commands in CLI and REST Interface and Improve Documentation</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-11458" target="_blank" rel="noopener">FLINK-11458: Add TERMINATE/SUSPEND Job with Savepoint</a></li>
+</ul>
+<h3 id="Network-stack"><a href="#Network-stack" class="headerlink" title="Network stack"></a>Network stack</h3><p>A few changes in the network stack related to changes in the threading model of <code>StreamTask</code> to a mailbox-based approach requires close attention to some related configuration:</p>
+<ul>
+<li>Due to changes in the lifecycle management of result partitions, partition requests as well as re-triggers will now happen sooner. Therefore, it is possible that some jobs with long deployment times and large state might start failing more frequently with <code>PartitionNotFound</code> exceptions compared to previous versions. If that’s the case, users should increase the value of <code>taskmanager.network.request-backoff.max</code> in order to have the same effective partition request timeout as it was prior to 1.9.0.</li>
+<li>To avoid a potential deadlock, a timeout has been added for how long a task will wait for assignment of exclusive memory segments. The default timeout is 30 seconds, and is configurable via <code>taskmanager.network.memory.exclusive-buffers-request-timeout-ms</code>. It is possible that for some previously working deployments this default timeout value is too low and might have to be increased.</li>
+</ul>
+<p>Please also notice that several network I/O metrics have had their scope changed. See the <a href="https://ci.apache.org/projects/flink/flink-docs-master/monitoring/metrics.html" target="_blank" rel="noopener">1.9 metrics documentation</a> for which metrics are affected. In 1.9.0, these metrics will still be available under their previous scopes, but this may no longer be the case in future versions.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13013" target="_blank" rel="noopener">FLINK-13013: Make sure that SingleInputGate can always request partitions</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-12852" target="_blank" rel="noopener">FLINK-12852: Deadlock occurs when requiring exclusive buffer for RemoteInputChannel</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-12555" target="_blank" rel="noopener">FLINK-12555: Introduce an encapsulated metric group layout for shuffle API and deprecate old one</a></li>
+</ul>
+<h3 id="AsyncIO"><a href="#AsyncIO" class="headerlink" title="AsyncIO"></a>AsyncIO</h3><p>Due to a bug in the <code>AsyncWaitOperator</code>, in 1.9.0 the default chaining behaviour of the operator is now changed so that it is never chained after another operator. This should not be problematic for migrating from older version snapshots as long as an uid was assigned to the operator. If an uid was not assigned to the operator, please see the instructions <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.9/ops/upgrading.html#matching-operator-state" target="_blank" rel="noopener">here</a> for a possible workaround.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13063" target="_blank" rel="noopener">FLINK-13063: AsyncWaitOperator shouldn’t be releasing checkpointingLock</a></li>
+</ul>
+<h3 id="Connectors-and-Libraries"><a href="#Connectors-and-Libraries" class="headerlink" title="Connectors and Libraries"></a>Connectors and Libraries</h3><h4 id="Introduced-KafkaSerializationSchema-to-fully-replace-KeyedSerializationSchema"><a href="#Introduced-KafkaSerializationSchema-to-fully-replace-KeyedSerializationSchema" class="headerlink" title="Introduced KafkaSerializationSchema to fully replace KeyedSerializationSchema"></a>Introduced <code>KafkaSerializationSchema</code> to fully replace <code>KeyedSerializationSchema</code></h4><p>The universal <code>FlinkKafkaProducer</code> (in <code>flink-connector-kafka</code>) supports a new <code>KafkaSerializationSchema</code> that will fully replace <code>KeyedSerializationSchema</code> in the long run. This new schema allows directly generating Kafka <code>ProducerRecord</code>s for sending to Kafka, therefore enabling the user to use all available Kafka features (in the context of Kafka records).</p>
+<h4 id="Dropped-connectors-and-libraries"><a href="#Dropped-connectors-and-libraries" class="headerlink" title="Dropped connectors and libraries"></a>Dropped connectors and libraries</h4><ul>
+<li>The Elasticsearch 1 connector has been dropped and will no longer receive patches. Users may continue to use the connector from a previous series (like 1.8) with newer versions of Flink. It is being dropped due to being used significantly less than more recent versions (Elasticsearch versions 2.x and 5.x are downloaded 4 to 5 times more), and hasn’t seen any development for over a year.</li>
+<li>The older Python APIs for batch and streaming have been removed and will no longer receive new patches. A new API is being developed based on the Table API as part of <a href="https://issues.apache.org/jira/browse/FLINK-12308" target="_blank" rel="noopener">FLINK-12308: Support python language in Flink Table API</a>. Existing users may continue to use these older APIs with future versions of Flink by copying both the <code>flink-streaming-python</code> and <code>flink-python</code> jars into the <code>/lib</code> directory of the distribution and the corresponding start scripts <code>pyflink-stream.sh</code> and <code>pyflink.sh</code> into the <code>/bin</code> directory of the distribution.</li>
+<li>The older machine learning libraries have been removed and will no longer receive new patches. This is due to efforts towards a new Table-based machine learning library (<a href="https://docs.google.com/document/d/1StObo1DLp8iiy0rbukx8kwAJb0BwDZrQrMWub3DzsEo/edit" target="_blank" rel="noopener">FLIP-39</a>). Users can still use the 1.8 version of the legacy library if their projects still rely on it.</li>
+</ul>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-11693" target="_blank" rel="noopener">FLINK-11693: Add KafkaSerializationSchema that directly uses ProducerRecord</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-12151" target="_blank" rel="noopener">FLINK-12151: Drop Elasticsearch 1 connector</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-12903" target="_blank" rel="noopener">FLINK-12903: Remove legacy flink-python APIs</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-12308" target="_blank" rel="noopener">FLINK-12308: Support python language in Flink Table API</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-12597" target="_blank" rel="noopener">FLINK-12597: Remove the legacy flink-libraries/flink-ml</a></li>
+</ul>
+<h3 id="MapR-dependency-removed"><a href="#MapR-dependency-removed" class="headerlink" title="MapR dependency removed"></a>MapR dependency removed</h3><p>Dependency on MapR vendor-specific artifacts has been removed, by changing the MapR filesystem connector to work purely based on reflection. This does not introduce any regession in the support for the MapR filesystem. The decision to remove hard dependencies on the MapR artifacts was made due to very flaky access to the secure https endpoint of the MapR artifact repository, and affected build stability of Flink.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-12578" target="_blank" rel="noopener">FLINK-12578: Use secure URLs for Maven repositories</a></li>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-13499" target="_blank" rel="noopener">FLINK-13499: Remove dependency on MapR artifact repository</a></li>
+</ul>
+<h3 id="StateDescriptor-interface-change"><a href="#StateDescriptor-interface-change" class="headerlink" title="StateDescriptor interface change"></a>StateDescriptor interface change</h3><p>Access to the state serializer in <code>StateDescriptor</code> is now modified from protected to private access. Subclasses should use the <code>StateDescriptor#getSerializer()</code> method as the only means to obtain the wrapped state serializer.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-12688" target="_blank" rel="noopener">FLINK-12688: Make serializer lazy initialization thread safe in StateDescriptor</a></li>
+</ul>
+<h3 id="Web-UI-dashboard"><a href="#Web-UI-dashboard" class="headerlink" title="Web UI dashboard"></a>Web UI dashboard</h3><p>The web frontend of Flink has been updated to use the latest Angular version (7.x). The old frontend remains available in Flink 1.9.x, but will be removed in a later Flink release once the new frontend is considered stable.</p>
+<p>Related issues:</p>
+<ul>
+<li><a href="https://issues.apache.org/jira/browse/FLINK-10705" target="_blank" rel="noopener">FLINK-10705: Rework Flink Web Dashoard</a></li>
+</ul>
+<h1 id="Flink-1-8"><a href="#Flink-1-8" class="headerlink" title="Flink 1.8"></a>Flink 1.8</h1><h3 id="State-1"><a href="#State-1" class="headerlink" title="State"></a>State</h3><h4 id="Continuous-incremental-cleanup-of-old-Keyed-State-with-TTL"><a href="#Continuous-incremental-cleanup-of-old-Keyed-State-with-TTL" class="headerlink" title="Continuous incremental cleanup of old Keyed State with TTL"></a>Continuous incremental cleanup of old Keyed State with TTL</h4><p>We introduced TTL (time-to-live) for Keyed state in Flink 1.6 (<a href="https://issues.apache.org/jira/browse/FLINK-9510" target="_blank" rel="noopener">FLINK-9510</a>). This feature allowed to clean up and make inaccessible keyed state entries when accessing them. In addition state would now also being cleaned up when writing a savepoint/checkpoint.</p>
+<p>Flink 1.8 introduces continous cleanup of old entries for both the RocksDB state backend (<a href="https://issues.apache.org/jira/browse/FLINK-10471" target="_blank" rel="noopener">FLINK-10471</a>) and the heap state backend (<a href="https://issues.apache.org/jira/browse/FLINK-10473" target="_blank" rel="noopener">FLINK-10473</a>). This means that old entries (according to the ttl setting) are continously being cleanup up.</p>
+<h4 id="New-Support-for-Schema-Migration-when-restoring-Savepoints"><a href="#New-Support-for-Schema-Migration-when-restoring-Savepoints" class="headerlink" title="New Support for Schema Migration when restoring Savepoints"></a>New Support for Schema Migration when restoring Savepoints</h4><p>With Flink 1.7.0 we added support for changing the schema of state when using the <code>AvroSerializer</code> (<a href="https://issues.apache.org/jira/browse/FLINK-10605" target="_blank" rel="noopener">FLINK-10605</a>). With Flink 1.8.0 we made great progress migrating all built-in <code>TypeSerializers</code> to a new serializer snapshot abstraction that theoretically allows schema migration. Of the serializers that come with Flink, we now support schema migration for the <code>PojoSerializer</code> (<a href="https://issues.apache.org/jira/browse/FLINK-11485" target="_blank" rel="noopener">FLINK-11485</a>), and Java <code>EnumSerializer</code> (<a href="https://issues.apache.org/jira/browse/FLINK-11334" target="_blank" rel="noopener">FLINK-11334</a>), As well as for Kryo in limited cases (<a href="https://issues.apache.org/jira/browse/FLINK-11323" target="_blank" rel="noopener">FLINK-11323</a>).</p>
+<h4 id="Savepoint-compatibility"><a href="#Savepoint-compatibility" class="headerlink" title="Savepoint compatibility"></a>Savepoint compatibility</h4><p>Savepoints from Flink 1.2 that contain a Scala <code>TraversableSerializer</code> are not compatible with Flink 1.8 anymore because of an update in this serializer (<a href="https://issues.apache.org/jira/browse/FLINK-11539" target="_blank" rel="noopener">FLINK-11539</a>). You can get around this restriction by first upgrading to a version between Flink 1.3 and Flink 1.7 and then updating to Flink 1.8.</p>
+<h4 id="RocksDB-version-bump-and-switch-to-FRocksDB-FLINK-10471"><a href="#RocksDB-version-bump-and-switch-to-FRocksDB-FLINK-10471" class="headerlink" title="RocksDB version bump and switch to FRocksDB (FLINK-10471)"></a>RocksDB version bump and switch to FRocksDB (<a href="https://issues.apache.org/jira/browse/FLINK-10471" target="_blank" rel="noopener">FLINK-10471</a>)</h4><p>We needed to switch to a custom build of RocksDB called FRocksDB because we need certain changes in RocksDB for supporting continuous state cleanup with TTL. The used build of FRocksDB is based on the upgraded version 5.17.2 of RocksDB. For Mac OS X, RocksDB version 5.17.2 is supported only for OS X version &gt;= 10.13. See also: <a href="https://github.com/facebook/rocksdb/issues/4862" target="_blank" rel="noopener">https://github.com/facebook/rocksdb/issues/4862</a>.</p>
+<h3 id="Maven-Dependencies"><a href="#Maven-Dependencies" class="headerlink" title="Maven Dependencies"></a>Maven Dependencies</h3><h4 id="Changes-to-bundling-of-Hadoop-libraries-with-Flink-FLINK-11266"><a href="#Changes-to-bundling-of-Hadoop-libraries-with-Flink-FLINK-11266" class="headerlink" title="Changes to bundling of Hadoop libraries with Flink (FLINK-11266)"></a>Changes to bundling of Hadoop libraries with Flink (<a href="https://issues.apache.org/jira/browse/FLINK-11266" target="_blank" rel="noopener">FLINK-11266</a>)</h4><p>Convenience binaries that include hadoop are no longer released.</p>
+<p>If a deployment relies on <code>flink-shaded-hadoop2</code> being included in <code>flink-dist</code>, then you must manually download a pre-packaged Hadoop jar from the optional components section of the <a href="https://flink.apache.org/downloads.html" target="_blank" rel="noopener">download page</a> and copy it into the <code>/lib</code> directory. Alternatively, a Flink distribution that includes hadoop can be built by packaging <code>flink-dist</code> and activating the <code>include-hadoop</code> maven profile.</p>
+<p>As hadoop is no longer included in <code>flink-dist</code> by default, specifying <code>-DwithoutHadoop</code> when packaging <code>flink-dist</code> no longer impacts the build.</p>
+<h3 id="Configuration-1"><a href="#Configuration-1" class="headerlink" title="Configuration"></a>Configuration</h3><h4 id="TaskManager-configuration-FLINK-11716"><a href="#TaskManager-configuration-FLINK-11716" class="headerlink" title="TaskManager configuration (FLINK-11716)"></a>TaskManager configuration (<a href="https://issues.apache.org/jira/browse/FLINK-11716" target="_blank" rel="noopener">FLINK-11716</a>)</h4><p><code>TaskManagers</code> now bind to the host IP address instead of the hostname by default . This behaviour can be controlled by the configuration option <code>taskmanager.network.bind-policy</code>. If your Flink cluster should experience inexplicable connection problems after upgrading, try to set <code>taskmanager.network.bind-policy: name</code> in your <code>flink-conf.yaml</code> to return to the pre-1.8 behaviour.</p>
+<h3 id="Table-API"><a href="#Table-API" class="headerlink" title="Table API"></a>Table API</h3><h4 id="Deprecation-of-direct-Table-constructor-usage-FLINK-11447"><a href="#Deprecation-of-direct-Table-constructor-usage-FLINK-11447" class="headerlink" title="Deprecation of direct Table constructor usage (FLINK-11447)"></a>Deprecation of direct <code>Table</code> constructor usage (<a href="https://issues.apache.org/jira/browse/FLINK-11447" target="_blank" rel="noopener">FLINK-11447</a>)</h4><p>Flink 1.8 deprecates direct usage of the constructor of the <code>Table</code> class in the Table API. This constructor would previously be used to perform a join with a <em>lateral table</em>. You should now use <code>table.joinLateral()</code> or <code>table.leftOuterJoinLateral()</code> instead.</p>
+<p>This change is necessary for converting the Table class into an interface, which will make the API more maintainable and cleaner in the future.</p>
+<h4 id="Introduction-of-new-CSV-format-descriptor-FLINK-9964"><a href="#Introduction-of-new-CSV-format-descriptor-FLINK-9964" class="headerlink" title="Introduction of new CSV format descriptor (FLINK-9964)"></a>Introduction of new CSV format descriptor (<a href="https://issues.apache.org/jira/browse/FLINK-9964" target="_blank" rel="noopener">FLINK-9964</a>)</h4><p>This release introduces a new format descriptor for CSV files that is compliant with RFC 4180. The new descriptor is available as <code>org.apache.flink.table.descriptors.Csv</code>. For now, this can only be used together with the Kafka connector. The old descriptor is available as <code>org.apache.flink.table.descriptors.OldCsv</code> for use with file system connectors.</p>
+<h4 id="Deprecation-of-static-builder-methods-on-TableEnvironment-FLINK-11445"><a href="#Deprecation-of-static-builder-methods-on-TableEnvironment-FLINK-11445" class="headerlink" title="Deprecation of static builder methods on TableEnvironment (FLINK-11445)"></a>Deprecation of static builder methods on TableEnvironment (<a href="https://issues.apache.org/jira/browse/FLINK-11445" target="_blank" rel="noopener">FLINK-11445</a>)</h4><p>In order to separate API from actual implementation, the static methods <code>TableEnvironment.getTableEnvironment()</code> are deprecated. You should now use <code>Batch/StreamTableEnvironment.create()</code> instead.</p>
+<h4 id="Change-in-the-Maven-modules-of-Table-API-FLINK-11064"><a href="#Change-in-the-Maven-modules-of-Table-API-FLINK-11064" class="headerlink" title="Change in the Maven modules of Table API (FLINK-11064)"></a>Change in the Maven modules of Table API (<a href="https://issues.apache.org/jira/browse/FLINK-11064" target="_blank" rel="noopener">FLINK-11064</a>)</h4><p>Users that had a <code>flink-table</code> dependency before, need to update their dependencies to <code>flink-table-planner</code> and the correct dependency of <code>flink-table-api-*</code>, depending on whether Java or Scala is used: one of <code>flink-table-api-java-bridge</code> or <code>flink-table-api-scala-bridge</code>.</p>
+<h4 id="Change-to-External-Catalog-Table-Builders-FLINK-11522"><a href="#Change-to-External-Catalog-Table-Builders-FLINK-11522" class="headerlink" title="Change to External Catalog Table Builders (FLINK-11522)"></a>Change to External Catalog Table Builders (<a href="https://issues.apache.org/jira/browse/FLINK-11522" target="_blank" rel="noopener">FLINK-11522</a>)</h4><p><code>ExternalCatalogTable.builder()</code> is deprecated in favour of <code>ExternalCatalogTableBuilder()</code>.</p>
+<h4 id="Change-to-naming-of-Table-API-connector-jars-FLINK-11026"><a href="#Change-to-naming-of-Table-API-connector-jars-FLINK-11026" class="headerlink" title="Change to naming of Table API connector jars (FLINK-11026)"></a>Change to naming of Table API connector jars (<a href="https://issues.apache.org/jira/browse/FLINK-11026" target="_blank" rel="noopener">FLINK-11026</a>)</h4><p>The naming scheme for kafka/elasticsearch6 sql-jars has been changed.</p>
+<p>In maven terms, they no longer have the <code>sql-jar</code> qualifier and the artifactId is now prefixed with <code>flink-sql</code> instead of <code>flink</code>, e.g., <code>flink-sql-connector-kafka...</code>.</p>
+<h4 id="Change-to-how-Null-Literals-are-specified-FLINK-11785"><a href="#Change-to-how-Null-Literals-are-specified-FLINK-11785" class="headerlink" title="Change to how Null Literals are specified (FLINK-11785)"></a>Change to how Null Literals are specified (<a href="https://issues.apache.org/jira/browse/FLINK-11785" target="_blank" rel="noopener">FLINK-11785</a>)</h4><p>Null literals in the Table API need to be defined with <code>nullOf(type)</code> instead of <code>Null(type)</code> from now on. The old approach is deprecated.</p>
+<h3 id="Connectors-1"><a href="#Connectors-1" class="headerlink" title="Connectors"></a>Connectors</h3><h4 id="Introduction-of-a-new-KafkaDeserializationSchema-that-give-direct-access-to-ConsumerRecord-FLINK-8354"><a href="#Introduction-of-a-new-KafkaDeserializationSchema-that-give-direct-access-to-ConsumerRecord-FLINK-8354" class="headerlink" title="Introduction of a new KafkaDeserializationSchema that give direct access to ConsumerRecord (FLINK-8354)"></a>Introduction of a new KafkaDeserializationSchema that give direct access to ConsumerRecord (<a href="https://issues.apache.org/jira/browse/FLINK-8354" target="_blank" rel="noopener">FLINK-8354</a>)</h4><p>For the Flink <code>KafkaConsumers</code>, we introduced a new <code>KafkaDeserializationSchema</code> that gives direct access to the Kafka <code>ConsumerRecord</code>. This subsumes the <code>KeyedSerializationSchema</code> functionality, which is deprecated but still available for now.</p>
+<h4 id="FlinkKafkaConsumer-will-now-filter-restored-partitions-based-on-topic-specification-FLINK-10342"><a href="#FlinkKafkaConsumer-will-now-filter-restored-partitions-based-on-topic-specification-FLINK-10342" class="headerlink" title="FlinkKafkaConsumer will now filter restored partitions based on topic specification (FLINK-10342)"></a>FlinkKafkaConsumer will now filter restored partitions based on topic specification (<a href="https://issues.apache.org/jira/browse/FLINK-10342" target="_blank" rel="noopener">FLINK-10342</a>)</h4><p>Starting from Flink 1.8.0, the <code>FlinkKafkaConsumer</code> now always filters out restored partitions that are no longer associated with a specified topic to subscribe to in the restored execution. This behaviour did not exist in previous versions of the <code>FlinkKafkaConsumer</code>. If you wish to retain the previous behaviour, please use the <code>disableFilterRestoredPartitionsWithSubscribedTopics()</code> configuration method on the <code>FlinkKafkaConsumer</code>.</p>
+<p>Consider this example: if you had a Kafka Consumer that was consuming from topic <code>A</code>, you did a savepoint, then changed your Kafka consumer to instead consume from topic <code>B</code>, and then restarted your job from the savepoint. Before this change, your consumer would now consume from both topic <code>A</code> and <code>B</code> because it was stored in state that the consumer was consuming from topic <code>A</code>. With the change, your consumer would only consume from topic <code>B</code> after restore because we filter the topics that are stored in state using the configured topics.</p>
+<h3 id="Miscellaneous-Interface-changes"><a href="#Miscellaneous-Interface-changes" class="headerlink" title="Miscellaneous Interface changes"></a>Miscellaneous Interface changes</h3><h4 id="The-canEqual-method-was-dropped-from-the-TypeSerializer-interface-FLINK-9803"><a href="#The-canEqual-method-was-dropped-from-the-TypeSerializer-interface-FLINK-9803" class="headerlink" title="The canEqual() method was dropped from the TypeSerializer interface (FLINK-9803)"></a>The canEqual() method was dropped from the TypeSerializer interface (<a href="https://issues.apache.org/jira/browse/FLINK-9803" target="_blank" rel="noopener">FLINK-9803</a>)</h4><p>The <code>canEqual()</code> methods are usually used to make proper equality checks across hierarchies of types. The <code>TypeSerializer</code> actually doesn’t require this property, so the method is now removed.</p>
+<h4 id="Removal-of-the-CompositeSerializerSnapshot-utility-class-FLINK-11073"><a href="#Removal-of-the-CompositeSerializerSnapshot-utility-class-FLINK-11073" class="headerlink" title="Removal of the CompositeSerializerSnapshot utility class (FLINK-11073)"></a>Removal of the CompositeSerializerSnapshot utility class (<a href="https://issues.apache.org/jira/browse/FLINK-11073" target="_blank" rel="noopener">FLINK-11073</a>)</h4><p>The <code>CompositeSerializerSnapshot</code> utility class has been removed. You should now use <code>CompositeTypeSerializerSnapshot</code> instead, for snapshots of composite serializers that delegate serialization to multiple nested serializers. Please see <a href="http://ci.apache.org/projects/flink/flink-docs-release-1.8/dev/stream/state/custom_serialization.html#implementing-a-compositetypeserializersnapshot" target="_blank" rel="noopener">here</a> for instructions on using <code>CompositeTypeSerializerSnapshot</code>.</p>
+<h3 id="Memory-management-1"><a href="#Memory-management-1" class="headerlink" title="Memory management"></a>Memory management</h3><p>In Fink 1.8.0 and prior version, the managed memory fraction of taskmanager is controlled by <code>taskmanager.memory.fraction</code>, and with 0.7 as the default value. However, sometimes this will cause OOMs due to the fact that the default value of JVM parameter <code>NewRatio</code> is 2, which means the old generation occupied only 2/3 (0.66) of the heap memory. So if you run into this case, please manually change this value to a lower value.</p>
+<h1 id="Flink-1-7"><a href="#Flink-1-7" class="headerlink" title="Flink 1.7"></a>Flink 1.7</h1><h3 id="Scala-2-12-support"><a href="#Scala-2-12-support" class="headerlink" title="Scala 2.12 support"></a>Scala 2.12 support</h3><p>When using Scala <code>2.12</code> you might have to add explicit type annotations in places where they were not required when using Scala <code>2.11</code>. This is an excerpt from the <code>TransitiveClosureNaive.scala</code> example in the Flink code base that shows the changes that could be required.</p>
+<p>Previous code:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">val terminate = prevPaths</span><br><span class="line"> .coGroup(nextPaths)</span><br><span class="line"> .where(0).equalTo(0) &#123;</span><br><span class="line">   (prev, next, out: Collector[(Long, Long)]) =&gt; &#123;</span><br><span class="line">     val prevPaths = prev.toSet</span><br><span class="line">     for (n &lt;- next)</span><br><span class="line">       if (!prevPaths.contains(n)) out.collect(n)</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>With Scala <code>2.12</code> you have to change it to:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">val terminate = prevPaths</span><br><span class="line"> .coGroup(nextPaths)</span><br><span class="line"> .where(0).equalTo(0) &#123;</span><br><span class="line">   (prev: Iterator[(Long, Long)], next: Iterator[(Long, Long)], out: Collector[(Long, Long)]) =&gt; &#123;</span><br><span class="line">       val prevPaths = prev.toSet</span><br><span class="line">       for (n &lt;- next)</span><br><span class="line">         if (!prevPaths.contains(n)) out.collect(n)</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The reason for this is that Scala <code>2.12</code> changes how lambdas are implemented. They now use the lambda support using SAM interfaces introduced in Java 8. This makes some method calls ambiguous because now both Scala-style lambdas and SAMs are candidates for methods were it was previously clear which method would be invoked.</p>
+<h3 id="State-evolution"><a href="#State-evolution" class="headerlink" title="State evolution"></a>State evolution</h3><p>Before Flink 1.7, serializer snapshots were implemented as a <code>TypeSerializerConfigSnapshot</code> (which is now deprecated, and will eventually be removed in the future to be fully replaced by the new <code>TypeSerializerSnapshot</code> interface introduced in 1.7). Moreover, the responsibility of serializer schema compatibility checks lived within the <code>TypeSerializer</code>, implemented in the <code>TypeSerializer#ensureCompatibility(TypeSerializerConfigSnapshot)</code> method.</p>
+<p>To be future-proof and to have flexibility to migrate your state serializers and schema, it is highly recommended to migrate from the old abstractions. Details and migration guides can be found <a href="https://ci.apache.org/projects/flink/flink-docs-master/dev/stream/state/custom_serialization.html" target="_blank" rel="noopener">here</a>.</p>
+<h3 id="Removal-of-the-legacy-mode"><a href="#Removal-of-the-legacy-mode" class="headerlink" title="Removal of the legacy mode"></a>Removal of the legacy mode</h3><p>Flink no longer supports the legacy mode. If you depend on this, then please use Flink <code>1.6.x</code>.</p>
+<h3 id="Savepoints-being-used-for-recovery"><a href="#Savepoints-being-used-for-recovery" class="headerlink" title="Savepoints being used for recovery"></a>Savepoints being used for recovery</h3><p>Savepoints are now used while recovering. Previously when using exactly-once sink one could get into problems with duplicate output data when a failure occurred after a savepoint was taken but before the next checkpoint occurred. This results in the fact that savepoints are no longer exclusively under the control of the user. Savepoint should not be moved nor deleted if there was no newer checkpoint or savepoint taken.</p>
+<h3 id="MetricQueryService-runs-in-separate-thread-pool"><a href="#MetricQueryService-runs-in-separate-thread-pool" class="headerlink" title="MetricQueryService runs in separate thread pool"></a>MetricQueryService runs in separate thread pool</h3><p>The metric query service runs now in its own <code>ActorSystem</code>. It needs consequently to open a new port for the query services to communicate with each other. The <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/config.html#metrics-internal-query-service-port" target="_blank" rel="noopener">query service port</a> can be configured in <code>flink-conf.yaml</code>.</p>
+<h3 id="Granularity-of-latency-metrics"><a href="#Granularity-of-latency-metrics" class="headerlink" title="Granularity of latency metrics"></a>Granularity of latency metrics</h3><p>The default granularity for latency metrics has been modified. To restore the previous behavior users have to explicitly set the <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/config.html#metrics-latency-granularity" target="_blank" rel="noopener">granularity</a> to <code>subtask</code>.</p>
+<h3 id="Latency-marker-activation"><a href="#Latency-marker-activation" class="headerlink" title="Latency marker activation"></a>Latency marker activation</h3><p>Latency metrics are now disabled by default, which will affect all jobs that do not explicitly set the <code>latencyTrackingInterval</code> via <code>ExecutionConfig#setLatencyTrackingInterval</code>. To restore the previous default behavior users have to configure the <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/config.html#metrics-latency-interval" target="_blank" rel="noopener">latency interval</a> in <code>flink-conf.yaml</code>.</p>
+<h3 id="Relocation-of-Hadoop’s-Netty-dependency"><a href="#Relocation-of-Hadoop’s-Netty-dependency" class="headerlink" title="Relocation of Hadoop’s Netty dependency"></a>Relocation of Hadoop’s Netty dependency</h3><p>We now also relocate Hadoop’s Netty dependency from <code>io.netty</code> to <code>org.apache.flink.hadoop.shaded.io.netty</code>. You can now bundle your own version of Netty into your job but may no longer assume that <code>io.netty</code> is present in the <code>flink-shaded-hadoop2-uber-*.jar</code> file.</p>
+<h3 id="Local-recovery-fixed"><a href="#Local-recovery-fixed" class="headerlink" title="Local recovery fixed"></a>Local recovery fixed</h3><p>With the improvements to Flink’s scheduling, it can no longer happen that recoveries require more slots than before if local recovery is enabled. Consequently, we encourage our users to enable <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/config.html#state-backend-local-recovery" target="_blank" rel="noopener">local recovery</a> in <code>flink-conf.yaml</code>.</p>
+<h3 id="Support-for-multi-slot-TaskManagers"><a href="#Support-for-multi-slot-TaskManagers" class="headerlink" title="Support for multi slot TaskManagers"></a>Support for multi slot TaskManagers</h3><p>Flink now properly supports <code>TaskManagers</code> with multiple slots. Consequently, <code>TaskManagers</code> can now be started with an arbitrary number of slots and it is no longer recommended to start them with a single slot.</p>
+<h3 id="StandaloneJobClusterEntrypoint-generates-JobGraph-with-fixed-JobID"><a href="#StandaloneJobClusterEntrypoint-generates-JobGraph-with-fixed-JobID" class="headerlink" title="StandaloneJobClusterEntrypoint generates JobGraph with fixed JobID"></a>StandaloneJobClusterEntrypoint generates JobGraph with fixed JobID</h3><p>The <code>StandaloneJobClusterEntrypoint</code>, which is launched by the script <code>standalone-job.sh</code> and used for the job-mode container images, now starts all jobs with a fixed <code>JobID</code>. Thus, in order to run a cluster in HA mode, one needs to set a different <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/config.html#high-availability-cluster-id" target="_blank" rel="noopener">cluster id</a> for each job/cluster.</p>
+<h3 id="Scala-shell-does-not-work-with-Scala-2-12"><a href="#Scala-shell-does-not-work-with-Scala-2-12" class="headerlink" title="Scala shell does not work with Scala 2.12"></a>Scala shell does not work with Scala 2.12</h3><p>Flink’s Scala shell does not work with Scala 2.12. Therefore, the module <code>flink-scala-shell</code> is not being released for Scala 2.12.</p>
+<p>See <a href="https://issues.apache.org/jira/browse/FLINK-10911" target="_blank" rel="noopener">FLINK-10911</a> for more details.</p>
+<h3 id="Limitations-of-failover-strategies"><a href="#Limitations-of-failover-strategies" class="headerlink" title="Limitations of failover strategies"></a>Limitations of failover strategies</h3><p>Flink’s non-default failover strategies are still a very experimental feature which come with a set of limitations. You should only use this feature if you are executing a stateless streaming job. In any other cases, it is highly recommended to remove the config option <code>jobmanager.execution.failover-strategy</code> from your <code>flink-conf.yaml</code> or set it to <code>&quot;full&quot;</code>.</p>
+<p>In order to avoid future problems, this feature has been removed from the documentation until it will be fixed. See <a href="https://issues.apache.org/jira/browse/FLINK-10880" target="_blank" rel="noopener">FLINK-10880</a> for more details.</p>
+<h3 id="SQL-over-window-preceding-clause"><a href="#SQL-over-window-preceding-clause" class="headerlink" title="SQL over window preceding clause"></a>SQL over window preceding clause</h3><p>The over window <code>preceding</code> clause is now optional. It defaults to <code>UNBOUNDED</code> if not specified.</p>
+<h3 id="OperatorSnapshotUtil-writes-v2-snapshots"><a href="#OperatorSnapshotUtil-writes-v2-snapshots" class="headerlink" title="OperatorSnapshotUtil writes v2 snapshots"></a>OperatorSnapshotUtil writes v2 snapshots</h3><p>Snapshots created with <code>OperatorSnapshotUtil</code> are now written in the savepoint format <code>v2</code>.</p>
+<h3 id="SBT-projects-and-the-MiniClusterResource"><a href="#SBT-projects-and-the-MiniClusterResource" class="headerlink" title="SBT projects and the MiniClusterResource"></a>SBT projects and the MiniClusterResource</h3><p>If you have a <code>sbt</code> project which uses the <code>MiniClusterResource</code>, you now have to add the <code>flink-runtime</code> test-jar dependency explicitly via:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">libraryDependencies += &quot;org.apache.flink&quot; %% &quot;flink-runtime&quot; % flinkVersion % Test classifier &quot;tests&quot;</span><br></pre></td></tr></table></figure>
+
+<p>The reason for this is that the <code>MiniClusterResource</code> has been moved from <code>flink-test-utils</code> to <code>flink-runtime</code>. The module <code>flink-test-utils</code> has correctly a <code>test-jar</code> dependency on <code>flink-runtime</code>. However, <code>sbt</code> does not properly pull in transitive <code>test-jar</code> dependencies as described in this <a href="https://github.com/sbt/sbt/issues/2964" target="_blank" rel="noopener">sbt issue</a>. Consequently, it is necessary to specify the <code>test-jar</code> dependency explicitly.</p>
+<h1 id="Flink-1-6"><a href="#Flink-1-6" class="headerlink" title="Flink 1.6"></a>Flink 1.6</h1><h3 id="Changed-Configuration-Default-Values"><a href="#Changed-Configuration-Default-Values" class="headerlink" title="Changed Configuration Default Values"></a>Changed Configuration Default Values</h3><p>The default value of the slot idle timeout <code>slot.idle.timeout</code> is set to the default value of the heartbeat timeout (<code>50 s</code>).</p>
+<h3 id="Changed-ElasticSearch-5-x-Sink-API"><a href="#Changed-ElasticSearch-5-x-Sink-API" class="headerlink" title="Changed ElasticSearch 5.x Sink API"></a>Changed ElasticSearch 5.x Sink API</h3><p>Previous APIs in the Flink ElasticSearch 5.x Sink’s <code>RequestIndexer</code> interface have been deprecated in favor of new signatures. When adding requests to the <code>RequestIndexer</code>, the requests now must be of type <code>IndexRequest</code>, <code>DeleteRequest</code>, or <code>UpdateRequest</code>, instead of the base <code>ActionRequest</code>.</p>
+<h3 id="Limitations-of-failover-strategies-1"><a href="#Limitations-of-failover-strategies-1" class="headerlink" title="Limitations of failover strategies"></a>Limitations of failover strategies</h3><p>Flink’s non-default failover strategies are still a very experimental feature which come with a set of limitations. You should only use this feature if you are executing a stateless streaming job. In any other cases, it is highly recommended to remove the config option <code>jobmanager.execution.failover-strategy</code> from your <code>flink-conf.yaml</code> or set it to <code>&quot;full&quot;</code>.</p>
+<p>In order to avoid future problems, this feature has been removed from the documentation until it will be fixed. See <a href="https://issues.apache.org/jira/browse/FLINK-10880" target="_blank" rel="noopener">FLINK-10880</a> for more details.</p>
+<h1 id="Flink-1-5"><a href="#Flink-1-5" class="headerlink" title="Flink 1.5"></a>Flink 1.5</h1><p>These release notes discuss important aspects, such as configuration, behavior, or dependencies, that changed between Flink 1.4 and Flink 1.5. Please read these notes carefully if you are planning to upgrade your Flink version to 1.5.</p>
+<h3 id="Update-Configuration-for-Reworked-Job-Deployment"><a href="#Update-Configuration-for-Reworked-Job-Deployment" class="headerlink" title="Update Configuration for Reworked Job Deployment"></a>Update Configuration for Reworked Job Deployment</h3><p>Flink’s reworked cluster and job deployment component improves the integration with resource managers and enables dynamic resource allocation. One result of these changes is, that you no longer have to specify the number of containers when submitting applications to YARN and Mesos. Flink will automatically determine the number of containers from the parallelism of the application.</p>
+<p>Although the deployment logic was completely reworked, we aimed to not unnecessarily change the previous behavior to enable a smooth transition. Nonetheless, there are a few options that you should update in your <code>conf/flink-conf.yaml</code> or know about.</p>
+<ul>
+<li>The allocation of TaskManagers with multiple slots is not fully supported yet. Therefore, we recommend to configure TaskManagers with a single slot, i.e., set <code>taskmanager.numberOfTaskSlots: 1</code></li>
+<li>If you observed any problems with the new deployment mode, you can always switch back to the pre-1.5 behavior by configuring <code>mode: legacy</code>.</li>
+</ul>
+<p>Please report any problems or possible improvements that you notice to the Flink community, either by posting to a mailing list or by opening a JIRA issue.</p>
+<p><em>Note</em>: We plan to remove the legacy mode in the next release.</p>
+<h3 id="Update-Configuration-for-Reworked-Network-Stack"><a href="#Update-Configuration-for-Reworked-Network-Stack" class="headerlink" title="Update Configuration for Reworked Network Stack"></a>Update Configuration for Reworked Network Stack</h3><p>The changes on the networking stack for credit-based flow control and improved latency affect the configuration of network buffers. In a nutshell, the networking stack can require more memory to run applications. Hence, you might need to adjust the network configuration of your Flink setup.</p>
+<p>There are two ways to address problems of job submissions that fail due to lack of network buffers.</p>
+<ul>
+<li>Reduce the number of buffers per channel, i.e., <code>taskmanager.network.memory.buffers-per-channel</code> or</li>
+<li>Increase the amount of TaskManager memory that is used by the network stack, i.e., increase <code>taskmanager.network.memory.fraction</code> and/or <code>taskmanager.network.memory.max</code>.</li>
+</ul>
+<p>Please consult the section about <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/ops/config.html#configuring-the-network-buffers" target="_blank" rel="noopener">network buffer configuration</a> in the Flink documentation for details. In case you experience issues with the new credit-based flow control mode, you can disable flow control by setting <code>taskmanager.network.credit-model: false</code>.</p>
+<p><em>Note</em>: We plan to remove the old model and this configuration in the next release.</p>
+<h3 id="Hadoop-Classpath-Discovery"><a href="#Hadoop-Classpath-Discovery" class="headerlink" title="Hadoop Classpath Discovery"></a>Hadoop Classpath Discovery</h3><p>We removed the automatic Hadoop classpath discovery via the Hadoop binary. If you want Flink to pick up the Hadoop classpath you have to export <code>HADOOP_CLASSPATH</code>. On cloud environments and most Hadoop distributions you would do</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_CLASSPATH=`hadoop classpath`.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Breaking-Changes-of-the-REST-API"><a href="#Breaking-Changes-of-the-REST-API" class="headerlink" title="Breaking Changes of the REST API"></a>Breaking Changes of the REST API</h3><p>In an effort to harmonize, extend, and improve the REST API, a few handlers and return values were changed.</p>
+<ul>
+<li>The jobs overview handler is now registered under <code>/jobs/overview</code> (before <code>/joboverview</code>) and returns a list of job details instead of the pre-grouped view of running, finished, cancelled and failed jobs.</li>
+<li>The REST API to cancel a job was changed.</li>
+<li>The REST API to cancel a job with savepoint was changed.</li>
+</ul>
+<p>Please check the <a href="https://ci.apache.org/projects/flink/flink-docs-release-1.10/monitoring/rest_api.html#available-requests" target="_blank" rel="noopener">REST API documentation</a> for details.</p>
+<h3 id="Kafka-Producer-Flushes-on-Checkpoint-by-Default"><a href="#Kafka-Producer-Flushes-on-Checkpoint-by-Default" class="headerlink" title="Kafka Producer Flushes on Checkpoint by Default"></a>Kafka Producer Flushes on Checkpoint by Default</h3><p>The Flink Kafka Producer now flushes on checkpoints by default. Prior to version 1.5, the behaviour was disabled by default and users had to explicitly call <code>setFlushOnCheckpoints(true)</code> on the producer to enable it.</p>
+<h3 id="Updated-Kinesis-Dependency"><a href="#Updated-Kinesis-Dependency" class="headerlink" title="Updated Kinesis Dependency"></a>Updated Kinesis Dependency</h3><p>The Kinesis dependencies of Flink’s Kinesis connector have been updated to the following versions.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;aws.sdk.version&gt;1.11.319&lt;/aws.sdk.version&gt;</span><br><span class="line">&lt;aws.kinesis-kcl.version&gt;1.9.0&lt;/aws.kinesis-kcl.version&gt;</span><br><span class="line">&lt;aws.kinesis-kpl.version&gt;0.12.9&lt;/aws.kinesis-kcl.version&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Limitations-of-failover-strategies-2"><a href="#Limitations-of-failover-strategies-2" class="headerlink" title="Limitations of failover strategies"></a>Limitations of failover strategies</h3><p>Flink’s non-default failover strategies are still a very experimental feature which come with a set of limitations. You should only use this feature if you are executing a stateless streaming job. In any other cases, it is highly recommended to remove the config option <code>jobmanager.execution.failover-strategy</code> from your <code>flink-conf.yaml</code> or set it to <code>&quot;full&quot;</code>.</p>
+<p>In order to avoid future problems, this feature has been removed from the documentation until it will be fixed. See <a href="https://issues.apache.org/jira/browse/FLINK-10880" target="_blank" rel="noopener">FLINK-10880</a> for more details.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/java/sharding-sphere/antlr/" rel="next" title="Antlr sql语法解析">
+                <i class="fa fa-chevron-left"></i> Antlr sql语法解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/distribution/distributed-computing/distributed-computing-docs/" rel="prev" title="分布式计算文档汇总">
+                分布式计算文档汇总 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink-1-10"><span class="nav-text">Flink 1.10</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Clusters-amp-Deployment"><span class="nav-text">Clusters &amp; Deployment</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FileSystems-should-be-loaded-via-Plugin-Architecture-FLINK-11956"><span class="nav-text">FileSystems should be loaded via Plugin Architecture (FLINK-11956)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Flink-Client-respects-Classloading-Policy-FLINK-13749"><span class="nav-text">Flink Client respects Classloading Policy (FLINK-13749)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Enable-spreading-out-Tasks-evenly-across-all-TaskManagers-FLINK-12122"><span class="nav-text">Enable spreading out Tasks evenly across all TaskManagers (FLINK-12122)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Directory-Structure-Change-for-highly-available-Artifacts-FLINK-13633"><span class="nav-text">Directory Structure Change for highly available Artifacts (FLINK-13633)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Resources-and-JARs-shipped-via-–yarnship-will-be-ordered-in-the-Classpath-FLINK-13127"><span class="nav-text">Resources and JARs shipped via –yarnship will be ordered in the Classpath (FLINK-13127)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Removal-of-–yn-–yarncontainer-Command-Line-Options-FLINK-12362"><span class="nav-text">Removal of –yn/–yarncontainer Command Line Options (FLINK-12362)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Removal-of-–yst-–yarnstreaming-Command-Line-Options-FLINK-14957"><span class="nav-text">Removal of –yst/–yarnstreaming Command Line Options (FLINK-14957)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mesos-Integration-will-reject-expired-Offers-faster-FLINK-14029"><span class="nav-text">Mesos Integration will reject expired Offers faster (FLINK-14029)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scheduler-Rearchitecture-FLINK-14651"><span class="nav-text">Scheduler Rearchitecture (FLINK-14651)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java-11-Support-FLINK-10725"><span class="nav-text">Java 11 Support (FLINK-10725)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-Management"><span class="nav-text">Memory Management</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#New-Task-Executor-Memory-Model-FLINK-13980"><span class="nav-text">New Task Executor Memory Model (FLINK-13980)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Deprecation-and-breaking-changes"><span class="nav-text">Deprecation and breaking changes</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RocksDB-State-Backend-Memory-Control-FLINK-7289"><span class="nav-text">RocksDB State Backend Memory Control (FLINK-7289)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Fine-grained-Operator-Resource-Management-FLINK-14058"><span class="nav-text">Fine-grained Operator Resource Management (FLINK-14058)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-API-amp-SQL"><span class="nav-text">Table API &amp; SQL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Rename-of-ANY-Type-to-RAW-Type-FLINK-14904"><span class="nav-text">Rename of ANY Type to RAW Type (FLINK-14904)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rename-of-Table-Connector-Properties-FLINK-14649"><span class="nav-text">Rename of Table Connector Properties (FLINK-14649)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Methods-for-interacting-with-temporary-Tables-amp-Views-FLINK-14490"><span class="nav-text">Methods for interacting with temporary Tables &amp; Views (FLINK-14490)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Removal-of-ExternalCatalog-API-FLINK-13697"><span class="nav-text">Removal of ExternalCatalog API (FLINK-13697)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration"><span class="nav-text">Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Introduction-of-Type-Information-for-ConfigOptions-FLINK-14493"><span class="nav-text">Introduction of Type Information for ConfigOptions (FLINK-14493)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Increase-of-default-Restart-Delay-FLINK-13884"><span class="nav-text">Increase of default Restart Delay (FLINK-13884)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Simplification-of-Cluster-Level-Restart-Strategy-Configuration-FLINK-13921"><span class="nav-text">Simplification of Cluster-Level Restart Strategy Configuration (FLINK-13921)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Disable-memory-mapped-BoundedBlockingSubpartition-by-default-FLINK-14952"><span class="nav-text">Disable memory-mapped BoundedBlockingSubpartition by default (FLINK-14952)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Removal-of-non-credit-based-Network-Flow-Control-FLINK-14516"><span class="nav-text">Removal of non-credit-based Network Flow Control (FLINK-14516)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Removal-of-HighAvailabilityOptions-HA-JOB-DELAY-FLINK-13885"><span class="nav-text">Removal of HighAvailabilityOptions#HA_JOB_DELAY (FLINK-13885)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#State"><span class="nav-text">State</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Enable-Background-Cleanup-of-State-with-TTL-by-default-FLINK-14898"><span class="nav-text">Enable Background Cleanup of State with TTL by default (FLINK-14898)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deprecation-of-StateTtlConfig-Builder-cleanupInBackground-FLINK-15606"><span class="nav-text">Deprecation of StateTtlConfig#Builder#cleanupInBackground() (FLINK-15606)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Timers-are-stored-in-RocksDB-by-default-when-using-RocksDBStateBackend-FLINK-15637"><span class="nav-text">Timers are stored in RocksDB by default when using RocksDBStateBackend (FLINK-15637)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Removal-of-StateTtlConfig-TimeCharacteristic-FLINK-15605"><span class="nav-text">Removal of StateTtlConfig#TimeCharacteristic (FLINK-15605)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#New-efficient-Method-to-check-if-MapState-is-empty-FLINK-13034"><span class="nav-text">New efficient Method to check if MapState is empty (FLINK-13034)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RocksDB-Upgrade-FLINK-14483"><span class="nav-text">RocksDB Upgrade (FLINK-14483)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RocksDB-Logging-disabled-by-default-FLINK-15068"><span class="nav-text">RocksDB Logging disabled by default (FLINK-15068)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Improved-RocksDB-Savepoint-Recovery-FLINK-12785"><span class="nav-text">Improved RocksDB Savepoint Recovery (FLINK-12785)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PyFlink"><span class="nav-text">PyFlink</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Python-2-Support-dropped-FLINK-14469"><span class="nav-text">Python 2 Support dropped (FLINK-14469)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Monitoring"><span class="nav-text">Monitoring</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#InfluxdbReporter-skips-Inf-and-NaN-FLINK-12147"><span class="nav-text">InfluxdbReporter skips Inf and NaN (FLINK-12147)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connectors"><span class="nav-text">Connectors</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Kinesis-Connector-License-Change-FLINK-12847"><span class="nav-text">Kinesis Connector License Change (FLINK-12847)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Miscellaneous-Interface-Changes"><span class="nav-text">Miscellaneous Interface Changes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ExecutionConfig-getGlobalJobParameters-cannot-return-null-anymore-FLINK-9787"><span class="nav-text">ExecutionConfig#getGlobalJobParameters() cannot return null anymore (FLINK-9787)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Change-of-contract-in-MasterTriggerRestoreHook-interface-FLINK-14344"><span class="nav-text">Change of contract in MasterTriggerRestoreHook interface (FLINK-14344)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Client-and-Server-Side-Separation-of-HA-Services-FLINK-13750"><span class="nav-text">Client-/ and Server-Side Separation of HA Services (FLINK-13750)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deprecation-of-HighAvailabilityServices-getWebMonitorLeaderElectionService-FLINK-13977"><span class="nav-text">Deprecation of HighAvailabilityServices#getWebMonitorLeaderElectionService() (FLINK-13977)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Interface-Change-in-LeaderElectionService-FLINK-14287"><span class="nav-text">Interface Change in LeaderElectionService (FLINK-14287)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deprecation-of-Checkpoint-Lock-FLINK-14857"><span class="nav-text">Deprecation of Checkpoint Lock (FLINK-14857)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deprecation-of-OptionsFactory-and-ConfigurableOptionsFactory-interfaces-FLINK-14926"><span class="nav-text">Deprecation of OptionsFactory and ConfigurableOptionsFactory interfaces (FLINK-14926)</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink-1-9"><span class="nav-text">Flink 1.9</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Known-shortcomings-or-limitations-for-new-features"><span class="nav-text">Known shortcomings or limitations for new features</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#New-Table-SQL-Blink-planner"><span class="nav-text">New Table / SQL Blink planner</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL-DDL"><span class="nav-text">SQL DDL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-9-support"><span class="nav-text">Java 9 support</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-management"><span class="nav-text">Memory management</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deprecations-and-breaking-changes"><span class="nav-text">Deprecations and breaking changes</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scala-expression-DSL-for-Table-API-moved-to-flink-table-api-scala"><span class="nav-text">Scala expression DSL for Table API moved to flink-table-api-scala</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Failover-strategies"><span class="nav-text">Failover strategies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Job-termination-via-CLI"><span class="nav-text">Job termination via CLI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Network-stack"><span class="nav-text">Network stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AsyncIO"><span class="nav-text">AsyncIO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connectors-and-Libraries"><span class="nav-text">Connectors and Libraries</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Introduced-KafkaSerializationSchema-to-fully-replace-KeyedSerializationSchema"><span class="nav-text">Introduced KafkaSerializationSchema to fully replace KeyedSerializationSchema</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dropped-connectors-and-libraries"><span class="nav-text">Dropped connectors and libraries</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapR-dependency-removed"><span class="nav-text">MapR dependency removed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StateDescriptor-interface-change"><span class="nav-text">StateDescriptor interface change</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-UI-dashboard"><span class="nav-text">Web UI dashboard</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink-1-8"><span class="nav-text">Flink 1.8</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#State-1"><span class="nav-text">State</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Continuous-incremental-cleanup-of-old-Keyed-State-with-TTL"><span class="nav-text">Continuous incremental cleanup of old Keyed State with TTL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#New-Support-for-Schema-Migration-when-restoring-Savepoints"><span class="nav-text">New Support for Schema Migration when restoring Savepoints</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Savepoint-compatibility"><span class="nav-text">Savepoint compatibility</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RocksDB-version-bump-and-switch-to-FRocksDB-FLINK-10471"><span class="nav-text">RocksDB version bump and switch to FRocksDB (FLINK-10471)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Maven-Dependencies"><span class="nav-text">Maven Dependencies</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Changes-to-bundling-of-Hadoop-libraries-with-Flink-FLINK-11266"><span class="nav-text">Changes to bundling of Hadoop libraries with Flink (FLINK-11266)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-1"><span class="nav-text">Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TaskManager-configuration-FLINK-11716"><span class="nav-text">TaskManager configuration (FLINK-11716)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-API"><span class="nav-text">Table API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Deprecation-of-direct-Table-constructor-usage-FLINK-11447"><span class="nav-text">Deprecation of direct Table constructor usage (FLINK-11447)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Introduction-of-new-CSV-format-descriptor-FLINK-9964"><span class="nav-text">Introduction of new CSV format descriptor (FLINK-9964)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Deprecation-of-static-builder-methods-on-TableEnvironment-FLINK-11445"><span class="nav-text">Deprecation of static builder methods on TableEnvironment (FLINK-11445)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Change-in-the-Maven-modules-of-Table-API-FLINK-11064"><span class="nav-text">Change in the Maven modules of Table API (FLINK-11064)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Change-to-External-Catalog-Table-Builders-FLINK-11522"><span class="nav-text">Change to External Catalog Table Builders (FLINK-11522)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Change-to-naming-of-Table-API-connector-jars-FLINK-11026"><span class="nav-text">Change to naming of Table API connector jars (FLINK-11026)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Change-to-how-Null-Literals-are-specified-FLINK-11785"><span class="nav-text">Change to how Null Literals are specified (FLINK-11785)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connectors-1"><span class="nav-text">Connectors</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Introduction-of-a-new-KafkaDeserializationSchema-that-give-direct-access-to-ConsumerRecord-FLINK-8354"><span class="nav-text">Introduction of a new KafkaDeserializationSchema that give direct access to ConsumerRecord (FLINK-8354)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FlinkKafkaConsumer-will-now-filter-restored-partitions-based-on-topic-specification-FLINK-10342"><span class="nav-text">FlinkKafkaConsumer will now filter restored partitions based on topic specification (FLINK-10342)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Miscellaneous-Interface-changes"><span class="nav-text">Miscellaneous Interface changes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#The-canEqual-method-was-dropped-from-the-TypeSerializer-interface-FLINK-9803"><span class="nav-text">The canEqual() method was dropped from the TypeSerializer interface (FLINK-9803)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Removal-of-the-CompositeSerializerSnapshot-utility-class-FLINK-11073"><span class="nav-text">Removal of the CompositeSerializerSnapshot utility class (FLINK-11073)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memory-management-1"><span class="nav-text">Memory management</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink-1-7"><span class="nav-text">Flink 1.7</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Scala-2-12-support"><span class="nav-text">Scala 2.12 support</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#State-evolution"><span class="nav-text">State evolution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Removal-of-the-legacy-mode"><span class="nav-text">Removal of the legacy mode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Savepoints-being-used-for-recovery"><span class="nav-text">Savepoints being used for recovery</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MetricQueryService-runs-in-separate-thread-pool"><span class="nav-text">MetricQueryService runs in separate thread pool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Granularity-of-latency-metrics"><span class="nav-text">Granularity of latency metrics</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Latency-marker-activation"><span class="nav-text">Latency marker activation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Relocation-of-Hadoop’s-Netty-dependency"><span class="nav-text">Relocation of Hadoop’s Netty dependency</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Local-recovery-fixed"><span class="nav-text">Local recovery fixed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Support-for-multi-slot-TaskManagers"><span class="nav-text">Support for multi slot TaskManagers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StandaloneJobClusterEntrypoint-generates-JobGraph-with-fixed-JobID"><span class="nav-text">StandaloneJobClusterEntrypoint generates JobGraph with fixed JobID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scala-shell-does-not-work-with-Scala-2-12"><span class="nav-text">Scala shell does not work with Scala 2.12</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Limitations-of-failover-strategies"><span class="nav-text">Limitations of failover strategies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL-over-window-preceding-clause"><span class="nav-text">SQL over window preceding clause</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OperatorSnapshotUtil-writes-v2-snapshots"><span class="nav-text">OperatorSnapshotUtil writes v2 snapshots</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SBT-projects-and-the-MiniClusterResource"><span class="nav-text">SBT projects and the MiniClusterResource</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink-1-6"><span class="nav-text">Flink 1.6</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Changed-Configuration-Default-Values"><span class="nav-text">Changed Configuration Default Values</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Changed-ElasticSearch-5-x-Sink-API"><span class="nav-text">Changed ElasticSearch 5.x Sink API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Limitations-of-failover-strategies-1"><span class="nav-text">Limitations of failover strategies</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink-1-5"><span class="nav-text">Flink 1.5</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-Configuration-for-Reworked-Job-Deployment"><span class="nav-text">Update Configuration for Reworked Job Deployment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Update-Configuration-for-Reworked-Network-Stack"><span class="nav-text">Update Configuration for Reworked Network Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop-Classpath-Discovery"><span class="nav-text">Hadoop Classpath Discovery</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Breaking-Changes-of-the-REST-API"><span class="nav-text">Breaking Changes of the REST API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka-Producer-Flushes-on-Checkpoint-by-Default"><span class="nav-text">Kafka Producer Flushes on Checkpoint by Default</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Updated-Kinesis-Dependency"><span class="nav-text">Updated Kinesis Dependency</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Limitations-of-failover-strategies-2"><span class="nav-text">Limitations of failover strategies</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

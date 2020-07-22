@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="7月7日，Flink 1.11.0 正式发布了，作为这个版本的 release manager 之一，我想跟大家分享一下其中的经历感受以及一些代表性 feature 的解读。在进入深度解读前，我们先简单了解下社区发布的一般流程，帮助大家更好的理解和参与 Flink 社区的工作。  首先在每个版本的规划初期，会从志愿者中选出 1-2 名作为 Release Manager。1.11.0 版本我作">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flink 1.11 究竟有哪些易用性上的改善？">
+<meta property="og:url" content="https://carlo-z.com/big-data/flink/flink-1.11-what-the-improve-of-easy-to-use/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="7月7日，Flink 1.11.0 正式发布了，作为这个版本的 release manager 之一，我想跟大家分享一下其中的经历感受以及一些代表性 feature 的解读。在进入深度解读前，我们先简单了解下社区发布的一般流程，帮助大家更好的理解和参与 Flink 社区的工作。  首先在每个版本的规划初期，会从志愿者中选出 1-2 名作为 Release Manager。1.11.0 版本我作">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716182642528.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716183917712.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716184025860.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716184242183.png">
+<meta property="og:image" content="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716184519585.png">
+<meta property="og:updated_time" content="2020-07-16T11:47:42.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flink 1.11 究竟有哪些易用性上的改善？">
+<meta name="twitter:description" content="7月7日，Flink 1.11.0 正式发布了，作为这个版本的 release manager 之一，我想跟大家分享一下其中的经历感受以及一些代表性 feature 的解读。在进入深度解读前，我们先简单了解下社区发布的一般流程，帮助大家更好的理解和参与 Flink 社区的工作。  首先在每个版本的规划初期，会从志愿者中选出 1-2 名作为 Release Manager。1.11.0 版本我作">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716182642528.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/big-data/flink/flink-1.11-what-the-improve-of-easy-to-use/">
+
+
+
+
+
+  <title>Flink 1.11 究竟有哪些易用性上的改善？ | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/big-data/flink/flink-1.11-what-the-improve-of-easy-to-use/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flink 1.11 究竟有哪些易用性上的改善？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-16T00:00:00+08:00">
+                2020-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/flink/" itemprop="url" rel="index">
+                    <span itemprop="name">flink</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<p>7月7日，<a href="http://mp.weixin.qq.com/s?__biz=MzU3Mzg4OTMyNQ==&mid=2247488124&idx=1&sn=002d1acbfa47887a4a28f14a4459f7ea&chksm=fd3b9c3eca4c1528d1f44bb5cc51a2ebe631ebf0b61707f85f81c10b3fe7eea0a58aeeeeb172&scene=21#wechat_redirect" target="_blank" rel="noopener">Flink 1.11.0 正式发布了</a>，作为这个版本的 release manager 之一，我想跟大家分享一下其中的经历感受以及一些代表性 feature 的解读。在进入深度解读前，我们先简单了解下社区发布的一般流程，帮助大家更好的理解和参与 Flink 社区的工作。</p>
+<ul>
+<li><p>首先在每个版本的规划初期，会从志愿者中选出 1-2 名作为 Release Manager。1.11.0 版本我作为中国这边的 Release Manager，同时还有一名来自 Ververica 的 Piotr Nowojski 作为德国方的 Release Manager，这在某种程度上也说明中国的开发者和贡献度在整个社区的占比很重要。</p>
+</li>
+<li><p>接下来会进行这个版本的 Feature Kickoff。在一些大的方向上，社区的规划周期可能比较久，会分阶段、分步骤跨越多个版本完成，确保质量。每个版本的侧重点也会有所不同，比如前两个版本侧重于批处理的加强，而这个版本更侧重于流处理易用性的提升。社区规划的 Feature 列表会在邮件列表中发起讨论，以收集更多的用户/开发者意见和反馈。</p>
+</li>
+<li><p>一般的开发周期为 2-3 个月时间，提前会明确规划出大概的 Feature Freeze 时间，之后进行 Release Candidate 的发布和测试、以及 Bug Fix。一般经过几轮的迭代周期后会正式投票通过一个相对稳定的 Candidate 版本，然后基于这个版本正式发布。</p>
+</li>
+</ul>
+<p>Flink 1.11.0 从 3 月初的功能规划到 7 月初的正式发布，历经了差不多 4 个月的时间，对 Flink 的生态、易用性、生产可用性、稳定性等方面都进行了增强和改善，下面将一一跟大家分享。</p>
+<h1 id="一、综述"><a href="#一、综述" class="headerlink" title="一、综述"></a>一、综述</h1><p>Flink 1.11.0 从 Feature 冻结后发布了 4 次 Candidate 才最终通过。经统计，一共有 236 个贡献者参与了这次版本开发，解决了 1474 个 Jira 问题，涉及 30 多个 FLIP，提交了 2325 个 Commit。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716182642528.png" alt="image-20200716182642528"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716183917712.png" alt="image-20200716183917712"></p>
+<p>纵观近五次版本发布，可以看出从 1.9.0 开始 Flink 进入了一个快速发展阶段，各个维度指标相比之前都有了几乎翻倍的提高。也是从 1.9.0 开始阿里巴巴内部的 Blink 项目开始被开源 Flink 整合，到 1.10.0 经过两个大版本已经全部整合完毕，对 Flink 从生态建设、功能性、性能和生产稳定性上都有了大幅的增强。</p>
+<p>Flink 1.11.0 版本的最初定位是重点解决易用性问题，提升用户业务的生产使用体验，整体上不做大的架构调整和功能开发，倾向于快速迭代的小版本开发。但是从上面统计的各个指标来看，所谓的“小版本”在各个维度的数据也丝毫不逊色于前两个大版本，解决问题的数量和参与的贡献者人数也在持续增加，其中来自中国的贡献者比例达到 62%。</p>
+<p>下面我们会深度剖析 Flink 1.11.0 带来了哪些让大家期待已久的特性，从用户直接使用的 API 层一直到执行引擎层，我们都会选择一些有代表性的 Feature 从不同维度解读，更完整的 Feature 列表请大家关注发布的 Release Blog。</p>
+<h1 id="二、生态完善和易用性提升"><a href="#二、生态完善和易用性提升" class="headerlink" title="二、生态完善和易用性提升"></a>二、生态完善和易用性提升</h1><p>这两个维度在某种程度上是相辅相成的，很难严格区分开，生态兼容上的缺失常常造成使用上的不便，提升易用性的过程往往也是不断完善相关生态的过程。在这方面用户感知最明显的应该就是 Table &amp; SQL API 层面的使用。</p>
+<h3 id="1、Table-amp-SQL-支持-Change-Data-Capture（CDC）"><a href="#1、Table-amp-SQL-支持-Change-Data-Capture（CDC）" class="headerlink" title="1、Table &amp; SQL 支持 Change Data Capture（CDC）"></a>1、Table &amp; SQL 支持 Change Data Capture（CDC）</h3><p>CDC 被广泛使用在复制数据、更新缓存、微服务间同步数据、审计日志等场景，很多公司都在使用开源的 CDC 工具，如 MySQL CDC。通过 Flink 支持在 Table &amp; SQL 中接入和解析 CDC 是一个强需求，在过往的很多讨论中都被提及过，可以帮助用户以实时的方式处理 Changelog 流，进一步扩展 Flink 的应用场景，例如把 MySQL 中的数据同步到 PG 或 ElasticSearch 中，低延时的 Temporal Join 一个 Changelog 等。</p>
+<p>除了考虑到上面的真实需求，Flink 中定义的“Dynamic Table”概念在流上有两种模型：Append 模式和 Update 模式。通过 Append 模式把流转化为“Dynamic Table”在之前的版本中已经支持，因此在 1.11.0 中进一步支持 Update 模式也从概念层面完整的实现了“Dynamic Table”。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716184025860.png" alt="image-20200716184025860"></p>
+<p>为了支持解析和输出 Changelog，如何在外部系统和 Flink 系统之间编解码这些更新操作是首要解决的问题。考虑到 Source 和 Sink 是衔接外部系统的一个桥梁，因此 FLIP-95 在定义全新的 Table Source 和 Table Sink 接口时解决了这个问题。</p>
+<p>在公开的 CDC 调研报告中，Debezium 和 Canal 是用户中最流行使用的 CDC 工具，这两种工具用来同步 Changelog 到其它的系统中，如消息队列。据此，FLIP-105 首先支持了 Debezium 和 Canal 这两种格式，而且 Kafka Source 也已经可以支持解析上述格式并输出更新事件，在后续的版本中会进一步支持 Avro（Debezium） 和 Protobuf（Canal）。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> my_table ( </span><br><span class="line">...) <span class="keyword">WITH</span> (  </span><br><span class="line"><span class="string">'connector'</span>=<span class="string">'...'</span>, <span class="comment">-- e.g. 'kafka'  </span></span><br><span class="line"><span class="string">'format'</span>=<span class="string">'debezium-json'</span>,  </span><br><span class="line"><span class="string">'debezium-json.schema-include'</span>=<span class="string">'true'</span> <span class="comment">-- default: false (Debezium can be configured to include or exclude the message schema)  </span></span><br><span class="line"><span class="string">'debezium-json.ignore-parse-errors'</span>=<span class="string">'true'</span> <span class="comment">-- default: false</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-、Table-amp-SQL-支持-JDBC-Catalog"><a href="#2-、Table-amp-SQL-支持-JDBC-Catalog" class="headerlink" title="2 、Table &amp; SQL 支持 JDBC Catalog"></a>2 、Table &amp; SQL 支持 JDBC Catalog</h3><p>1.11.0 之前，用户如果依赖 Flink 的 Source/Sink 读写关系型数据库或读取 Changelog 时，必须要手动创建对应的 Schema。而且当数据库中的 Schema 发生变化时，也需要手动更新对应的 Flink 作业以保持一致和类型匹配，任何不匹配都会造成运行时报错使作业失败。用户经常抱怨这个看似冗余且繁琐的流程，体验极差。</p>
+<p>实际上对于任何和 Flink 连接的外部系统都可能有类似的上述问题，在 1.11.0 中重点解决了和关系型数据库对接的这个问题。FLIP-93 提供了 JDBC catalog 的基础接口以及 Postgres catalog 的实现，这样方便后续实现与其它类型的关系型数据库的对接。</p>
+<p>1.11.0 版本后，用户使用 Flink SQL 时可以自动获取表的 Schema 而不再需要输入 DDL。除此之外，任何 Schema 不匹配的错误都会在编译阶段提前进行检查报错，避免了之前运行时报错造成的作业失败。这是提升易用性和用户体验的一个典型例子。</p>
+<h3 id="3、Hive-实时数仓"><a href="#3、Hive-实时数仓" class="headerlink" title="3、Hive 实时数仓"></a>3、Hive 实时数仓</h3><p>从 1.9.0 版本开始 Flink 从生态角度致力于集成 Hive，目标打造批流一体的 Hive 数仓。经过前两个版本的迭代，已经达到了 Batch 兼容且生产可用，在 TPC-DS 10T Benchmark 下性能达到 Hive 3.0 的 7 倍以上。</p>
+<p>1.11.0 在 Hive 生态中重点实现了实时数仓方案，改善了端到端流式 ETL 的用户体验，达到了批流一体 Hive 数仓的目标。同时在兼容性、性能、易用性方面也进一步进行了加强。</p>
+<p>在实时数仓的解决方案中，凭借 Flink 的流式处理优势做到实时读写 Hive：</p>
+<ul>
+<li><p>Hive 写入：FLIP-115 完善扩展了 FileSystem Connector 的基础能力和实现，Table/SQL 层的 sink 可以支持各种格式（CSV、Json、Avro、Parquet、ORC），而且支持 Hive Table 的所有格式。</p>
+</li>
+<li><p>Partition 支持：数据导入 Hive 引入 Partition 提交机制来控制可见性，通过sink.partition-commit.trigger 控制 Partition 提交的时机，通过 sink.partition-commit.policy.kind 选择提交策略，支持 SUCCESS 文件和 Metastore 提交。</p>
+</li>
+<li><p>Hive 读取：实时化的流式读取 Hive，通过监控 Partition 生成增量读取新 Partition，或者监控文件夹内新文件生成来增量读取新文件。</p>
+</li>
+</ul>
+<p>在 Hive 可用性方面的提升：</p>
+<ul>
+<li><p>FLIP-123 通过 Hive Dialect 为用户提供语法兼容，这样用户无需在 Flink 和 Hive 的 CLI 之间切换，可以直接迁移 Hive 脚本到 Flink 中执行。</p>
+</li>
+<li><p>提供 Hive 相关依赖的内置支持，避免用户自己下载所需的相关依赖。现在只需要单独下载一个包，配置 HADOOP_CLASSPATH 就可以运行。</p>
+</li>
+</ul>
+<p>在 Hive 性能方面，1.10.0 中已经支持了 ORC（Hive 2+）的向量化读取，1.11.0 中我们补全了所有版本的 Parquet 和 ORC 向量化支持来提升性能。</p>
+<h3 id="4、全新-Source-API"><a href="#4、全新-Source-API" class="headerlink" title="4、全新 Source API"></a>4、全新 Source API</h3><p>前面也提到过，Source 和 Sink 是 Flink 对接外部系统的一个桥梁，对于完善生态、可用性及端到端的用户体验是很重要的环节。社区早在一年前就已经规划了 Source 端的彻底重构，从 FLIP-27 的 ID 就可以看出是很早的一个 Feature。但是由于涉及到很多复杂的内部机制和考虑到各种 Source Connector 的实现，设计上需要考虑的很全面。从 1.10.0 就开始做 POC 的实现，最终赶上了 1.11.0 版本的发布。</p>
+<p>先简要回顾下 Source 之前的主要问题：</p>
+<ul>
+<li><p>对用户而言，在 Flink 中改造已有的 Source 或者重新实现一个生产级的 Source Connector 不是一件容易的事情，具体体现在没有公共的代码可以复用，而且需要理解很多 Flink 内部细节以及实现具体的 Event Time 分配、Watermark 产出、Idleness 监测、线程模型等。</p>
+</li>
+<li><p>批和流的场景需要实现不同的 Source。</p>
+</li>
+<li><p>Partitions/Splits/Shards 概念在接口中没有显式表达，比如 Split 的发现逻辑和数据消费都耦合在 Source Sunction 的实现中，这样在实现 Kafka 或 Kinesis 类型的 Source 时增加了复杂性。</p>
+</li>
+<li><p>在 Runtime 执行层，Checkpoint 锁被 Source Function 抢占会带来一系列问题，框架很难进行优化。</p>
+</li>
+</ul>
+<p>FLIP-27 在设计时充分考虑了上述的痛点：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716184242183.png" alt="image-20200716184242183"></p>
+<ul>
+<li><p>首先在 Job Manager 和 Task Manager 中分别引入两种不同的组件 Split Enumerator 和 Source Reader，解耦 Split 发现和对应的消费处理，同时方便随意组合不同的策略。比如现有的 Kafka Connector 中有多种不同的 Partition 发现策略和实现耦合在一起，在新的架构下，我们只需要实现一种 Source Reader，就可以适配多种 Split Enumerator 的实现来对应不同的 Partition 发现策略。</p>
+</li>
+<li><p>在新架构下实现的 Source Connector 可以做到批流统一，唯一的小区别是对批场景的有限输入，Split Enumerator 会产出固定数量的 Split 集合并且每个 Split 都是有限数据集；对于流场景的无限输入，Split Enumerator 要么产出无限多的 Split 或者 Split 自身是无限数据集。</p>
+</li>
+<li><p>复杂的 Timestamp Assigner 以及 Watermark Generator 透明的内置在 Source Reader 模块内运行，对用户来说是无感知的。这样用户如果想实现新的 Source Connector，一般不再需要重复实现这部分功能。</p>
+</li>
+</ul>
+<p>目前 Flink 已有的 Source Connector 会在后续的版本中基于新架构来重新实现，Legacy Source 也会继续维护几个版本保持兼容性，用户也可以按照 Release 文档中的说明来尝试体验新 Source 的开发。</p>
+<h3 id="5、PyFlink-生态"><a href="#5、PyFlink-生态" class="headerlink" title="5、PyFlink 生态"></a>5、PyFlink 生态</h3><p>众所周知，Python 语言在机器学习和数据分析领域有着广泛的使用。Flink 从 1.9.0 版本开始发力兼容 Python 生态，Python 和 Flink 合力为 PyFlink，把 Flink 的实时分布式处理能力输出给 Python 用户。前两个版本 PyFlink 已经支持了 Python Table API 和 UDF，在 1.11.0 中扩大对 Python 生态库 Pandas 的支持以及和 SQL DDL/Client 的集成，同时 Python UDF 性能有了极大的提升。</p>
+<p>具体来说，之前普通的 Python UDF 每次调用只能处理一条数据，而且在 Java 端和 Python 端都需要序列化/反序列化，开销很大。1.11.0 中 Flink 支持在 Table &amp; SQL 作业中自定义和使用向量化 Python UDF，用户只需要在 UDF 修饰中额外增加一个参数 udf_type=“pandas” 即可。这样带来的好处是：</p>
+<ul>
+<li><p>每次调用可以处理 N 条数据。</p>
+</li>
+<li><p>数据格式基于 Apache Arrow，大大降低了 Java、Python 进程之间的序列化/反序列化开销。</p>
+</li>
+<li><p>方便 Python 用户基于 Numpy 和 Pandas 等数据分析领域常用的 Python 库，开发高性能的 Python UDF。</p>
+</li>
+</ul>
+<p>除此之外，1.11.0 中 PyFlink 还支持：</p>
+<ul>
+<li><p>PyFlink table 和 Pandas DataFrame 之间无缝切换（FLIP-120），增强 Pandas 生态的易用性和兼容性。</p>
+</li>
+<li><p>Table &amp; SQL 中可以定义和使用 Python UDTF（FLINK-14500），不再必需 Java/Scala UDTF。</p>
+</li>
+<li><p>Cython 优化 Python UDF 的性能（FLIP-121），对比 1.10.0 可以提升 30 倍。</p>
+</li>
+<li><p>Python UDF 中用户自定义 Metric（FLIP-112），方便监控和调试 UDF 的执行。</p>
+</li>
+</ul>
+<p>上述解读的都是侧重 API 层面，用户开发作业可以直接感知到的易用性的提升。下面我们看看执行引擎层在 1.11.0 中都有哪些值得关注的变化。</p>
+<h1 id="三、生产可用性和稳定性提升"><a href="#三、生产可用性和稳定性提升" class="headerlink" title="三、生产可用性和稳定性提升"></a>三、生产可用性和稳定性提升</h1><h3 id="1、支持-Application-模式和-Kubernetes-增强"><a href="#1、支持-Application-模式和-Kubernetes-增强" class="headerlink" title="1、支持 Application 模式和 Kubernetes 增强"></a>1、支持 Application 模式和 Kubernetes 增强</h3><p>1.11.0 版本前，Flink 主要支持如下两种模式运行：</p>
+<ul>
+<li><p>Session 模式：提前启动一个集群，所有作业都共享这个集群的资源运行。优势是避免每个作业单独启动集群带来的额外开销，缺点是隔离性稍差。如果一个作业把某个 Task Manager（TM）容器搞挂，会导致这个容器内的所有作业都跟着重启。虽然每个作业有自己独立的 Job Manager（JM）来管理，但是这些 JM 都运行在一个进程中，容易带来负载上的瓶颈。</p>
+</li>
+<li><p>Per-job 模式：为了解决 Session 模式隔离性差的问题，每个作业根据资源需求启动独立的集群，每个作业的 JM 也是运行在独立的进程中，负载相对小很多。</p>
+</li>
+</ul>
+<p>以上两种模式的共同问题是需要在客户端执行用户代码，编译生成对应的 Job Graph 提交到集群运行。在这个过程需要下载相关 Jar 包并上传到集群，客户端和网络负载压力容易成为瓶颈，尤其当一个客户端被多个用户共享使用。</p>
+<p>1.11.0 中引入了 Application 模式（FLIP-85）来解决上述问题，按照 Application 粒度来启动一个集群，属于这个 Application 的所有 Job 在这个集群中运行。核心是 Job Graph 的生成以及作业的提交不在客户端执行，而是转移到 JM 端执行，这样网络下载上传的负载也会分散到集群中，不再有上述 Client 单点上的瓶颈。</p>
+<p>用户可以通过 bin/flink run-application 来使用 Application 模式，目前 Yarn 和 Kubernetes（K8s）都已经支持这种模式。Yarn application 会在客户端将运行作业需要的依赖都通过 Yarn Local Resource 传递到 JM。K8s Application 允许用户构建包含用户 Jar 与依赖的镜像，同时会根据作业自动创建 TM，并在结束后销毁整个集群，相比 Session 模式具有更好的隔离性。K8s 不再有严格意义上的 Per-Job 模式，Application 模式相当于 Per-Job 在集群进行提交作业的实现。</p>
+<p>除了支持 Application 模式，Flink 原生 K8s 在 1.11.0 中还完善了很多基础的功能特性（FLINK-14460），以达到生产可用性的标准。例如 Node Selector、Label、Annotation、Toleration 等。为了更方便的与 Hadoop 集成，也支持根据环境变量自动挂载 Hadoop 配置的功能。</p>
+<h3 id="2、Checkpoint-amp-Savepoint-优化"><a href="#2、Checkpoint-amp-Savepoint-优化" class="headerlink" title="2、Checkpoint &amp; Savepoint 优化"></a>2、Checkpoint &amp; Savepoint 优化</h3><p>Checkpoint 和 Savepoint 机制一直是 Flink 保持先进性的核心竞争力之一，社区在这个领域的改动很谨慎，最近的几个大版本中几乎没有大的功能和架构上的调整。在用户邮件列表中，我们经常能看到用户反馈和抱怨的相关问题：比如 Checkpoint 长时间做不出来失败，Savepoint 在作业重启后不可用等等。1.11.0 有选择的解决了一些这方面的常见问题，提高生产可用性和稳定性。</p>
+<p>1.11.0 之前， Savepoint 中 Meta 数据和 State 数据分别保存在两个不同的目录中，这样如果想迁移 State 目录很难识别这种映射关系，也可能导致目录被误删除，对于目录清理也同样有麻烦。1.11.0 把两部分数据整合到一个目录下，这样方便整体转移和复用。另外，之前 Meta 引用 State 采用的是绝对路径，这样 State 目录迁移后路径发生变化也不可用，1.11.0 把 State 引用改成了相对路径解决了这个问题（FLINK-5763），这样 Savepoint 的管理维护、复用更加灵活方便。</p>
+<p>实际生产环境中，用户经常遭遇 Checkpoint 超时失败、长时间不能完成带来的困扰。一旦作业 failover 会造成回放大量的历史数据，作业长时间没有进度，端到端的延迟增加。1.11.0 从不同维度对 Checkpoint 的优化和提速做了改进，目标实现分钟甚至秒级的轻量型 Checkpoint。</p>
+<p>首先，增加了 Checkpoint Coordinator 通知 Task 取消 Checkpoint 的机制（FLINK-8871），这样避免 Task 端还在执行已经取消的 Checkpoint 而对系统带来不必要的压力。同时 Task 端放弃已经取消的 Checkpoint，可以更快的参与执行 Coordinator 新触发的 Checkpoint，某种程度上也可以避免新 Checkpoint 再次执行超时而失败。这个优化也对后面默认开启 Local Recovery 提供了便利，Task 端可以及时清理失效 Checkpoint 的资源。</p>
+<p>其次，在反压场景下，整个数据链路堆积了大量 Buffer，导致 Checkpoint Barrier 排在数据 Buffer 后面，不能被 Task 及时处理对齐，也就导致了 Checkpoint 长时间不能执行。1.11.0 中从两个维度对这个问题进行解决：</p>
+<p>1）尝试<strong>减少数据链路中的 Buffer 总量</strong>（FLINK-16428），这样 Checkpoint Barrier 可以尽快被处理对齐。</p>
+<ul>
+<li><p>上游输出端控制单个 Sub Partition 堆积 Buffer 的最大阈值（Backlog），避免负载不均场景下单个链路上堆积大量 Buffer。</p>
+</li>
+<li><p>在不影响网络吞吐性能的情况下合理修改上下游默认的 Buffer 配置。</p>
+</li>
+<li><p>上下游数据传输的基础协议进行了调整，允许单个数据链路可以配置 0 个独占 Buffer 而不死锁，这样总的 Buffer 数量和作业并发规模解耦。根据实际需求在吞吐性能和 Checkpoint 速度两者之间权衡，自定义 Buffer 配比。</p>
+</li>
+</ul>
+<p>这个优化有一部分工作已经在 1.11.0 中完成，剩余部分会在下个版本继续推进完成。</p>
+<p>2）实现了<strong>全新的 Unaligned Checkpoint 机制</strong>（FLIP-76）从根本上解决了反压场景下 Checkpoint Barrier 对齐的问题。实际上这个想法早在 1.10.0 版本之前就开始酝酿设计，由于涉及到很多模块的大改动，实现机制和线程模型也很复杂。我们实现了两种不同方案的原型 POC 进行了测试、性能对比，确定了最终的方案，因此直到 1.11.0 才完成了 MVP 版本，这也是 1.11.0 中执行引擎层唯一的一个重量级 Feature。其基本思想可以概括为：</p>
+<ul>
+<li><p>Checkpoint Barrier 跨数据 Buffer 传输，不在输入输出队列排队等待处理，这样就和算子的计算能力解耦，Barrier 在节点之间的传输只有网络延时，可以忽略不计。</p>
+</li>
+<li><p>每个算子多个输入链路之间不需要等待 Barrier 对齐来执行 Checkpoint，第一个到的 Barrier 就可以提前触发 Checkpoint，这样可以进一步提速 Checkpoint，不会因为个别链路的延迟而影响整体。</p>
+</li>
+<li><p>为了和之前 Aligned Checkpoint 的语义保持一致，所有未被处理的输入输出数据 Buffer 都将作为 Channel State 在 Checkpoint 执行时进行快照持久化，在 Failover 时连同 Operator State 一同进行恢复。换句话说，Aligned 机制保证的是 Barrier 前面所有数据必须被处理完，状态实时体现到 Operator State 中；而 Unaligned 机制把 Barrier 前面的未处理数据所反映的 Operator State 延后到 Failover Restart 时通过 Channel State 回放进行体现，从状态恢复的角度来说最终都是一致的。注意这里虽然引入了额外的 In-Flight Buffer 的持久化，但是这个过程实际是在 Checkpoint 的异步阶段完成的，同步阶段只是进行了轻量级的 Buffer 引用，所以不会过多占用算子的计算时间而影响吞吐性能。</p>
+</li>
+</ul>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="img"> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200716184519585.png" alt="image-20200716184519585"></p>
+<p>Unaligned Checkpoint 在反压严重的场景下可以明显加速 Checkpoint 的完成时间，因为它不再依赖于整体的计算吞吐能力，而和系统的存储性能更加相关，相当于计算和存储的解耦。但是它的使用也有一定的局限性，它会增加整体 State 的大小，对存储 IO 带来额外的开销，因此在 IO 已经是瓶颈的场景下就不太适合使用 Unaligned Checkpoint 机制。</p>
+<p>1.11.0 中 Unaligned Checkpoint 还没有作为默认模式，需要用户手动配置来开启，并且只在 Exactly-Once 模式下生效。但目前还不支持 Savepoint 模式，因为 Savepoint 涉及到作业的 Rescale 场景，Channel State 目前还不支持 State 拆分，在后面的版本会进一步支持，所以 Savepoint 目前还是会使用之前的 Aligned 模式，在反压场景下有可能需要很长时间才能完成。</p>
+<h1 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h1><p>Flink 1.11.0 版本的开发过程中，我们看到越来越多来自中国的贡献者参与到核心功能的开发中，见证了 Flink 在中国的生态发展越来越繁荣，比如来自腾讯公司的贡献者参与了 K8s、Checkpoint 等功能开发，来自字节跳动公司的贡献者参与了 Table &amp; SQL 层以及引擎网络层的一些开发。希望更多的公司能够参与到 Flink 开源社区中，分享在不同领域的经验，使 Flink 开源技术一直保持先进性，能够普惠到更多的受众。</p>
+<p>经过 1.11.0 “小版本”的短暂调整，Flink 正在酝酿下一个大版本的 Feature，相信一定会有很多重量级的特性登场，让我们拭目以待！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/big-data/flink/day3-how-to-be-flink-committer/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/big-data/flink/day4-flink-learn-gift-pack/" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、综述"><span class="nav-text">一、综述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、生态完善和易用性提升"><span class="nav-text">二、生态完善和易用性提升</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、Table-amp-SQL-支持-Change-Data-Capture（CDC）"><span class="nav-text">1、Table &amp; SQL 支持 Change Data Capture（CDC）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-、Table-amp-SQL-支持-JDBC-Catalog"><span class="nav-text">2 、Table &amp; SQL 支持 JDBC Catalog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、Hive-实时数仓"><span class="nav-text">3、Hive 实时数仓</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、全新-Source-API"><span class="nav-text">4、全新 Source API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、PyFlink-生态"><span class="nav-text">5、PyFlink 生态</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#三、生产可用性和稳定性提升"><span class="nav-text">三、生产可用性和稳定性提升</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、支持-Application-模式和-Kubernetes-增强"><span class="nav-text">1、支持 Application 模式和 Kubernetes 增强</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、Checkpoint-amp-Savepoint-优化"><span class="nav-text">2、Checkpoint &amp; Savepoint 优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、总结"><span class="nav-text">四、总结</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

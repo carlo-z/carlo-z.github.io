@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="bind实现按照socket网络编程的顺序，我们这一篇来分析bind函数。我们通过socket函数拿到了一个socket结构体。bind函数的逻辑其实比较简单，他就是给socket结构体绑定一个地址，简单来说，就是给他的某些字段赋值。talk is cheap。show me the code。 1234567891011121314151617181920static int sock_bi">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux下深入理解TCP&#x2F;IP协议的实现（基于linux1.2.13）">
+<meta property="og:url" content="https://carlo-z.com/computer-network/linux-srcode-tcp/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="bind实现按照socket网络编程的顺序，我们这一篇来分析bind函数。我们通过socket函数拿到了一个socket结构体。bind函数的逻辑其实比较简单，他就是给socket结构体绑定一个地址，简单来说，就是给他的某些字段赋值。talk is cheap。show me the code。 1234567891011121314151617181920static int sock_bi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-f3220906a0bf893d6a6c4b62d56c00d1_720w.jpg">
+<meta property="og:updated_time" content="2020-05-31T13:41:47.332Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux下深入理解TCP&#x2F;IP协议的实现（基于linux1.2.13）">
+<meta name="twitter:description" content="bind实现按照socket网络编程的顺序，我们这一篇来分析bind函数。我们通过socket函数拿到了一个socket结构体。bind函数的逻辑其实比较简单，他就是给socket结构体绑定一个地址，简单来说，就是给他的某些字段赋值。talk is cheap。show me the code。 1234567891011121314151617181920static int sock_bi">
+<meta name="twitter:image" content="https://pic2.zhimg.com/80/v2-f3220906a0bf893d6a6c4b62d56c00d1_720w.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/computer-network/linux-srcode-tcp/">
+
+
+
+
+
+  <title>linux下深入理解TCP/IP协议的实现（基于linux1.2.13） | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/linux-srcode-tcp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">linux下深入理解TCP/IP协议的实现（基于linux1.2.13）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-25T00:00:00+08:00">
+                2020-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-network/" itemprop="url" rel="index">
+                    <span itemprop="name">computer-network</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-network/tcp/" itemprop="url" rel="index">
+                    <span itemprop="name">tcp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<h1 id="bind实现"><a href="#bind实现" class="headerlink" title="bind实现"></a>bind实现</h1><p>按照socket网络编程的顺序，我们这一篇来分析bind函数。我们通过socket函数拿到了一个socket结构体。bind函数的逻辑其实比较简单，他就是给socket结构体绑定一个地址，简单来说，就是给他的某些字段赋值。talk is cheap。show me the code。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">static int sock_bind(int fd, struct sockaddr *umyaddr, int addrlen)</span><br><span class="line">&#123;</span><br><span class="line">    struct socket *sock;</span><br><span class="line">    int i;</span><br><span class="line">    char address[MAX_SOCK_ADDR];</span><br><span class="line">    int err;</span><br><span class="line"></span><br><span class="line">    // 通过文件描述符找到对应的socket   </span><br><span class="line">    if (!(sock = sockfd_lookup(fd, NULL))) </span><br><span class="line">        return(-ENOTSOCK);</span><br><span class="line"></span><br><span class="line">    if((err=move_addr_to_kernel(umyaddr,addrlen,address))&lt;0)</span><br><span class="line">        return err;</span><br><span class="line"></span><br><span class="line">    if ((i = sock-&gt;ops-&gt;bind(sock, (struct sockaddr *)address, addrlen)) &lt; 0) </span><br><span class="line">    &#123;</span><br><span class="line">        return(i);</span><br><span class="line">    &#125;</span><br><span class="line">    return(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要是两个函数，我们一个个来。</p>
+<h3 id="1、sockfd-lookup"><a href="#1、sockfd-lookup" class="headerlink" title="1、sockfd_lookup"></a>1、sockfd_lookup</h3><p>通过之前一些文章的分析，我们应该数socket和文件的内存布局比较熟悉了。下面的代码不难理解。就是根据文件描述符从pcb中找到inode节点。因为inode节点里保存了socket结构体，所以最后返回fd对应的socke结构体就行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// 通过fd找到file结构体，从而找到inode节点，最后找到socket结构体</span><br><span class="line">static inline struct socket *sockfd_lookup(int fd, struct file **pfile)</span><br><span class="line">&#123;</span><br><span class="line">    struct file *file;</span><br><span class="line">    struct inode *inode;</span><br><span class="line"></span><br><span class="line">    if (fd &lt; 0 || fd &gt;= NR_OPEN || !(file = current-&gt;files-&gt;fd[fd])) </span><br><span class="line">        return NULL;</span><br><span class="line"></span><br><span class="line">    inode = file-&gt;f_inode;</span><br><span class="line">    if (!inode || !inode-&gt;i_sock)</span><br><span class="line">        return NULL;</span><br><span class="line"></span><br><span class="line">    if (pfile) </span><br><span class="line">        *pfile = file;</span><br><span class="line"></span><br><span class="line">    return socki_lookup(inode);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// inode和socket互相引用</span><br><span class="line">inline struct socket *socki_lookup(struct inode *inode)</span><br><span class="line">&#123;</span><br><span class="line">    return &amp;inode-&gt;u.socket_i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、sock-gt-ops-gt-bind"><a href="#2、sock-gt-ops-gt-bind" class="headerlink" title="2、sock-&gt;ops-&gt;bind"></a>2、sock-&gt;ops-&gt;bind</h3><p>我们回顾socket那篇文章可以知道socket结构体里保存了一些列的操作函数，假设是协议簇是ipv4，那么bind函数就是inet_bind函数（省略了部分代码）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">// 给socket绑定一个地址</span><br><span class="line">static int inet_bind(struct socket *sock, struct sockaddr *uaddr,</span><br><span class="line">           int addr_len)</span><br><span class="line">&#123;</span><br><span class="line">    struct sockaddr_in *addr=(struct sockaddr_in *)uaddr;</span><br><span class="line">    // 拿到底层的sock结构体</span><br><span class="line">    struct sock *sk=(struct sock *)sock-&gt;data, *sk2;</span><br><span class="line">    unsigned short snum = 0 /* Stoopid compiler.. this IS ok */;</span><br><span class="line">    int chk_addr_ret;</span><br><span class="line"></span><br><span class="line">    // raw协议的这些数据由用户填充  </span><br><span class="line">    if(sock-&gt;type != SOCK_RAW)</span><br><span class="line">    &#123;   // 已经绑定了端口</span><br><span class="line">        if (sk-&gt;num != 0) </span><br><span class="line">            return(-EINVAL);</span><br><span class="line"></span><br><span class="line">        snum = ntohs(addr-&gt;sin_port);</span><br><span class="line"></span><br><span class="line">        // 端口无效则随机获取一个非root才能使用的端口</span><br><span class="line">        if (snum == 0) </span><br><span class="line">        &#123;</span><br><span class="line">            snum = get_new_socknum(sk-&gt;prot, 0);</span><br><span class="line">        &#125;</span><br><span class="line">        // 小于1024的端口需要超级用户权限</span><br><span class="line">        if (snum &lt; PROT_SOCK &amp;&amp; !suser()) </span><br><span class="line">            return(-EACCES);</span><br><span class="line">    &#125;</span><br><span class="line">    // 判断ip</span><br><span class="line">    chk_addr_ret = ip_chk_addr(addr-&gt;sin_addr.s_addr);</span><br><span class="line">    // 非法地址</span><br><span class="line">    if (addr-&gt;sin_addr.s_addr != 0 &amp;&amp; chk_addr_ret != IS_MYADDR &amp;&amp; chk_addr_ret != IS_MULTICAST)</span><br><span class="line">        return(-EADDRNOTAVAIL); /* Source address MUST be ours! */</span><br><span class="line">     // 记录ip    </span><br><span class="line">    if (chk_addr_ret || addr-&gt;sin_addr.s_addr == 0)</span><br><span class="line">        sk-&gt;saddr = addr-&gt;sin_addr.s_addr;</span><br><span class="line">    if(sock-&gt;type != SOCK_RAW)</span><br><span class="line">    &#123;</span><br><span class="line">        /* Make sure we are allowed to bind here. */</span><br><span class="line">        cli();</span><br><span class="line">        // 遍历哈希表，哈希表冲突解决法是链地址法，校验绑定的端口的合法性</span><br><span class="line">        for(sk2 = sk-&gt;prot-&gt;sock_array[snum &amp; (SOCK_ARRAY_SIZE -1)];</span><br><span class="line">                    sk2 != NULL; sk2 = sk2-&gt;next) </span><br><span class="line">        &#123;</span><br><span class="line">            // 端口还没有绑定过，直接校验下一个</span><br><span class="line">            if (sk2-&gt;num != snum) </span><br><span class="line">                continue;</span><br><span class="line">            // 端口已经被使用，没有设置可重用标记，比如断开连接后在2msl内是否可以重用，通过setsockopt函数设置</span><br><span class="line">            if (!sk-&gt;reuse)</span><br><span class="line">            &#123;</span><br><span class="line">                sti();</span><br><span class="line">                return(-EADDRINUSE);</span><br><span class="line">            &#125;</span><br><span class="line">            // 端口一样，但是ip不一样，ok，下一个</span><br><span class="line">            if (sk2-&gt;saddr != sk-&gt;saddr) </span><br><span class="line">                continue;   /* socket per slot ! -FB */</span><br><span class="line">            // 端口和ip都一样。被监听的端口不能同时被使用</span><br><span class="line">            if (!sk2-&gt;reuse || sk2-&gt;state==TCP_LISTEN) </span><br><span class="line">            &#123;</span><br><span class="line">                sti();</span><br><span class="line">                return(-EADDRINUSE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        sti();</span><br><span class="line">        // 保证该sk不在sock_array队列里</span><br><span class="line">        remove_sock(sk);</span><br><span class="line">        // 挂载到sock_array里</span><br><span class="line">        put_sock(snum, sk);</span><br><span class="line">        // tcp头中的源端口</span><br><span class="line">        sk-&gt;dummy_th.source = ntohs(sk-&gt;num);</span><br><span class="line">        sk-&gt;daddr = 0;</span><br><span class="line">        sk-&gt;dummy_th.dest = 0;</span><br><span class="line">    &#125;</span><br><span class="line">    return(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>bind函数主要是对待绑定的ip和端口做一个校验，合法的时就记录在sock结构体中。并且把sock结构体挂载到一个全局的哈希表里。</p>
+<br>
+
+<h1 id="listen-实现"><a href="#listen-实现" class="headerlink" title="listen 实现"></a>listen 实现</h1><p>listen函数的逻辑比bind还简单。bind主要是校验和绑定ip、端口。listen则是修改socket的状态，并记录一些设置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">static int sock_listen(int fd, int backlog)</span><br><span class="line">&#123;</span><br><span class="line">    struct socket *sock;</span><br><span class="line"></span><br><span class="line">    if (fd &lt; 0 || fd &gt;= NR_OPEN || current-&gt;files-&gt;fd[fd] == NULL)</span><br><span class="line">        return(-EBADF);</span><br><span class="line">    if (!(sock = sockfd_lookup(fd, NULL))) </span><br><span class="line">        return(-ENOTSOCK);</span><br><span class="line"></span><br><span class="line">    if (sock-&gt;state != SS_UNCONNECTED) </span><br><span class="line">    &#123;</span><br><span class="line">        return(-EINVAL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (sock-&gt;ops &amp;&amp; sock-&gt;ops-&gt;listen)</span><br><span class="line">        sock-&gt;ops-&gt;listen(sock, backlog);</span><br><span class="line">    // 设置socket的监听属性，accept函数时用到    </span><br><span class="line">    sock-&gt;flags |= SO_ACCEPTCON;</span><br><span class="line">    return(0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static int inet_listen(struct socket *sock, int backlog)</span><br><span class="line">&#123;</span><br><span class="line">    struct sock *sk = (struct sock *) sock-&gt;data;</span><br><span class="line">    // 如果没有绑定端口则绑定一个，并把sock加到sock_array中</span><br><span class="line">    if(inet_autobind(sk)!=0)</span><br><span class="line">        return -EAGAIN;</span><br><span class="line"></span><br><span class="line">    if ((unsigned) backlog &gt; 128)</span><br><span class="line">        backlog = 128;</span><br><span class="line">    // tcp接收队列的长度上限，不同系统实现不一样，具体参考tcp.c的使用</span><br><span class="line">    sk-&gt;max_ack_backlog = backlog;</span><br><span class="line">    // 修改socket状态，防止多次调用listen</span><br><span class="line">    if (sk-&gt;state != TCP_LISTEN)</span><br><span class="line">    &#123;   </span><br><span class="line">        sk-&gt;ack_backlog = 0;</span><br><span class="line">        sk-&gt;state = TCP_LISTEN;</span><br><span class="line">    &#125;</span><br><span class="line">    return(0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 绑定一个随机的端口，更新sk的源端口字段，并把sk挂载到端口对应的队列中，见bind函数的分析</span><br><span class="line">static int inet_autobind(struct sock *sk)</span><br><span class="line">&#123;</span><br><span class="line">    /* We may need to bind the socket. */</span><br><span class="line">    if (sk-&gt;num == 0) </span><br><span class="line">    &#123;</span><br><span class="line">        sk-&gt;num = get_new_socknum(sk-&gt;prot, 0);</span><br><span class="line">        if (sk-&gt;num == 0) </span><br><span class="line">            return(-EAGAIN);</span><br><span class="line">        put_sock(sk-&gt;num, sk);</span><br><span class="line">        sk-&gt;dummy_th.source = ntohs(sk-&gt;num);</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="accept-实现"><a href="#accept-实现" class="headerlink" title="accept 实现"></a>accept 实现</h1><p>我们继续分析tcp/ip协议的实现，这一篇讲一下accept，accept就是从已完成三次握手的连接队列里，摘下一个节点。我们可以了解到三次握手的实现和过程。很多同学都了解三次握手是什么，但是可能很少同学会深入思考或者看他的实现，众所周知，一个服务器启动的时候，会监听一个端口。其实就是新建了一个socket。那么如果有一个连接到来的时候，我们通过accept就能拿到这个新连接对应的socket。那么这个socket和监听的socket是不是同一个呢？其实socket分为监听型和通信型的。表面上，服务器用一个端口实现了多个连接，但是这个端口是用于监听的，底层用于和客户端通信的其实是另一个socket。所以每一个连接过来，负责监听的socket发现是一个建立连接的包（syn包），他就会生成一个新的socket与之通信（accept的时候返回的那个）。我们将会从代码中看到这个实现。<br>我们从accept函数开始，详细分析这个过程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">static int sock_accept(int fd, struct sockaddr *upeer_sockaddr, int *upeer_addrlen)</span><br><span class="line">&#123;</span><br><span class="line">    struct file *file;</span><br><span class="line">    struct socket *sock, *newsock;</span><br><span class="line">    int i;</span><br><span class="line">    char address[MAX_SOCK_ADDR];</span><br><span class="line">    int len;</span><br><span class="line"></span><br><span class="line">    if (fd &lt; 0 || fd &gt;= NR_OPEN || ((file = current-&gt;files-&gt;fd[fd]) == NULL))</span><br><span class="line">        return(-EBADF);</span><br><span class="line">    // 根据文件描述符找到对应的file结构体和socket结构</span><br><span class="line">      if (!(sock = sockfd_lookup(fd, &amp;file))) </span><br><span class="line">        return(-ENOTSOCK);</span><br><span class="line">    if (sock-&gt;state != SS_UNCONNECTED) </span><br><span class="line">    &#123;</span><br><span class="line">        return(-EINVAL);</span><br><span class="line">    &#125;</span><br><span class="line">    // socket没有调用过listen，报错，该标记位在listen中设置</span><br><span class="line">    if (!(sock-&gt;flags &amp; SO_ACCEPTCON)) </span><br><span class="line">    &#123;</span><br><span class="line">        return(-EINVAL);</span><br><span class="line">    &#125;</span><br><span class="line">    // 分配一个新的socket结构体</span><br><span class="line">    if (!(newsock = sock_alloc())) </span><br><span class="line">    &#123;</span><br><span class="line">        printk(&quot;NET: sock_accept: no more sockets\n&quot;);</span><br><span class="line">        return(-ENOSR); /* Was: EAGAIN, but we are out of system</span><br><span class="line">                   resources! */</span><br><span class="line">    &#125;</span><br><span class="line">    newsock-&gt;type = sock-&gt;type;</span><br><span class="line">    newsock-&gt;ops = sock-&gt;ops;</span><br><span class="line">    // 创建一个底层的sock结构体和新的socket结构体互相关联</span><br><span class="line">    if ((i = sock-&gt;ops-&gt;dup(newsock, sock)) &lt; 0) </span><br><span class="line">    &#123;</span><br><span class="line">        sock_release(newsock);</span><br><span class="line">        return(i);</span><br><span class="line">    &#125;</span><br><span class="line">    // accept返回一个新的sock和socket关联</span><br><span class="line">    i = newsock-&gt;ops-&gt;accept(sock, newsock, file-&gt;f_flags);</span><br><span class="line">    if ( i &lt; 0) </span><br><span class="line">    &#123;</span><br><span class="line">        sock_release(newsock);</span><br><span class="line">        return(i);</span><br><span class="line">    &#125;</span><br><span class="line">    // 返回一个新的文件描述符</span><br><span class="line">    if ((fd = get_fd(SOCK_INODE(newsock))) &lt; 0) </span><br><span class="line">    &#123;</span><br><span class="line">        sock_release(newsock);</span><br><span class="line">        return(-EINVAL);</span><br><span class="line">    &#125;</span><br><span class="line">    // 是否需要获取socket对应的地址</span><br><span class="line">    if (upeer_sockaddr)</span><br><span class="line">    &#123;</span><br><span class="line">        newsock-&gt;ops-&gt;getname(newsock, (struct sockaddr *)address, &amp;len, 1);</span><br><span class="line">        move_addr_to_user(address,len, upeer_sockaddr, upeer_addrlen);</span><br><span class="line">    &#125;</span><br><span class="line">    return(fd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们一步步来分析这个函数。<br>1 通过fd找到对应的socket结构体，然后申请一个新的socket结构体和sock结构体，并且把他们两互相关联。这个在前面的文章分析过。<br>2 然后把监听的socket和准备用于通信的结构体作为参数，调用accept函数。<br>3 最后返回通信socket对应的文件描述符。</p>
+<p>下面我们开始分析accept函数的真正实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">static int inet_accept(struct socket *sock, struct socket *newsock, int flags)</span><br><span class="line">&#123;</span><br><span class="line">    struct sock *sk1, *sk2;</span><br><span class="line">    int err;</span><br><span class="line">    sk1 = (struct sock *) sock-&gt;data;</span><br><span class="line">    // 返回一个新的sock结构体</span><br><span class="line">    sk2 = sk1-&gt;prot-&gt;accept(sk1,flags);</span><br><span class="line">    // 互相关联</span><br><span class="line">    newsock-&gt;data = (void *)sk2;</span><br><span class="line">    sk2-&gt;socket = newsock;</span><br><span class="line">    newsock-&gt;conn = NULL;</span><br><span class="line">    // 设置sock为已经建立连接状态</span><br><span class="line">    newsock-&gt;state = SS_CONNECTED;</span><br><span class="line">    return(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数主要是调底层的accept函数，底层accept函数会返回一个新的sock结构体，socket和sock结构体的区别和背景在之前的文章里已经分析过。总的来说，accept函数就是申请一个新的通信socket，这个socket关联了一个新的sock结构体。下面我们看看tcp层的accept函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">static struct sock *tcp_accept(struct sock *sk, int flags)</span><br><span class="line">&#123;</span><br><span class="line">    struct sock *newsk;</span><br><span class="line">    struct sk_buff *skb;</span><br><span class="line"></span><br><span class="line">    // 是一个listen的套接字</span><br><span class="line">    if (sk-&gt;state != TCP_LISTEN) </span><br><span class="line">    &#123;</span><br><span class="line">        sk-&gt;err = EINVAL;</span><br><span class="line">        return(NULL); </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cli();</span><br><span class="line">    // 从sock的receive_queue队列摘取已建立连接的节点，</span><br><span class="line">    while((skb = tcp_dequeue_established(sk)) == NULL) </span><br><span class="line">    &#123;   </span><br><span class="line">        // 没有已经建立连接的节点，但是设置了非阻塞模式，直接返回</span><br><span class="line">        if (flags &amp; O_NONBLOCK) </span><br><span class="line">        &#123;</span><br><span class="line">            sti();</span><br><span class="line">            release_sock(sk);</span><br><span class="line">            sk-&gt;err = EAGAIN;</span><br><span class="line">            return(NULL);</span><br><span class="line">        &#125;</span><br><span class="line">        release_sock(sk);</span><br><span class="line">        //阻塞进程，如果后续建立了连接，则进程被唤醒的时候，就会跳出while循环</span><br><span class="line">        interruptible_sleep_on(sk-&gt;sleep);</span><br><span class="line">      &#125;</span><br><span class="line">    sti();</span><br><span class="line"></span><br><span class="line">    // 拿到一个新的sock结构，由建立连接的时候创建的</span><br><span class="line">    newsk = skb-&gt;sk;</span><br><span class="line"></span><br><span class="line">    // 返回新的sock结构体</span><br><span class="line">    return(newsk);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数主要的逻辑是从监听型socket的已完成三次握手的队列里摘下一个节点。这个节点是一个sk_buff结构体，sk_buff是一个表示网络数据包的数据结构。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-f3220906a0bf893d6a6c4b62d56c00d1_720w.jpg" alt="img"></p>
+<p>accept函数就分析完了。下一篇我们分析三次握手。看看accept函数摘下的这个节点是如果生成的。</p>
+<br>
+
+<h1 id="connect-实现"><a href="#connect-实现" class="headerlink" title="connect 实现"></a>connect 实现</h1><p>分析完了服务器端，我们继续分析客户端，在socket编程中，客户端的流程是比较简单的，申请一个socket，然后调connect去发起连接就行。我们先看一下connect函数的定义。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    socket 通过socket函数申请的结构体</span><br><span class="line">    address 需要连接的目的地地址信息</span><br><span class="line">*/</span><br><span class="line">int connect(int socket, const struct sockaddr *address,socklen_t address_len);</span><br></pre></td></tr></table></figure>
+
+<p>我们通过层层调用揭开connect的迷雾。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">static int sock_connect(int fd, struct sockaddr *uservaddr, int addrlen)</span><br><span class="line">&#123;</span><br><span class="line">    struct socket *sock;</span><br><span class="line">    struct file *file;</span><br><span class="line">    int i;</span><br><span class="line">    char address[MAX_SOCK_ADDR];</span><br><span class="line">    int err;</span><br><span class="line"></span><br><span class="line">    if (fd &lt; 0 || fd &gt;= NR_OPEN || (file=current-&gt;files-&gt;fd[fd]) == NULL)</span><br><span class="line">        return(-EBADF);</span><br><span class="line">    if (!(sock = sockfd_lookup(fd, &amp;file)))</span><br><span class="line">        return(-ENOTSOCK);</span><br><span class="line"></span><br><span class="line">    i = sock-&gt;ops-&gt;connect(sock, (struct sockaddr *)address, addrlen, file-&gt;f_flags);</span><br><span class="line">    if (i &lt; 0) </span><br><span class="line">    &#123;</span><br><span class="line">        return(i);</span><br><span class="line">    &#125;</span><br><span class="line">    return(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>没有太多逻辑，通过fd找到关联的socket结构体。然后调底层函数。底层的函数是inet_connect，这个函数逻辑比较多，我们分开分析。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">if (sock-&gt;state == SS_CONNECTING &amp;&amp; sk-&gt;protocol == IPPROTO_TCP &amp;&amp; (flags &amp; O_NONBLOCK)) &#123;</span><br><span class="line">    if (sk-&gt;err != 0)</span><br><span class="line">    &#123;</span><br><span class="line">        err=sk-&gt;err;</span><br><span class="line">        sk-&gt;err=0;</span><br><span class="line">        return -err;</span><br><span class="line">    &#125;</span><br><span class="line">    return -EALREADY;   /* Connecting is currently in progress */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正在连接，并且是非阻塞的，直接返回。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">if (sock-&gt;state != SS_CONNECTING) </span><br><span class="line">    &#123;</span><br><span class="line">        // 如果绑过就不需要绑了</span><br><span class="line">        if(inet_autobind(sk)!=0)</span><br><span class="line">            return(-EAGAIN);</span><br><span class="line">        // 调用底层的连接函数，发一个syn包</span><br><span class="line">        err = sk-&gt;prot-&gt;connect(sk, (struct sockaddr_in *)uaddr, addr_len);</span><br><span class="line">        if (err &lt; 0) </span><br><span class="line">            return(err);</span><br><span class="line">        // 发送成功设置状态为连接中</span><br><span class="line">          sock-&gt;state = SS_CONNECTING;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续调用底层的函数，这里是tcp，所以是发送一个sync包（一会分析）。然后把socket状态修改为连接中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if (sk-&gt;state != TCP_ESTABLISHED &amp;&amp;(flags &amp; O_NONBLOCK)) </span><br><span class="line">    return(-EINPROGRESS);</span><br></pre></td></tr></table></figure>
+
+<p>还没建立连接成功并且是非阻塞的方式，直接返回。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// 连接建立中，阻塞当前进程</span><br><span class="line">while(sk-&gt;state == TCP_SYN_SENT || sk-&gt;state == TCP_SYN_RECV) </span><br><span class="line">&#123;   </span><br><span class="line">    // 可中断式睡眠，即可被信号唤醒</span><br><span class="line">    interruptible_sleep_on(sk-&gt;sleep);</span><br><span class="line">    // 被唤醒后，判断是因为被信号唤醒的还是因为建立建立了。</span><br><span class="line">    if (current-&gt;signal &amp; ~current-&gt;blocked) </span><br><span class="line">    &#123;</span><br><span class="line">        sti();</span><br><span class="line">        return(-ERESTARTSYS);</span><br><span class="line">    &#125;</span><br><span class="line">    // 连接失败</span><br><span class="line">    if(sk-&gt;err &amp;&amp; sk-&gt;protocol == IPPROTO_TCP)</span><br><span class="line">    &#123;</span><br><span class="line">        sti();</span><br><span class="line">        sock-&gt;state = SS_UNCONNECTED;</span><br><span class="line">        err = -sk-&gt;err;</span><br><span class="line">        sk-&gt;err=0;</span><br><span class="line">        return err; /* set by tcp_err() */</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>connect的时候如果没有设置阻塞标记，则进程会被挂起。tcp层建立连接后会唤醒进程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 连接建立</span><br><span class="line">    sock-&gt;state = SS_CONNECTED;</span><br><span class="line"></span><br><span class="line">    if (sk-&gt;state != TCP_ESTABLISHED &amp;&amp; sk-&gt;err) </span><br><span class="line">    &#123;</span><br><span class="line">        sock-&gt;state = SS_UNCONNECTED;</span><br><span class="line">        err=sk-&gt;err;</span><br><span class="line">        sk-&gt;err=0;</span><br><span class="line">        return(-err);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后被连接建立唤醒后，设置socket的状态。connect就完成了。</p>
+<p>下面我们看一下tcp层的connect的实现，其实就是从客户端视角看三次握手的过程。代码比较多，只看一下核心的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line">static int tcp_connect(struct sock *sk, struct sockaddr_in *usin, int addr_len)</span><br><span class="line">&#123;</span><br><span class="line">    struct sk_buff *buff;</span><br><span class="line">    struct device *dev=NULL;</span><br><span class="line">    unsigned char *ptr;</span><br><span class="line">    int tmp;</span><br><span class="line">    int atype;</span><br><span class="line">    struct tcphdr *t1;</span><br><span class="line">    struct rtable *rt;</span><br><span class="line"></span><br><span class="line">    if (usin-&gt;sin_family &amp;&amp; usin-&gt;sin_family != AF_INET) </span><br><span class="line">        return(-EAFNOSUPPORT);</span><br><span class="line"></span><br><span class="line">      // 不传ip则取本机ip</span><br><span class="line">      if(usin-&gt;sin_addr.s_addr==INADDR_ANY)</span><br><span class="line">        usin-&gt;sin_addr.s_addr=ip_my_addr();</span><br><span class="line">    // 禁止广播和多播</span><br><span class="line">    if ((atype=ip_chk_addr(usin-&gt;sin_addr.s_addr)) == IS_BROADCAST || atype==IS_MULTICAST) </span><br><span class="line">        return -ENETUNREACH;</span><br><span class="line"></span><br><span class="line">    sk-&gt;inuse = 1;</span><br><span class="line">    // 连接的远端地址</span><br><span class="line">    sk-&gt;daddr = usin-&gt;sin_addr.s_addr;</span><br><span class="line">    // 第一个字节的序列号</span><br><span class="line">    sk-&gt;write_seq = tcp_init_seq();</span><br><span class="line">    sk-&gt;window_seq = sk-&gt;write_seq;</span><br><span class="line">    sk-&gt;rcv_ack_seq = sk-&gt;write_seq -1;</span><br><span class="line">    sk-&gt;err = 0;</span><br><span class="line">    // 远端端口</span><br><span class="line">    sk-&gt;dummy_th.dest = usin-&gt;sin_port;</span><br><span class="line">    release_sock(sk);</span><br><span class="line">    // 分配一个skb</span><br><span class="line">    buff = sk-&gt;prot-&gt;wmalloc(sk,MAX_SYN_SIZE,0, GFP_KERNEL);</span><br><span class="line">    sk-&gt;inuse = 1;</span><br><span class="line">    // tcp头和选项，告诉对方自己的接收窗口大小1</span><br><span class="line">    buff-&gt;len = 24;</span><br><span class="line">    buff-&gt;sk = sk;</span><br><span class="line">    buff-&gt;free = 0;</span><br><span class="line">    buff-&gt;localroute = sk-&gt;localroute;</span><br><span class="line">    t1 = (struct tcphdr *) buff-&gt;data;</span><br><span class="line">    // 查找路由</span><br><span class="line">    rt=ip_rt_route(sk-&gt;daddr, NULL, NULL);</span><br><span class="line">    // 构建ip和mac头</span><br><span class="line">    tmp = sk-&gt;prot-&gt;build_header(buff, sk-&gt;saddr, sk-&gt;daddr, &amp;dev,</span><br><span class="line">                    IPPROTO_TCP, NULL, MAX_SYN_SIZE,sk-&gt;ip_tos,sk-&gt;ip_ttl);</span><br><span class="line">    buff-&gt;len += tmp;</span><br><span class="line">    t1 = (struct tcphdr *)((char *)t1 +tmp);</span><br><span class="line">    memcpy(t1,(void *)&amp;(sk-&gt;dummy_th), sizeof(*t1));</span><br><span class="line">    // 序列号为初始化的序列号</span><br><span class="line">    t1-&gt;seq = ntohl(sk-&gt;write_seq++);</span><br><span class="line">    // 下一个数据包中第一个字节的序列号 </span><br><span class="line">    sk-&gt;sent_seq = sk-&gt;write_seq;</span><br><span class="line">    buff-&gt;h.seq = sk-&gt;write_seq;</span><br><span class="line">    t1-&gt;ack = 0;</span><br><span class="line">    t1-&gt;window = 2;</span><br><span class="line">    t1-&gt;res1=0;</span><br><span class="line">    t1-&gt;res2=0;</span><br><span class="line">    t1-&gt;rst = 0;</span><br><span class="line">    t1-&gt;urg = 0;</span><br><span class="line">    t1-&gt;psh = 0;</span><br><span class="line">    // 是一个syn包</span><br><span class="line">    t1-&gt;syn = 1;</span><br><span class="line">    t1-&gt;urg_ptr = 0;</span><br><span class="line">    // TCP头包括24个字节，因为还有4个字节的选项</span><br><span class="line">    t1-&gt;doff = 6;</span><br><span class="line"></span><br><span class="line">    // 执行tcp头后面的第一个字节</span><br><span class="line">    ptr = (unsigned char *)(t1+1);</span><br><span class="line">    // 选项的类型是2，通知对方TCP报文中数据部分的最大值</span><br><span class="line">    ptr[0] = 2;</span><br><span class="line">    // 选项内容长度是4个字节</span><br><span class="line">    ptr[1] = 4;</span><br><span class="line">    // 组成MSS</span><br><span class="line">    ptr[2] = (sk-&gt;mtu) &gt;&gt; 8;</span><br><span class="line">    ptr[3] = (sk-&gt;mtu) &amp; 0xff;</span><br><span class="line">    // tcp头的校验和</span><br><span class="line">    tcp_send_check(t1, sk-&gt;saddr, sk-&gt;daddr,sizeof(struct tcphdr) + 4, sk);</span><br><span class="line"></span><br><span class="line">    // 设置套接字为syn_send状态</span><br><span class="line">    tcp_set_state(sk,TCP_SYN_SENT);</span><br><span class="line">    // 设置数据包往返时间需要的时间</span><br><span class="line">    sk-&gt;rto = TCP_TIMEOUT_INIT;</span><br><span class="line">    // 设置超时回调</span><br><span class="line">    sk-&gt;retransmit_timer.function=&amp;retransmit_timer;</span><br><span class="line">    sk-&gt;retransmit_timer.data = (unsigned long)sk;</span><br><span class="line">    // 设置超时时间</span><br><span class="line">    reset_xmit_timer(sk, TIME_WRITE, sk-&gt;rto);  </span><br><span class="line">    // 设置syn包的重试次数</span><br><span class="line">    sk-&gt;retransmits = TCP_SYN_RETRIES;</span><br><span class="line">    // 发送</span><br><span class="line">    sk-&gt;prot-&gt;queue_xmit(sk, dev, buff, 0);  </span><br><span class="line">    reset_xmit_timer(sk, TIME_WRITE, sk-&gt;rto);</span><br><span class="line">    release_sock(sk);</span><br><span class="line">    return(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码很长，主要是构建一个sync包发出去。在这个代码里我们大概能看到tcp协议的相关实现。上面的代码完成了第一次握手。下面再看一下第二次握手的代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// 发送了syn包</span><br><span class="line">if(sk-&gt;state==TCP_SYN_SENT)</span><br><span class="line">&#123;</span><br><span class="line">    // 发送了syn包，收到ack包说明可能是建立连接的ack包</span><br><span class="line">    if(th-&gt;ack)</span><br><span class="line">    &#123;</span><br><span class="line">        // 尝试连接但是对端回复了重置包</span><br><span class="line">        if(th-&gt;rst)</span><br><span class="line">            return tcp_std_reset(sk,skb);</span><br><span class="line">        // 建立连接的回包 </span><br><span class="line">        syn_ok=1;   </span><br><span class="line">        // 期待收到对端下一个的序列号</span><br><span class="line">        sk-&gt;acked_seq=th-&gt;seq+1;</span><br><span class="line">        sk-&gt;fin_seq=th-&gt;seq;</span><br><span class="line">        // 发送第三次握手的ack包，进入连接建立状态</span><br><span class="line">        tcp_send_ack(sk-&gt;sent_seq,sk-&gt;acked_seq,sk,th,sk-&gt;daddr);</span><br><span class="line">        tcp_set_state(sk, TCP_ESTABLISHED);</span><br><span class="line">        // 解析tcp选项</span><br><span class="line">        tcp_options(sk,th);</span><br><span class="line">        // 记录对端地址</span><br><span class="line">        sk-&gt;dummy_th.dest=th-&gt;source;</span><br><span class="line">        // 可以读取但是还没读取的序列号</span><br><span class="line">        sk-&gt;copied_seq = sk-&gt;acked_seq;</span><br><span class="line">        // 唤醒阻塞在connect函数的进程</span><br><span class="line">        if(!sk-&gt;dead)</span><br><span class="line">        &#123;</span><br><span class="line">            sk-&gt;state_change(sk);</span><br><span class="line">            sock_wake_async(sk-&gt;socket, 0);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码完成了第二次握手。tcp_send_ack完成第三次握手。这里不打算深入分析tcp层的代码，后续再深入分析。</p>
+<br>
+
+
+
+<br>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/redis/redis-list-blpop/" rel="next" title="线上redis blpop连接超时引发的血案">
+                <i class="fa fa-chevron-left"></i> 线上redis blpop连接超时引发的血案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/computer-network/linux-srcode-epoll/" rel="prev" title="理解epoll（基于linux2.6.12.1）">
+                理解epoll（基于linux2.6.12.1） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#bind实现"><span class="nav-text">bind实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、sockfd-lookup"><span class="nav-text">1、sockfd_lookup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、sock-gt-ops-gt-bind"><span class="nav-text">2、sock-&gt;ops-&gt;bind</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#listen-实现"><span class="nav-text">listen 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#accept-实现"><span class="nav-text">accept 实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#connect-实现"><span class="nav-text">connect 实现</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

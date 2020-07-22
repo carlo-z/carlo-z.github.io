@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="原文：https://developer.aliyun.com/article/755441  第一节 什么是max_connect_errors一开始接触这个参数的时候，感觉他和max_connections的含义差不多，字面意思简单明了，这个参数的含义是最大连接错误数，翻翻mysql的文档中的解释是If more than this many successive connection">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="被我误解的max_connect_errors">
+<meta property="og:url" content="https://carlo-z.com/mysql/mysql-issue-max-connect-errors/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="原文：https://developer.aliyun.com/article/755441  第一节 什么是max_connect_errors一开始接触这个参数的时候，感觉他和max_connections的含义差不多，字面意思简单明了，这个参数的含义是最大连接错误数，翻翻mysql的文档中的解释是If more than this many successive connection">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/e7e62a3ea66248ab87c6a1da1b147896.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/474298780e8146799e583ef69c8ece4a.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/8b0044d120c04ff8b8c721c78107207f.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/1ee779a11f0d41b880675f2833656da7.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/40952e24f8244f9ca6e48b5c29a32de9.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/d571db4eee624bbabaa2a362090121c1.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/949aead2e79c4bcd9bb585ee450b4126.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/84dbb96324234398b7b4d9b46016940f.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/aa85fe91b1c14d3599d9529dc5116d8f.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/38fa608ac69948328adbd4df1eb66fb1.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/84e5ecbcd4954b81818a12f2800fabe9.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/9ebc5df826144464aa49705656b1a5a5.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/f3c46a8b2bd54e46ba2d173a2879b4ee.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/81d064ae8f594d5aad095910872aefd6.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/de855eea61c44cb0a6a9129b95c25728.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/3d56c2d7717a4491a520da9d1feeac30.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/89b5d7e6da314e3d8ed1a1555bcd3c33.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/2d945a9ea18b484cb18867538c0fdd93.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/533ea2abead949eca053687ae90b10c7.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/633cfc564e104211b103eacc6a19c2c0.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/d063f01a34474c3f97cb01eb8580536d.png">
+<meta property="og:updated_time" content="2020-05-31T13:41:47.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="被我误解的max_connect_errors">
+<meta name="twitter:description" content="原文：https://developer.aliyun.com/article/755441  第一节 什么是max_connect_errors一开始接触这个参数的时候，感觉他和max_connections的含义差不多，字面意思简单明了，这个参数的含义是最大连接错误数，翻翻mysql的文档中的解释是If more than this many successive connection">
+<meta name="twitter:image" content="https://ucc.alicdn.com/pic/developer-ecology/e7e62a3ea66248ab87c6a1da1b147896.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/mysql/mysql-issue-max-connect-errors/">
+
+
+
+
+
+  <title>被我误解的max_connect_errors | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/mysql-issue-max-connect-errors/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">被我误解的max_connect_errors</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-22T00:00:00+08:00">
+                2020-05-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<blockquote>
+<p>原文：<a href="https://developer.aliyun.com/article/755441" target="_blank" rel="noopener">https://developer.aliyun.com/article/755441</a></p>
+</blockquote>
+<h2 id="第一节-什么是max-connect-errors"><a href="#第一节-什么是max-connect-errors" class="headerlink" title="第一节 什么是max_connect_errors"></a>第一节 什么是<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_max_connect_errors" target="_blank" rel="noopener">max_connect_errors</a></h2><p>一开始接触这个参数的时候，感觉他和max_connections的含义差不多，字面意思简单明了，这个参数的含义是最大连接错误数，翻翻mysql的文档中的解释是If more than this many successive connection requests from a host are interrupted without a successful connection, the server blocks that host from further connections,大意是：如果mysql服务器<strong>连续</strong>接收到了来自于<strong>同一个主机</strong>的请求，且这些<strong>连续</strong>的请求全部都<strong>没有成功的建立连接</strong>就被断开了，当这些<strong>连续</strong>的请求的累计值大于 max_connect_errors的设定值时，mysql服务器就会阻止这台主机后续的所有请求。”without a successful connection”那太好办了，故意输错密码不就行了，并且网上搜索了下该参数的说明，大量的文章充斥着” 防止暴力破解密码”的内容，于是兴高采烈的去做了测试。以下测试基于自建的mysql（非rds for mysql），由于rds for mysql无法直接设置set global，设置时需要在”rds控制台-参数这里”里进行设置：<a href="https://help.aliyun.com/document_detail/26179.html?spm=5176.11065259.1996646101.searchclickresult.44156de7pLffcV" target="_blank" rel="noopener">https://help.aliyun.com/document_detail/26179.html?spm=5176.11065259.1996646101.searchclickresult.44156de7pLffcV</a></p>
+<br>
+
+<h2 id="第二节-测试max-connect-errors"><a href="#第二节-测试max-connect-errors" class="headerlink" title="第二节 测试max_connect_errors"></a>第二节 测试<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_max_connect_errors" target="_blank" rel="noopener">max_connect_errors</a></h2><p>1,创建账号：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/e7e62a3ea66248ab87c6a1da1b147896.png" alt="image.png"></p>
+<p>2,设置max_connect_errors为3：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/474298780e8146799e583ef69c8ece4a.png" alt="image.png"></p>
+<p>3，故意输错密码3次，第四次使用正确密码登录进行验证：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/8b0044d120c04ff8b8c721c78107207f.png" alt="image.png"></p>
+<p>4,结论是第四次依然可以登录，即密码不对（认证失败）不属于” ”without a successful connection””的范畴，网上的” 防止暴力破解密码”也不成立了。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/1ee779a11f0d41b880675f2833656da7.png" alt="image.png"></p>
+<br>
+
+<h2 id="第三节-继续分析max-connect-errors"><a href="#第三节-继续分析max-connect-errors" class="headerlink" title="第三节 继续分析max_connect_errors"></a>第三节 继续分析<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_max_connect_errors" target="_blank" rel="noopener">max_connect_errors</a></h2><p>再继续看文档，发现还有以下说明：</p>
+<p>You can unblock blocked hosts by flushing the host cache. To do so, issue a <a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fflush.html%23flush-hosts" target="_blank" rel="noopener">FLUSH HOSTS</a> statement or execute a <a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fmysqladmin.html" target="_blank" rel="noopener">mysqladmin flush-hosts</a> command.</p>
+<p>大意是：</p>
+<p>当你遇到主机被阻止的时候，你可以清空host cache来解决，具体的清空方法是执行flush hosts或者在mysql服务器的shell里执行 <a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fmysqladmin.html" target="_blank" rel="noopener">mysqladmin flush-hosts</a>操作</p>
+<p>既然清空host cache可以解决主机被阻止访问的问题，那应该与host cache有些关系，看看host cache的介绍可能会有些眉目，关于host cache，文档解释如下：</p>
+<p>The MySQL server maintains a host cache in memory that contains information about clients: IP address, host name, and error information. The server uses this cache for nonlocal TCP connections. It does not use the cache for TCP connections established using a loopback interface address (127.0.0.1 or ::1), or for connections established using a Unix socket file, named pipe, or shared memory.</p>
+<p>大意是：</p>
+<p>Mysql服务器会在内存里管理一个host cache，host cache里保存了一些客户端的ip地址，主机名，以及这个客户端在与server建立连接时遇到的一些错误信息，host cache对不是本地的TCP连接才有效，所以host cache对127.0.0.1 或者::1是无效的，并且对于Unix socket file、named pipe以及 shared memory方式建立的连接也是无效的。并且通过了解，host cache的内容可以通过performance_schema.host_cache来查看，通过performance_schema.host_cache表里的几个列的描述信息，对之前的测试不成立的原因有些了解了，部分相关列如下：</p>
+<ul>
+<li>IP<br>The IP address of the client that connected to the server, expressed as a string.</li>
+</ul>
+<p>连接到mysql server的主机的连接地址</p>
+<ul>
+<li>HOST<br>The resolved DNS host name for that client IP, or NULL if the name is unknown.</li>
+</ul>
+<p>通过dns解析IP地址获取到的该IP地址对应的mysql client的主机名</p>
+<ul>
+<li>SUM_CONNECT_ERRORS<br>The number of connection errors that are deemed “blocking” (assessed against the max_connect_errors system variable). Only protocol handshake errors are counted, and only for hosts that passed validation (HOST_VALIDATED = YES).</li>
+<li>COUNT_HANDSHAKE_ERRORS<br>The number of errors detected at the wire protocol level.</li>
+</ul>
+<p>通过SUM_CONNECT_ERRORS(连接错误计数)描述，重点是红色部分：只计算协议握手过程的错误(Only protocol handshake errors are counted),也就是说max_connect_errors 可能记录的是协议(不确定是tcp协议还是应用协议，通过抓包以及COUNT_HANDSHAKE_ERRORS的” the wire protocol level”说明可能是指应用协议)的握手过程中出现的错误 ，也就是可以说网络不好(无法顺利握手)会导致该问题。</p>
+<br>
+
+<h2 id="第四节-继续测试max-connect-errors"><a href="#第四节-继续测试max-connect-errors" class="headerlink" title="第四节 继续测试max_connect_errors"></a>第四节 继续测试<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_max_connect_errors" target="_blank" rel="noopener">max_connect_errors</a></h2><p>通过之前的说明，需要模拟应用协议握手失败的情况，最后考虑使用telnet一些来做测试</p>
+<p>1,创建账号</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/40952e24f8244f9ca6e48b5c29a32de9.png" alt="image.png"></p>
+<p>2,设置max_connect_errors为3：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/d571db4eee624bbabaa2a362090121c1.png" alt="image.png"></p>
+<p>3,先使用telnet 10.26.254.217 3306连接3次，第四次使用正确的账号密码尝试登陆：</p>
+<p>telnet前查看performance_schema.host_cache的记录为空</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/949aead2e79c4bcd9bb585ee450b4126.png" alt="image.png"></p>
+<p>第一次telnet 10.26.254.217 3306</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/84dbb96324234398b7b4d9b46016940f.png" alt="image.png"></p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/aa85fe91b1c14d3599d9529dc5116d8f.png" alt="image.png"></p>
+<p>第二次 telnet 10.26.254.217 3306</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/38fa608ac69948328adbd4df1eb66fb1.png" alt="image.png"></p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/84e5ecbcd4954b81818a12f2800fabe9.png" alt="image.png"></p>
+<p>第三次telnet 10.26.254.217 3306</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/9ebc5df826144464aa49705656b1a5a5.png" alt="image.png"></p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/f3c46a8b2bd54e46ba2d173a2879b4ee.png" alt="image.png"></p>
+<p>第四次执行mysql -h10.26.254.217 -utestcon -p123 -P3306</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/81d064ae8f594d5aad095910872aefd6.png" alt="image.png"></p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/de855eea61c44cb0a6a9129b95c25728.png" alt="image.png"></p>
+<p>问题复现了，出现了错误提示ERROR 1129 (HY000): Host ‘10.24.236.231’ is blocked because of many connection errors; unblock with ‘mysqladmin flush-hosts’</p>
+<br>
+
+<h2 id="第五节-ERROR-1129-HY000-问题延伸"><a href="#第五节-ERROR-1129-HY000-问题延伸" class="headerlink" title="第五节 ERROR 1129 (HY000)问题延伸"></a>第五节 ERROR 1129 (HY000)问题延伸</h2><p>解决ERROR 1129 (HY000)的方法是执行flush host或者<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fmysqladmin.html" target="_blank" rel="noopener"> mysqladmin flush-hosts</a>，其目的是为了清空host cache里的信息，那是不是说不使用host cache就可以了？使host cache不生效的方式有如下两种：</p>
+<p>1,设置 <a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_host_cache_size" target="_blank" rel="noopener">host_cache_size</a> 为0/ 打开<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-options.html%23option_mysqld_skip-host-cache" target="_blank" rel="noopener">skip-host-cache</a></p>
+<p>2,打开<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-options.html%23option_mysqld_skip-name-resolve" target="_blank" rel="noopener">skip-name-resolve</a></p>
+<p>需要通过测试看下推测是否生效</p>
+<p>5.1 设置 <a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_host_cache_size" target="_blank" rel="noopener">host_cache_size 为0</a>/ 打开<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-options.html%23option_mysqld_skip-host-cache" target="_blank" rel="noopener">skip-host-cache</a><br>1,设置<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_host_cache_size" target="_blank" rel="noopener">host_cache_size</a>为0</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/3d56c2d7717a4491a520da9d1feeac30.png" alt="image.png"></p>
+<p>2,再次查询performance_schema.host_cache</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/89b5d7e6da314e3d8ed1a1555bcd3c33.png" alt="image.png"></p>
+<p>3,继续之前的测试：先使用telnet 10.26.254.217 3306连接3次，第四次使用正确的账号密码尝试登陆</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/2d945a9ea18b484cb18867538c0fdd93.png" alt="image.png"></p>
+<p>更改已经生效，<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_max_connect_errors" target="_blank" rel="noopener">max_connect_errors</a>的作用无效了</p>
+<p>5.2 打开<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-options.html%23option_mysqld_skip-name-resolve" target="_blank" rel="noopener">skip-name-resolve</a><br>1,在cnf配置文件里设置<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-options.html%23option_mysqld_skip-name-resolve" target="_blank" rel="noopener">skip-name-resolve </a>以此打开<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-options.html%23option_mysqld_skip-name-resolve" target="_blank" rel="noopener">skip-name-resolve</a></p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/533ea2abead949eca053687ae90b10c7.png" alt="image.png"></p>
+<p>2,继续之前的测试：先使用telnet 10.26.254.217 3306连接3次，第四次使用正确的账号密码尝试登陆</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/633cfc564e104211b103eacc6a19c2c0.png" alt="image.png"></p>
+<p>3,查询performance_schema.host_cache</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/d063f01a34474c3f97cb01eb8580536d.png" alt="image.png"></p>
+<p>更改已经生效，<a href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.243b3fd2jm9Efr&url=https%3A%2F%2Fdev.mysql.com%2Fdoc%2Frefman%2F5.6%2Fen%2Fserver-system-variables.html%23sysvar_max_connect_errors" target="_blank" rel="noopener">max_connect_errors</a>的作用无效了，RDS for mysql 的skip_name_resolve是on的状态，</p>
+<p>所以很少会出现ERROR 1129 (HY000)的错误</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/computer-network/linux-srcode-epoll/" rel="next" title="理解epoll（基于linux2.6.12.1）">
+                <i class="fa fa-chevron-left"></i> 理解epoll（基于linux2.6.12.1）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/java/collection/java-collection-map-init-oom-bug/" rel="prev" title="永远不要使用双花括号初始化实例，否则可能会OOM！">
+                永远不要使用双花括号初始化实例，否则可能会OOM！ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一节-什么是max-connect-errors"><span class="nav-text">第一节 什么是max_connect_errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二节-测试max-connect-errors"><span class="nav-text">第二节 测试max_connect_errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三节-继续分析max-connect-errors"><span class="nav-text">第三节 继续分析max_connect_errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四节-继续测试max-connect-errors"><span class="nav-text">第四节 继续测试max_connect_errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五节-ERROR-1129-HY000-问题延伸"><span class="nav-text">第五节 ERROR 1129 (HY000)问题延伸</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

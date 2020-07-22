@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="epoll在现在的软件中占据了很大的分量，nginx，libuv等单线程事件循环的软件都使用了epoll。之前分析过select，今天分析一下epoll。 简介 epoll与select epoll_create epoll_ctl epoll_wait ET、LT模式  1#include &amp;lt;sys/epoll.h&amp;gt;  epoll与select Epoll 没有最大并发连接的限制">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="理解epoll（基于linux2.6.12.1）">
+<meta property="og:url" content="https://carlo-z.com/computer-network/linux-srcode-epoll/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="epoll在现在的软件中占据了很大的分量，nginx，libuv等单线程事件循环的软件都使用了epoll。之前分析过select，今天分析一下epoll。 简介 epoll与select epoll_create epoll_ctl epoll_wait ET、LT模式  1#include &amp;lt;sys/epoll.h&amp;gt;  epoll与select Epoll 没有最大并发连接的限制">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-47c2346f42a179a09c73d96df45eb510_720w.jpg">
+<meta property="og:updated_time" content="2020-05-31T13:41:47.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="理解epoll（基于linux2.6.12.1）">
+<meta name="twitter:description" content="epoll在现在的软件中占据了很大的分量，nginx，libuv等单线程事件循环的软件都使用了epoll。之前分析过select，今天分析一下epoll。 简介 epoll与select epoll_create epoll_ctl epoll_wait ET、LT模式  1#include &amp;lt;sys/epoll.h&amp;gt;  epoll与select Epoll 没有最大并发连接的限制">
+<meta name="twitter:image" content="https://pic1.zhimg.com/80/v2-47c2346f42a179a09c73d96df45eb510_720w.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/computer-network/linux-srcode-epoll/">
+
+
+
+
+
+  <title>理解epoll（基于linux2.6.12.1） | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/linux-srcode-epoll/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">理解epoll（基于linux2.6.12.1）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-25T00:00:00+08:00">
+                2020-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-network/" itemprop="url" rel="index">
+                    <span itemprop="name">computer-network</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-network/tcp/" itemprop="url" rel="index">
+                    <span itemprop="name">tcp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<p>epoll在现在的软件中占据了很大的分量，nginx，libuv等单线程事件循环的软件都使用了epoll。之前分析过select，今天分析一下epoll。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
+<li>epoll与select</li>
+<li>epoll_create</li>
+<li>epoll_ctl</li>
+<li>epoll_wait</li>
+<li>ET、LT模式</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/epoll.h&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="epoll与select"><a href="#epoll与select" class="headerlink" title="epoll与select"></a>epoll与select</h3><ul>
+<li>Epoll 没有最大并发连接的限制，上限是最大可以打开文件的数目</li>
+<li>效率提升，epoll对于句柄事件的选择不是遍历的，是事件响应的，就是句柄上事件来就马上选择出来，不需要遍历整个句柄链表，因此效率非常高，内核将句柄用红黑树保存的，IO效率不随FD数目增加而线性下降。</li>
+<li>内存拷贝， select让内核把 FD 消息通知给用户空间的时候使用了内存拷贝的方式，开销较大，但是Epoll 在这点上使用了共享内存的方式，这个内存拷贝也省略了。</li>
+</ul>
+<p>相比于select，epoll最大的好处在于它不会随着监听fd数目的增长而降低效率。因为在内核中的select实现中，它是采用轮询来处理的，轮询的fd数目越多，自然耗时越多。</p>
+<p>并且，在linux/posix_types.h头文件有这样的声明：</p>
+<p>#define __FD_SETSIZE 1024</p>
+<p>表示select最多同时监听1024个fd，当然，可以通过修改头文件再重编译内核来扩大这个数目，但这似乎并不治本。</p>
+<p>epoll_create</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int epoll_create(int size);</span><br></pre></td></tr></table></figure>
+
+<p>创建一个epoll的句柄，</p>
+<ul>
+<li>size用来告诉内核这个监听的数目一共有多大。</li>
+</ul>
+<p>这个参数不同于select()中的第一个参数，给出最大监听的fd+1的值。需要注意的是，当创建好epoll句柄后，它就是会占用一个fd值，在linux下如果查看/proc/进程id/fd/，是能够看到这个fd的，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。</p>
+<p>epoll_ctl</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);</span><br></pre></td></tr></table></figure>
+
+<p>epoll的事件注册函数，它不同与select()是在监听事件时告诉内核要监听什么类型的事件，而是在这里先注册要监听的事件类型</p>
+<ul>
+<li>EPOLL_CTL_ADD 注册新的fd到epfd中；</li>
+<li>EPOLL_CTL_MOD 修改已经注册的fd的监听事件；</li>
+<li>EPOLL_CTL_DEL 从epfd中删除一个fd；</li>
+</ul>
+<p>fd 是要监听的fd</p>
+<p>event 是要监听什么样的事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">typedef union epoll_data &#123;</span><br><span class="line"> void *ptr;</span><br><span class="line"> int fd;</span><br><span class="line"> uint32_t u32;</span><br><span class="line"> uint64_t u64;</span><br><span class="line">&#125; epoll_data_t;</span><br><span class="line">struct epoll_event &#123;</span><br><span class="line"> uint32_t events; /* Epoll events */</span><br><span class="line"> epoll_data_t data; /* User data variable */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>events可以是以下几个宏的集合：</p>
+<ul>
+<li>EPOLLIN ：表示对应的文件描述符可以读（包括对端SOCKET正常关闭）；</li>
+<li>EPOLLOUT：表示对应的文件描述符可以写；</li>
+<li>EPOLLPRI：表示对应的文件描述符有紧急的数据可读（这里应该表示有带外数据到来）；</li>
+<li>EPOLLERR：表示对应的文件描述符发生错误；</li>
+<li>EPOLLHUP：表示对应的文件描述符被挂断；</li>
+<li>EPOLLET： 将EPOLL设为边缘触发(Edge Triggered)模式，这是相对于水平触发(Level Triggered)来说的。</li>
+<li>EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个socket的话，需要再次把这个socket加入到EPOLL队列里</li>
+</ul>
+<p>epoll_wait</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int epoll_wait(int epfd, struct epoll_event *events,</span><br><span class="line"> int maxevents, int timeout);</span><br></pre></td></tr></table></figure>
+
+<p>等待事件的产生，类似于select()调用。参数events用来从内核得到事件的集合，maxevents告之内核这个events有多大，这个 maxevents的值不能大于创建epoll_create()时的size，参数timeout是超时时间（毫秒，0会立即返回，-1将不确定，也有说法说是永久阻塞）。该函数返回需要处理的事件数目，如返回0表示已超时。</p>
+<h3 id="ET、LT两种工作模式"><a href="#ET、LT两种工作模式" class="headerlink" title="ET、LT两种工作模式"></a>ET、LT两种工作模式</h3><ul>
+<li>EPOLLLT：完全靠Linux-kernel-epoll驱动，应用程序只需要处理从epoll_wait返回的fds， 这些fds我们认为它们处于就绪状态。此时epoll可以认为是更快速的poll。</li>
+<li>EPOLLET：此模式下，系统仅仅通知应用程序哪些fds变成了就绪状态，一旦fd变成就绪状态，epoll将不再关注这个fd的任何状态信息(从epoll队列移除), 直到应用程序通过读写操作（非阻塞）触发EAGAIN状态，epoll认为这个fd又变为空闲状态，那么epoll又重新关注这个fd的状态变化(重新加入epoll队列)。 随着epoll_wait的返回，队列中的fds是在减少的，所以在大并发的系统中，EPOLLET更有优势，但是对程序员的要求也更高。</li>
+</ul>
+<p><strong>举例</strong></p>
+<p>假设现在对方发送了2k的数据，而我们先读取了1k，然后这时调用了epoll_wait，如果是边沿触发ET，那么这个fd变成就绪状态就会从epoll 队列移除，则epoll_wait 会一直阻塞，忽略尚未读取的1k数据; 而如果是水平触发LT，那么epoll_wait 还会检测到可读事件而返回，我们可以继续读取剩下的1k 数据。</p>
+<p><strong>总结:</strong> LT模式可能触发的次数更多, 一旦触发的次数多, 也就意味着效率会下降; 但这样也不能就说LT模式就比ET模式效率更低, 因为ET的使用对编程人员提出了更高更精细的要求,一旦使用者编程水平不够, 那ET模式还不如LT模式。</p>
+<p>ET模式仅当状态发生变化的时候才获得通知,这里所谓的状态的变化并不包括缓冲区中还有未处理的数据,也就是说,如果要采用ET模式,需要一直read/write直到出错为止,很多人反映为什么采用ET模式只接收了一部分数据就再也得不到通知了,大多因为这样;而LT模式是只要有数据没有处理就会一直通知下去的.</p>
+<h3 id="epoll-IO多路复用模型实现机制"><a href="#epoll-IO多路复用模型实现机制" class="headerlink" title="epoll IO多路复用模型实现机制"></a>epoll IO多路复用模型实现机制</h3><p>设想一下如下场景：有100万个客户端同时与一个服务器进程保持着TCP连接。而每一时刻，通常只有几百上千个TCP连接是活跃的(事实上大部分场景都是这种情况)。如何实现这样的高并发？</p>
+<p>在select/poll时代，服务器进程每次都把这100万个连接告诉操作系统(从用户态复制句柄数据结构到内核态)，让操作系统内核去查询这些套接字上是否有事件发生，轮询完后，再将句柄数据复制到用户态，让服务器应用程序轮询处理已发生的网络事件，这一过程资源消耗较大，因此，select/poll一般只能处理几千的并发连接。</p>
+<p>epoll的设计和实现与select完全不同。epoll通过在Linux内核中申请一个简易的文件系统，把原先的select/poll调用分成了3个部分：</p>
+<ul>
+<li>调用epoll_create()建立一个epoll对象(在epoll文件系统中为这个句柄对象分配资源)</li>
+<li>调用epoll_ctl向epoll对象中添加这100万个连接的套接字</li>
+<li>调用epoll_wait收集发生的事件的连接</li>
+</ul>
+<p>只需要在进程启动时建立一个epoll对象，然后在需要的时候向这个epoll对象中添加或者删除连接。同时，epoll_wait的效率也非常高，因为调用epoll_wait时，并没有一股脑的向操作系统复制这100万个连接的句柄数据，内核也不需要去遍历全部的连接。</p>
+<p>Linux内核具体的epoll机制实现思路。</p>
+<p>当某一进程调用epoll_create方法时，Linux内核会创建一个eventpoll结构体，这个结构体中有两个成员与epoll的使用方式密切相关</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * This structure is stored inside the &quot;private_data&quot; member of the file</span><br><span class="line"> * structure and rapresent the main data sructure for the eventpoll</span><br><span class="line"> * interface.</span><br><span class="line"> */</span><br><span class="line">struct eventpoll &#123;</span><br><span class="line"> /* Protect the this structure access */</span><br><span class="line"> spinlock_t lock;</span><br><span class="line"> /*</span><br><span class="line"> * This mutex is used to ensure that files are not removed</span><br><span class="line"> * while epoll is using them. This is held during the event</span><br><span class="line"> * collection loop, the file cleanup path, the epoll file exit</span><br><span class="line"> * code and the ctl operations.</span><br><span class="line"> */</span><br><span class="line"> struct mutex mtx;</span><br><span class="line"> /* Wait queue used by sys_epoll_wait() */</span><br><span class="line"> wait_queue_head_t wq;</span><br><span class="line"> /* Wait queue used by file-&gt;poll() */</span><br><span class="line"> wait_queue_head_t poll_wait;</span><br><span class="line"> /* List of ready file descriptors */</span><br><span class="line">/*双链表中则存放着将要通过epoll_wait返回给用户的满足条件的事件*/ </span><br><span class="line"> struct list_head rdllist;</span><br><span class="line">/*红黑树的根节点，这颗树中存储着所有添加到epoll中的需要监控的事件*/</span><br><span class="line"> /* RB tree root used to store monitored fd structs */</span><br><span class="line"> struct rb_root rbr;</span><br><span class="line"> /*</span><br><span class="line"> * This is a single linked list that chains all the &quot;struct epitem&quot; that</span><br><span class="line"> * happened while transfering ready events to userspace w/out</span><br><span class="line"> * holding -&gt;lock.</span><br><span class="line"> */</span><br><span class="line"> struct epitem *ovflist;</span><br><span class="line"> /* The user that created the eventpoll descriptor */</span><br><span class="line"> struct user_struct *user;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>每一个epoll对象都有一个独立的eventpoll结构体，用于存放通过epoll_ctl方法向epoll对象中添加进来的事件。这些事件都会挂载在红黑树中，如此，重复添加的事件就可以通过红黑树而高效的识别出来(红黑树的插入时间效率是lgn，其中n为树的高度)。</p>
+<p>而所有添加到epoll中的事件都会与设备(网卡)驱动程序建立回调关系，也就是说，当相应的事件发生时会调用这个回调方法。这个回调方法在内核中叫ep_poll_callback,它会将发生的事件添加到rdlist双链表中。</p>
+<p>在epoll中，对于每一个事件，都会建立一个epitem结构体，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * Each file descriptor added to the eventpoll interface will</span><br><span class="line"> * have an entry of this type linked to the &quot;rbr&quot; RB tree.</span><br><span class="line"> */</span><br><span class="line">struct epitem &#123;</span><br><span class="line"> /* RB tree node used to link this structure to the eventpoll RB tree */</span><br><span class="line">//红黑树节点 </span><br><span class="line"> struct rb_node rbn;</span><br><span class="line"> /* List header used to link this structure to the eventpoll ready list */</span><br><span class="line">//双向链表节点 </span><br><span class="line"> struct list_head rdllink;</span><br><span class="line"> /*</span><br><span class="line"> * Works together &quot;struct eventpoll&quot;-&gt;ovflist in keeping the</span><br><span class="line"> * single linked chain of items.</span><br><span class="line"> */</span><br><span class="line"> struct epitem *next;</span><br><span class="line"> /* The file descriptor information this item refers to */</span><br><span class="line">//事件句柄信息</span><br><span class="line"> struct epoll_filefd ffd;</span><br><span class="line"> /* Number of active wait queue attached to poll operations */</span><br><span class="line"> int nwait;</span><br><span class="line"> /* List containing poll wait queues */</span><br><span class="line"> struct list_head pwqlist;</span><br><span class="line"> /* The &quot;container&quot; of this item */</span><br><span class="line">//指向其所属的eventpoll对象 </span><br><span class="line"> struct </span><br><span class="line">![Uploading EPOLL_663944.jpg . . .]</span><br><span class="line">eventpoll *ep;</span><br><span class="line"> /* List header used to link this item to the &quot;struct file&quot; items list */</span><br><span class="line"> struct list_head fllink;</span><br><span class="line"> /* The structure that describe the interested events and the source fd */</span><br><span class="line"> //期待发生的事件类型 </span><br><span class="line"> struct epoll_event event;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>当调用epoll_wait检查是否有事件发生时，只需要检查eventpoll对象中的rdlist双链表中是否有epitem元素即可。如果rdlist不为空，则把发生的事件复制到用户态，同时将事件数量返回给用户。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-47c2346f42a179a09c73d96df45eb510_720w.jpg" alt="img"></p>
+<p>通过红黑树和双链表数据结构，并结合回调机制，造就了epoll的高效。</p>
+<p>下面我们按照epoll三部曲的顺序进行分析。</p>
+<h2 id="epoll-create"><a href="#epoll-create" class="headerlink" title="epoll_create"></a>epoll_create</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">asmlinkage long sys_epoll_create(int size)</span><br><span class="line">&#123;</span><br><span class="line">    int error, fd;</span><br><span class="line">    struct inode *inode;</span><br><span class="line">    struct file *file;</span><br><span class="line"></span><br><span class="line">    error = ep_getfd(&amp;fd, &amp;inode, &amp;file);</span><br><span class="line">    error = ep_file_init(file);</span><br><span class="line"></span><br><span class="line">    return fd;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们发现create函数似乎很简单。</p>
+<p>1、操作系统中，进程和文件系统是通过fd=&gt;file=&gt;node联系起来的。ep_getfd就是在建立这个联系。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">static int ep_getfd(int *efd, struct inode **einode, struct file **efile)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    // 获取一个file结构体</span><br><span class="line">    file = get_empty_filp();</span><br><span class="line">    // epoll在底层本身对应一个文件系统，从这个文件系统中获取一个inode</span><br><span class="line">    inode = ep_eventpoll_inode();</span><br><span class="line">    // 获取一个文件描述符</span><br><span class="line">    fd = get_unused_fd();</span><br><span class="line"></span><br><span class="line">    sprintf(name, &quot;[%lu]&quot;, inode-&gt;i_ino);</span><br><span class="line">    this.name = name;</span><br><span class="line">    this.len = strlen(name);</span><br><span class="line">    this.hash = inode-&gt;i_ino;</span><br><span class="line">    // 申请一个entry</span><br><span class="line">    dentry = d_alloc(eventpoll_mnt-&gt;mnt_sb-&gt;s_root, &amp;this);</span><br><span class="line">    dentry-&gt;d_op = &amp;eventpollfs_dentry_operations;</span><br><span class="line">    file-&gt;f_dentry = dentry;</span><br><span class="line"></span><br><span class="line">    // 建立file和inode的联系</span><br><span class="line">    d_add(dentry, inode);</span><br><span class="line">    // 建立fd=&gt;file的关联</span><br><span class="line">    fd_install(fd, file);</span><br><span class="line"></span><br><span class="line">    *efd = fd;</span><br><span class="line">    *einode = inode;</span><br><span class="line">    *efile = file;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>形成一个这种的结构。</p>
+<p>2、通过ep_file_init建立file和epoll的关联。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">static int ep_file_init(struct file *file)</span><br><span class="line">&#123;</span><br><span class="line">    struct eventpoll *ep;</span><br><span class="line"></span><br><span class="line">    ep = kmalloc(sizeof(struct eventpoll), GFP_KERNEL)</span><br><span class="line">    memset(ep, 0, sizeof(*ep));</span><br><span class="line">    // 一系列初始化</span><br><span class="line">    file-&gt;private_data = ep;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>epoll_create函数主要是建立一个数据结构。并返回一个文件描述符供后面使用。</p>
+<h2 id="epoll-ctl"><a href="#epoll-ctl" class="headerlink" title="epoll_ctl"></a>epoll_ctl</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">asmlinkage long</span><br><span class="line">sys_epoll_ctl(int epfd, int op, int fd, struct epoll_event __user *event)</span><br><span class="line">&#123;</span><br><span class="line">    int error;</span><br><span class="line">    struct file *file, *tfile;</span><br><span class="line">    struct eventpoll *ep;</span><br><span class="line">    struct epitem *epi;</span><br><span class="line">    struct epoll_event epds;</span><br><span class="line"></span><br><span class="line">    error = -EFAULT;</span><br><span class="line">    // 不是删除操作则复制用户数据到内核</span><br><span class="line">    if (</span><br><span class="line">        EP_OP_HASH_EVENT(op) &amp;&amp;</span><br><span class="line">        copy_from_user(&amp;epds, event, sizeof(struct epoll_event))</span><br><span class="line">      )</span><br><span class="line">        goto eexit_1;</span><br><span class="line"></span><br><span class="line">    // 根据一种的图，拿到epoll对应的file结构体</span><br><span class="line">    file = fget(epfd);</span><br><span class="line"></span><br><span class="line">    // 拿到操作的文件的file结构体</span><br><span class="line">    tfile = fget(fd);</span><br><span class="line">    // 通过file拿到epoll_event结构体，见上面的图</span><br><span class="line">    ep = file-&gt;private_data;</span><br><span class="line">    // 看这个文件描述符是否已经存在，epoll用红黑树维护这个数据</span><br><span class="line">    epi = ep_find(ep, tfile, fd);</span><br><span class="line"></span><br><span class="line">    switch (op) &#123;</span><br><span class="line">    // 新增</span><br><span class="line">    case EPOLL_CTL_ADD:</span><br><span class="line">        // 还没有则新增，有则报错</span><br><span class="line">        if (!epi) &#123;</span><br><span class="line">            epds.events |= POLLERR | POLLHUP;</span><br><span class="line">            // 插入红黑树</span><br><span class="line">            error = ep_insert(ep, &amp;epds, tfile, fd);</span><br><span class="line">        &#125; else</span><br><span class="line">            error = -EEXIST;</span><br><span class="line">        break;</span><br><span class="line">    // 删除</span><br><span class="line">    case EPOLL_CTL_DEL:</span><br><span class="line">        // 存在则删除，否则报错</span><br><span class="line">        if (epi)</span><br><span class="line">            error = ep_remove(ep, epi);</span><br><span class="line">        else</span><br><span class="line">            error = -ENOENT;</span><br><span class="line">        break;</span><br><span class="line">    // 修改</span><br><span class="line">    case EPOLL_CTL_MOD:</span><br><span class="line">        // 存在则修改，否则报错</span><br><span class="line">        if (epi) &#123;</span><br><span class="line">            epds.events |= POLLERR | POLLHUP;</span><br><span class="line">            error = ep_modify(ep, epi, &amp;epds);</span><br><span class="line">        &#125; else</span><br><span class="line">            error = -ENOENT;</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>epoll_ctl函数看起来也没有很复杂，就是根据用户传进来的信息去操作红黑树。对于红黑树的增删改查，查和删除就不分析了。就是去操作红黑树。增和改是类似的逻辑，所以我们只分析增操作就可以了。在此之前，我们先了解一些epoll中其他的数据结构。</p>
+<p>当我们新增一个需要监听的文件描述符的时候，系统会申请一个epitem去表示。epitem是保存了文件描述符、事件等信息的结构体。然后把epitem插入到eventpoll结构体维护的红黑树中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">static int ep_insert(struct eventpoll *ep, struct epoll_event *event,</span><br><span class="line">             struct file *tfile, int fd)</span><br><span class="line">&#123;</span><br><span class="line">    int error, revents, pwake = 0;</span><br><span class="line">    unsigned long flags;</span><br><span class="line">    struct epitem *epi;</span><br><span class="line">    struct ep_pqueue epq;</span><br><span class="line"></span><br><span class="line">    // 申请一个epitem</span><br><span class="line">    epi = EPI_MEM_ALLOC()</span><br><span class="line">    // 省略一系列初始化工作</span><br><span class="line">    // 记录所属的epoll</span><br><span class="line">    epi-&gt;ep = ep;</span><br><span class="line">    // 在epitem中保存文件描述符fd和file</span><br><span class="line">    EP_SET_FFD(&amp;epi-&gt;ffd, tfile, fd);</span><br><span class="line">    // 监听的事件</span><br><span class="line">    epi-&gt;event = *event;</span><br><span class="line">    epi-&gt;nwait = 0;</span><br><span class="line"></span><br><span class="line">    epq.epi = epi;</span><br><span class="line">    init_poll_funcptr(&amp;epq.pt, ep_ptable_queue_proc);</span><br><span class="line">    revents = tfile-&gt;f_op-&gt;poll(tfile, &amp;epq.pt);</span><br><span class="line"></span><br><span class="line">    // 把epitem插入红黑树</span><br><span class="line">    ep_rbtree_insert(ep, epi);</span><br><span class="line"></span><br><span class="line">    // 如果监听的事件在新增的时候就已经触发，则直接插入到epoll就绪队列</span><br><span class="line">    if ((revents &amp; event-&gt;events) &amp;&amp; !EP_IS_LINKED(&amp;epi-&gt;rdllink)) &#123;</span><br><span class="line">        // 把epitem插入就绪队列rdllist</span><br><span class="line">        list_add_tail(&amp;epi-&gt;rdllink, &amp;ep-&gt;rdllist);</span><br><span class="line">        //  有事件触发，唤醒阻塞在epoll_wait的进程队列</span><br><span class="line">        if (waitqueue_active(&amp;ep-&gt;wq))</span><br><span class="line">            wake_up(&amp;ep-&gt;wq);</span><br><span class="line">        if (waitqueue_active(&amp;ep-&gt;poll_wait))</span><br><span class="line">            pwake++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>新增操作的大致流程是：</p>
+<ol>
+<li>申请了一个新的epitem表示待观察的实体。他保存了文件描述符、感兴趣的事件等信息。</li>
+<li>插入红黑树</li>
+<li>判断新增的节点中对应的文件描述符和事件是否已经触发了，是则加入到就绪队列（由eventpoll-&gt;rdllist维护的一个队列）</li>
+</ol>
+<p>下面具体看一下如何判断感兴趣的事件在对应的文件描述符中是否已经触发。相关代码在ep_insert中。下面单独拎出来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    struct ep_pqueue &#123;</span><br><span class="line">        // 函数指针</span><br><span class="line">        poll_table pt;</span><br><span class="line">        // epitem</span><br><span class="line">        struct epitem *epi;</span><br><span class="line">    &#125;;</span><br><span class="line">*/</span><br><span class="line">struct ep_pqueue epq;</span><br><span class="line">epq.epi = epi;</span><br><span class="line">init_poll_funcptr(&amp;epq.pt, ep_ptable_queue_proc);</span><br><span class="line">revents = tfile-&gt;f_op-&gt;poll(tfile, &amp;epq.pt);</span><br><span class="line"></span><br><span class="line">static inline void init_poll_funcptr(poll_table *pt, poll_queue_proc qproc)</span><br><span class="line">&#123;</span><br><span class="line">    pt-&gt;qproc = qproc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码是定义了一个struct ep_pqueue 结构体，然后设置他的一个字段为ep_ptable_queue_proc。然后执行tfile-&gt;f_op-&gt;poll。poll函数由各个文件系统或者网络协议实现。我们以管道为例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">static unsigned int</span><br><span class="line">pipe_poll(struct file *filp, poll_table *wait)</span><br><span class="line">&#123;</span><br><span class="line">    unsigned int mask;</span><br><span class="line">    // 监听的文件描述符对应的inode</span><br><span class="line">    struct inode *inode = filp-&gt;f_dentry-&gt;d_inode;</span><br><span class="line">    struct pipe_inode_info *info = inode-&gt;i_pipe;</span><br><span class="line">    int nrbufs;</span><br><span class="line">    /*</span><br><span class="line">    static inline void poll_wait(struct file * filp, wait_queue_head_t * wait_address, poll_table *p)</span><br><span class="line">    &#123;</span><br><span class="line">        if (p &amp;&amp; wait_address)</span><br><span class="line">            p-&gt;qproc(filp, wait_address, p);</span><br><span class="line">    &#125;</span><br><span class="line">    */</span><br><span class="line">    poll_wait(filp, PIPE_WAIT(*inode), wait);</span><br><span class="line"></span><br><span class="line">    // 判断哪些事件触发了</span><br><span class="line">    nrbufs = info-&gt;nrbufs;</span><br><span class="line">    mask = 0;</span><br><span class="line">    if (filp-&gt;f_mode &amp; FMODE_READ) &#123;</span><br><span class="line">        mask = (nrbufs &gt; 0) ? POLLIN | POLLRDNORM : 0;</span><br><span class="line">        if (!PIPE_WRITERS(*inode) &amp;&amp; filp-&gt;f_version != PIPE_WCOUNTER(*inode))</span><br><span class="line">            mask |= POLLHUP;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (filp-&gt;f_mode &amp; FMODE_WRITE) &#123;</span><br><span class="line">        mask |= (nrbufs &lt; PIPE_BUFFERS) ? POLLOUT | POLLWRNORM : 0;</span><br><span class="line">        if (!PIPE_READERS(*inode))</span><br><span class="line">            mask |= POLLERR;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return mask;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到具体的poll函数里会首先执行poll_wait函数。这个函数只是简单执行struct ep_pqueue epq结构体中的函数，即刚才设置的ep_ptable_queue_proc。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">//  监听的文件描述符对应的file结构体，whead是等待监听的文件描述符对应的inode可用的队列</span><br><span class="line">static void ep_ptable_queue_proc(struct file *file, wait_queue_head_t *whead,</span><br><span class="line">                 poll_table *pt)</span><br><span class="line">&#123;</span><br><span class="line">    struct epitem *epi = EP_ITEM_FROM_EPQUEUE(pt);</span><br><span class="line">    struct eppoll_entry *pwq;</span><br><span class="line"></span><br><span class="line">    if (epi-&gt;nwait &gt;= 0 &amp;&amp; (pwq = PWQ_MEM_ALLOC())) &#123;</span><br><span class="line">        pwq-&gt;wait-&gt;flags = 0;</span><br><span class="line">        pwq-&gt;wait-&gt;task = NULL;</span><br><span class="line">        // 设置回调</span><br><span class="line">        pwq-&gt;wait-&gt;func = ep_poll_callback;</span><br><span class="line">        pwq-&gt;whead = whead;</span><br><span class="line">        pwq-&gt;base = epi;</span><br><span class="line">        // 插入等待监听的文件描述符的inode可用的队列，回调函数是ep_poll_callback</span><br><span class="line">        add_wait_queue(whead, &amp;pwq-&gt;wait);</span><br><span class="line">        list_add_tail(&amp;pwq-&gt;llink, &amp;epi-&gt;pwqlist);</span><br><span class="line">        epi-&gt;nwait++;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        /* We have to signal that an error occurred */</span><br><span class="line">        epi-&gt;nwait = -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要的逻辑是把当前进程插入监听的文件的等待队列中，等待唤醒。</p>
+<h2 id="epoll-wait"><a href="#epoll-wait" class="headerlink" title="epoll_wait"></a>epoll_wait</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">asmlinkage long sys_epoll_wait(int epfd, struct epoll_event __user *events,</span><br><span class="line">                   int maxevents, int timeout)</span><br><span class="line">&#123;</span><br><span class="line">    int error;</span><br><span class="line">    struct file *file;</span><br><span class="line">    struct eventpoll *ep;</span><br><span class="line">    // 通过epoll的fd拿到对应的file结构体</span><br><span class="line">    file = fget(epfd);</span><br><span class="line">    // 通过file结构体拿到eventpoll结构体</span><br><span class="line">    ep = file-&gt;private_data;</span><br><span class="line">    error = ep_poll(ep, events, maxevents, timeout);</span><br><span class="line">    return error;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,</span><br><span class="line">           int maxevents, long timeout)</span><br><span class="line">&#123;</span><br><span class="line">    int res, eavail;</span><br><span class="line">    unsigned long flags;</span><br><span class="line">    long jtimeout;</span><br><span class="line">    wait_queue_t wait;</span><br><span class="line"></span><br><span class="line">    // 计算超时时间</span><br><span class="line">    jtimeout = timeout == -1 || timeout &gt; (MAX_SCHEDULE_TIMEOUT - 1000) / HZ ?</span><br><span class="line">        MAX_SCHEDULE_TIMEOUT: (timeout * HZ + 999) / 1000;</span><br><span class="line"></span><br><span class="line">retry:</span><br><span class="line"></span><br><span class="line">    res = 0;</span><br><span class="line">    // 就绪队列为空</span><br><span class="line">    if (list_empty(&amp;ep-&gt;rdllist)) &#123;</span><br><span class="line">        // 加入阻塞队列</span><br><span class="line">        init_waitqueue_entry(&amp;wait, current);</span><br><span class="line">        add_wait_queue(&amp;ep-&gt;wq, &amp;wait);</span><br><span class="line"></span><br><span class="line">        for (;;) &#123;</span><br><span class="line">            // 挂起</span><br><span class="line">            set_current_state(TASK_INTERRUPTIBLE);</span><br><span class="line">            // 超时或者有就绪事件了，则跳出返回</span><br><span class="line">            if (!list_empty(&amp;ep-&gt;rdllist) || !jtimeout)</span><br><span class="line">                break;</span><br><span class="line">            // 被信号唤醒返回EINTR</span><br><span class="line">            if (signal_pending(current)) &#123;</span><br><span class="line">                res = -EINTR;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            // 设置定时器，然后进程挂起，等待超时唤醒（超时或者信号唤醒）</span><br><span class="line">            jtimeout = schedule_timeout(jtimeout);</span><br><span class="line">        &#125;</span><br><span class="line">        // 移出阻塞队列</span><br><span class="line">        remove_wait_queue(&amp;ep-&gt;wq, &amp;wait);</span><br><span class="line">        // 设置就绪</span><br><span class="line">        set_current_state(TASK_RUNNING);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 是否有事件就绪，唤醒的原因有几个，被唤醒不代表就有就绪事件</span><br><span class="line">    eavail = !list_empty(&amp;ep-&gt;rdllist);</span><br><span class="line"></span><br><span class="line">    write_unlock_irqrestore(&amp;ep-&gt;lock, flags);</span><br><span class="line">    // 处理就绪事件返回</span><br><span class="line">    if (!res &amp;&amp; eavail &amp;&amp;</span><br><span class="line">        !(res = ep_events_transfer(ep, events, maxevents)) &amp;&amp; jtimeout)</span><br><span class="line">        goto retry;</span><br><span class="line"></span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总的来说epoll_wait的逻辑主要是处理就绪队列的节点。</p>
+<ol>
+<li>如果就绪队列为空，则根据timeout做下一步处理，可能定时阻塞。</li>
+<li>如果就绪队列非空则处理就绪队列，返回给用户。处理就绪队列的函数是ep_events_transfer。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">static int ep_events_transfer(struct eventpoll *ep,</span><br><span class="line">                  struct epoll_event __user *events, int maxevents)</span><br><span class="line">&#123;</span><br><span class="line">    int eventcnt = 0;</span><br><span class="line">    struct list_head txlist;</span><br><span class="line"></span><br><span class="line">    INIT_LIST_HEAD(&amp;txlist);</span><br><span class="line"></span><br><span class="line">    if (ep_collect_ready_items(ep, &amp;txlist, maxevents) &gt; 0) &#123;</span><br><span class="line">        eventcnt = ep_send_events(ep, &amp;txlist, events);</span><br><span class="line">        ep_reinject_items(ep, &amp;txlist);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return eventcnt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要是三个函数，我们一个个看。</p>
+<p>1、ep_collect_ready_items收集就绪事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">static int ep_collect_ready_items(struct eventpoll *ep, struct list_head *txlist, int maxevents)</span><br><span class="line">&#123;</span><br><span class="line">    int nepi;</span><br><span class="line">    unsigned long flags;</span><br><span class="line">    // 就绪事件的队列</span><br><span class="line">    struct list_head *lsthead = &amp;ep-&gt;rdllist, *lnk;</span><br><span class="line">    struct epitem *epi;</span><br><span class="line"></span><br><span class="line">    for (nepi = 0, lnk = lsthead-&gt;next; lnk != lsthead &amp;&amp; nepi &lt; maxevents;) &#123;</span><br><span class="line">        // 通过结构体字段的地址拿到结构体首地址</span><br><span class="line">        epi = list_entry(lnk, struct epitem, rdllink);</span><br><span class="line"></span><br><span class="line">        lnk = lnk-&gt;next;</span><br><span class="line"></span><br><span class="line">        /* If this file is already in the ready list we exit soon */</span><br><span class="line">        if (!EP_IS_LINKED(&amp;epi-&gt;txlink)) &#123;</span><br><span class="line"></span><br><span class="line">            epi-&gt;revents = epi-&gt;event.events;</span><br><span class="line">            // 插入txlist队列，然后处理完再返回给用户</span><br><span class="line">            list_add(&amp;epi-&gt;txlink, txlist);</span><br><span class="line">            nepi++;</span><br><span class="line">            // 从就绪队列中删除</span><br><span class="line">            EP_LIST_DEL(&amp;epi-&gt;rdllink);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return nepi;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2、ep_send_events判断哪些事件触发了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">static int ep_send_events(struct eventpoll *ep, struct list_head *txlist,</span><br><span class="line">              struct epoll_event __user *events)</span><br><span class="line">&#123;</span><br><span class="line">    int eventcnt = 0;</span><br><span class="line">    unsigned int revents;</span><br><span class="line">    struct list_head *lnk;</span><br><span class="line">    struct epitem *epi;</span><br><span class="line">    // 遍历就绪队列，记录触发的事件</span><br><span class="line">    list_for_each(lnk, txlist) &#123;</span><br><span class="line">        epi = list_entry(lnk, struct epitem, txlink);</span><br><span class="line">        // 判断哪些事件触发了</span><br><span class="line">        revents = epi-&gt;ffd.file-&gt;f_op-&gt;poll(epi-&gt;ffd.file, NULL);</span><br><span class="line"></span><br><span class="line">        epi-&gt;revents = revents &amp; epi-&gt;event.events;</span><br><span class="line">        // 复制到用户空间</span><br><span class="line">        if (epi-&gt;revents) &#123;</span><br><span class="line">            if (__put_user(epi-&gt;revents,</span><br><span class="line">                       &amp;events[eventcnt].events) ||</span><br><span class="line">                __put_user(epi-&gt;event.data,</span><br><span class="line">                       &amp;events[eventcnt].data))</span><br><span class="line">                return -EFAULT;</span><br><span class="line">            // 只监听一次，触发完设置成对任何事件都不感兴趣</span><br><span class="line">            if (epi-&gt;event.events &amp; EPOLLONESHOT)</span><br><span class="line">                epi-&gt;event.events &amp;= EP_PRIVATE_BITS;</span><br><span class="line">            eventcnt++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return eventcnt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3、ep_reinject_items重新插入就绪队列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">static void ep_reinject_items(struct eventpoll *ep, struct list_head *txlist)</span><br><span class="line">&#123;</span><br><span class="line">    int ricnt = 0, pwake = 0;</span><br><span class="line">    unsigned long flags;</span><br><span class="line">    struct epitem *epi;</span><br><span class="line"></span><br><span class="line">    while (!list_empty(txlist)) &#123;</span><br><span class="line">        epi = list_entry(txlist-&gt;next, struct epitem, txlink);</span><br><span class="line">        EP_LIST_DEL(&amp;epi-&gt;txlink);</span><br><span class="line">        //  水平触发模式则一直通知，即重新加入就绪队列</span><br><span class="line">        if (EP_RB_LINKED(&amp;epi-&gt;rbn) &amp;&amp; !(epi-&gt;event.events &amp; EPOLLET) &amp;&amp;</span><br><span class="line">            (epi-&gt;revents &amp; epi-&gt;event.events) &amp;&amp; !EP_IS_LINKED(&amp;epi-&gt;rdllink)) &#123;</span><br><span class="line">            list_add_tail(&amp;epi-&gt;rdllink, &amp;ep-&gt;rdllist);</span><br><span class="line">            ricnt++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们发现，并有没有在epoll_wait的时候去收集就绪事件，那么就绪队列是谁处理的呢？我们回顾一下插入红黑树的时候，做了一个事情，就是在文件对应的inode上注册一个回调。当文件满足条件的时候，就会唤醒因为epoll_wait而阻塞的进程。epoll_wait会收集事件返回给用户。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">static int ep_poll_callback(wait_queue_t *wait, unsigned mode, int sync, void *key)</span><br><span class="line">&#123;</span><br><span class="line">    int pwake = 0;</span><br><span class="line">    unsigned long flags;</span><br><span class="line">    struct epitem *epi = EP_ITEM_FROM_WAIT(wait);</span><br><span class="line">    struct eventpoll *ep = epi-&gt;ep;</span><br><span class="line">    // 插入就绪队列</span><br><span class="line">    list_add_tail(&amp;epi-&gt;rdllink, &amp;ep-&gt;rdllist);</span><br><span class="line">    // 唤醒因epoll_wait而阻塞的进程</span><br><span class="line">    if (waitqueue_active(&amp;ep-&gt;wq))</span><br><span class="line">        wake_up(&amp;ep-&gt;wq);</span><br><span class="line">    if (waitqueue_active(&amp;ep-&gt;poll_wait))</span><br><span class="line">        pwake++;</span><br><span class="line">    return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>epoll的实现涉及的内容比较多，先分析一下大致的原理。有机会再深入分析。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/computer-network/linux-srcode-tcp/" rel="next" title="linux下深入理解TCP/IP协议的实现（基于linux1.2.13）">
+                <i class="fa fa-chevron-left"></i> linux下深入理解TCP/IP协议的实现（基于linux1.2.13）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/mysql/mysql-issue-max-connect-errors/" rel="prev" title="被我误解的max_connect_errors">
+                被我误解的max_connect_errors <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll与select"><span class="nav-text">epoll与select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ET、LT两种工作模式"><span class="nav-text">ET、LT两种工作模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll-IO多路复用模型实现机制"><span class="nav-text">epoll IO多路复用模型实现机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#epoll-create"><span class="nav-text">epoll_create</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#epoll-ctl"><span class="nav-text">epoll_ctl</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#epoll-wait"><span class="nav-text">epoll_wait</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

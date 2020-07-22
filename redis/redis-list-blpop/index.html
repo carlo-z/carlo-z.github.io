@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="列表REDIS_LIST （列表）是 LPUSH 、 LRANGE 等命令的操作对象， 它使用 REDIS_ENCODING_ZIPLIST 和 REDIS_ENCODING_LINKEDLIST 这两种方式编码：    编码的选择创建新列表时 Redis 默认使用 REDIS_ENCODING_ZIPLIST 编码， 当以下任意一个条件被满足时， 列表会被转换成 REDIS_ENCODING">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线上redis blpop连接超时引发的血案">
+<meta property="og:url" content="https://carlo-z.com/redis/redis-list-blpop/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="列表REDIS_LIST （列表）是 LPUSH 、 LRANGE 等命令的操作对象， 它使用 REDIS_ENCODING_ZIPLIST 和 REDIS_ENCODING_LINKEDLIST 这两种方式编码：    编码的选择创建新列表时 Redis 默认使用 REDIS_ENCODING_ZIPLIST 编码， 当以下任意一个条件被满足时， 列表会被转换成 REDIS_ENCODING">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134225.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134244.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134302.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134319.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134338.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134353.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134413.png">
+<meta property="og:updated_time" content="2020-07-01T12:43:42.948Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线上redis blpop连接超时引发的血案">
+<meta name="twitter:description" content="列表REDIS_LIST （列表）是 LPUSH 、 LRANGE 等命令的操作对象， 它使用 REDIS_ENCODING_ZIPLIST 和 REDIS_ENCODING_LINKEDLIST 这两种方式编码：    编码的选择创建新列表时 Redis 默认使用 REDIS_ENCODING_ZIPLIST 编码， 当以下任意一个条件被满足时， 列表会被转换成 REDIS_ENCODING">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134225.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/redis/redis-list-blpop/">
+
+
+
+
+
+  <title>线上redis blpop连接超时引发的血案 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/redis/redis-list-blpop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">线上redis blpop连接超时引发的血案</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-13T00:00:00+08:00">
+                2020-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<h1 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h1><p><code>REDIS_LIST</code> （列表）是 <a href="http://redis.readthedocs.org/en/latest/list/lpush.html#lpush" target="_blank" rel="noopener">LPUSH</a> 、 <a href="http://redis.readthedocs.org/en/latest/list/lrange.html#lrange" target="_blank" rel="noopener">LRANGE</a> 等命令的操作对象， 它使用 <code>REDIS_ENCODING_ZIPLIST</code> 和 <code>REDIS_ENCODING_LINKEDLIST</code> 这两种方式编码：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134225.png" alt></p>
+<br>
+
+<h2 id="编码的选择"><a href="#编码的选择" class="headerlink" title="编码的选择"></a>编码的选择</h2><p>创建新列表时 Redis 默认使用 <code>REDIS_ENCODING_ZIPLIST</code> 编码， 当以下任意一个条件被满足时， 列表会被转换成 <code>REDIS_ENCODING_LINKEDLIST</code> 编码：</p>
+<ul>
+<li>试图往列表新添加一个字符串值，且这个字符串的长度超过 <code>server.list_max_ziplist_value</code> （默认值为 <code>64</code> ）。</li>
+<li><code>ziplist</code> 包含的节点超过 <code>server.list_max_ziplist_entries</code> （默认值为 <code>512</code> ）。</li>
+</ul>
+<br>
+
+<h2 id="列表命令的实现"><a href="#列表命令的实现" class="headerlink" title="列表命令的实现"></a>列表命令的实现</h2><p>因为两种底层实现的抽象方式和列表的抽象方式非常接近， 所以列表命令几乎就是通过一对一地映射到底层数据结构的操作来实现的。</p>
+<p>既然这些映射都非常直观， 这里就不做赘述了， 在以下的内容中， 我们将焦点放在 <a href="http://redis.readthedocs.org/en/latest/list/blpop.html#blpop" target="_blank" rel="noopener">BLPOP</a> 、 <a href="http://redis.readthedocs.org/en/latest/list/brpop.html#brpop" target="_blank" rel="noopener">BRPOP</a> 和 <a href="http://redis.readthedocs.org/en/latest/list/brpoplpush.html#brpoplpush" target="_blank" rel="noopener">BRPOPLPUSH</a> 这个几个阻塞命令的实现原理上。</p>
+<br>
+
+<h2 id="阻塞的条件"><a href="#阻塞的条件" class="headerlink" title="阻塞的条件"></a>阻塞的条件</h2><p><a href="http://redis.readthedocs.org/en/latest/list/blpop.html#blpop" target="_blank" rel="noopener">BLPOP</a> 、 <a href="http://redis.readthedocs.org/en/latest/list/brpop.html#brpop" target="_blank" rel="noopener">BRPOP</a> 和 <a href="http://redis.readthedocs.org/en/latest/list/brpoplpush.html#brpoplpush" target="_blank" rel="noopener">BRPOPLPUSH</a> 三个命令都可能造成客户端被阻塞， 以下将这些命令统称为列表的阻塞原语。</p>
+<p>阻塞原语并不是一定会造成客户端阻塞：</p>
+<ul>
+<li>只有当这些命令被用于空列表时， 它们才会阻塞客户端。</li>
+<li>如果被处理的列表不为空的话， 它们就执行无阻塞版本的 <a href="http://redis.readthedocs.org/en/latest/list/lpop.html#lpop" target="_blank" rel="noopener">LPOP</a> 、 <a href="http://redis.readthedocs.org/en/latest/list/rpop.html#rpop" target="_blank" rel="noopener">RPOP</a> 或 <a href="http://redis.readthedocs.org/en/latest/list/rpoplpush.html#rpoplpush" target="_blank" rel="noopener">RPOPLPUSH</a> 命令。</li>
+</ul>
+<p>作为例子，以下流程图展示了 <a href="http://redis.readthedocs.org/en/latest/list/blpop.html#blpop" target="_blank" rel="noopener">BLPOP</a> 决定是否对客户端进行阻塞过程：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134244.png" alt></p>
+<br>
+
+<h2 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h2><p>当一个阻塞原语的处理目标为空键时， 执行该阻塞原语的客户端就会被阻塞。</p>
+<p>阻塞一个客户端需要执行以下步骤：</p>
+<ol>
+<li>将客户端的状态设为“正在阻塞”，并记录阻塞这个客户端的各个键，以及阻塞的最长时限（timeout）等数据。</li>
+<li>将客户端的信息记录到 <code>server.db[i]-&gt;blocking_keys</code> 中（其中 <code>i</code> 为客户端所使用的数据库号码）。</li>
+<li>继续维持客户端和服务器之间的网络连接，但不再向客户端传送任何信息，造成客户端阻塞。</li>
+</ol>
+<p>步骤 2 是将来解除阻塞的关键， <code>server.db[i]-&gt;blocking_keys</code> 是一个字典， 字典的键是那些造成客户端阻塞的键， 而字典的值是一个链表， 链表里保存了所有因为这个键而被阻塞的客户端 （被同一个键所阻塞的客户端可能不止一个）：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134302.png" alt></p>
+<p>在上图展示的 <code>blocking_keys</code> 例子中， <code>client2</code> 、 <code>client5</code> 和 <code>client1</code> 三个客户端就正被 <code>key1</code> 阻塞， 而其他几个客户端也正在被别的两个 key 阻塞。</p>
+<p>当客户端被阻塞之后，脱离阻塞状态有以下三种方法：</p>
+<ol>
+<li>被动脱离：有其他客户端为造成阻塞的键推入了新元素。</li>
+<li>主动脱离：到达执行阻塞原语时设定的最大阻塞时间。</li>
+<li>强制脱离：客户端强制终止和服务器的连接，或者服务器停机。</li>
+</ol>
+<p>以下内容将分别介绍被动脱离和主动脱离的实现方式。</p>
+<br>
+
+<h2 id="阻塞因-LPUSH-、-RPUSH-、-LINSERT-等添加命令而被取消"><a href="#阻塞因-LPUSH-、-RPUSH-、-LINSERT-等添加命令而被取消" class="headerlink" title="阻塞因 LPUSH 、 RPUSH 、 LINSERT 等添加命令而被取消"></a>阻塞因 LPUSH 、 RPUSH 、 LINSERT 等添加命令而被取消</h2><p>通过将新元素推入造成客户端阻塞的某个键中， 可以让相应的客户端从阻塞状态中脱离出来 （取消阻塞的客户端数量取决于推入元素的数量）。</p>
+<p><a href="http://redis.readthedocs.org/en/latest/list/lpush.html#lpush" target="_blank" rel="noopener">LPUSH</a> 、 <a href="http://redis.readthedocs.org/en/latest/list/rpush.html#rpush" target="_blank" rel="noopener">RPUSH</a> 和 <a href="http://redis.readthedocs.org/en/latest/list/linsert.html#linsert" target="_blank" rel="noopener">LINSERT</a> 这三个添加新元素到列表的命令， 在底层都由一个 <code>pushGenericCommand</code> 的函数实现， 这个函数的运作流程如下图：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134319.png" alt></p>
+<p>当向一个空键推入新元素时， <code>pushGenericCommand</code> 函数执行以下两件事：</p>
+<ol>
+<li>检查这个键是否存在于前面提到的 <code>server.db[i]-&gt;blocking_keys</code> 字典里， 如果是的话， 那么说明有至少一个客户端因为这个 key 而被阻塞，程序会为这个键创建一个 <code>redis.h/readyList</code> 结构， 并将它添加到 <code>server.ready_keys</code> 链表中。</li>
+<li>将给定的值添加到列表键中。</li>
+</ol>
+<p><code>readyList</code> 结构的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">readyList</span> &#123;</span></span><br><span class="line">    redisDb *db;</span><br><span class="line">    robj *key;</span><br><span class="line">&#125; readyList;</span><br></pre></td></tr></table></figure>
+
+<p><code>readyList</code> 结构的 <code>key</code> 属性指向造成阻塞的键，而 <code>db</code> 则指向该键所在的数据库。</p>
+<p>举个例子， 假设某个非阻塞客户端正在使用 <code>0</code> 号数据库， 而这个数据库当前的 <code>blocking_keys</code> 属性的值如下：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134338.png" alt></p>
+<p>如果这时客户端对该数据库执行 <code>PUSH key3 value</code> ， 那么 <code>pushGenericCommand</code> 将创建一个 <code>db</code> 属性指向 <code>0</code> 号数据库、 <code>key</code> 属性指向 <code>key3</code> 键对象的 <code>readyList</code> 结构 ， 并将它添加到服务器 <code>server.ready_keys</code> 属性的链表中：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134353.png" alt></p>
+<p>在我们这个例子中， 到目前为止， <code>pushGenericCommand</code> 函数完成了以下两件事：</p>
+<ol>
+<li>将 <code>readyList</code> 添加到服务器。</li>
+<li>将新元素 <code>value</code> 添加到键 <code>key3</code> 。</li>
+</ol>
+<p>虽然 <code>key3</code> 已经不再是空键， 但到目前为止， 被 <code>key3</code> 阻塞的客户端还没有任何一个被解除阻塞状态。</p>
+<p>为了做到这一点， Redis 的主进程在执行完 <code>pushGenericCommand</code> 函数之后， 会继续调用 <code>handleClientsBlockedOnLists</code> 函数， 这个函数执行以下操作：</p>
+<ol>
+<li>如果 <code>server.ready_keys</code> 不为空，那么弹出该链表的表头元素，并取出元素中的 <code>readyList</code> 值。</li>
+<li>根据 <code>readyList</code> 值所保存的 <code>key</code> 和 <code>db</code> ，在 <code>server.blocking_keys</code> 中查找所有因为 <code>key</code> 而被阻塞的客户端（以链表的形式保存）。</li>
+<li>如果 <code>key</code> 不为空，那么从 <code>key</code> 中弹出一个元素，并弹出客户端链表的第一个客户端，然后将被弹出元素返回给被弹出客户端作为阻塞原语的返回值。</li>
+<li>根据 <code>readyList</code> 结构的属性，删除 <code>server.blocking_keys</code> 中相应的客户端数据，取消客户端的阻塞状态。</li>
+<li>继续执行步骤 3 和 4 ，直到 <code>key</code> 没有元素可弹出，或者所有因为 <code>key</code> 而阻塞的客户端都取消阻塞为止。</li>
+<li>继续执行步骤 1 ，直到 <code>ready_keys</code> 链表里的所有 <code>readyList</code> 结构都被处理完为止。</li>
+</ol>
+<p>用一段伪代码描述以上操作可能会更直观一些：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">def handleClientsBlockedOnLists():</span><br><span class="line"></span><br><span class="line">    # 执行直到 ready_keys 为空</span><br><span class="line">    <span class="keyword">while</span> server.ready_keys != <span class="literal">NULL</span>:</span><br><span class="line"></span><br><span class="line">        # 弹出链表中的第一个 readyList</span><br><span class="line">        rl = server.ready_keys.pop_first_node()</span><br><span class="line"></span><br><span class="line">        # 遍历所有因为这个键而被阻塞的客户端</span><br><span class="line">        <span class="keyword">for</span> client in all_client_blocking_by_key(rl.key, rl.db):</span><br><span class="line"></span><br><span class="line">            # 只要还有客户端被这个键阻塞，就一直从键中弹出元素</span><br><span class="line">            # 如果被阻塞客户端执行的是 BLPOP ，那么对键执行 LPOP</span><br><span class="line">            # 如果执行的是 BRPOP ，那么对键执行 RPOP</span><br><span class="line">            element = rl.key.pop_element()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> element == <span class="literal">NULL</span>:</span><br><span class="line">                # 键为空，跳出 <span class="keyword">for</span> 循环</span><br><span class="line">                # 余下的未解除阻塞的客户端只能等待下次新元素的进入了</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                # 清除客户端的阻塞信息</span><br><span class="line">                server.blocking_keys.remove_blocking_info(client)</span><br><span class="line">                # 将元素返回给客户端，脱离阻塞状态</span><br><span class="line">                client.reply_list_item(element)</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h2 id="先阻塞先服务（FBFS）策略"><a href="#先阻塞先服务（FBFS）策略" class="headerlink" title="先阻塞先服务（FBFS）策略"></a>先阻塞先服务（FBFS）策略</h2><p>值得一提的是， 当程序添加一个新的被阻塞客户端到 <code>server.blocking_keys</code> 字典的链表中时， 它将该客户端放在链表的最后， 而当 <code>handleClientsBlockedOnLists</code> 取消客户端的阻塞时， 它从链表的最前面开始取消阻塞： 这个链表形成了一个 FIFO 队列， 最先被阻塞的客户端总是最先脱离阻塞状态， Redis 文档称这种模式为先阻塞先服务（FBFS，first-block-first-serve）。</p>
+<p>举个例子，在下图所示的阻塞状况中， 如果客户端对数据库执行 <code>PUSH key3 value</code> ， 那么只有 <code>client3</code> 会被取消阻塞， <code>client6</code> 和 <code>client4</code> 仍然阻塞； 如果客户端对数据库执行 <code>PUSH key3 value1 value2</code> ， 那么 <code>client3</code> 和 <code>client4</code> 的阻塞都会被取消， 而客户端 <code>client6</code> 依然处于阻塞状态：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200617134413.png" alt></p>
+<br>
+
+<h2 id="阻塞因超过最大等待时间而被取消"><a href="#阻塞因超过最大等待时间而被取消" class="headerlink" title="阻塞因超过最大等待时间而被取消"></a>阻塞因超过最大等待时间而被取消</h2><p>前面提到过， 当客户端被阻塞时， 所有造成它阻塞的键， 以及阻塞的最长时限会被记录在客户端里面， 并且该客户端的状态会被设置为“正在阻塞”。</p>
+<p>每次 Redis 服务器常规操作函数（server cron job）执行时， 程序都会检查所有连接到服务器的客户端， 查看那些处于“正在阻塞”状态的客户端的最大阻塞时限是否已经过期， 如果是的话， 就给客户端返回一个空白回复， 然后撤销对客户端的阻塞。</p>
+<p>可以用一段伪代码来描述这个过程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">def server_cron_job():</span><br><span class="line"></span><br><span class="line">    # 其他操作 ...</span><br><span class="line"></span><br><span class="line">    # 遍历所有已连接客户端</span><br><span class="line">    for client in server.all_connected_client:</span><br><span class="line"></span><br><span class="line">        # 如果客户端状态为“正在阻塞”，并且最大阻塞时限已到达</span><br><span class="line">        if client.state == BLOCKING and \</span><br><span class="line">           client.max_blocking_timestamp &lt; current_timestamp():</span><br><span class="line"></span><br><span class="line">            # 那么给客户端发送空回复,脱离阻塞状态</span><br><span class="line">            client.send_empty_reply()</span><br><span class="line"></span><br><span class="line">            # 并清除客户端在服务器上的阻塞信息</span><br><span class="line">            server.blocking_keys.remove_blocking_info(client)</span><br><span class="line"></span><br><span class="line">    # 其他操作 ...</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/flink/flink-on-k8s/" rel="next" title="Flink on K8s 部署">
+                <i class="fa fa-chevron-left"></i> Flink on K8s 部署
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/computer-network/linux-srcode-tcp/" rel="prev" title="linux下深入理解TCP/IP协议的实现（基于linux1.2.13）">
+                linux下深入理解TCP/IP协议的实现（基于linux1.2.13） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#列表"><span class="nav-text">列表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编码的选择"><span class="nav-text">编码的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列表命令的实现"><span class="nav-text">列表命令的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞的条件"><span class="nav-text">阻塞的条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞"><span class="nav-text">阻塞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞因-LPUSH-、-RPUSH-、-LINSERT-等添加命令而被取消"><span class="nav-text">阻塞因 LPUSH 、 RPUSH 、 LINSERT 等添加命令而被取消</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#先阻塞先服务（FBFS）策略"><span class="nav-text">先阻塞先服务（FBFS）策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻塞因超过最大等待时间而被取消"><span class="nav-text">阻塞因超过最大等待时间而被取消</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

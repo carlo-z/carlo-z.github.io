@@ -1,0 +1,2829 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Focus-1">
+<meta property="og:url" content="https://carlo-z.com/page/21/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Focus-1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/page/21/">
+
+
+
+
+
+  <title>Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-dstat/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-monitor-dstat/" itemprop="url">Linux dstat 性能检测工具说明</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-02T00:00:00+08:00">
+                2016-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="dstat-介绍"><a href="#dstat-介绍" class="headerlink" title="dstat 介绍"></a>dstat 介绍</h1><p> dstat命令是一个用来替换vmstat、iostat、netstat、nfsstat和ifstat这些命令的工具，是一个全能系统信息统计工具。<br>安装：<code>yum install -y dstat</code> </p>
+<p> dstat使用说明：<br>直接使用dstat，默认使用的是-cdngy参数，分别显示cpu、disk、net、page、system信息 </p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028135248.png" alt></p>
+<ul>
+<li>CPU状态: CPU的使用率。显示了用户占比，系统占比、空闲占比、等待占比、硬中断和软中断情况。</li>
+<li>磁盘统计: 磁盘的读写，分别显示磁盘的读、写总数。</li>
+<li>网络统计: 网络设备发送和接受的数据，分别显示的网络收、发数据总数。</li>
+<li>分页统计: 系统的分页活动。分别显示换入（in）和换出（out）。</li>
+<li>系统统计: 统计中断（int）和上下文切换（csw）。</li>
+</ul>
+<p>dstat 是一个可以取代vmstat，iostat，netstat和ifstat这些命令的多功能产品。dstat克服了这些命令的局限并增加了一些另外的功能，增加了监控项，也变得更灵活了。dstat可以很方便监控系统运行状况并用于基准测试和排除故障。</p>
+<p>dstat可以让你实时地看到所有系统资源，例如，你能够通过统计IDE控制器当前状态来比较磁盘利用率，或者直接通过网络带宽数值来比较磁盘的吞吐率（在相同的时间间隔内）。</p>
+<p>dstat将以列表的形式为你提供选项信息并清晰地告诉你是在何种幅度和单位显示输出。这样更好地避免了信息混乱和误报。更重要的是，它可以让你更容易编写插件来收集你想要的数据信息，以从未有过的方式进行扩展。</p>
+<p>dstat的默认输出是专门为人们实时查看而设计的，不过你也可以将详细信息通过CSV输出到一个文件，并导入到Gnumeric或者Excel生成表格中。</p>
+<br>
+
+<h1 id="常见选项"><a href="#常见选项" class="headerlink" title="常见选项"></a>常见选项</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">-c, --cpu：开启cpu统计</span><br><span class="line">-C：该选项跟cpu的编号（0~cpu核数-1,多个用都好隔开）如：0,3,total表示分别包含cpu0、cpu3和total</span><br><span class="line">-d, --disk：开启disk统计</span><br><span class="line">-D：改选跟具体的设备名（多个用逗号隔开）如：total,hda，hdb表示分别统计total、hda、hdb设备块</span><br><span class="line">-g, --page：开启分页统计</span><br><span class="line">-i, --int：开启中断统计</span><br><span class="line">-I 5,10：没弄懂呢~巴拉巴拉</span><br><span class="line">-l, --load：开启负载均衡统计，分别是1m，5m，15m</span><br><span class="line">-m, --mem：开启内存统计，包括used，buffers，cache，free</span><br><span class="line">-n, --net：开启net统计，包括接受和发送</span><br><span class="line">-N：该选项可以跟网络设备名多个用逗号隔开，如eth1,total</span><br><span class="line">-p, --proc：开启进程统计，包括runnable, uninterruptible, new</span><br><span class="line">-r, --io：io开启请求统计，包括read requests, write requests</span><br><span class="line">-s, --swap：开启swap统计，包括used, free</span><br><span class="line">-S：该选项可以跟具体的交换区，多个用逗号隔开如swap1,total</span><br><span class="line">-t, --time：启用时间和日期输出</span><br><span class="line">-T, --epoch：启用时间计数，从epoch到现在的秒数</span><br><span class="line">-y, --sys：开启系统统计，包括中断和上下文切换</span><br><span class="line">--aio：开启同步IO统计 (asynchronous I/O)</span><br><span class="line">--fs：开启文件系统统计，包括 (open files, inodes)</span><br><span class="line">--ipc：开启ipc统计，包括 (message queue, semaphores, shared memory)</span><br><span class="line">--lock：开启文件所统计，包括 (posix, flock, read, write)</span><br><span class="line">--raw：开启raw统计 (raw sockets)</span><br><span class="line">--socket：开启sockets统计，包括 (total, tcp, udp, raw, ip-fragments)</span><br><span class="line">--tcp：开启tcp统计，包括(listen, established, syn, time_wait, close)</span><br><span class="line">--udp：开启udp统计 (listen, active)</span><br><span class="line">--unix：开启unix统计(datagram, stream, listen, active)</span><br><span class="line">--vm：开启vm统计 (hard pagefaults, soft pagefaults, allocated, free)</span><br><span class="line">--stat：通过插件名称开启插件扩展，详见命令插件 ：可能的内置插件为aio, cpu, cpu24, disk, disk24, disk24old, epoch, fs, int, int24, io, ipc, load, lock, mem, net, page, page24, proc, raw, socket, swap, swapold, sys, tcp, time,udp, unix, vm</span><br><span class="line">--list：列举内置插件扩展的名称</span><br><span class="line">-a, --all：是默认值相当于 -cdngy (default)</span><br><span class="line">-f, --full：相当于 -C, -D, -I, -N and -S</span><br><span class="line">-v, --vmstat：相当于 -pmgdsc -D total</span><br><span class="line">-bw, --blackonwhite：在白色背景终端上改变显示颜色</span><br><span class="line">--float：在屏幕上的输出强制显示为浮点值（即带小数）(相反的选项设置为 --integer)</span><br><span class="line">--integer：在屏幕上的输出强制显示为整数值，此为默认值（相反的选项设置为--float）</span><br><span class="line">--nocolor：禁用颜色(意味着选项 --noupdate)</span><br><span class="line">--noheaders：禁止重复输出header，默认会打印一屏幕输出一次header</span><br><span class="line">--noupdate：当delay&gt;1时禁止在过程中更新（即在时间间隔内不允许更新）</span><br><span class="line">--output file：可以把状态信息以csv的格式重定向到指定的文件中，以便日后查看</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h1><table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>delay</td>
+<td>两次输出之间的时间间隔，默认是1s</td>
+</tr>
+<tr>
+<td>count</td>
+<td>报告输出的次数，默认是没有限制，一直输出知道ctrl+c</td>
+</tr>
+</tbody></table>
+<br>
+
+<h1 id="命令插件"><a href="#命令插件" class="headerlink" title="命令插件"></a>命令插件</h1><p>虽然anyone可以自由的为dstat编写插件，但dstat附带大量的插件已经大大扩展其功能，下面是dstat附带插件的一个概述</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">-battery：电池电池百分比(需要ACPI)</span><br><span class="line">-battery-remain：电池剩余小时、分钟(需要ACPI)</span><br><span class="line">-cpufreq：CPU频率百分比(需要ACPI)</span><br><span class="line">-dbus：dbus连接的数量(需要python-dbus)</span><br><span class="line">-disk-util：显示某一时间磁盘的忙碌状况</span><br><span class="line">-fan：风扇转速(需要ACPI)</span><br><span class="line">-freespace：每个文件系统的磁盘使用情况</span><br><span class="line">-gpfs：gpfs读/写 I/O(需要mmpmon)</span><br><span class="line">-gpfs-ops：GPFS文件系统操作(需要mmpmon)</span><br><span class="line">-helloworld：dstat插件Hello world示例</span><br><span class="line">-innodb-buffer：显示innodb缓冲区统计</span><br><span class="line">-innodb-io：显示innodb I/O统计数据</span><br><span class="line">-innodb-ops：显示innodb操作计数器</span><br><span class="line">-lustre：显示lustreI/O吞吐量</span><br><span class="line">-memcache-hits：显示memcache 的命中和未命中的数量</span><br><span class="line">-mysql5-cmds：显示MySQL5命令统计</span><br><span class="line">-mysql5-conn：显示MySQL5连接统计</span><br><span class="line">-mysql5-io：MySQL5 I/O统计数据</span><br><span class="line">-mysql5-keys：显示MySQL5关键字统计</span><br><span class="line">-mysql-io：显示MySQL I/O统计数据</span><br><span class="line">-mysql-keys：显示MySQL关键字统计</span><br><span class="line">-net-packets：显示接收和发送的数据包的数量</span><br><span class="line">-nfs3：显示NFS v3客户端操作</span><br><span class="line">-nfs3-ops：显示扩展NFS v3客户端操作</span><br><span class="line">-nfsd3：显示NFS v3服务器操作</span><br><span class="line">-nfsd3-ops：显示扩展NFS v3服务器操作</span><br><span class="line">-ntp：显示NTP服务器的ntp时间</span><br><span class="line">-postfix：显示后缀队列大小(需要后缀)</span><br><span class="line">-power：显示电源使用量</span><br><span class="line">-proc-count：显示处理器的总数</span><br><span class="line">-rpc：显示rpc客户端调用统计</span><br><span class="line">-rpcd：显示RPC服务器调用统计</span><br><span class="line">-sendmail：显示sendmail队列大小(需要sendmail)</span><br><span class="line">-snooze：显示每秒运算次数</span><br><span class="line">-test：显示插件输出</span><br><span class="line">-thermal：热系统的温度传感器</span><br><span class="line">-top-bio：显示消耗块I/O最大的进程</span><br><span class="line">-top-cpu：显示消耗CPU最大的进程</span><br><span class="line">-top-cputime：显示使用CPU时间最大的进程(单位ms)</span><br><span class="line">-top-cputime-avg：显示使用CPU时间平均最大的进程(单位ms)</span><br><span class="line">-top-io：显示消耗I/O最大进程</span><br><span class="line">-top-latency：显示总延迟最大的进程(单位ms)</span><br><span class="line">-top-latency-avg：显示平均延时最大的进程(单位ms)</span><br><span class="line">-top-mem：显示使用内存最大的进程</span><br><span class="line">-top-oom：显示第一个被OOM结束的进程</span><br><span class="line">-utmp：显示utmp连接的数量(需要python-utmp)</span><br><span class="line">-vmk-hba：显示VMware ESX内核vmhba统计数</span><br><span class="line">-vmk-int：显示VMware ESX内核中断数据</span><br><span class="line">-vmk-nic：显示VMware ESX内核端口统计</span><br><span class="line">-vz-io：显示每个OpenVZ请求CPU使用率</span><br><span class="line">-vz-ubc：显示OpenVZ用户统计</span><br><span class="line">-wifi：无线连接质量和信号噪声比</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="常用插件"><a href="#常用插件" class="headerlink" title="常用插件"></a>常用插件</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--disk-util：显示某一时间磁盘的忙碌状况</span><br><span class="line">--freespace：显示当前磁盘空间使用率</span><br><span class="line">--proc-count：显示正在运行的程序数量</span><br><span class="line">--top-bio：显示块I/O最大的进程</span><br><span class="line">--top-cpu：显示CPU占用最大的进程</span><br><span class="line">--top-io：显示正常I/O最大的进程</span><br><span class="line">--top-mem：显示占用最多内存的进程</span><br></pre></td></tr></table></figure>
+
+<p>例如：监控磁盘</p>
+<blockquote>
+<p>dstat -d –disk-util –disk-tps</p>
+<p>-d 分别显示磁盘的读、写总数<br>–disk-tps  #每秒每个磁盘事务(tps)统计<br>–disk-util #磁盘利用率百分比</p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028142604.png" alt></p>
+<blockquote>
+<p>dstat -v<br>-v, –vmstat：相当于 -pmgdsc -D total</p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028140341.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-strace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-strace/" itemprop="url">linux strace命令详解_未完</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-02T00:00:00+08:00">
+                2016-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<p>strace 简介</p>
+<p>跟踪系统调用和信号</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">NAME</span><br><span class="line">       strace - trace system calls and signals</span><br><span class="line"></span><br><span class="line">SYNOPSIS</span><br><span class="line">       strace [-CdffhikqrtttTvVxxy] [-In] [-bexecve] [-eexpr]...  [-acolumn] [-ofile] [-sstrsize] [-Ppath]... -ppid... / [-D] [-Evar[=val]]... [-uusername] command [args]</span><br><span class="line"></span><br><span class="line">       strace -c[df] [-In] [-bexecve] [-eexpr]...  [-Ooverhead] [-Ssortby] -ppid... / [-D] [-Evar[=val]]... [-uusername] command [args]</span><br></pre></td></tr></table></figure>
+
+<h1 id="安装strace"><a href="#安装strace" class="headerlink" title="安装strace"></a>安装strace</h1><p>centos7 安装：yum install strace -y</p>
+<h1 id="跟踪特定进程"><a href="#跟踪特定进程" class="headerlink" title="跟踪特定进程"></a>跟踪特定进程</h1><blockquote>
+<p> strace -p<u>pid</u></p>
+</blockquote>
+<p>使用 strace -p32557</p>
+<p><a href="https://segmentfault.com/a/1190000005931147" target="_blank" rel="noopener">https://segmentfault.com/a/1190000005931147</a></p>
+<h1 id="strace-amp-ltrace-amp-phpstrace"><a href="#strace-amp-ltrace-amp-phpstrace" class="headerlink" title="strace &amp; ltrace &amp; phpstrace"></a><a href="https://segmentfault.com/a/1190000005931147" target="_blank" rel="noopener">strace &amp; ltrace &amp; phpstrace</a></h1><h1 id="strace"><a href="#strace" class="headerlink" title="strace"></a>strace</h1><p>strace是Linux环境下的一款程序调试工具，用来监察一个应用程序所使用的系统调用及它所接收的系统信息。追踪程序运行时的整个生命周期，输出每一个系统调用的名字，参数，返回值和执行消耗的时间等。</p>
+<h2 id="常用参数："><a href="#常用参数：" class="headerlink" title="常用参数："></a>常用参数：</h2><p>-p 跟踪指定的进程<br>-f 跟踪由fork子进程系统调用<br>-F 尝试跟踪vfork子进程系统调吸入，与-f同时出现时, vfork不被跟踪<br>-o filename 默认strace将结果输出到stdout。通过-o可以将输出写入到filename文件中<br>-ff 常与-o选项一起使用，不同进程(子进程)产生的系统调用输出到filename.PID文件<br>-r 打印每一个系统调用的相对时间<br>-t 在输出中的每一行前加上时间信息。 -tt 时间确定到微秒级。还可以使用-ttt打印相对时间<br>-v 输出所有系统调用。默认情况下，一些频繁调用的系统调用不会输出<br>-s 指定每一行输出字符串的长度,默认是32。文件名一直全部输出<br>-c 统计每种系统调用所执行的时间，调用次数，出错次数。<br>-e expr 输出过滤器，通过表达式，可以过滤出掉你不想要输出</p>
+<p><strong>这里特别说下strace的-e trace选项。</strong></p>
+<p>要跟踪某个具体的系统调用，-e trace=xxx即可。但有时候我们要跟踪一类系统调用，比如所有和文件名有关的调用、所有和内存分配有关的调用。</p>
+<p>如果人工输入每一个具体的系统调用名称，可能容易遗漏。于是strace提供了几类常用的系统调用组合名字。</p>
+<blockquote>
+<p>-e trace=file   跟踪和文件访问相关的调用(参数中有文件名)<br>-e trace=process  和进程管理相关的调用，比如fork/exec/exit_group<br>-e trace=network  和网络通信相关的调用，比如socket/sendto/connect<br>-e trace=signal   信号发送和处理相关，比如kill/sigaction<br>-e trace=desc  和文件描述符相关，比如write/read/select/epoll等<br>-e trace=ipc 进程见同学相关，比如shmget等</p>
+</blockquote>
+<p>绝大多数情况，我们使用上面的组合名字就够了。实在需要跟踪具体的系统调用时，可能需要注意C库实现的差异。</p>
+<blockquote>
+<p>比如我们知道创建进程使用的是fork系统调用，但在glibc里面，fork的调用实际上映射到了更底层的clone系统调用。使用strace时，得指定-e trace=clone, 指定-e trace=fork什么也匹配不上。</p>
+</blockquote>
+<p>当发现进程或服务异常时，我们可以通过strace来跟踪其系统调用，“看看它在干啥”，进而找到异常的原因。熟悉常用系统调用，能够更好地理解和使用strace。</p>
+<p>当然，万能的strace也不是真正的万能。当目标进程卡死在用户态时，strace就没有输出了。</p>
+<p>这个时候我们需要其他的跟踪手段，比如gdb/perf/SystemTap等。</p>
+<p>备注：</p>
+<p>1、perf原因kernel支持</p>
+<p>2、ftrace  kernel支持可编程</p>
+<p>3、systemtap 功能强大，<a href="http://www.linuxidc.com/topicnews.aspx?tid=10" target="_blank" rel="noopener">RedHat</a>系统支持，对用户态，内核态逻辑都能探查，使用范围更广</p>
+<h2 id="追踪多个进程方法"><a href="#追踪多个进程方法" class="headerlink" title="追踪多个进程方法"></a>追踪多个进程方法</h2><p>当有多个子进程的情况下，比如php-fpm、nginx等，用strace追踪显得很不方便。可以使用下面的方法来追踪所有的子进程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># vim /root/.bashrc //添加以下内容</span><br><span class="line">function straceall &#123;</span><br><span class="line">    strace $(pidof &quot;$&#123;1&#125;&quot; | sed &apos;s/\([0-9]*\)/-p \1/g&apos;)</span><br><span class="line">&#125;</span><br><span class="line"># source /root/.bashrc</span><br><span class="line"># traceall php-fpm //监控phpfpm</span><br><span class="line">OR</span><br><span class="line"># strace -tt -T $(pidof &apos;php-fpm: pool www&apos; | sed &apos;s/\([0-9]*\)/\-p \1/g&apos;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="追踪web服务"><a href="#追踪web服务" class="headerlink" title="追踪web服务"></a>追踪web服务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># strace -f -F -s 1024 -o nginx-strace /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf</span><br><span class="line"># strace -f -F -o php-fpm-strace /usr/local/php/sbin/php-fpm -y /usr/local/php/etc/php-fpm.conf</span><br></pre></td></tr></table></figure>
+
+<h2 id="追踪mysql"><a href="#追踪mysql" class="headerlink" title="追踪mysql"></a>追踪mysql</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># strace -f -F -ff -o mysqld-strace -s 1024 -p mysql_pid</span><br><span class="line"># find ./ -name &quot;mysqld-strace*&quot; -type f -print |xargs grep -n &quot;SELECT.*FROM&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看程序做了什么"><a href="#查看程序做了什么" class="headerlink" title="查看程序做了什么"></a>查看程序做了什么</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"># This script is from http://poormansprofiler.org/</span><br><span class="line">nsamples=1</span><br><span class="line">sleeptime=0</span><br><span class="line">pid=$(pidof $1)</span><br><span class="line"> </span><br><span class="line">for x in $(seq 1 $nsamples)</span><br><span class="line">  do</span><br><span class="line">    gdb -ex &quot;set pagination 0&quot; -ex &quot;thread apply all bt&quot; -batch -p $pid</span><br><span class="line">    sleep $sleeptime</span><br><span class="line">  done | \</span><br><span class="line">awk &apos;</span><br><span class="line">  BEGIN &#123; s = &quot;&quot;; &#125; </span><br><span class="line">  /^Thread/ &#123; print s; s = &quot;&quot;; &#125; </span><br><span class="line">  /^\#/ &#123; if (s != &quot;&quot; ) &#123; s = s &quot;,&quot; $4&#125; else &#123; s = $4 &#125; &#125; </span><br><span class="line">  END &#123; print s &#125;&apos; | \</span><br><span class="line">sort | uniq -c | sort -r -n -k 1,1</span><br></pre></td></tr></table></figure>
+
+<h1 id="ltrace"><a href="#ltrace" class="headerlink" title="ltrace"></a>ltrace</h1><p>-a 对齐具体某个列的返回值<br>-c 计算时间和调用，并在程序退出时打印摘要<br>-C 解码低级别名称（内核级）为用户级名称<br>-d 打印调试信息<br>-e 改变跟踪的事件<br>-f 跟踪子进<br>-h 打印帮助信息<br>-i 打印指令指针，当库调用时。<br>-l 只打印某个库中的调用。<br>-L 不打印库调用。<br>-n, –indent=NR 对每个调用级别嵌套以NR个空格进行缩进输出。<br>-o, –output=file 把输出定向到文件。<br>-p PID 附着在值为PID的进程号上进行ltrace。<br>-r 打印相对时间戳。<br>-s STRLEN 设置打印的字符串最大长度。<br>-S 显示系统调用。<br>-t, -tt, -ttt 打印绝对时间戳。<br>-T 输出每个调用过程的时间开销。<br>-u USERNAME 使用某个用户id或组ID来运行命令。<br>-V, –version 打印版本信息，然后退出。<br>-x NAME treat the global NAME like a library subroutine.</p>
+<h1 id="phpstrace"><a href="#phpstrace" class="headerlink" title="phpstrace"></a>phpstrace</h1><p><a href="https://github.com/markus-perl/php-strace" target="_blank" rel="noopener">phpstrace</a>追踪php进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Usage: ./php-strace [ options ]</span><br><span class="line">-h|--help               show this help</span><br><span class="line">-l|--lines &lt;integer&gt;    output the last N lines of a stacktrace. Default: 100</span><br><span class="line">--process-name &lt;string&gt; name of running php processes. Default: autodetect</span><br><span class="line">--live                  search while running for new upcoming pid&apos;s</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><a href="https://www.ibm.com/developerworks/cn/linux/l-tsl/" target="_blank" rel="noopener">使用truss/strace/ltrace跟踪进程</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-vmstat/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-vmstat/" itemprop="url">linux vmstat命令详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <br>
+
+<h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>​    很显然，从名字我们就可以知道 vmstat 是一个<u><strong>查看虚拟内存（Virtual Memory）使用状况的工具</strong></u>，但是怎样通过vmstat 来发现系统中的瓶颈呢？在回答这个问题前，还是让我们回顾一下Linux中关于虚拟内存的相关内容。</p>
+<br>
+
+<h1 id="二、虚拟内存"><a href="#二、虚拟内存" class="headerlink" title="二、虚拟内存"></a>二、虚拟内存</h1><p>​    在系统中运行的每个进程都需要使用到内存，但不是每个进程都需要每时每刻使用系统分配的内存空间。当系统运行所需内存超过实际的物理内存，内核会释放某些进程所占用但未使用的部分或所有物理内存，将这部分资料存储在磁盘上直到下一次调用，将释放出的内存提供给有需要的进程使用。</p>
+<p>​    在Linux内存管理中，主要通过”调页Paging“和”交换Swapping“来完成内存调度。调页算法是将内存中最近<u><strong>不常使用的页面换到磁盘上，把活动页面保留在内存中供进程使用</strong></u>。交换技术是将整个进程，而不是部分页面，全部交换到磁盘上。</p>
+<p>​    <u><strong>分页（Page）写入磁盘的过程被称为Page-Out，分页（Page）从磁盘重新回到内存的过程叫Page-In</strong></u>。当内核需要一个分页时，但发现此分页不再物理内存中（因为已经被Page-Out了），此时就发生了分页错误（Page-Fault）。</p>
+<p>​    当系统内核发现可运行内存变少时，会通过Page-Out来释放一部分物理内存。尽管Page-Out不是经常发生，但是如果Page-Out频繁不断的发生，直到当内核管理分页的时间超过运行程式的时间时，熊效能会急剧下降。这时系统已经运行非常慢或进入暂停状态，这种状态被称为 thrashing（颠簸）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1、page fault出现的原因：</span><br><span class="line">   a). 页表中找不到对应虚拟地址的PTE(无效地址/有效地址但是没有载入主存);</span><br><span class="line">   b). 对应虚拟地址的PTE拒绝访问。</span><br><span class="line"></span><br><span class="line">2、page fault在哪里进行处理</span><br><span class="line">   page fault被CPU捕获，跳转到 page_fault_handler 进行处理。</span><br><span class="line"></span><br><span class="line">3、page fault的处理方式</span><br><span class="line">   page fault -&gt; 访问地址是否合法</span><br><span class="line">   a. 无效地址：segment fault，返回(用户地址杀死进程、内核地址杀死内核)</span><br><span class="line">   b. 有效地址：</span><br><span class="line">    1) page第一次被访问: demand_page_faults (demanding pages，请求调页)</span><br><span class="line">       检查页表中是否存在该PTE　　　　pmd_none, pte_none</span><br><span class="line">       分配新的页帧，初始化(从磁盘读入内存)</span><br><span class="line">    2) page被交换到swap分区</span><br><span class="line">       检查present标志位，如果该位为0表示不在主存中。</span><br><span class="line">       分配新的页帧，从磁盘重新读入内存。</span><br><span class="line">    3) COW(Copy-On-Write)</span><br><span class="line">        vm_area_struct允许写，但是对应的PTE禁止写操作。</span><br><span class="line"></span><br><span class="line">4、如何判断访问地址是否合法？如果地址合法有什么操作？</span><br><span class="line">   判断地址合法的方式：</span><br><span class="line">   static int __do_page_fault()函数 vma = find_vma(mm, addr);</span><br><span class="line">   根据传入的地址addr查找对应的vm_area_struct，如果没有找到证明该地址访问无效，返回segment fault。</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="三、vmstat详解"><a href="#三、vmstat详解" class="headerlink" title="三、vmstat详解"></a>三、vmstat详解</h1><h3 id="1、用法"><a href="#1、用法" class="headerlink" title="1、用法"></a>1、用法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vmstat [-a] [-n] [-S unit] [delay [ count]]</span><br><span class="line">vmstat [-s] [-n] [-S unit]</span><br><span class="line">vmstat [-m] [-n] [delay [ count]]</span><br><span class="line">vmstat [-d] [-n] [delay [ count]]</span><br><span class="line">vmstat [-p disk partition] [-n] [delay [ count]]</span><br><span class="line">vmstat [-f]</span><br><span class="line">vmstat [-V]</span><br></pre></td></tr></table></figure>
+
+<p>-a：显示活跃和非活跃内存<br>-f：显示从系统启动至今的fork数量 。<br>-m：显示slabinfo<br>-n：只在开始时显示一次各字段名称。<br>-s：显示内存相关统计信息及多种系统活动数量。<br>delay：刷新时间间隔。如果不指定，只显示一条结果。<br>count：刷新次数。如果不指定刷新次数，但指定了刷新时间间隔，这时刷新次数为无穷。<br>-d：显示磁盘相关统计信息。<br>-p：显示指定磁盘分区统计信息<br>-S：使用指定单位显示。参数有 k 、K 、m 、M ，分别代表1000、1024、1000000、1048576字节（byte）。默认单位为K（1024 bytes）<br>-V：显示vmstat版本信息。</p>
+<br>
+
+<h3 id="2、使用说明"><a href="#2、使用说明" class="headerlink" title="2、使用说明"></a>2、使用说明</h3><p><u><strong>vmstat 5 5 【在5秒时间内进行5次采样】</strong></u> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmstat 5 5</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191026111456.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">procs（进程）：</span><br><span class="line">  r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）</span><br><span class="line">  b： 等待IO的进程数量</span><br><span class="line">  </span><br><span class="line">memory（内存）：</span><br><span class="line">  swpd: 使用虚拟内存大小。注意：如果swpd的值不为0，但是si，so的值长期为0，这种情况不会影响系统性能。</span><br><span class="line">  free: 空闲物理内存大小</span><br><span class="line">  buff: 用作缓冲的内存大小</span><br><span class="line">  cache: 用作缓存的内存大小。注意：如果cache的值大的时候，说明cache处的文件数多，如果频繁访问到的文件都能被cache处，那么磁盘的读IO bi会非常小。</span><br><span class="line">  inact: 非活跃内存大小（当使用-a选项时显示）</span><br><span class="line">  active: 活跃的内存大小（当使用-a选项时显示）</span><br><span class="line">  </span><br><span class="line">swap：</span><br><span class="line">  si: 每秒从交换区写到内存的大小，由磁盘调入内存</span><br><span class="line">  so: 每秒写入交换区的内存大小，由内存调入磁盘</span><br><span class="line">  注意：内存够用的时候，这2个值都是0，如果这2个值长期大于0时，系统性能会受到影响，磁盘IO和CPU资源都会被消耗。有些朋友看到空闲内存（free）很少的或接近于0时，就认为内存不够用了，不能光看这一点，还要结合si和so，如果free很少，但是si和so也很少（大多时候是0），那么不用担心，系统性能这时不会受到影响的。</span><br><span class="line">  </span><br><span class="line">io：（现在的Linux版本块的大小为1024bytes）</span><br><span class="line">  bi: 每秒读取的块数</span><br><span class="line">  bo: 每秒写入的块数</span><br><span class="line"></span><br><span class="line">system：</span><br><span class="line">  in: 每秒中断数，包括时钟中断。【interrupt】</span><br><span class="line">  cs: 每秒上下文切换数。【count/second】</span><br><span class="line">  注意：随机磁盘读写的时候，这2个值越大（如超出1024k)，能看到CPU在IO等待的值也会越大。</span><br><span class="line"></span><br><span class="line">cpu（以百分比表示）：</span><br><span class="line">  us: 用户进程执行时间(user time)。注意： us的值比较高时，说明用户进程消耗的CPU时间多，但是如果长期超50%的使用，那么我们就该考虑优化程序算法或者进行加速。</span><br><span class="line">  sy: 系统进程执行时间(system time)。注意：sy的值高时，说明系统内核消耗的CPU资源多，这并不是良性表现，我们应该检查原因。</span><br><span class="line">  id: 空闲时间(包括IO等待时间),中央处理器的空闲时间 。</span><br><span class="line">  wa: 等待IO时间。注意：wa的值高时，说明IO等待比较严重，这可能由于磁盘大量作随机访问造成，也有可能磁盘出现瓶颈（块操作）。</span><br></pre></td></tr></table></figure>
+
+<p> <u><strong>vmstat -a 2 5 【-a 显示活跃和非活跃内存,所显示的内容除增加inact和active 】</strong></u></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191026145904.png" alt></p>
+<p> <u><strong>vmstat -f 【 linux下创建进程的系统调用是fork】</strong></u> </p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028094204.png" alt></p>
+<br>
+
+<h1 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h1><p>目前说来，对于服务器监控有用处的度量主要有：</p>
+<ul>
+<li>r（运行队列）</li>
+<li>pi（页导入）</li>
+<li>us（用户CPU）</li>
+<li>sy（系统CPU）</li>
+<li>id（空闲）</li>
+</ul>
+<p><strong>注意：如果r经常大于4 ，且id经常少于40，表示cpu的负荷很重。如果bi，bo 长期不等于0，表示内存不足。</strong></p>
+<p>通过VMSTAT识别CPU瓶颈：<br><strong>r（运行队列）展示了正在执行和等待CPU资源的任务个数。当这个值超过了CPU数目，就会出现CPU瓶颈了。</strong></p>
+<p>Linux下查看CPU核心数的命令：<br><code>cat /proc/cpuinfo|grep processor|wc -l</code></p>
+<p><strong>当r值超过了CPU个数，就会出现CPU瓶颈，解决办法大体几种：</strong></p>
+<ol>
+<li>最简单的就是增加CPU个数和核数</li>
+<li>通过调整任务执行时间，如大任务放到系统不繁忙的情况下进行执行，进尔平衡系统任务</li>
+<li>调整已有任务的优先级</li>
+</ol>
+<p>通过vmstat识别CPU满负荷：<br>    首先需要声明一点的是，vmstat中CPU的度量是百分比的。当us＋sy的值接近100的时候，表示CPU正在接近满负荷工作。但要注意的是，CPU 满负荷工作并不能说明什么，Linux总是试图要CPU尽可能的繁忙，使得任务的吞吐量最大化。唯一能够确定CPU瓶颈的还是r（运行队列）的值。</p>
+<p>通过vmstat识别RAM瓶颈：</p>
+<p>数据库服务器都只有有限的RAM，出现内存争用现象是Oracle的常见问题。</p>
+<p>首先用free查看RAM的数量：<br>[oracle@oracle-db02 ~]$ free<br>total    used    free   shared  buffers   cached<br>Mem:    2074924  2071112    3812     0   40616  1598656<br>-/+ buffers/cache:   431840  1643084<br>Swap:   3068404   195804  2872600</p>
+<p><strong>当内存的需求大于RAM的数量，服务器启动了虚拟内存机制，通过虚拟内存，可以将RAM段移到SWAP DISK的特殊磁盘段上，这样会 出现虚拟内存的页导出和页导入现象，页导出并不能说明RAM瓶颈，虚拟内存系统经常会对内存段进行页导出，但页导入操作就表明了服务器需要更多的内存了， 页导入需要从SWAP DISK上将内存段复制回RAM，导致服务器速度变慢。</strong></p>
+<p>解决的办法有几种：</p>
+<ol>
+<li>最简单的，加大RAM；</li>
+<li>改小SGA，使得对RAM需求减少；</li>
+<li>减少RAM的需求。（如：减少PGA）</li>
+</ol>
+<p>如果disk经常不等于0，且在b中的队列大于3，表示io性能不好。</p>
+<ol>
+<li>如果在processes中运行的序列(process r)是连续的大于在系统中的CPU的个数表示系统现在运行比较慢,有多数的进程等待CPU。</li>
+<li>如果r的输出数大于系统中可用CPU个数的4倍的话,则系统面临着CPU短缺的问题,或者是CPU的速率过低,系统中有多数的进程在等待CPU,造成系统中进程运行过慢。</li>
+<li>如果空闲时间(cpu id)持续为0并且系统时间(cpu sy)是用户时间的两倍(cpu us)系统则面临着CPU资源的短缺。</li>
+</ol>
+<p>解决办法:<br>当发生以上问题的时候请先调整应用程序对CPU的占用情况.使得应用程序能够更有效的使用CPU.同时可以考虑增加更多的CPU. 关于CPU的使用情况还可以结合mpstat, ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的CPU的使用情况,和那些进程在占用大量的CPU时间.一般情况下，应用程序的问题会比较大一些.比如一些sql语句不合理等等都会造成这样的现象.</p>
+<p>内存问题现象:<br>内存的瓶颈是由scan rate (sr)来决定的.scan rate是通过每秒的始终算法来进行页扫描的.如果scan rate(sr)连续的大于每秒200页则表示可能存在内存缺陷.同样的如果page项中的pi和po这两栏表示每秒页面的调入的页数和每秒调出的页数.如果该值经常为非零值,也有可能存在内存的瓶颈,当然,如果个别的时候不为0的话,属于正常的页面调度这个是虚拟内存的主要原理.</p>
+<p>解决办法:</p>
+<ol>
+<li>调节applications &amp; servers使得对内存和cache的使用更加有效.</li>
+<li>增加系统的内存.</li>
+<li>Implement priority paging in s in pre solaris 8 versions by adding line “set priority paging=1” in /etc/system. Remove this line if upgrading from Solaris 7 to 8 &amp; retaining old /etc/system file.</li>
+</ol>
+<p>关于内存的使用情况还可以结ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的内存的使用情况,和那些进程在占用大量的内存.一般情况下，如果内存的占用率比较高,但是,CPU的占用很低的时候,可以考虑是有很多的应用程序占用了内存没有释放,但是,并没有占用CPU时间,可以考虑应用程序,对于未占用CPU时间和一些后台的程序,释放内存的占用。</p>
+<br>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-keepalived/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-keepalived/" itemprop="url">Nginx+keepalived双机热备（主从模式）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-reverse-proxy-http/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-reverse-proxy-http/" itemprop="url">Nginx+keepalived双机热备（主从模式）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-reverse-proxy-tcp-and-udp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-reverse-proxy-tcp-and-udp/" itemprop="url">nginx 转发 tcp/udp</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
+                2016-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
+<p><a href="https://www.cnblogs.com/gongjingyun123--/p/11424424.html" target="_blank" rel="noopener">Nginx四层负载均衡</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-301-and-302/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-301-and-302/" itemprop="url">nginx 永久跳转（301） 和 临时重定向（302）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-14T00:00:00+08:00">
+                2016-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="科普"><a href="#科普" class="headerlink" title="科普"></a>科普</h1><p>301永久跳转：当用户或搜索引擎向网站服务器发出浏览请求时，服务器返回的HTTP数据流中头信息中的状态码的一种，表示本网页永久性转移到另一个地址。</p>
+<p>302临时跳转：也是状态码的一种，意义是暂时转向到另外一个网址。</p>
+<p>主要区别</p>
+<p>一句话，302容易被搜索引擎视为spam，301则不会。</p>
+<h1 id="conf设置"><a href="#conf设置" class="headerlink" title="conf设置"></a>conf设置</h1><h3 id="301跳转设置"><a href="#301跳转设置" class="headerlink" title="301跳转设置"></a>301跳转设置</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">	<span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">	<span class="attribute">server_name</span> <span class="number">123</span>.com;</span><br><span class="line">	<span class="attribute">rewrite</span><span class="regexp"> ^/(.*)</span> http://456.com/<span class="variable">$1</span> <span class="literal">permanent</span>;</span><br><span class="line">	<span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="302跳转设置"><a href="#302跳转设置" class="headerlink" title="302跳转设置"></a>302跳转设置</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">	<span class="attribute">server_name</span> <span class="number">123</span>.com;</span><br><span class="line">	<span class="attribute">rewrite</span><span class="regexp"> ^/(.*)</span> http://456.com/<span class="variable">$1</span> <span class="literal">redirect</span>;</span><br><span class="line">	<span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="研究"><a href="#研究" class="headerlink" title="研究"></a>研究</h1><p>Nginx的重定向用到了Nginx的HttpRewriteModule</p>
+<h3 id="rewrite命令"><a href="#rewrite命令" class="headerlink" title="rewrite命令"></a>rewrite命令</h3><p>nginx的rewrite相当于apache的rewriterule(大多数情况下可以把原有apache的rewrite规则加上引号就可以直接使用)，它可以用在server,location 和IF条件判断块中</p>
+<p>rewrite 正则表达式 替换目标 flag标记，flag标记可以用以下几种格式：</p>
+<ul>
+<li>last – 基本上都用这个Flag。</li>
+<li>break – 中止Rewirte，不在继续匹配</li>
+<li>redirect – 返回临时重定向的HTTP状态302</li>
+<li>permanent – 返回永久重定向的HTTP状态301</li>
+</ul>
+<p>特别注意：</p>
+<p>last和break用来实现URL重写，浏览器地址栏的URL地址不变，但是在服务器端访问的路径发生了变化；</p>
+<p>redirect和permanent用来实现URL跳转，浏览器地址栏会显示跳转后的URL地址；</p>
+<p>例如下面这段设定nginx将某个目录下面的文件重定向到另一个目录,$2对应第二个括号(.*)中对应的字符串：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> /download/ &#123;</span><br><span class="line">	<span class="attribute">rewrite</span><span class="regexp"> ^(/download/.*)/m/(.*)\..*1</span> /nginx-rewrite/<span class="variable">$2</span>.gz <span class="literal">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例如下面设定nginx在用户使用ie的使用重定向到/nginx-ie目录下：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">if</span> (httpuseragent MSIE)</span><br><span class="line">	rewrite (.∗)$ /nginx−ie/<span class="variable">$1</span> <span class="literal">break</span>;</span><br></pre></td></tr></table></figure>
+
+<p>文件和目录判断：</p>
+<ul>
+<li>−f和!−f判断是否存在文件</li>
+<li>−d和!−d判断是否存在目录</li>
+<li>−e和!−e判断是否存在文件或目录</li>
+<li>−x和!−x判断文件是否可执行</li>
+</ul>
+<p>例如下面设定nginx在文件和目录不存在的时候重定向：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if(!−e request_filename) &#123;</span><br><span class="line">	<span class="attribute">proxy_pass</span> http://127.0.0.1;</span><br><span class="line">&#125;</span><br><span class="line">return</span><br></pre></td></tr></table></figure>
+
+<h3 id="nginx防盗链"><a href="#nginx防盗链" class="headerlink" title="nginx防盗链"></a>nginx防盗链</h3><p>返回http代码，例如设置nginx防盗链：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> <span class="regexp">~* \.(gif|jpg|png|swf|flv)$</span> &#123;</span><br><span class="line">    <span class="attribute">valid_referers</span> <span class="literal">none</span> <span class="literal">blocked</span> www.test.com www.test1.com;</span><br><span class="line">    <span class="attribute">if</span> (<span class="variable">$invalid_referer</span>) &#123;</span><br><span class="line">    	<span class="attribute">return</span> <span class="number">404</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-synamic-and-static-separation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-synamic-and-static-separation/" itemprop="url">nginx 动静分离配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-14T00:00:00+08:00">
+                2016-01-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200114201511.png" alt></p>
+<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">~ 或 ^：  表示 正则表达式的开始</span><br><span class="line">.  ： 匹配除 \n 之外 的 一个任意字符</span><br><span class="line">(  ：子表达式的开始</span><br><span class="line">)  ：子表达式的结束</span><br><span class="line">|  ：表示 在两个 或者 多个之间进行的选择</span><br><span class="line">\  ：转义字符</span><br><span class="line"><span class="meta">$</span><span class="bash"> 或 ^ ：表示 表达式的结尾</span></span><br><span class="line">*  ：0个或多个匹配前面的 正则表达式</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-cpu-load-average/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-cpu-load-average/" itemprop="url">Linux系统负载</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
+                2016-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="一、查看系统负荷"><a href="#一、查看系统负荷" class="headerlink" title="一、查看系统负荷"></a>一、查看系统负荷</h1><p>如果你的电脑很慢，你或许想查看一下，它的工作量是否太大了。</p>
+<p>在Linux系统中，我们一般使用 <code>uptime</code> 命令查看（w命令和top命令也行）。（另外，它们在苹果公司的Mac电脑上也适用。）</p>
+<p>你在终端窗口键入<code>uptime</code>，系统会返回一行信息。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101201.png" alt></p>
+<p>这行信息的后半部分，显示 <code>load average</code>，它的意思是”系统的平均负荷”，里面有三个数字，我们可以从中判断系统负荷是大还是小。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101242.png" alt></p>
+<p>为什么会有三个数字呢？你从手册中查到，它们的意思分别是1分钟、5分钟、15分钟内系统的平均负荷。</p>
+<p>如果你继续看手册，它还会告诉你，当CPU完全空闲的时候，平均负荷为0；当CPU工作量饱和的时候，平均负荷为1。</p>
+<p>那么很显然，<code>load average</code> 的值越低，比如等于0.2或0.3，就说明电脑的工作量越小，系统负荷比较轻。</p>
+<p>但是，什么时候能看出系统负荷比较重呢？等于1的时候，还是等于0.5或等于1.5的时候？如果1分钟、5分钟、15分钟三个值不一样，怎么办？</p>
+<br>
+
+<h1 id="二、一个类比"><a href="#二、一个类比" class="headerlink" title="二、一个类比"></a>二、一个类比</h1><p>判断系统负荷是否过重，必须理解load average的真正含义。下面，我根据”<a href="http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages" target="_blank" rel="noopener">Understanding Linux CPU Load</a>“这篇文章，尝试用最通俗的语言，解释这个问题。</p>
+<p>首先，假设最简单的情况，你的电脑只有一个CPU，所有的运算都必须由这个CPU来完成。</p>
+<p>那么，我们不妨把这个CPU想象成一座大桥，桥上只有一根车道，所有车辆都必须从这根车道上通过。（很显然，这座桥只能单向通行。）</p>
+<p>系统负荷为0，意味着大桥上一辆车也没有。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101323.png" alt></p>
+<p>系统负荷为0.5，意味着大桥一半的路段有车。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101339.png" alt></p>
+<p>系统负荷为1.0，意味着大桥的所有路段都有车，也就是说大桥已经”满”了。但是必须注意的是，直到此时大桥还是能顺畅通行的。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101357.png" alt></p>
+<p>系统负荷为1.7，意味着车辆太多了，大桥已经被占满了（100%），后面等着上桥的车辆为桥面车辆的70%。以此类推，系统负荷2.0，意味着等待上桥的车辆与桥面的车辆一样多；系统负荷3.0，意味着等待上桥的车辆是桥面车辆的2倍。总之，当系统负荷大于1，后面的车辆就必须等待了；系统负荷越大，过桥就必须等得越久。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101411.png" alt></p>
+<p>CPU的系统负荷，基本上等同于上面的类比。大桥的通行能力，就是CPU的最大工作量；桥梁上的车辆，就是一个个等待CPU处理的进程（process）。</p>
+<p>如果CPU每分钟最多处理100个进程，那么系统负荷0.2，意味着CPU在这1分钟里只处理20个进程；系统负荷1.0，意味着CPU在这1分钟里正好处理100个进程；系统负荷1.7，意味着除了CPU正在处理的100个进程以外，还有70个进程正排队等着CPU处理。</p>
+<p>为了电脑顺畅运行，系统负荷最好不要超过1.0，这样就没有进程需要等待了，所有进程都能第一时间得到处理。很显然，1.0是一个关键值，超过这个值，系统就不在最佳状态了，你要动手干预了。</p>
+<br>
+
+<h1 id="三、系统负荷的经验法则"><a href="#三、系统负荷的经验法则" class="headerlink" title="三、系统负荷的经验法则"></a>三、系统负荷的经验法则</h1><p>1.0是系统负荷的理想值吗？</p>
+<p>不一定，系统管理员往往会留一点余地，当这个值达到0.7，就应当引起注意了。经验法则是这样的：</p>
+<p>当系统负荷持续大于0.7，你必须开始调查了，问题出在哪里，防止情况恶化。</p>
+<p>当系统负荷持续大于1.0，你必须动手寻找解决办法，把这个值降下来。</p>
+<p>当系统负荷达到5.0，就表明你的系统有很严重的问题，长时间没有响应，或者接近死机了。你不应该让系统达到这个值。</p>
+<br>
+
+<h1 id="四、多处理器"><a href="#四、多处理器" class="headerlink" title="四、多处理器"></a>四、多处理器</h1><p>上面，我们假设你的电脑只有1个CPU。如果你的电脑装了2个CPU，会发生什么情况呢？</p>
+<p>2个CPU，意味着电脑的处理能力翻了一倍，能够同时处理的进程数量也翻了一倍。</p>
+<p>还是用大桥来类比，两个CPU就意味着大桥有两根车道了，通车能力翻倍了。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101433.png" alt></p>
+<p>所以，2个CPU表明系统负荷可以达到2.0，此时每个CPU都达到100%的工作量。推广开来，n个CPU的电脑，可接受的系统负荷最大为n.0。</p>
+<br>
+
+<h1 id="五、多核处理器"><a href="#五、多核处理器" class="headerlink" title="五、多核处理器"></a>五、多核处理器</h1><p>芯片厂商往往在一个CPU内部，包含多个CPU核心，这被称为多核CPU。</p>
+<p>在系统负荷方面，多核CPU与多CPU效果类似，所以考虑系统负荷的时候，必须考虑这台电脑有几个CPU、每个CPU有几个核心。然后，把系统负荷除以总的核心数，只要每个核心的负荷不超过1.0，就表明电脑正常运行。</p>
+<p>怎么知道电脑有多少个CPU核心呢？</p>
+<p><code>cat /proc/cpuinfo</code>命令，可以查看CPU信息。<code>grep -c &#39;model name&#39; /proc/cpuinfo</code>命令，直接返回CPU的总核心数。</p>
+<br>
+
+<h1 id="六、最佳观察时长"><a href="#六、最佳观察时长" class="headerlink" title="六、最佳观察时长"></a>六、最佳观察时长</h1><p>最后一个问题，”load average”一共返回三个平均值—-1分钟系统负荷、5分钟系统负荷，15分钟系统负荷，—-应该参考哪个值？</p>
+<p>如果只有1分钟的系统负荷大于1.0，其他两个时间段都小于1.0，这表明只是暂时现象，问题不大。</p>
+<p>如果15分钟内，平均系统负荷大于1.0（调整CPU核心数之后），表明问题持续存在，不是暂时现象。所以，你应该主要观察”15分钟系统负荷”，将它作为电脑正常运行的指标。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-atop/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-monitor-atop/" itemprop="url">linux atop详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
+                2016-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+
+<p><strong>atop</strong> 是一个功能非常强大的linux服务器监控工具，它的数据采集主要包括：CPU、内存、磁盘、网络、进程等，并且内容非常的详细，特别是当那一部分存在压力它会以特殊的颜色进行展示，如果颜色是红色那么说明已经非常严重了。</p>
+<p> 注意：所有的信息都是反映过去10s的状态信息</p>
+<br>
+
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>1.官网：http://www.atoptool.nl/downloadatop.php找下载链接</span><br><span class="line"><span class="meta">#</span>2.下载解压编译</span><br><span class="line">wget http://www.atoptool.nl/download/atop-2.2-3.tar.gz</span><br><span class="line">tar xvf atop-2.2-3.tar.gz</span><br><span class="line">cd atop-2.2-3</span><br><span class="line">make prefix=/usr/local/atop install</span><br><span class="line"><span class="meta">#</span>3.（报错rawlog.c:154:18: fatal error: zlib.h: No such file or directory，yum -y install zlib未解决，因为只安装lib没有头文件，提示需要zlib头文件）</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>4.解决方案：标准安装zlib</span><br><span class="line"><span class="meta">#</span>官网: http://www.zlib.net/</span><br><span class="line"><span class="meta">#</span>找下载链接：http://zlib.net/zlib-1.2.8.tar.gz 或者：http://iweb.dl.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz</span><br><span class="line">cd ../</span><br><span class="line">wget http://zlib.net/zlib-1.2.8.tar.gz</span><br><span class="line">tar xzf zlib-1.2.8.tar.gz</span><br><span class="line">cd zlib-1.2.8</span><br><span class="line"><span class="meta">#</span>创建动态库</span><br><span class="line">./configure --shared</span><br><span class="line">make test</span><br><span class="line">make install</span><br><span class="line">cp zutil.h /usr/local/include</span><br><span class="line">cp zutil.c /usr/local/include</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>5.重新编译</span><br><span class="line">cd atop-2.2-3</span><br><span class="line">make clean</span><br><span class="line">make install</span><br><span class="line"><span class="meta">#</span>提示Choose either 'make systemdinstall' or 'make sysvinstall' #关于采用哪种方式安装可以参考这里：http://www.linuxdiyf.com/linux/10711.html</span><br><span class="line">make systemdimstall</span><br><span class="line"><span class="meta">#</span>6.运行</span><br><span class="line">atop</span><br><span class="line"><span class="meta">#</span>7.退出</span><br><span class="line">q</span><br><span class="line">参考：http://my.oschina.net/nox/blog/221014</span><br><span class="line">http://blog.sina.com.cn/s/blog_714dacd10102v6et.html</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="资源监控字段含义"><a href="#资源监控字段含义" class="headerlink" title="资源监控字段含义"></a>资源监控字段含义</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108110401.png" alt></p>
+<p>上图中列出了不少字段以及数值，各字段的含义是什么？我们应该怎么看？以上每个字段的含义都是相对采样周期而言的，下面我们先来关注上图显示的上半部分。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108110858.png" alt></p>
+<p><strong>ATOP列</strong>：该列显示了主机名、信息采样日期和时间点</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108110924.png" alt></p>
+<p><strong>PRC列</strong>：该列显示进程整体运行情况</p>
+<ol>
+<li>sys：过去10s所有的进程在<u><strong>内核态</strong></u>运行的时间总和</li>
+<li>usr：过去10s所有的进程在<u><strong>用户态</strong></u>的运行时间总和</li>
+<li>#proc：<u><strong>进程总数</strong></u></li>
+<li>#trun：过去10s转换的进程数</li>
+<li>#zombie：过去10s僵死进程的数量</li>
+<li>#exit：在10s采样周期期间退出的进程数量</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108110948.png" alt></p>
+<p><strong>CPU列</strong>：该列显示CPU整体(即多核CPU作为一个整体CPU资源)的使用情况，我们知道CPU可被用于执行进程、处理中断，也可处于空闲状态(空闲状态分两种，一种是活动进程等待磁盘IO导致CPU空闲，另一种是完全空闲)</p>
+<ol>
+<li>sys：cpu在处理进程时处于<u><strong>内核态</strong></u>的时间所占的比例</li>
+<li>usr：cpu在处理进程时处于用户态的时间所占的比例</li>
+<li>irq：cpu在处理进程的<u><strong>中断请求</strong></u>所占的实际比例</li>
+<li>idle：CPU处在<u><strong>完全空闲</strong></u>状态的时间比例</li>
+<li>wait：CPU处在“进程<u><strong>等待磁盘IO导致CPU空闲</strong></u>”状态的时间比例</li>
+</ol>
+<p>CPU列各个字段指示值相加结果为N00%，其中N为cpu核数。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111025.png" alt></p>
+<p><strong>cpu列</strong>：该列显示某一核cpu的使用情况，各字段含义可参照CPU列，各字段值相加结果为100%</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111116.png" alt></p>
+<p><strong>CPL列</strong>：该列显示<u><strong>CPU负载</strong></u>情况</p>
+<ol>
+<li>avg1、avg5和avg15字段：过去1分钟、5分钟和15分钟内运行队列中的平均进程数量</li>
+<li><code>csw(context swapping)</code>：<u><strong>上下文交换次数</strong></u></li>
+<li><code>intr(interrupt)</code>：<u><strong>中断发生次数</strong></u></li>
+<li>numcpu：cpu的核心数</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111141.png" alt></p>
+<p><strong>MEM列</strong>：列主要展示内存的使用信息</p>
+<ol>
+<li>tot：<u><strong>物理内存总量</strong></u></li>
+<li>free：<u><strong>空闲内存</strong></u>的大小</li>
+<li>cache：用于<u><strong>页缓存</strong></u>的内存大小</li>
+<li>buff：用于<u><strong>文件缓存</strong></u>的内存大小</li>
+<li>slab：系统<u><strong>内核占用</strong></u>的内存大小</li>
+<li>dirty：内存中的脏页大小</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111207.png" alt></p>
+<p><strong>SWP列</strong>：该列指示交换空间的使用情况</p>
+<ol>
+<li>tot：<u><strong>交换区总量</strong></u></li>
+<li>free：<u><strong>空闲交换空间</strong></u>大小</li>
+</ol>
+<p><strong>PAG列</strong>：该列指示虚拟内存分页情况</p>
+<ol>
+<li>swin:换入内存页数</li>
+<li>swout：换出内存页数</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108123406.png" alt></p>
+<p><strong>LVM/DSK列</strong>：该列指示磁盘使用情况，每一个磁盘设备对应一列，如果有sdb设备，那么增多一列DSK信息</p>
+<ol>
+<li>sda字段：磁盘设备标识</li>
+<li>busy：磁盘忙时所占比例</li>
+<li>read、KiB/r 、MBr/s：每秒读的请求数和请求的kb、mb数</li>
+<li>write、KiB/w 、MBr/w：每秒写的请求数和请求的kb、mb数</li>
+<li>avq:磁盘平均队列长度（根据实际的监控该列好像是磁盘平均请求数avgrq）</li>
+<li>avio:磁盘的平均io时间</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111547.png" alt></p>
+<p><strong>NET列</strong>：多列NET展示了传输层（TCP/UDP）、网络层（ip）、网络接口的网络传输信息。</p>
+<ol>
+<li>XXXi 字段指示各层或活动网口<u><strong>收包数</strong></u>目</li>
+<li>XXXo 字段指示各层或活动网口<u><strong>发包数</strong></u>目</li>
+</ol>
+<p><strong>transport：</strong>传输层（TCP/UDP）的数据输入输出的展示，例如在服务器的内部进程之间的数据传输就是在传输层展示，以为还不需要往下通过网络进行传输。</p>
+<p><strong>network：</strong>网络层（ip）的数据输入输出的展示；</p>
+<p><strong>eth0：</strong>默认的网络接口的数据输入输出的展示，也就是通过etho的ip的数据传输的展示，</p>
+<ol>
+<li>sp:网卡的带宽（1000M）</li>
+<li>pcki：传入的数据包的大小</li>
+<li>pcko：传出的数据包的大小</li>
+<li>si:每秒传入的数据大小</li>
+<li>so：每秒传出的数据大小</li>
+<li>coll（collisions）：每秒的冲突数</li>
+<li>mlti（MULTICAST）：每秒的多路广播的数量</li>
+<li>erri/erro:每秒输入输出的错误数</li>
+<li>drpi/drpo:每秒的输入输出的丢包数</li>
+</ol>
+<p><strong>lo:</strong>通过127.0.0.1网络接口的数据传输的数据展示，参数和上面的eth0是一样的</p>
+<h1 id="视图切换"><a href="#视图切换" class="headerlink" title="视图切换"></a>视图切换</h1><ol>
+<li>g：默认视图</li>
+<li>m：内存视图</li>
+<li>c：命令视图</li>
+</ol>
+<h3 id="默认视图（g）"><a href="#默认视图（g）" class="headerlink" title="默认视图（g）"></a>默认视图（g）</h3><p>按g键可以从其他视图跳到默认视图</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108121220.png" alt></p>
+<p>从上图中，我们可以看到PID为3061的find进程在退出前在</p>
+<p>内核模式下占用了3.43秒CPU时间，</p>
+<p>在用户模式下占用了0.96秒CPU时间，共使用CPU时间为4.39秒，相对10分钟采样周期，CPU时间占用比例为1%，</p>
+<p>ST列表示进程状态，N表示该进程是前一个采样周期新生成的进程，E表示该进程已退出，</p>
+<p>EXC列指示进程的退出码。从进程名在“&lt;&gt;”符号中，我们亦可知该进程已退出。</p>
+<br>
+
+<h3 id="内存视图（m）"><a href="#内存视图（m）" class="headerlink" title="内存视图（m）"></a>内存视图（m）</h3><p>内存视图展示了进程使用内存情况，按m键可进入内存视图。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108121630.png" alt></p>
+<ul>
+<li><p>SYSCPU：过去10s内进程处于内核模式占用的CPU时间</p>
+</li>
+<li><p>USRCPU：过去10s进程处于<u><strong>用户模式</strong></u>占用的CPU时间</p>
+</li>
+<li><p>VSIZE：过去10s 进程占用的<u><strong>虚拟空间</strong></u>大小</p>
+</li>
+<li><p>RSIZE：过去10s 进程占用的<u><strong>内存空间</strong></u>大小</p>
+</li>
+<li><p>PSIZE：过去10s 进程占用的<u><strong>页</strong></u>大小</p>
+</li>
+<li><p>VGROW：过去10s 进程<u><strong>增长的虚拟空间</strong></u>大小</p>
+</li>
+<li><p>RGROW：过去10s 进程<u><strong>增长的内存</strong></u>大小</p>
+</li>
+<li><p>SWAPSZ：过去10s 进程使用<u><strong>交换空间</strong></u>的大小。</p>
+</li>
+<li><p>MEM：过去10s 进程占用内存百分比</p>
+</li>
+</ul>
+<br>
+
+<h3 id="磁盘状态模式（d）"><a href="#磁盘状态模式（d）" class="headerlink" title="磁盘状态模式（d）"></a>磁盘状态模式（d）</h3><p>RDDSK:过去10S进程读磁盘的数据量</p>
+<p>WRDSK:过去10S进程写磁盘的数据量</p>
+<p>DSK:过去10S进程所占磁盘的百分比</p>
+<p>CMD:进程名 </p>
+<br>
+
+<h3 id="进程状态模式（p）"><a href="#进程状态模式（p）" class="headerlink" title="进程状态模式（p）"></a>进程状态模式（p）</h3><p>同一个名称的进程显示一列，根据进程名进行分组显示</p>
+<p>NPROCS:相同名称的进程数量</p>
+<p>其它的参数上面已经有列出</p>
+<br>
+
+<h3 id="线程状态模式（v）"><a href="#线程状态模式（v）" class="headerlink" title="线程状态模式（v）"></a>线程状态模式（v）</h3><br>
+
+<h3 id="用户模式（u）"><a href="#用户模式（u）" class="headerlink" title="用户模式（u）"></a>用户模式（u）</h3><p>根据用户进行分组显示</p>
+<br>
+
+<h3 id="命令视图模式（c）"><a href="#命令视图模式（c）" class="headerlink" title="命令视图模式（c）"></a>命令视图模式（c）</h3><p>按c键我们可以进入命令视图，该视图展示了与每个进程相对应的命令。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108121900.png" alt></p>
+<p>有时我们某位“马大哈”同事执行了某个脚本或命令，使得系统资源占用率异常飙高，这时，我们可以很容易地通过atop的命令视图找到导致异常的命令。</p>
+<br>
+
+<h1 id="atop的相关文件"><a href="#atop的相关文件" class="headerlink" title="atop的相关文件"></a>atop的相关文件</h1><p>/etc/atop：目录保存的是atop的配置文件<br>/etc/rc.d/init.d/atop：atop的启动文件<br>/etc/cron.d/atop：atop的定时任务文件，默认是每天0点开始<br>/var/log/atop：atop日志文件，默认是每天0点开始会产生当天的一个日志文件，然后可以通过atop -r file 查看信息，但是没有找到自动播放的的功能，只能通过输入b显示一个指定的时间的信息，可以写个循环来实现<br>/usr/bin/atop：atop命令目录</p>
+<br>
+
+<h1 id="atop日志"><a href="#atop日志" class="headerlink" title="atop日志"></a>atop日志</h1><p>每个时间点采样页面组合起来就形成了一个atop日志文件，我们可以使用”atop -r XXX”命令对日志文件进行查看。那以什么形式保存atop日志文件呢？</p>
+<p>对于atop日志文件的保存方式，我们可以这样：</p>
+<ol>
+<li>每天保存一个atop日志文件，该日志文件记录当天信息</li>
+<li>日志文件以”atop_YYYYMMDD”的方式命名</li>
+<li>设定日志失效期限，自动删除一段时间前的日志文件</li>
+</ol>
+<p>其实atop开发者已经提供了以上日志保存方式，相应的atop.daily脚本可以在源码目录下找到。在atop.daily脚本中，我们可以通过修改INTERVAL变量改变atop信息采样周期(默认为10分钟)；通过修改以下命令中的数值改变日志保存天数(默认为28天)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(sleep 3; find $LOGPATH -name 'atop_*' -mtime +28 -exec rm &#123;&#125; \; )&amp;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

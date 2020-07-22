@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="英文原文：The Eight Fallacies of Distributed Computing  关于分布式计算有八大谬论，这是20 世纪90 年代在Sun MicroSystem 中被首次提出的，但在此之前就已经为人所熟知了。随着时间的推移，这些谬论已经被IT 从业人员所遗忘了，所以有必要提醒一下大家。它们分别是：   网络是可靠的 延迟为零 带宽是无限的 网络是安全的 拓扑不会改变">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式计算的八大谬论">
+<meta property="og:url" content="https://carlo-z.com/distribution/the-eight-fallacies-of-distributed-computing/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="英文原文：The Eight Fallacies of Distributed Computing  关于分布式计算有八大谬论，这是20 世纪90 年代在Sun MicroSystem 中被首次提出的，但在此之前就已经为人所熟知了。随着时间的推移，这些谬论已经被IT 从业人员所遗忘了，所以有必要提醒一下大家。它们分别是：   网络是可靠的 延迟为零 带宽是无限的 网络是安全的 拓扑不会改变">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-07-08T12:46:28.772Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式计算的八大谬论">
+<meta name="twitter:description" content="英文原文：The Eight Fallacies of Distributed Computing  关于分布式计算有八大谬论，这是20 世纪90 年代在Sun MicroSystem 中被首次提出的，但在此之前就已经为人所熟知了。随着时间的推移，这些谬论已经被IT 从业人员所遗忘了，所以有必要提醒一下大家。它们分别是：   网络是可靠的 延迟为零 带宽是无限的 网络是安全的 拓扑不会改变">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/distribution/the-eight-fallacies-of-distributed-computing/">
+
+
+
+
+
+  <title>分布式计算的八大谬论 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/distribution/the-eight-fallacies-of-distributed-computing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">分布式计算的八大谬论</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-17T00:00:00+08:00">
+                2019-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/distribution/" itemprop="url" rel="index">
+                    <span itemprop="name">distribution</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<blockquote>
+<p>英文原文：<a href="https://www.red-gate.com/simple-talk/blogs/the-eight-fallacies-of-distributed-computing/" target="_blank" rel="noopener">The Eight Fallacies of Distributed Computing</a></p>
+</blockquote>
+<p>关于分布式计算有八大谬论，这是20 世纪90 年代在Sun MicroSystem 中被首次提出的，但在此之前就已经为人所熟知了。随着时间的推移，这些谬论已经被IT 从业人员所遗忘了，所以有必要提醒一下大家。它们分别是：</p>
+<blockquote>
+<ol>
+<li>网络是可靠的</li>
+<li>延迟为零</li>
+<li>带宽是无限的</li>
+<li>网络是安全的</li>
+<li>拓扑不会改变</li>
+<li>只存在一个管理员</li>
+<li>传输代价为零</li>
+<li>网络是同质的</li>
+</ol>
+</blockquote>
+<p>我个人经历过一些大型项目，一些高级管理层会做出以上错误的假设，最终导致了灾难性的后果。许多应用设计者对他们使用的网络充满信心，但现实却往往很打脸</p>
+<p>某些人可能认为现在的网络比他们很久之前首次接触分布式系统的时候要更快速、更便宜，所以他们认为上面的这些假设不再是一种谬论，因为技术已经把这些假设实现了。但是，尽管有市场的营销宣传，网络的现实仍然困扰着基于以上谬论设计分布式系统的人</p>
+<p>分布式系统可以在专门设计和指定的网络中很好的工作，并受到严格的控制和监控，但分布式系统真实运行所在的生产环境可能无法满足这些要求！为什么呢？请继续看！</p>
+<h2 id="网络是可靠的"><a href="#网络是可靠的" class="headerlink" title="网络是可靠的"></a>网络是可靠的</h2><p>在局域网中，网络可能看起来坚如磐石。毕竟，现在哪还有一个网络组件经常宕机呢？而且即使一个单一的组件出现故障，还会有很多的冗余，确实是这样吗？随着网络环境越来越复杂，网络管理员很有可能犯错，尤其是在配置上。某些情况下，多达1/3 的网络更改会导致网络的可靠性故障。软件和硬件都可能出现故障，尤其是路由器，它占到所有故障的1/4 左右。“不可中断”的电源供应有可能出现断电、管理员可能进行不明智的网络设备配置更改、可能出现网络阻塞、可能遇到拒绝服务攻击，以及软件和防火墙的更新或布丁失败。网络会因为自然的和非自然的因素导致故障，设计一个能应对这些情况的网络需要很高的技巧。广域网在你的可控范围之外，很容易出错</p>
+<p>最近几个月的Azure 事件真的是令人头疼，而且这种故障概率是主要的云服务提供商的典型特征。对于移动应用，所有的环节都可能出现问题：请求将以不可预测的间隔失败、目标不可达、请求到达目的地但返回应答失败、数据在传输过程中损坏或者不完整。移动应用必须在网络的可靠范围内具有弹性，但所有分布式应用程序必须能够应对所有这些可能性，并且网络节点必须能够应对服务器故障</p>
+<h2 id="延迟为零"><a href="#延迟为零" class="headerlink" title="延迟为零"></a>延迟为零</h2><p>延迟和带宽不同，延迟是指花费在等待应答上的时间，原因是什么？除了明显的服务器处理延迟，还有网络延迟，包括传输延迟、节点延迟和阻塞延迟。传输延迟随着距离的增加而增加：在美国和欧洲之间的传输延迟在30ms 左右。传输路径中的节点数（译者注：路由器、网管、代理服务器等）决定了节点延迟</p>
+<p>通常开发人员在内网中构建分布式系统，而内网中的延迟并不明显，因此频繁地进行细粒度的网络远程调用几乎不会有什么损失。这种设计错误只有在投入到真实的生产环境中才会暴露出来</p>
+<p>高延迟的一个令人不安的影响就是它不是固定的。在一个糟糕的网络中，偶尔会是几秒。就其性质而言，无法保证网络服务单个数据包的顺序，甚至不能保证请求进程仍然存在。延迟会让事情变得更糟。此外，在应用程序通过发送多个同时请求进行补偿的情况下，可以通过对其的响应来加剧暂时高延迟</p>
+<h2 id="带宽是无限的"><a href="#带宽是无限的" class="headerlink" title="带宽是无限的"></a>带宽是无限的</h2><p>虽然大多数现代电缆可以应对无限带宽，但我们还没有找到如何构建足够快的互联设备（集线器、交换机、路由器等）以保证所有连接用户的带宽，典型的企业内部网仍将具有限制带宽的区域</p>
+<p>随着公共网络带宽的快速增加，使用网络进行视频和音频服务（而视频和音频服务所使用的是广播技术）的速度也在增加。社交媒体等新用途往往会吸收不断增加的带宽。此外，主要城市以外的许多地方存在“最后一英里”的限制，以及包丢失的可能性越来越大</p>
+<p>所以总的来说，我们在假设高带宽是一种通用体验的时候需要谨慎。无论网络带宽如何令人印象深刻，它都无法接近共同托管进程可以通信的速度</p>
+<h2 id="网络是安全的"><a href="#网络是安全的" class="headerlink" title="网络是安全的"></a>网络是安全的</h2><p>奇怪的是，仍然会遇到基于网络的系统，它们具有基本的安全弱点。网络攻击逐年增加，已经远远超出了其原本的好奇心、恶意和犯罪根源，成为国际冲突和政治“行动”的一部分。网络攻击是IT 生活的一部分：对开发人员来说很无聊，但必须要防御。部分问题是网络入侵检测往往是低优先级的，所以我们只是不总是知道成功的网络入侵</p>
+<p>传统上，漏洞通常是配置不当的防火墙的结果。大多数防火墙弱点都会经常被检测出来，因为如果你愚蠢地禁用了一个就会立即发现。然而，这只是破坏网络和防火墙的一种方式，只是防御的一部分。Wi-Fi 通常是一个弱点，使用自己的设备（BYOD）可以允许通过受损设备进行入侵，虚拟化和软件定义网络（SDN）也是如此。越来越多的DevOps 对快速变化的基础设施的需求使得更难以保持必要的控制措施。企业网络中的僵尸网络是一个持续存在的问题，以及通过业务合作伙伴的入侵也是如此</p>
+<p>你需要假设网络是敌对的，并且安全性必须深入。这意味着要将安全性构建到分布式应用程序及其主机的基本设计中</p>
+<p>通过纵深防御，分布式系统的任何部分都需要具有访问其他网络资源的安全方式</p>
+<p>安全带来了自身的复杂性。这将来自维护不同用户帐户、权限、证书、帐户等的管理开销。一个主要的云网络故障是由于许可在续签之前过期</p>
+<h2 id="拓扑不会改变"><a href="#拓扑不会改变" class="headerlink" title="拓扑不会改变"></a>拓扑不会改变</h2><p>网络拓扑不断变化，速度非常快。由于“网络敏捷性”的压力越来越大，这是不可避免的，以便与快速变化的业务需求保持同步</p>
+<p>无论你在何处部署应用程序，都必须假设大部分网络拓扑都可能无法控制。网络管理员将一次进行更改，原因可能不符合你的利益。他们将移动服务器并更改网络拓扑以获得性能或安全性，并在服务器和网络故障的情况下进行路由更改</p>
+<p>因此，依赖特定端点或路由的持久性是错误的。必须始终从任何分布式设计中抽象出网络的物理结构</p>
+<h2 id="只存在一个管理员"><a href="#只存在一个管理员" class="headerlink" title="只存在一个管理员"></a>只存在一个管理员</h2><p>除非系统完全存在于小型LAN 中，否则将有不同的管理员与网络的各种组件相关联。他们将拥有不同程度的专业知识，不同的职责和优先事项</p>
+<p>如果出现导致服务失败的问题，这将很重要。你的服务级别协议将要求在一定时间内做出响应。第一阶段将是确定问题。除非有问题的网络部分的管理员是你的开发团队的一部分，否则这可能并不容易。不幸的是，这不太可能。在许多网络中，问题可能完全是另一个组织的责任。如果云组件是应用程序的重要组成部分，而云出现中断，那么在确定优先级时就无能为力了。你所能做的就是等待</p>
+<p>如果网络中有许多管理员，那么协调升级到网络或应用程序就更加困难，特别是当涉及到几个忙碌的人时。升级和部署必须协调完成，涉及的人数越多，这就变得越困难！</p>
+<h2 id="传输代价为零"><a href="#传输代价为零" class="headerlink" title="传输代价为零"></a>传输代价为零</h2><p>传输成本是指通过网络传输数据的总体成本。我们可以参考时间和计算机资源，或者我们可以参考财务成本</p>
+<p>将数据从应用程序层传输到传输层需要CPU和其他资源。需要对结构化信息进行序列化（编组）或解析以将数据传输到线路上。这种性能影响可能大于带宽和延迟时间，XML 冗长和复杂性导致其需要的时间是JSON 的两倍</p>
+<p>金融运输成本不仅包括创建网络的硬件和安装成本，还包括监控和维护网络服务器，服务和基础设施的成本，以及如果发现带宽不足，或者你的服务器实际上无法处理足够的并发请求。我们还需要考虑租用线路和云服务的成本，这些成本由所使用的带宽支付</p>
+<h2 id="网络都是同质的"><a href="#网络都是同质的" class="headerlink" title="网络都是同质的"></a>网络都是同质的</h2><p>今天的同质网络是罕见的，甚至比首次发现谬论时更为罕见！网络可能连接计算机和其他设备，每个设备具有不同的操作系统，不同的数据传输协议，并且所有设备都与来自各种供应商的网络组件相连</p>
+<p>但是，异构网络没有什么特别的错误，除非它涉及需要专门支持，设备或驱动程序的专有数据传输协议。从应用程序的角度来看，如果数据以开放标准格式（如CSV，XML或JSON）传输，并且使用行业标准的查询数据（如ODBC）的方法，则会有很大帮助</p>
+<p>如果所有组件都来自一个供应商，则可靠性更高，因为测试覆盖范围可能更大，但实际情况是组件的丰富组合。这意味着互操作性应该从任何分布式系统的设计开始就内置</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>即使有现代的千兆网络，数据在服务器外的传输速度也较慢，而且不那么可靠。这就是为什么我们传统上更喜欢扩展硬件而不是扩展基于网络的商品硬件。问题是，这种偏好僵化成了一条黄金法则。当它被证明可以控制网络到八种谬误更接近现实的程度时，“最佳实践”就可以被推翻，然后分布式模型就变得更有吸引力了。问题是，分布式系统、面向服务的体系结构和微服务只有在网络被驯服了所有的缺点时才有效。即使在今天，云服务的故障或“停机”发生的频率也惊人地高。当你计划或开发分布式应用程序时，在你的网络中假定那些不一定存在的属性和质量是一个坏主意：在计划时，最好假定你的网络将是昂贵的，并且偶尔会是不可靠和不安全的。假设你将面临高延迟、带宽不足和拓扑变化。当你需要更改时，你可能需要与许多管理员联系，以及各种令人眼花缭乱的网络服务器和协议。你可能会感到惊喜，但不要指望它！</p>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ul>
+<li><a href="https://www.martinfowler.com/articles/microservices.html" target="_blank" rel="noopener">Microservices: a definition of this new architectural term</a></li>
+<li><a href="http://blog.cuicc.com/blog/2015/07/22/microservices/" target="_blank" rel="noopener">微服务(翻译)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Google_File_System" target="_blank" rel="noopener">Google File System</a></li>
+<li><a href="https://en.wikipedia.org/wiki/MapReduce" target="_blank" rel="noopener">MapReduce</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Bigtable" target="_blank" rel="noopener">Bigtable</a></li>
+<li><a href="http://www.infoq.com/cn/minibooks/domain-driven-design-quickly" target="_blank" rel="noopener">Domain Driven Design(Quickly)</a></li>
+<li><a href="http://dockone.io/article/932" target="_blank" rel="noopener">十分钟带你理解Kubernetes核心概念</a></li>
+<li><a href="https://www.thoughtworks.com/cn/radar" target="_blank" rel="noopener">技术雷达</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/computer-network/tcpdump-manual-analysis-network-package/" rel="next" title="tcpdump 捕获中文传输数据包，并手动解析">
+                <i class="fa fa-chevron-left"></i> tcpdump 捕获中文传输数据包，并手动解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/algorithm/backoff-algorighm/" rel="prev" title="退避算法">
+                退避算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#网络是可靠的"><span class="nav-text">网络是可靠的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#延迟为零"><span class="nav-text">延迟为零</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带宽是无限的"><span class="nav-text">带宽是无限的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络是安全的"><span class="nav-text">网络是安全的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拓扑不会改变"><span class="nav-text">拓扑不会改变</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#只存在一个管理员"><span class="nav-text">只存在一个管理员</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传输代价为零"><span class="nav-text">传输代价为零</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络都是同质的"><span class="nav-text">网络都是同质的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展阅读"><span class="nav-text">扩展阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

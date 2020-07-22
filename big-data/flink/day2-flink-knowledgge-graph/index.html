@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="速度收藏！看完这份知识图谱，才算搞懂 Flink！简介： 社区整理了这样一份知识图谱，由 Apache Flink Committer 执笔，四位 PMC 成员审核，将 Flink 9 大技术版块详细拆分，突出重点内容并搭配全面的学习素材。看完这份图谱，才算真的搞懂 Flink！ 先跟大家分享一个好消息！即日起，Apache Flink 社区微信公众号 Ververica 正式更名为「Flink">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Focus-1">
+<meta property="og:url" content="https://carlo-z.com/big-data/flink/day2-flink-knowledgge-graph/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="速度收藏！看完这份知识图谱，才算搞懂 Flink！简介： 社区整理了这样一份知识图谱，由 Apache Flink Committer 执笔，四位 PMC 成员审核，将 Flink 9 大技术版块详细拆分，突出重点内容并搭配全面的学习素材。看完这份图谱，才算真的搞懂 Flink！ 先跟大家分享一个好消息！即日起，Apache Flink 社区微信公众号 Ververica 正式更名为「Flink">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/d7cab0164c5d44c3ba85108af0d7e5b5.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/a4228164777f4738be878459a8258334.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/ab3f54990f0c4892938e7c0170ce1b94.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/9b02c1d50fb343a0879f43759b7179f4.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/277ce4a7eb3d439c93f900f55668618c.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/f3393ea9fcf04a9bb735dbcf33dc580d.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/c80bf9c6f4b94a32a15988b1a8380947.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/224ba0146702451db521fde2ec172de1.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/8407ab2ef6104c6aae2f5cf5661106e8.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/9342a56a8ca04d64930658159b353f6d.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/075299f213f949689f45a436bfdec3f3.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/c9d9de921e11415c829dc6ffd41ce589.jpeg">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/f83aa052e832430694830fea5ffa3a32.jpeg">
+<meta property="og:updated_time" content="2020-07-14T13:21:25.927Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Focus-1">
+<meta name="twitter:description" content="速度收藏！看完这份知识图谱，才算搞懂 Flink！简介： 社区整理了这样一份知识图谱，由 Apache Flink Committer 执笔，四位 PMC 成员审核，将 Flink 9 大技术版块详细拆分，突出重点内容并搭配全面的学习素材。看完这份图谱，才算真的搞懂 Flink！ 先跟大家分享一个好消息！即日起，Apache Flink 社区微信公众号 Ververica 正式更名为「Flink">
+<meta name="twitter:image" content="https://ucc.alicdn.com/pic/developer-ecology/d7cab0164c5d44c3ba85108af0d7e5b5.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/big-data/flink/day2-flink-knowledgge-graph/">
+
+
+
+
+
+  <title> | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/big-data/flink/day2-flink-knowledgge-graph/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T21:17:55+08:00">
+                2020-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="速度收藏！看完这份知识图谱，才算搞懂-Flink！"><a href="#速度收藏！看完这份知识图谱，才算搞懂-Flink！" class="headerlink" title="速度收藏！看完这份知识图谱，才算搞懂 Flink！"></a>速度收藏！看完这份知识图谱，才算搞懂 Flink！</h1><p><strong>简介：</strong> 社区整理了这样一份知识图谱，由 Apache Flink Committer 执笔，四位 PMC 成员审核，将 Flink 9 大技术版块详细拆分，突出重点内容并搭配全面的学习素材。看完这份图谱，才算真的搞懂 Flink！</p>
+<p>先跟大家分享一个好消息！即日起，Apache Flink 社区微信公众号 Ververica 正式更名为「<strong>Flink 中文社区</strong>」并由 Apache Flink PMC 成员进行维护，是国内唯一的 Flink 社区官方微信公众号。</p>
+<p>在去年的一年中，Flink 中文社区共发布文章 144 篇，通过提供 Flink 技术原理剖析、上手实操、多场景下的最佳实践以及社区的最新资讯等帮助大家更好的理解、使用 Flink。</p>
+<p>同时，我们也发现当前社区除文章、直播教程、Meetup 外还缺少一个清晰的图谱让大家了解 Flink 完整的技术体系与学习路径。因此，社区整理了这样一份知识图谱，由 Apache Flink Committer 执笔，四位 PMC 成员审核，将 Flink 9 大技术版块详细拆分，突出重点内容并搭配全面的学习素材。看完这份图谱，才算真的搞懂 Flink！</p>
+<p><strong>▽ Flink 知识图谱概览 ▽</strong></p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/d7cab0164c5d44c3ba85108af0d7e5b5.jpeg" alt="640-2.jpeg"></p>
+<p><strong>如何获取？</strong></p>
+<p>点击下方链接即可马上下载，知识图谱 PDF 版本内含大量补充链接，一键点击即可查看相关扩展素材！</p>
+<p>《Apache Flink 知识图谱》<br><a href="https://ververica.cn/developers/special-issue/" target="_blank" rel="noopener">https://ververica.cn/developers/special-issue/</a></p>
+<h2 id="最实用的知识图谱"><a href="#最实用的知识图谱" class="headerlink" title="最实用的知识图谱"></a>最实用的知识图谱</h2><p><strong>1.内容全面</strong>，将 Flink 所涉及的技术内容划分为 9 大版块，每部分内容进行详细分解，并提供学习路径及深入了解的学习素材。</p>
+<ul>
+<li>Streaming Processing Concepts(common concepts for stream processing)</li>
+<li>Architecture</li>
+<li>State Management</li>
+<li>DataStream</li>
+<li>Libraries</li>
+<li>Table API &amp; SQL</li>
+<li>Deployment and Operations</li>
+<li>Debugging and Monitoring</li>
+<li>Ecosystem</li>
+<li>Use Cases</li>
+</ul>
+<p><strong>2.层次分明</strong>，将各部分技术内容中的基础入门知识进行标示，重点突出，帮你找到清晰的学习路径。</p>
+<p><strong>3.方便实用</strong>，每个知识点附带补充说明的链接与最佳学习素材，可及时进行深度探索，有助于理解消化。</p>
+<p><strong>4.强大的拓展阅读资料配置</strong>，整合了社区全年输出的技术文章、系列直播教程、线下 Meetup 及 Flink Forward Asia 的精华内容，一图在手，学好 Flink 不用愁！</p>
+<h2 id="各版块知识点详解"><a href="#各版块知识点详解" class="headerlink" title="各版块知识点详解"></a>各版块知识点详解</h2><ul>
+<li>Streaming Processing Concepts(common concepts for stream processing)</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/a4228164777f4738be878459a8258334.jpeg" alt="640-3.jpeg"></p>
+<ul>
+<li>Architecture</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/ab3f54990f0c4892938e7c0170ce1b94.jpeg" alt="640-4.jpeg"></p>
+<ul>
+<li>State Management</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/9b02c1d50fb343a0879f43759b7179f4.jpeg" alt="640-5.jpeg"></p>
+<ul>
+<li>DataStream</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/277ce4a7eb3d439c93f900f55668618c.jpeg" alt="640-6.jpeg"><br><img src="https://ucc.alicdn.com/pic/developer-ecology/f3393ea9fcf04a9bb735dbcf33dc580d.jpeg" alt="640-7.jpeg"></p>
+<ul>
+<li>Libraries</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/c80bf9c6f4b94a32a15988b1a8380947.jpeg" alt="640-8.jpeg"></p>
+<ul>
+<li>Table API &amp; SQL</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/224ba0146702451db521fde2ec172de1.jpeg" alt="640-9.jpeg"><br><img src="https://ucc.alicdn.com/pic/developer-ecology/8407ab2ef6104c6aae2f5cf5661106e8.jpeg" alt="640-10.jpeg"></p>
+<ul>
+<li>Deployment and Operations</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/9342a56a8ca04d64930658159b353f6d.jpeg" alt="640-11.jpeg"></p>
+<ul>
+<li>Debugging and Monitoring</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/075299f213f949689f45a436bfdec3f3.jpeg" alt="640-12.jpeg"></p>
+<ul>
+<li>Ecosystem</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/c9d9de921e11415c829dc6ffd41ce589.jpeg" alt="640-13.jpeg"></p>
+<ul>
+<li>Use Cases</li>
+</ul>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/f83aa052e832430694830fea5ffa3a32.jpeg" alt="640-14.jpeg"></p>
+<h2 id="部分知识图谱扩展素材"><a href="#部分知识图谱扩展素材" class="headerlink" title="部分知识图谱扩展素材"></a>部分知识图谱扩展素材</h2><h3 id="直播教程"><a href="#直播教程" class="headerlink" title="直播教程"></a>直播教程</h3><p>| Flink 基础概念解析<br>| Flink 开发环境搭建和应用的配置、部署及运行<br>| Flink Datastream API 编程<br>| Flink 客户端操作<br>| Flink Time &amp; Window<br>| Flink 状态管理及容错机制<br>| Flink Table API 编程<br>| Flink SQL 编程实践<br>| 5分钟从零构建第一个 Flink 应用<br>| 零基础实战教程：如何计算实时热门商品<br>| Runtime 核心机制剖析<br>| 时间属性深度解析<br>| Checkpoint 原理剖析与应用实践<br>| Flink on Yarn / K8s 原理剖析及实践<br>| 数据类型和序列化<br>| Flink 作业执行深度解析<br>| 网络流控和反压剖析<br>| 详解 Metrics 原理与实战</p>
+<h3 id="User-Case-及补充"><a href="#User-Case-及补充" class="headerlink" title="User Case 及补充"></a>User Case 及补充</h3><p>| 小米流式平台架构演进与实践<br>| 美团点评基于 Flink 的实时数仓平台实践<br>| 监控指标10K+！携程实时智能检测平台实践<br>| Lyft 基于 Flink 的大规模准实时数据分析平台<br>| 基于 Flink 构建 CEP 引擎的挑战和实践<br>| 趣头条基于 Flink 的实时平台建设实践<br>| G7 在实时计算的探索与实践<br>| Flink 靠什么征服饿了么工程师？<br>| Apache Flink 的迁移之路，2 年处理效果提升 5 倍<br>| 日均百亿级日志处理：微博基于 Flink 的实时计算平台建设<br>| Flink 在同程艺龙实时计算平台的研发与应用实践<br>| 从 Storm 到 Flink，汽车之家基于 Flink 的实时 SQL 平台设计思路与实践<br>| 日均处理万亿数据！Apache Flink在快手的应用实践与技术演进之路<br>| 从 Spark Streaming 到 Apache Flink : 实时数据流在爱奇艺的演进<br>| Apache Flink 在 eBay 监控系统上的实践和应用<br>| 每天30亿条笔记展示，小红书如何实现实时高效推荐？<br>| 360深度实践：Flink 与 Storm 协议级对比<br>| Blink 有何特别之处？菜鸟供应链场景最佳实践<br>| 58 集团大规模Storm 任务平滑迁移至 Flink 的秘密<br>| 从Storm到Flink，有赞五年实时计算效率提升实践</p>
+<h3 id="拓展链接"><a href="#拓展链接" class="headerlink" title="拓展链接"></a>拓展链接</h3><p>| <a href="https://ververica.cn/developers/table-api-programming/" target="_blank" rel="noopener">https://ververica.cn/developers/table-api-programming/</a><br>| <a href="https://sf-2017.flink-forward.org/kb_sessions/streaming-models-how-ing-adds-models-at-runtime-to-catch-fraudsters/" target="_blank" rel="noopener">https://sf-2017.flink-forward.org/kb_sessions/streaming-models-how-ing-adds-models-at-runtime-to-catch-fraudsters/</a><br>| <a href="https://sf-2017.flink-forward.org/kb_sessions/building-a-real-time-anomaly-detection-system-with-flink-mux/" target="_blank" rel="noopener">https://sf-2017.flink-forward.org/kb_sessions/building-a-real-time-anomaly-detection-system-with-flink-mux/</a><br>| <a href="https://sf-2017.flink-forward.org/kb_sessions/dynamically-configured-stream-processing-using-flink-kafka/" target="_blank" rel="noopener">https://sf-2017.flink-forward.org/kb_sessions/dynamically-configured-stream-processing-using-flink-kafka/</a><br>| <a href="https://jobs.zalando.com/en/tech/blog/complex-event-generation-for-business-process-monitoring-using-apache-flink/" target="_blank" rel="noopener">https://jobs.zalando.com/en/tech/blog/complex-event-generation-for-business-process-monitoring-using-apache-flink/</a><br>| <a href="https://berlin-2017.flink-forward.org/kb_sessions/drivetribes-kappa-architecture-with-apache-flink/" target="_blank" rel="noopener">https://berlin-2017.flink-forward.org/kb_sessions/drivetribes-kappa-architecture-with-apache-flink/</a><br>| <a href="https://2016.flink-forward.org/kb_sessions/a-brief-history-of-time-with-apache-flink-real-time-monitoring-and-analysis-with-flink-kafka-hb/" target="_blank" rel="noopener">https://2016.flink-forward.org/kb_sessions/a-brief-history-of-time-with-apache-flink-real-time-monitoring-and-analysis-with-flink-kafka-hb/</a><br>| <a href="https://ci.apache.org/projects/flink/flink-docs-master/monitoring/checkpoint_monitoring.html" target="_blank" rel="noopener">https://ci.apache.org/projects/flink/flink-docs-master/monitoring/checkpoint_monitoring.html</a><br>| <a href="https://ci.apache.org/projects/flink/flink-docs-master/dev/table/functions/udfs.html" target="_blank" rel="noopener">https://ci.apache.org/projects/flink/flink-docs-master/dev/table/functions/udfs.html</a><br>| <a href="https://ci.apache.org/projects/flink/flink-docs-master/dev/table/functions/systemFunctions.html" target="_blank" rel="noopener">https://ci.apache.org/projects/flink/flink-docs-master/dev/table/functions/systemFunctions.html</a><br>| <a href="https://ci.apache.org/projects/flink/flink-docs-master/dev/table/streaming/dynamic_tables.html" target="_blank" rel="noopener">https://ci.apache.org/projects/flink/flink-docs-master/dev/table/streaming/dynamic_tables.html</a><br>| <a href="https://ci.apache.org/projects/flink/flink-docs-master/monitoring/metrics.html" target="_blank" rel="noopener">https://ci.apache.org/projects/flink/flink-docs-master/monitoring/metrics.html</a></p>
+<h1 id="重磅福利"><a href="#重磅福利" class="headerlink" title="重磅福利"></a>重磅福利</h1><p>Flink 社区知识图谱免费下载链接来啦～关注点击下方链接即可下载，并有直播课程详解知识图谱的正确打开方式，让你一图在手，学好 Flink 不用愁！</p>
+<p>《Apache Flink 知识图谱》链接地址：<a href="https://ververica.cn/developers/special-issue/" target="_blank" rel="noopener">https://ververica.cn/developers/special-issue/</a></p>
+<p><strong>知识图谱作者介绍：</strong></p>
+<p>程鹤群（军长），Apache Flink Committer，阿里巴巴技术专家，2015 年 4 月加入阿里巴巴，从事主搜离线相关开发。2016 年开始参与 Flink SQL 相关的研发。2018 年开始核心参与 Flink Table API 相关的研发。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/big-data/flink/flink-7-days/" rel="next" title="Flink-1.11 7天训练营">
+                <i class="fa fa-chevron-left"></i> Flink-1.11 7天训练营
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/big-data/flink/day1-what-is-flink/" rel="prev" title>
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#速度收藏！看完这份知识图谱，才算搞懂-Flink！"><span class="nav-text">速度收藏！看完这份知识图谱，才算搞懂 Flink！</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最实用的知识图谱"><span class="nav-text">最实用的知识图谱</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#各版块知识点详解"><span class="nav-text">各版块知识点详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部分知识图谱扩展素材"><span class="nav-text">部分知识图谱扩展素材</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#直播教程"><span class="nav-text">直播教程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#User-Case-及补充"><span class="nav-text">User Case 及补充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拓展链接"><span class="nav-text">拓展链接</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重磅福利"><span class="nav-text">重磅福利</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

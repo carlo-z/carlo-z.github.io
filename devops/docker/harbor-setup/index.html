@@ -116,7 +116,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="docker仓库Harbor安装配置">
 <meta property="og:url" content="https://carlo-z.com/devops/docker/harbor-setup/index.html">
-<meta property="og:site_name" content="CarloZ">
+<meta property="og:site_name" content="Focus-1">
 <meta property="og:description" content="技术选型开源Docker Registry的不足同很多团队进行容器云构建的初始阶段一样，一开始我们并不太注重安全，容器仓库一般都是配置成insecure-registry直接使用。这次，我们决定加强安全方面的控制。我们发现了它的一些不足如下：  用户与鉴权：Docker Registry V2可以基于htpasswd文件进行简单的用户管理，但是维护不便，也没有对外的API可供集成。  缺少日">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135610.png">
@@ -130,7 +130,7 @@
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420214517.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420215346.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420215536.png">
-<meta property="og:updated_time" content="2020-04-21T09:20:03.976Z">
+<meta property="og:updated_time" content="2020-04-22T13:44:11.208Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker仓库Harbor安装配置">
 <meta name="twitter:description" content="技术选型开源Docker Registry的不足同很多团队进行容器云构建的初始阶段一样，一开始我们并不太注重安全，容器仓库一般都是配置成insecure-registry直接使用。这次，我们决定加强安全方面的控制。我们发现了它的一些不足如下：  用户与鉴权：Docker Registry V2可以基于htpasswd文件进行简单的用户管理，但是维护不便，也没有对外的API可供集成。  缺少日">
@@ -170,7 +170,7 @@
 
 
 
-  <title>docker仓库Harbor安装配置 | CarloZ</title>
+  <title>docker仓库Harbor安装配置 | Focus-1</title>
   
 
 
@@ -200,7 +200,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">CarloZ</span>
+        <span class="site-title">Focus-1</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -332,13 +332,13 @@
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/docker/harbor-setup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="-CarloZ">
+      <meta itemprop="name" content="Focus-1">
       <meta itemprop="description" content>
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="CarloZ">
+      <meta itemprop="name" content="Focus-1">
     </span>
 
     
@@ -381,7 +381,18 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/docker/" itemprop="url" rel="index">
                     <span itemprop="name">docker</span>
                   </a>
                 </span>
@@ -576,8 +587,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/elasticsearch/elk-single-node-cluster/" rel="prev" title="ELK单节点集群搭建">
-                ELK单节点集群搭建 <i class="fa fa-chevron-right"></i>
+              <a href="/devops/docker/portainer-setup/" rel="prev" title="centos7 下 Portainer安装配置">
+                centos7 下 Portainer安装配置 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -649,7 +660,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">-CarloZ</p>
+              <p class="site-author-name" itemprop="name">Focus-1</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -660,7 +671,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">192</span>
+                  <span class="site-state-item-count">228</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -671,7 +682,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">57</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -682,7 +693,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">97</span>
+                  <span class="site-state-item-count">98</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -753,7 +764,7 @@
   <span class="with-love">
     <i class="fa fa-"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">-CarloZ</span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
 
   
 </div>

@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="版本要求 https://docs.sonarqube.org/latest/requirements/requirements/ 安装PostgreSQL 123456docker pull postgresdocker run --name postgres -e POSTGRES_USER=sonar -e POSTGRES_PASSWORD=sonar -p 5432:5432 -">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sonarqube-8.3 安装">
+<meta property="og:url" content="https://carlo-z.com/devops/sonar/sonarqube-server-setup/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="版本要求 https://docs.sonarqube.org/latest/requirements/requirements/ 安装PostgreSQL 123456docker pull postgresdocker run --name postgres -e POSTGRES_USER=sonar -e POSTGRES_PASSWORD=sonar -p 5432:5432 -">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200512153042.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200512171820.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200512152854.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200515152245.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514142721.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514150054.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514150509.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514175808.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514191037.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514191525.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514190949.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514192610.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514193841.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514193817.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514194221.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514194328.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514200516.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514200539.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514200634.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514200830.png">
+<meta property="og:updated_time" content="2020-05-31T13:41:47.334Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sonarqube-8.3 安装">
+<meta name="twitter:description" content="版本要求 https://docs.sonarqube.org/latest/requirements/requirements/ 安装PostgreSQL 123456docker pull postgresdocker run --name postgres -e POSTGRES_USER=sonar -e POSTGRES_PASSWORD=sonar -p 5432:5432 -">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200512153042.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/devops/sonar/sonarqube-server-setup/">
+
+
+
+
+
+  <title>sonarqube-8.3 安装 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/sonar/sonarqube-server-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sonarqube-8.3 安装</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-25T00:00:00+08:00">
+                2019-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+
+
+<p>版本要求</p>
+<p><a href="https://docs.sonarqube.org/latest/requirements/requirements/" target="_blank" rel="noopener">https://docs.sonarqube.org/latest/requirements/requirements/</a></p>
+<h1 id="安装PostgreSQL"><a href="#安装PostgreSQL" class="headerlink" title="安装PostgreSQL"></a>安装PostgreSQL</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200512153042.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker pull postgres</span><br><span class="line">docker run --name postgres -e POSTGRES_USER=sonar -e POSTGRES_PASSWORD=sonar -p 5432:5432 -d postgres</span><br><span class="line">firewall-cmd --permanent --add-port=5432/tcp</span><br><span class="line">firewall-cmd --reload</span><br><span class="line">firewall-cmd --list-all</span><br><span class="line">docker exec -it postgres /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>修改host</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts</span><br><span class="line">10.1.171.41  dev.mypostgres.com</span><br><span class="line"></span><br><span class="line">C:\Windows\System32\drivers\etc\</span><br><span class="line">hosts</span><br><span class="line">10.1.171.41  dev.mypostgres.com</span><br></pre></td></tr></table></figure>
+
+<p>通过Navicat for Postgres连接</p>
+<blockquote>
+<p>dev.mypostgres.com</p>
+<p>5432</p>
+<p>sonar/sonar</p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200512171820.png" alt></p>
+<br>
+
+<h1 id="安装jdk11"><a href="#安装jdk11" class="headerlink" title="安装jdk11"></a>安装jdk11</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200512152854.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vi /etc/profile</span></span><br><span class="line">export JAVA_HOME=/data/components/jdk-11.0.7</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">source</span> /etc/profile</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> java -version</span></span><br><span class="line">java version "11.0.7" 2020-04-14 LTS</span><br><span class="line">Java(TM) SE Runtime Environment 18.9 (build 11.0.7+8-LTS)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM 18.9 (build 11.0.7+8-LTS, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="SonarQube安装配置"><a href="#SonarQube安装配置" class="headerlink" title="SonarQube安装配置"></a>SonarQube安装配置</h1><h3 id="使用zip安装"><a href="#使用zip安装" class="headerlink" title="使用zip安装"></a>使用zip安装</h3><p>下载zip文件（<a href="http://www.sonarqube.org/downloads/）" target="_blank" rel="noopener">http://www.sonarqube.org/downloads/）</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unzip sonarqube-8.3.1.34397.zip</span><br><span class="line">ln -s /data/sonarqube-8.3.1.34397 /data/sonarqube</span><br><span class="line">cd /data/sonarqube</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200515152245.png" alt></p>
+<br>
+
+<h3 id="设置DB"><a href="#设置DB" class="headerlink" title="设置DB"></a>设置DB</h3><p>在pg中建立数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">create database sonar;</span><br><span class="line">create user sonar;</span><br><span class="line">atler user sonar with password 'sonar';</span><br><span class="line">alter role sonar createdb;alter role sonar superuser;alter role sonar createrole;</span><br><span class="line">alter database sonar owner to sonar</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">vi /data/sonarqube/conf/sonar.properties</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> DATABASE</span></span><br><span class="line">sonar.jdbc.username=sonar</span><br><span class="line">sonar.jdbc.password=sonar</span><br><span class="line">sonar.jdbc.url=jdbc:postgresql://dev.mypostgres.com:5432/sonar</span><br><span class="line"></span><br><span class="line">sonar.jdbc.maxActive=60</span><br><span class="line">sonar.jdbc.maxIdle=5</span><br><span class="line">sonar.jdbc.minIdle=2</span><br><span class="line">sonar.jdbc.maxWait=5000</span><br><span class="line">sonar.jdbc.minEvictableIdleTimeMillis=600000</span><br><span class="line">sonar.jdbc.timeBetweenEvictionRunsMillis=30000</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> sonar.sorceEncoding=UTF-8</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="添加JDBC驱动程序"><a href="#添加JDBC驱动程序" class="headerlink" title="添加JDBC驱动程序"></a>添加JDBC驱动程序</h3><p>已经提供了支持的数据库（Oracle除外）的驱动程序。不要更换提供的驱动程序；他们是唯一受支持的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/data/sonarqube/lib/jdbc</span><br><span class="line">(base) [root@dev-10-1-171-41 jdbc]# ll</span><br><span class="line">total 12</span><br><span class="line">drwxr-xr-x 2 root root 4096 May  7 13:41 h2</span><br><span class="line">drwxr-xr-x 2 root root 4096 May  7 13:41 mssql</span><br><span class="line">drwxr-xr-x 2 root root 4096 May  7 13:41 postgresql</span><br></pre></td></tr></table></figure>
+
+<p>oracle 数据库需要单独添加驱动，其他数据库已经默认提供</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/data/sonarqube/extensions/jdbc-driver</span><br><span class="line">(base) [root@dev-10-1-171-41 jdbc-driver]# ll</span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x 2 root root 4096 May  7 13:22 oracle</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="配置Elasticsearch存储路径"><a href="#配置Elasticsearch存储路径" class="headerlink" title="配置Elasticsearch存储路径"></a>配置Elasticsearch存储路径</h3><p>默认情况下，Elasticsearch数据存储在<em>$ SONARQUBE-HOME / data中</em>，但不建议将其用于生产实例。相反，您应该将此数据存储在其他位置，最好是在具有快速I / O的专用卷中。除了保持可接受的性能外，这样做还可以简化SonarQube的升级。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /data/sonarqube/conf/sonar.properties</span><br><span class="line"><span class="meta">#</span><span class="bash">sonar.path.data=/var/sonarqube/data</span></span><br><span class="line"><span class="meta">#</span><span class="bash">sonar.path.temp=/var/sonarqube/temp</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="特别配置jdk路径"><a href="#特别配置jdk路径" class="headerlink" title="特别配置jdk路径"></a>特别配置jdk路径</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi /data/sonarqube/conf/wrapper.conf</span><br><span class="line">wrapper.java.command=/data/components/jdk-11.0.7/bin/java</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="linux系统参数优化"><a href="#linux系统参数优化" class="headerlink" title="linux系统参数优化"></a>linux系统参数优化</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysctl.d/99-sonarqube.conf（或/etc/sysctl.conf文件）</span><br><span class="line">vm.max_map_count=262144</span><br><span class="line">fs.file-max=65536</span><br><span class="line"></span><br><span class="line">sysctl -w vm.max_map_count=262144</span><br><span class="line">sysctl -w fs.file-max=65536</span><br><span class="line">ulimit -n 65536</span><br><span class="line"></span><br><span class="line">sysctl vm.max_map_count </span><br><span class="line">sysctl fs.file-max </span><br><span class="line">ulimit -n</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="启动Web服务器"><a href="#启动Web服务器" class="headerlink" title="启动Web服务器"></a>启动Web服务器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi /data/sonarqube/conf/sonar.properties</span><br><span class="line">sonar.web.host=0.0.0.0</span><br><span class="line">sonar.web.port=9011</span><br><span class="line">sonar.web.context=</span><br><span class="line"></span><br><span class="line">firewall-cmd --permanent --add-port=9011/tcp</span><br><span class="line">firewall-cmd --reload</span><br><span class="line">firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
+
+<p>sonar不能使用root启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd sonar</span><br><span class="line">passwd sonar</span><br><span class="line">chown -R sonar:sonar /data/sonarqube/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">su - sonar</span><br><span class="line">/data/sonarqube/bin/linux-x86-64/sonar.sh start</span><br><span class="line">/data/sonarqube/bin/linux-x86-64/sonar.sh restart</span><br><span class="line"></span><br><span class="line">jps -l</span><br></pre></td></tr></table></figure>
+
+<p>设置域名</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts</span><br><span class="line">10.1.171.41  dev.mysonar.com</span><br><span class="line">echo '10.1.171.41  dev.mysonar.com' &gt;&gt; /etc/hosts</span><br><span class="line"></span><br><span class="line">C:\Windows\System32\drivers\etc\</span><br><span class="line">hosts</span><br><span class="line">10.1.171.41  dev.mysonar.com</span><br></pre></td></tr></table></figure>
+
+<p>访问：</p>
+<p><a href="http://dev.mysonar.com:9011/" target="_blank" rel="noopener">http://dev.mysonar.com:9011/</a></p>
+<p>默认账号：admin/admin</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514142721.png" alt></p>
+<br>
+
+<h3 id="安装中文插件"><a href="#安装中文插件" class="headerlink" title="安装中文插件"></a>安装中文插件</h3><p>install -&gt; restart</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514150054.png" alt></p>
+<br>
+
+<h3 id="使用systemd管理启动"><a href="#使用systemd管理启动" class="headerlink" title="使用systemd管理启动"></a>使用systemd管理启动</h3><br>
+
+<h1 id="SonarScanner安装配置"><a href="#SonarScanner安装配置" class="headerlink" title="SonarScanner安装配置"></a>SonarScanner安装配置</h1><blockquote>
+<p>文档：<a href="https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/" target="_blank" rel="noopener">https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/</a></p>
+</blockquote>
+<h3 id="下载zip包安装"><a href="#下载zip包安装" class="headerlink" title="下载zip包安装"></a>下载zip包安装</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514150509.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> unzip sonar-scanner-cli-4.3.0.2102-linux.zip</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ln -s /data/downloads/sonar-scanner-4.3.0.2102-linux /data/sonar-scanner</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ln -s /data/sonar-scanner/bin/sonar-scanner /usr/bin/sonar-scanner</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vi /data/sonar-scanner/conf/sonar-scanner.properties</span></span><br><span class="line">sonar.host.url=http://dev.mysonar.com:9011</span><br><span class="line">sonar.sourceEncoding=UTF-8</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="扫描maven工程示例"><a href="#扫描maven工程示例" class="headerlink" title="扫描maven工程示例"></a>扫描maven工程示例</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /data/components/leancloud-proxy</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vi sonar-project.properties</span></span><br><span class="line">sonar.projectKey=leancloud-proxy</span><br><span class="line">sonar.projectName=leancloud-proxy</span><br><span class="line">sonar.projectVersion=1.0</span><br><span class="line">sonar.sources=./</span><br><span class="line">sonar.language=java</span><br><span class="line">sonar.sources=src</span><br><span class="line">sonar.java.binaries=target</span><br><span class="line">sonar.sourceEncoding=UTF-8</span><br><span class="line">sonar.dynamicAnalysis=false</span><br><span class="line">sonar.scm.disabled=true</span><br><span class="line">sonar.scm.provider=svn</span><br><span class="line">sonar.host.url=http://dev.mysonar.com:9011</span><br></pre></td></tr></table></figure>
+
+<p>执行扫描</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sonar-scanner</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514175808.png" alt></p>
+<p><a href="http://dev.mysonar.com:9011/projects" target="_blank" rel="noopener">http://dev.mysonar.com:9011/projects</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514191037.png" alt></p>
+<br>
+
+<h3 id="扫描php工程示例"><a href="#扫描php工程示例" class="headerlink" title="扫描php工程示例"></a>扫描php工程示例</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> /data/public_html</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vi sonar-project.properties</span></span><br><span class="line">sonar.projectKey=php-trunk</span><br><span class="line">sonar.projectName=php-trunk</span><br><span class="line">sonar.projectVersion=1.0</span><br><span class="line">sonar.sources=./</span><br><span class="line">sonar.language=php</span><br><span class="line">sonar.sourceEncoding=UTF-8</span><br><span class="line">sonar.dynamicAnalysis=false</span><br><span class="line">sonar.scm.disabled=true</span><br><span class="line">sonar.scm.provider=svn</span><br><span class="line">sonar.host.url=http://dev.mysonar.com:9011</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sonar-scanner</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514191525.png" alt></p>
+<p><a href="http://dev.mysonar.com:9011/projects" target="_blank" rel="noopener">http://dev.mysonar.com:9011/projects</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514190949.png" alt></p>
+<br>
+
+<h1 id="jenkins-SonarScanner"><a href="#jenkins-SonarScanner" class="headerlink" title="jenkins + SonarScanner"></a>jenkins + SonarScanner</h1><h3 id="安装SonarQube-Scanner插件"><a href="#安装SonarQube-Scanner插件" class="headerlink" title="安装SonarQube Scanner插件"></a>安装SonarQube Scanner插件</h3><p>Jenkins → 系统管理 → 管理插件 → 可选插件 → 🔍SonarQueue Scanner</p>
+<p>安装以后重启</p>
+<br>
+
+<h3 id="配置SonarQube"><a href="#配置SonarQube" class="headerlink" title="配置SonarQube"></a>配置SonarQube</h3><p>首先，在SonarQube中生成一个Token（PS：用token代替输入用户名和密码）</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514192610.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bb6ad69138f3607af1082565551846a5b23eb310</span><br></pre></td></tr></table></figure>
+
+<p>然后，在Jenkins中配置连接sonarqube服务器的地址，这里用到的token就是刚才在sonarqube中创建的那个token</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514193841.png" alt></p>
+<p>系统设置</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514193817.png" alt></p>
+<p>最后，配置全局工具配置</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514194221.png" alt></p>
+<h3 id="创建任务"><a href="#创建任务" class="headerlink" title="创建任务"></a>创建任务</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514194328.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514200516.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514200539.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514200634.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sonar.projectKey=php-trunk</span><br><span class="line">sonar.projectName=php-trunk</span><br><span class="line">sonar.projectVersion=1.0</span><br><span class="line">sonar.sources=$WORKSPACE</span><br><span class="line">sonar.language=php</span><br><span class="line">sonar.sourceEncoding=UTF-8</span><br><span class="line">sonar.dynamicAnalysis=false</span><br><span class="line">sonar.scm.disabled=true</span><br><span class="line">sonar.scm.provider=svn</span><br><span class="line">sonar.host.url=http://dev.mysonar.com:9011</span><br></pre></td></tr></table></figure>
+
+<h3 id="开始构建任务"><a href="#开始构建任务" class="headerlink" title="开始构建任务"></a>开始构建任务</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200514200830.png" alt></p>
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+<br>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/message-queue/rocketmq/linux-rocketmq-setup/" rel="next" title="centos7 下 rocketmq 单机版安装">
+                <i class="fa fa-chevron-left"></i> centos7 下 rocketmq 单机版安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/message-queue/rocketmq/rocketmq-how-to-submit-pr/" rel="prev" title="如何向rocketmq提交pr">
+                如何向rocketmq提交pr <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装PostgreSQL"><span class="nav-text">安装PostgreSQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装jdk11"><span class="nav-text">安装jdk11</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SonarQube安装配置"><span class="nav-text">SonarQube安装配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用zip安装"><span class="nav-text">使用zip安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置DB"><span class="nav-text">设置DB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加JDBC驱动程序"><span class="nav-text">添加JDBC驱动程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Elasticsearch存储路径"><span class="nav-text">配置Elasticsearch存储路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特别配置jdk路径"><span class="nav-text">特别配置jdk路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linux系统参数优化"><span class="nav-text">linux系统参数优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动Web服务器"><span class="nav-text">启动Web服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装中文插件"><span class="nav-text">安装中文插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用systemd管理启动"><span class="nav-text">使用systemd管理启动</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#SonarScanner安装配置"><span class="nav-text">SonarScanner安装配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载zip包安装"><span class="nav-text">下载zip包安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扫描maven工程示例"><span class="nav-text">扫描maven工程示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扫描php工程示例"><span class="nav-text">扫描php工程示例</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#jenkins-SonarScanner"><span class="nav-text">jenkins + SonarScanner</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装SonarQube-Scanner插件"><span class="nav-text">安装SonarQube Scanner插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置SonarQube"><span class="nav-text">配置SonarQube</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建任务"><span class="nav-text">创建任务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始构建任务"><span class="nav-text">开始构建任务</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简介： 用户需求和云的发展两条线推动了云原生技术的兴起、发展和大规模应用。本文将主要讨论什么是云原生应用，构成云原生应用的要素是什么，什么是Serverless 计算，以及Serverless如何简化技术复杂度，帮助用户应对快速变化的需求，实现弹性、高可用的服务，并通过具体的案例和场景进行说明。 作者 | 不瞋来源 | 凌云时刻（微信号：linuxpk） 前言如今，各行各业都在谈数字化转型，尤">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从单体迈向Serverless的避坑指南">
+<meta property="og:url" content="https://carlo-z.com/devops/serverless/from-single-to-serverless/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="简介： 用户需求和云的发展两条线推动了云原生技术的兴起、发展和大规模应用。本文将主要讨论什么是云原生应用，构成云原生应用的要素是什么，什么是Serverless 计算，以及Serverless如何简化技术复杂度，帮助用户应对快速变化的需求，实现弹性、高可用的服务，并通过具体的案例和场景进行说明。 作者 | 不瞋来源 | 凌云时刻（微信号：linuxpk） 前言如今，各行各业都在谈数字化转型，尤">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/a0f6e7a9b0fb4b738ecc67a94c4a3232.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/79c250a0a12b4b869fcc968d18e128ce.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/c45692090a2640fbb056f30385faaca4.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/2c895e24feeb4fdc998eb42952983a28.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/f6abf0d4cec8498f9b566b38d9d3270b.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/636f8af23faa4d43a44c6badaa515087.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/915c15a8100e4acfada78c6952005f9d.png">
+<meta property="og:updated_time" content="2020-07-22T13:40:39.315Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从单体迈向Serverless的避坑指南">
+<meta name="twitter:description" content="简介： 用户需求和云的发展两条线推动了云原生技术的兴起、发展和大规模应用。本文将主要讨论什么是云原生应用，构成云原生应用的要素是什么，什么是Serverless 计算，以及Serverless如何简化技术复杂度，帮助用户应对快速变化的需求，实现弹性、高可用的服务，并通过具体的案例和场景进行说明。 作者 | 不瞋来源 | 凌云时刻（微信号：linuxpk） 前言如今，各行各业都在谈数字化转型，尤">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/a0f6e7a9b0fb4b738ecc67a94c4a3232.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/devops/serverless/from-single-to-serverless/">
+
+
+
+
+
+  <title>从单体迈向Serverless的避坑指南 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/serverless/from-single-to-serverless/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从单体迈向Serverless的避坑指南</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-22T00:00:00+08:00">
+                2020-07-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/serverless/" itemprop="url" rel="index">
+                    <span itemprop="name">serverless</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<p><strong>简介：</strong> 用户需求和云的发展两条线推动了云原生技术的兴起、发展和大规模应用。本文将主要讨论什么是云原生应用，构成云原生应用的要素是什么，什么是Serverless 计算，以及Serverless如何简化技术复杂度，帮助用户应对快速变化的需求，实现弹性、高可用的服务，并通过具体的案例和场景进行说明。</p>
+<p>作者 | 不瞋<br>来源 | 凌云时刻（微信号：linuxpk）</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>如今，各行各业都在谈数字化转型，尤其是新零售、传媒、交通等行业。数字化的商业形态已经成为主流，逐渐替代了传统的商业形态。在另外一些行业里（如工业制造），虽然企业的商业形态并非以数字化的形式表现，但是在数字孪生理念下，充分利用数据科技进行生产运营优化也正在成为研究热点和行业共识。</p>
+<p>企业进行数字化转型，从生产资料、生产关系、战略规划、增长曲线四个层面来看：</p>
+<ul>
+<li>生产资料：数据成为最重要的生产资料，需求/风险随时变化，企业面临巨大的不确定性。</li>
+<li>生产关系：数据为中心，非基于流程和规则的固定生产关系。网络效应令生产关系跨越时空限制，多连接方式催生新的业务和物种。</li>
+<li>战略规划：基于数据决策，快速应对不确定的商业环境。</li>
+<li>增长曲线：数字化技术带来触达海量用户的能力，可带来突破性的增长。</li>
+</ul>
+<p>从云服务商的角度来看云的演进趋势，在Cloud 1.0时代，基础设施的云化是其主题，采用云托管模式，云上云下的应用保持兼容，传统的应用可以直接迁移到云上，这种方式的核心价值在于资源的弹性和成本的低廉；在基础设施提供了海量算力之后，怎么帮助用户更好地利用算力，加速企业创新的速度，就成为云的核心能力。</p>
+<p>如果仍在服务器上构建基础应用，那么研发成本就会很高，管理难度也很大，因此有了Cloud 2.0，也就是云原生时代。在云原生时代，云服务商提供了丰富的托管服务，助力企业数字化转型和创新，用户可以像搭积木一样基于各种云服务来构建应用，大大降低了研发成本。</p>
+<h1 id="云原生应用要素"><a href="#云原生应用要素" class="headerlink" title="云原生应用要素"></a>云原生应用要素</h1><p>云原生应用有三个非常关键的要素：微服务架构，应用容器化和Serverless化，敏捷的软件交付流程。</p>
+<ul>
+<li>微服务架构</li>
+</ul>
+<p>单体架构和微服务架构各有各的特点，其主要特点对比如下图所示。总的来说，单体架构上手快，但是维护难，微服务架构部署较难，但是独立性和敏捷性更好，更适合云原生应用。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/a0f6e7a9b0fb4b738ecc67a94c4a3232.png" alt="image.png"></p>
+<ul>
+<li>应用容器化和Serverless化</li>
+</ul>
+<p>容器是当前最流行的代码封装方式，借助K8s及其生态的能力，大大降低了整个基础设施的管理难度，而且容器在程序的支撑性方面提供非常出色的灵活性和可移植性，越来越多的用户开始使用容器来封装整个应用。</p>
+<p>Serverless计算是另外一种形态，做了大量的端到端整合和云服务的集成，大大提高了研发效率，但是对传统应用的兼容性没有容器那么灵活，但是也带来了很大的整洁性，用户只需要专注于业务逻辑的编码，聚焦于业务逻辑的创新即可。</p>
+<ul>
+<li>敏捷的应用交付流程</li>
+</ul>
+<p>敏捷的应用交付流程是非常重要的一个要素，主要包括流程自动化，专注于功能开发，快速发现问题，快速发布上线。</p>
+<h1 id="Serverless-计算"><a href="#Serverless-计算" class="headerlink" title="Serverless 计算"></a>Serverless 计算</h1><ul>
+<li>阿里云函数计算</li>
+</ul>
+<p>Serverless是一个新的概念，但是其内涵早就已经存在。阿里云或者AWS的第一个云服务都是对象存储，对象储存实际上就是一个存储领域的Serverless服务；另外，Serverless指的是一个产品体系，而不是单个产品。当前业界云服务商推出的新功能或者新产品绝大多数都是Serverless形态的。阿里云Serverless产品体系包括计算、存储、API、分析和中间件等，目前云的产品体系正在Serverless化。</p>
+<p>阿里云Serverless计算平台函数计算，有4个特点：</p>
+<ul>
+<li>和云端无缝集成：通过事件驱动的方式将云端的各种服务与函数计算无缝集成，用户只需要关注函数的开发，事件的触发等均由服务商来完成。</li>
+<li>实时弹性伸缩：由系统自动完成函数计算的弹性伸缩，且速度非常快，用户可以将这种能力用在在线应用上。</li>
+<li>次秒级计量：次秒级的计量方式提供了一种完全的按需计量方式，资源利用率能达到百分之百。</li>
+<li>高可用：函数计算平台做了大量工作帮助用户构建高可用的应用。</li>
+</ul>
+<p>那么，阿里云函数计算是如何做到以上4点呢？阿里云函数计算的产品能力大图如下图所示，首先函数计算产品是建立在阿里巴巴的基础设施服务之上的产品，对在其之上的计算层进行了大量优化。接着在应用层开发了大量能力和工具，基于以上产品能力，为用户提供多种场景下完整的解决方案，才有了整个优秀的函数计算产品。函数计算是阿里云的一个非常基础的云产品，阿里云的许多产品和功能均是建立在函数计算的基础上。目前阿里云函数计算已经在全球19个区域提供服务。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/79c250a0a12b4b869fcc968d18e128ce.png" alt="阿里云函数计算产品能力大图"></p>
+<ul>
+<li>Serverless帮助用户简化云原生应用高可用设计、实施的复杂度</li>
+</ul>
+<p>云原生应用的高可用是一个系统的工程，包括众多方面，完整的高可用体系构建需要很多时间和精力。那么Serverless计算是如何帮助用户简化云原生应用高可用设计、实施的复杂度呢？</p>
+<p>如下图所示，高可用体系建设要考虑的点包括基础设施层、运行时层、数据层以及应用层，且每一层都有大量的工作要做才可以实现高可用。函数计算主要是从容错、弹性、流控、监控四方面做了大量工作来实现高可用，下图中蓝色虚线框所对应的功能均由平台来实现，用户是不需要考虑的。蓝色实线框虽然平台做了一些工作来简化用户的工作难度，但是仍需要用户来进行关注，而橘红色的实线框代表需要用户去负责的部分功能。结合平台提供的功能和用户的部分精力投入，可以极大地减轻用户进行高可用体系建设的难度。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/c45692090a2640fbb056f30385faaca4.png" alt="函数计算高可用"></p>
+<p>函数计算在很多方面做了优化来帮助用户建设高可用体系。下图展示了函数计算在可用区容灾方面的能力。从图中可知，函数计算做了相应的负载均衡，使得容灾能力大大提升。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/2c895e24feeb4fdc998eb42952983a28.png" alt="函数计算多可用区容灾"></p>
+<p>下图展示的是函数计算对事件的异步处理，其处理流水线主要包括事件队列、事件分发、事件消费三个环节，在每一个环节上都可以进行水平伸缩，其中一个比较关键的点是事件的分发需要匹配下游的消费能力。另外，通过为不同函数指定不同数量的计算资源，用户能方便地动态调整不同类型事件的消费速度。此外，还可以自定义错误重试逻辑，并且有背压反馈和流控，不会在短时间内产生大量请求时压垮下一个服务。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/f6abf0d4cec8498f9b566b38d9d3270b.png" alt="函数计算事件异步处理"></p>
+<p>在函数计算的可观测性上面，提供了日志收集和查询功能，除了默认的简单日志查询功能外，还提供了高级日志查询，用户可以更方便地进行日志分析。在指标收集和可视化方面，函数计算提供了丰富的指标收集能力，并且提供了标准指标、概览信息等视图，可以更方便用户进行运维工作。</p>
+<p>下图是应用交付的一个示意图，在整个应用的交付过程中，只有每个环节都做好，才能够建设一个敏捷的应用交付流程，其核心是自动化，只有做到了自动化，才能提升整个流水线的效率和敏捷度。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/636f8af23faa4d43a44c6badaa515087.png" alt="敏捷的应用交付流程"></p>
+<p>下图展示了自动化应用交付流水线在每个环节的具体任务。其中需要注意的是做到基础设施即代码，才能进行模板定义和自动化设置应用运行环境，进而实现自动化的持续集成等。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/915c15a8100e4acfada78c6952005f9d.png" alt="自动化应用交付流水线"></p>
+<p>做到了应用的自动化交付之后，对整个研发效率的帮助是非常大的。在Serverless应用上，阿里云提供了多种工具来帮助用户实现基础设施即代码。Serverless的模型有一个很好的能力，就是同一份模板可以传入不同的参数，进而生成不同环境的定义，然后通过自动化地管理这些环境。</p>
+<p>对于应用本身不同服务版本的交付和灰度发布，函数计算提供了服务版本和服务别名来提供相应的服务，整个应用的灰度发布流程可以简化成一些API的操作，大大提升业务的效率。通过Serverless计算平台提供的这些能力，整个软件应用的交付流水线自动化程度得到了大幅度的提高。</p>
+<p>函数计算还有一个很有用的功能——对存量应用的兼容性。通过Custom runtime，能够适配很多的流行框架，兼容传统应用，使其能够很容易地适配到Serverless平台上面，由控制台提供应用的创建、部署、关联资源管理、监控等一系列服务。</p>
+<p>除了函数计算，还可以用Serverless工作流对不同的应用环节、不同的函数进行编排，通过描述性的语言去定义工作流，由其可靠地执行每一个步骤，这就大幅度降低用户对于复杂任务的编排难度。</p>
+<h1 id="应用场景案例"><a href="#应用场景案例" class="headerlink" title="应用场景案例"></a>应用场景案例</h1><p>函数计算有几个典型的应用场景，一个就是Web/API后端服务，阿里云已经有包括石墨文档、微博、世纪华联在内的多个成功应用案例。</p>
+<p>函数计算的另外一个应用场景就是大规模的数据并行处理，比如往OSS上面上传大量的图片、音频、文本等数据，可以触发函数做自定义的处理，比如转码、截帧等。这方面的成功案例包括虎扑、分众传媒、百家互联等。</p>
+<p>函数计算还有一个应用场景就是数据实时流式处理，比如不同的设备产生的消息、日志发送到消息队列等管道类似的服务中，就可以触发函数来进行流式处理。</p>
+<p>最后一个应用场景就是运维的自动化，通过定时触发、云监控事件触发、流程编排等方式调用函数完成运维任务，大大降低运维成本和难度，典型的成功案例有图森未来等。</p>
+<p>图森未来是一家专注于L4级别无人驾驶卡车技术研发与应用的人工智能企业，面向全球提供可大规模商业化运营的无人驾驶卡车技术，为全球物流运输行业赋能。在路测过程中会有大量数据产生，而对这些数据的处理流程复杂多变，即使对于同一批数据，不同的业务小组也会有不同的使用及处理方式。如何有效管理不同的数据处理流程、降低人为介入频率能够大幅的提高生产效率。</p>
+<p>路测不定时运行的特点使得流程编排任务运行时间点、运行时长具有极大的不确定性，本地机房独自建立流程管理系统难以最大优化机器利用率，造成资源浪费。而图森未来本地已有许多单元化业务处理脚本及应用程序，但因为各种限制而无法全量的迁移上云，这也对如何合理化使用云上服务带来了挑战。</p>
+<p>针对上述情况，图森未来开始探索数据处理平台的自动化。阿里云 Serverless 工作流按执行调度的次数计费，具有易用易集成、运维简单等诸多优点，能够很好的解决上述场景中所遇到的问题，非常适合这类不定时运行的离线任务场景。</p>
+<p>Serverless 工作流还支持编排本地或自建机房的任务，图森未来通过使用Serverless 工作流原生支持的消息服务MNS解决了云上云下的数据打通问题，使得本地的原有任务得到很好的编排及管理。</p>
+<p>除了调度外，Serverless 工作流也支持对任务的状态及执行过程中所产生的数据进行维护。图森未来通过使用任务的输入输出映射及状态汇报机制，高效的管理了流程中各任务的生命周期及相互间的数据传递。</p>
+<p>在未来，随着业务规模的扩大，图森未来将持续优化离线大数据处理流程的运行效率及自动化水平。通过各种探索，图森未来将进一步提升工程团队的效率，将更多的精力和资金投入到业务创新中去。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Serverless 工作流是阿里云 Serverless 产品体系中的关键一环。通过 Serverless 工作流，用户能够将函数计算、视觉智能平台等多个阿里云服务，或者自建的服务，以简单直观的方式编排为工作流，迅速构建弹性高可用的云原生应用。</p>
+<p>自2017年推出函数计算起，该服务根据应用负载变化实时智能地弹性扩缩容，1分钟完成上万实例的伸缩并保证稳定的延时。目前已经支撑微博、芒果TV、华大基因、图森未来、石墨科技等用户的关键应用，轻松应对业务洪峰。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/big-data/flink/day4-flink-learn-gift-pack/" rel="next" title>
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#云原生应用要素"><span class="nav-text">云原生应用要素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Serverless-计算"><span class="nav-text">Serverless 计算</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用场景案例"><span class="nav-text">应用场景案例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
