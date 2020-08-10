@@ -111,21 +111,18 @@
 
 
 
-<meta name="description" content="中文文档：https://docs.rancher.cn/rancher2x/ https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/  安装 Docker1curl https://releases.rancher.com/install-docker/18.09.sh | sh  要了解某个 Docker 版本是否有可用的安装脚本，请">
+<meta name="description" content="简介： Alpine以其小巧、简单在docker容器中得到了广泛的应用。但是Alpine Linux使用了musl，可能和其他Linux发行版使用的glibc实现会有些不同。这里主要介绍了它的基础用法，但是足以满足日常运维需要。 简介 Small. Simple. Secure.Alpine Linux is a security-oriented, lightweight Linux dis">
 <meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Rancher 2.x docker安装">
-<meta property="og:url" content="https://carlo-z.com/devops/k8s/rancher-docker-install/index.html">
+<meta property="og:title" content="Alpine Linux详解">
+<meta property="og:url" content="https://carlo-z.com/linux/alpine/index.html">
 <meta property="og:site_name" content="Focus-1">
-<meta property="og:description" content="中文文档：https://docs.rancher.cn/rancher2x/ https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/  安装 Docker1curl https://releases.rancher.com/install-docker/18.09.sh | sh  要了解某个 Docker 版本是否有可用的安装脚本，请">
+<meta property="og:description" content="简介： Alpine以其小巧、简单在docker容器中得到了广泛的应用。但是Alpine Linux使用了musl，可能和其他Linux发行版使用的glibc实现会有些不同。这里主要介绍了它的基础用法，但是足以满足日常运维需要。 简介 Small. Simple. Secure.Alpine Linux is a security-oriented, lightweight Linux dis">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200709022046.png">
-<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200712203348.png">
-<meta property="og:updated_time" content="2020-07-12T13:36:40.607Z">
+<meta property="og:updated_time" content="2020-08-09T04:36:49.607Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Rancher 2.x docker安装">
-<meta name="twitter:description" content="中文文档：https://docs.rancher.cn/rancher2x/ https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/  安装 Docker1curl https://releases.rancher.com/install-docker/18.09.sh | sh  要了解某个 Docker 版本是否有可用的安装脚本，请">
-<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20200709022046.png">
+<meta name="twitter:title" content="Alpine Linux详解">
+<meta name="twitter:description" content="简介： Alpine以其小巧、简单在docker容器中得到了广泛的应用。但是Alpine Linux使用了musl，可能和其他Linux发行版使用的glibc实现会有些不同。这里主要介绍了它的基础用法，但是足以满足日常运维需要。 简介 Small. Simple. Secure.Alpine Linux is a security-oriented, lightweight Linux dis">
 
 
 
@@ -155,13 +152,13 @@
 
 
 
-  <link rel="canonical" href="https://carlo-z.com/devops/k8s/rancher-docker-install/">
+  <link rel="canonical" href="https://carlo-z.com/linux/alpine/">
 
 
 
 
 
-  <title>Rancher 2.x docker安装 | Focus-1</title>
+  <title>Alpine Linux详解 | Focus-1</title>
   
 
 
@@ -320,7 +317,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/k8s/rancher-docker-install/">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/alpine/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Focus-1">
@@ -337,7 +334,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Rancher 2.x docker安装</h1>
+          <h1 class="post-title" itemprop="name headline">Alpine Linux详解</h1>
         
 
         <div class="post-meta">
@@ -349,8 +346,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-12T00:00:00+08:00">
-                2019-07-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-07T00:00:00+08:00">
+                2019-08-07
               </time>
             
 
@@ -372,8 +369,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/devops/" itemprop="url" rel="index">
-                    <span itemprop="name">devops</span>
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
                   </a>
                 </span>
 
@@ -383,8 +380,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/devops/rancher/" itemprop="url" rel="index">
-                    <span itemprop="name">rancher</span>
+                  <a href="/categories/linux/alpine/" itemprop="url" rel="index">
+                    <span itemprop="name">alpine</span>
                   </a>
                 </span>
 
@@ -422,107 +419,86 @@
       
         <br>
 
-<blockquote>
-<p>中文文档：<a href="https://docs.rancher.cn/rancher2x/" target="_blank" rel="noopener">https://docs.rancher.cn/rancher2x/</a></p>
-<p><a href="https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/" target="_blank" rel="noopener">https://rancher2.docs.rancher.cn/docs/releases/v2.4.5/</a></p>
+<p><strong>简介：</strong> Alpine以其小巧、简单在docker容器中得到了广泛的应用。但是Alpine Linux使用了musl，可能和其他Linux发行版使用的glibc实现会有些不同。这里主要介绍了它的基础用法，但是足以满足日常运维需要。</p>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><blockquote>
+<p>Small. Simple. Secure.Alpine Linux is a security-oriented, lightweight Linux distribution based on musl libc and busybox.</p>
+<p>Alpine Linux 是一个社区开发的面向安全应用的轻量级Linux发行版。 Alpine 的意思是“高山的”，它采用了musl libc和busybox以减小系统的体积和运行时资源消耗，同时还提供了自己的包管理工具apk。</p>
 </blockquote>
-<h1 id="安装-Docker"><a href="#安装-Docker" class="headerlink" title="安装 Docker"></a>安装 Docker</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://releases.rancher.com/install-docker/18.09.sh | sh</span><br></pre></td></tr></table></figure>
+<h3 id="适用环境"><a href="#适用环境" class="headerlink" title="适用环境"></a>适用环境</h3><p>由于其小巧、安全、简单以及功能完备的特点，被广泛应用于众多Docker容器中。我司目前使用的基础镜像均是基于该系统，<a href="https://hub.docker.com/_/alpine" target="_blank" rel="noopener">dockerhub</a>上有提供各种语言的基础镜像.如：<code>node:8-alpine</code>、<code>python:3.6-alpine</code>，同时也可以基于alpine镜像制作符合自己需求的基础镜像。</p>
+<h3 id="简单的镜像构建示例"><a href="#简单的镜像构建示例" class="headerlink" title="简单的镜像构建示例"></a>简单的镜像构建示例</h3><p>这里提供一个python3的基础镜像的<code>Dockerfile</code>，<a href="https://pip.pypa.io/en/latest/installing/" target="_blank" rel="noopener">get-pip.py</a>可在 <a href="https://pip.pypa.io/en/latest/installing/" target="_blank" rel="noopener">https://pip.pypa.io/en/latest/installing/</a> 下载。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine</span><br><span class="line"></span><br><span class="line">MAINTAINER guoxudong@keking.cn</span><br><span class="line"></span><br><span class="line"># 拷贝安装pip的脚本</span><br><span class="line">COPY get-pip.py /get-pip.py</span><br><span class="line"></span><br><span class="line"># 设置alpine的镜像地址为阿里云的地址</span><br><span class="line">RUN echo &quot;https://mirrors.aliyun.com/alpine/v3.6/main/&quot; &gt; /etc/apk/repositories \</span><br><span class="line">    # 安装依赖包</span><br><span class="line">    &amp;&amp; apk update \</span><br><span class="line">    &amp;&amp; apk add --no-cache bash \</span><br><span class="line">    # libevent-dev libxml2-dev  libffi libxml2 libxslt libxslt-dev  \</span><br><span class="line">    python3 gcc g++ python3-dev python-dev linux-headers libffi-dev openssl-dev \</span><br><span class="line">    # 由于通过apk安装的pip总是基于python2.7的版本，不符合项目要求，此处使用get-pip.py的方式</span><br><span class="line">    #安装基于python3.6的pip</span><br><span class="line">    &amp;&amp; python3 /get-pip.py \</span><br><span class="line">    # 删除不必要的脚本</span><br><span class="line">    &amp;&amp; cd .. \</span><br><span class="line">    &amp;&amp; rm -f /get-pip.py \</span><br><span class="line">    # 此环境专用做运行django项目，因此移除不必要的工具，减少空间</span><br><span class="line">    #    &amp;&amp; pip uninstall -y pip setuptools wheel \</span><br><span class="line">    # 最后清空apk安装时产生的无用文件</span><br><span class="line">    &amp;&amp; rm -rf /var/cache/apk/*</span><br></pre></td></tr></table></figure>
 
-<p>要了解某个 Docker 版本是否有可用的安装脚本，请参考这个<a href="https://github.com/rancher/install-docker" target="_blank" rel="noopener">GitHub 仓库</a>，这里包含了 Rancher 的所有 Docker 安装脚本。</p>
-<h1 id="安装-Rancher-2-x"><a href="#安装-Rancher-2-x" class="headerlink" title="安装 Rancher 2.x"></a>安装 Rancher 2.x</h1><p>首先连接到主机，然后使用 shell 安装 Rancher。</p>
-<ol>
-<li><p>使用 shell 工具（如 PuTTy 或其他连接工具）登录 Linux 主机。</p>
-</li>
-<li><p>执行以下命令：</p>
-</li>
-</ol>
-<p>   sudo docker run -d –restart=unless-stopped -p 80:80 -p 443:443 rancher/rancher</p>
-<p><strong>结果：</strong> Rancher 已经安装在了 Linux 主机上。</p>
-<h1 id="登录-Rancher-界面并配置初始设置"><a href="#登录-Rancher-界面并配置初始设置" class="headerlink" title="登录 Rancher 界面并配置初始设置"></a>登录 Rancher 界面并配置初始设置</h1><p>您需要先登录 Rancher，然后再开始使用 Rancher。登录以后，您需要完成一些一次性的配置。</p>
-<ol>
-<li><p>打开浏览器，输入主机的 IP 地址：<code>https://&lt;SERVER_IP&gt;</code></p>
-<p>请使用真实的主机 IP 地址替换 <code>&lt;SERVER_IP&gt;</code> 。</p>
-</li>
-<li><p>首次登录时，请按照页面提示设置登录密码。</p>
-</li>
-<li><p>设置 <strong>Rancher Server URL</strong>。URL 既可以是一个 IP 地址，也可以是一个主机名称。请确保您在集群内添加的每个节点都可以连接到这个 URL。如果您使用的是主机名称，请保证主机名称可以被节点的 DNS 服务器成功解析。</p>
-</li>
-</ol>
-<p><strong>结果：</strong>完成 Rancher 管理员用户的密码设置和访问地址设置。下次使用 Rancher 时，可以输入 IP 地址或主机地址访问 Rancher 界面，然后输入管理员用户名<code>admin</code>和您设置的密码登录 Rancher 界面。</p>
-<blockquote>
-<p><a href="https://local-rancher/" target="_blank" rel="noopener">https://local-rancher/</a></p>
-<p>设置密码：admin/123456</p>
+<p><strong>对比</strong>：同样版本的python，对比镜像大小，可见使用alpine的优势</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~ docker images | grep python</span><br><span class="line">python                                  3.4                 ccbffa0d70d9        2 months ago        922MB</span><br><span class="line">alpine-python3                          latest              69e41b673a50        2 months ago        297MB</span><br></pre></td></tr></table></figure>
+
+<h3 id="apk包管理"><a href="#apk包管理" class="headerlink" title="apk包管理"></a>apk包管理</h3><blockquote>
+<p>alpine镜像仓库：<a href="https://pkgs.alpinelinux.org/packages" target="_blank" rel="noopener">https://pkgs.alpinelinux.org/packages</a></p>
 </blockquote>
-<h1 id="创建业务集群"><a href="#创建业务集群" class="headerlink" title="创建业务集群"></a>创建业务集群</h1><p>完成安装和登录 Rancher 的步骤之后，您现在可以参考以下步骤，在 Rancher 中创建第一个 Kubernetes 集群。</p>
-<p>在这个任务中，您可以使用<strong>自定义集群</strong>选项，使用的<strong>任意</strong> Linux 主机（云主机、虚拟机或裸金属服务器）创建集群。</p>
-<ol>
-<li>访问<strong>集群</strong>页面，单击<strong>添加集群</strong>。</li>
-<li>选择<strong>自定义</strong>选项。</li>
-<li>输入<strong>集群名称</strong>。</li>
-<li>跳过<strong>集群角色</strong>和<strong>集群选项</strong>。</li>
-<li>单击<strong>下一步</strong>。</li>
-<li>勾选<strong>主机选项 - 角色选择</strong>中的所有角色： <strong>Etcd</strong>、 <strong>Control</strong> 和 <strong>Worker</strong>。</li>
-<li><strong>可选：</strong> Rancher 会自动探查用于 Rancher 通信和集群通信的 IP 地址。您可以通过<strong>主机选项 &gt; 显示高级选项</strong>中的<code>公网地址</code>和<code>内网地址</code>指定 IP 地址。</li>
-<li>跳过<strong>主机标签</strong>参数，因为对快速入门来说，这部分的参数不太重要。</li>
-<li>复制代码框中的命令。</li>
-<li>登录您的 Linux 主机，打开命令行工具，粘贴命令，单击回车键运命令。</li>
-<li>运行完成后，回到 Rancher 界面，单击<strong>完成</strong>。</li>
-</ol>
-<p><strong>结果：</strong> 在 Rancher 中创建了一个 Kubernetes 集群。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200709022046.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.4.5 --server https://local-rancher --token htxp8hrk95jjghg74zngg2j8bj2bkwxc9s7rxcv7dgs7lx42lddd9f --ca-checksum 7fb6276d3eefaf30a82c9dd0a40e0d1118863a640f37939fd5b168aa6392e7dc --etcd --controlplane --worker</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>镜像源配置</p>
+<p>官方镜像源列表：<a href="http://dl-cdn.alpinelinux.org/alpine/MIRRORS.txt" target="_blank" rel="noopener">http://dl-cdn.alpinelinux.org/alpine/MIRRORS.txt</a></p>
+<blockquote>
+<p>MIRRORS.txt中是当前Alpine官方提供的镜像源（Alpine安装的时候系统自动选择最佳镜像源）</p>
+</blockquote>
+<p>国内镜像源</p>
+<ul>
+<li>清华TUNA镜像源：<a href="https://mirror.tuna.tsinghua.edu.cn/alpine/?spm=a2c6h.12873639.0.0.d4b9b368jJwAiL" target="_blank" rel="noopener">https://mirror.tuna.tsinghua.edu.cn/alpine/</a></li>
+<li>中科大镜像源：<a href="http://mirrors.ustc.edu.cn/alpine/" target="_blank" rel="noopener">http://mirrors.ustc.edu.cn/alpine/</a></li>
+<li>阿里云镜像源：<a href="http://mirrors.aliyun.com/alpine/" target="_blank" rel="noopener">http://mirrors.aliyun.com/alpine/</a></li>
+</ul>
+<p>镜像源配置</p>
+<p>这里推荐使用阿里云镜像源，由于公司应用都是部署在阿里云上，使用阿里云镜像源会快很多</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/apk/repositories</span><br><span class="line"># 将这两行插入到repositories文件开头</span><br><span class="line">http://mirrors.aliyun.com/alpine/v3.9/main</span><br><span class="line">http://mirrors.aliyun.com/alpine/v3.9/community</span><br><span class="line"># 后面是原有的默认配置</span><br><span class="line">http://dl-cdn.alpinelinux.org/alpine/v3.8/main</span><br><span class="line">http://dl-cdn.alpinelinux.org/alpine/v3.8/community</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>apk包管理命令</p>
+<p>这里介绍一些常用的操作apk包管理命令</p>
+<ul>
+<li><code>apk --help</code>可以查看完整的包管理命令</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">bash-4.3# apk --help</span><br><span class="line">apk-tools 2.10.0, compiled for x86_64.</span><br><span class="line"></span><br><span class="line">Installing and removing packages:</span><br><span class="line">add       Add PACKAGEs to &apos;world&apos; and install (or upgrade) them, while ensuring that all dependencies are met</span><br><span class="line">del       Remove PACKAGEs from &apos;world&apos; and uninstall them</span><br><span class="line"></span><br><span class="line">System maintenance:</span><br><span class="line">fix       Repair package or upgrade it without modifying main dependencies</span><br><span class="line">update    Update repository indexes from all remote repositories</span><br><span class="line">upgrade   Upgrade currently installed packages to match repositories</span><br><span class="line">cache     Download missing PACKAGEs to cache and/or delete unneeded files from cache</span><br><span class="line"></span><br><span class="line">Querying information about packages:</span><br><span class="line">info      Give detailed information about PACKAGEs or repositories</span><br><span class="line">list      List packages by PATTERN and other criteria</span><br><span class="line">dot       Generate graphviz graphs</span><br><span class="line">policy    Show repository policy for packages</span><br><span class="line"></span><br><span class="line">Repository maintenance:</span><br><span class="line">index     Create repository index file from FILEs</span><br><span class="line">fetch     Download PACKAGEs from global repositories to a local directory</span><br><span class="line">verify    Verify package integrity and signature</span><br><span class="line">manifest  Show checksums of package contents</span><br><span class="line"></span><br><span class="line">Use apk &lt;command&gt; --help for command-specific help.</span><br><span class="line">Use apk --help --verbose for a full command listing.</span><br><span class="line"></span><br><span class="line">This apk has coffee making abilities.</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200712203348.png" alt></p>
-<h1 id="部署带有-Ingress-的工作负载"><a href="#部署带有-Ingress-的工作负载" class="headerlink" title="部署带有 Ingress 的工作负载"></a>部署带有 Ingress 的工作负载</h1><h2 id="先决条件"><a href="#先决条件" class="headerlink" title="#先决条件"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#先决条件" target="_blank" rel="noopener">#</a>先决条件</h2><p>已经有一个正在运行的集群，且集群中有至少一个节点</p>
-<h2 id="部署工作负载"><a href="#部署工作负载" class="headerlink" title="#部署工作负载"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#部署工作负载" target="_blank" rel="noopener">#</a>部署工作负载</h2><p>参考前文完成 <a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/_index" target="_blank" rel="noopener">Rancher Server 的快速部署</a>后，您可以创建 <em>工作负载</em>。工作负载即 Kubernetes 对一组 Pod 的抽象模型，用于描述业务的运行载体，包括 Deployment、Statefulset、Daemonset、Job、CronJob 等多种类型，详情请参考<a href="https://rancher2.docs.rancher.cn/docs/overview/glossary/_index" target="_blank" rel="noopener">名词解释</a>。</p>
-<p>以下步骤讲解了如何在 Rancher Server 中部署带有 Ingress 的工作负载。本文部署的工作负载是一个“Hello-World”应用。</p>
-<ol>
-<li><p>访问<strong>集群</strong>页面，选择您刚刚创建的集群，进入集群页面。</p>
-</li>
-<li><p>从集群页面的主菜单中选择<strong>项目/命名空间</strong>。</p>
-</li>
-<li><p>打开 <strong>项目：Default</strong>。</p>
-</li>
-<li><p>单击<strong>资源 &gt; 工作负载</strong>。如果您使用的是 v2.3.0 之前的版本，请单击 <strong>工作负载 &gt; 工作负载</strong>。</p>
-</li>
-<li><p>单击<strong>部署</strong>。</p>
-<p><strong>结果：</strong> 打开<strong>部署工作负载</strong> 页面。</p>
-</li>
-<li><p>输入工作负载的名称。</p>
-</li>
-<li><p>在<strong>Docker 镜像</strong>一栏，输入<code>rancher/hello-world</code>，请注意区分大小写字母。</p>
-</li>
-<li><p>余下的选项保持默认配置即可。</p>
-</li>
-<li><p>单击<strong>运行</strong>。</p>
-</li>
-</ol>
-<p><strong>结果：</strong></p>
 <ul>
-<li>部署了工作负载。这个过程可能需要几分钟完成。</li>
-<li>当您的工作负载部署完成后，它的状态将变为<strong>Active</strong>，您可以从项目的<strong>工作负载</strong>页面查看工作负载当前的状态。</li>
+<li><p><code>apk info</code> 列出所有已安装的软件包</p>
+</li>
+<li><p><code>apk apk update</code> 更新最新本地镜像源</p>
+</li>
+<li><p><code>apk upgrade</code> 升级软件</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apk search</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
 </ul>
-<h2 id="暴露服务"><a href="#暴露服务" class="headerlink" title="#暴露服务"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#暴露服务" target="_blank" rel="noopener">#</a>暴露服务</h2><p>上述步骤帮助您完成了工作负载的部署，现在您需要将服务暴露出来，让其他服务可以通过网络连接和调用这个工作负载。</p>
-<ol>
-<li>访问<strong>集群</strong>页面，选择您刚刚创建的集群，进入集群页面。</li>
-<li>从集群页面的主菜单中选择<strong>项目/命名空间</strong>。</li>
-<li>打开 <strong>项目 &gt; Default</strong>。</li>
-<li>单击<strong>资源 &gt; 工作负载 &gt; 负载均衡</strong>。如果您使用的是 v2.3.0 之前的版本，请单击 <strong>工作负载 &gt; 负载均衡</strong>。</li>
-<li>单击<strong>添加 Ingress</strong></li>
-<li>输入 Ingress 负载均衡的名称，如 “hello”。</li>
-<li>在<strong>目标</strong>一栏，从下拉菜单选择您服务的名称。</li>
-<li>在<strong>端口</strong>一栏输入 <code>80</code>。</li>
-<li>余下的选项保持默认配置即可，单击<strong>保存</strong>。</li>
-</ol>
-<p><strong>结果：</strong> 这个工作负载分配到了一个<code>xip.io</code>地址，已经暴露出去了。可能需要 1~2 分钟完成服务关联。</p>
-<h2 id="查看您的应用"><a href="#查看您的应用" class="headerlink" title="#查看您的应用"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#查看您的应用" target="_blank" rel="noopener">#</a>查看您的应用</h2><p>从<strong>负载均衡</strong>页面单击目标链接<code>hello.default.xxx.xxx.xxx.xxx.xip.io &gt; hello-world</code>，您的应用会在一个新窗口中打开。</p>
-<h2 id="结果"><a href="#结果" class="headerlink" title="#结果"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#结果" target="_blank" rel="noopener">#</a>结果</h2><p>成功部署工作负载并通过 Ingress 暴露该工作负载。</p>
-<h2 id="后续操作"><a href="#后续操作" class="headerlink" title="#后续操作"></a><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/workload/quickstart-deploy-workload-ingress/_index#后续操作" target="_blank" rel="noopener">#</a>后续操作</h2><p>使用完您通过快速入门搭建的 Rancher 沙盒后，您可能想要清理遗留在环境中与 Rancher 相关的资源，并删除 Rancher Server 和您的集群，请单击下方链接查看操作指导。</p>
+</li>
+</ul>
+<pre><code>搜索可用软件包，
+
+搜索之前最好先更新镜像源
+
+bash-4.3# apk search #查找所以可用软件包
+bash-4.3# apk search -v #查找所以可用软件包及其描述内容
+bash-4.3# apk search -v &apos;acf*&apos; #通过软件包名称查找软件包
+bash-4.3# apk search -v -d &apos;docker&apos; #通过描述文件查找特定的软件包</code></pre><ul>
+<li><p><code>apk add</code> 从仓库中安装最新软件包，并自动安装必须的依赖包,也可以从第三方仓库添加软件包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bash-4.3# apk add curl busybox-extras       #软件以空格分开这里，这里列举我们用的最多的curl和telnet</span><br><span class="line">bash-4.3# apk add --no-cache curl</span><br><span class="line">bash-4.3# apk add mongodb --update-cache --repository http://mirrors.ustc.edu.cn/alpine/v3.6/main/ --allow-untrusted    #从指定镜像源拉取</span><br></pre></td></tr></table></figure>
+
 <ul>
-<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/amazon-aws-qs/_index" target="_blank" rel="noopener">清理环境：Amazon AWS</a></li>
-<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/digital-ocean-qs/_index" target="_blank" rel="noopener">清理环境：DigitalOcean</a></li>
-<li><a href="https://rancher2.docs.rancher.cn/docs/quick-start-guide/deployment/quickstart-vagrant/_index" target="_blank" rel="noopener">清理环境：Vagrant</a></li>
+<li><p>安装指定版本软件包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bash-4.3# apk add mongodb=4.0.5-r0</span><br><span class="line">bash-4.3# apk add &apos;mongodb&lt;4.0.5&apos;</span><br><span class="line">bash-4.3# apk add &apos;mongodb&gt;4.0.5&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>升级指定软件包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash-4.3# apk add --upgrade busybox #升级指定软件包</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
+</li>
+</ul>
+<p>  <strong>注</strong>：安装之前最好修改本地镜像源，更新镜像源，搜索软件包是否存在，选择合适岸本在进行安装。</p>
+<ul>
+<li><code>apk del</code> 卸载并删除指定软件包</li>
+</ul>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>Alpine以其小巧、简单在docker容器中得到了广泛的应用。但是Alpine Linux使用了musl，可能和其他Linux发行版使用的glibc实现会有些不同。这里主要介绍了它的基础用法，但是足以满足日常运维需要。毕竟在kubernetes集群中操作容器内环境较直接在虚拟机或者物理机上操作更为复杂，由于缩减的容器的大小，导致和CentOS或Ubuntu相比缺少许多功能。而缺少的这些功能又不想在基础镜像中安装导致容器变大，这个时候就可以在容器运行后，根据实际需要安装即可。</p>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="https://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management" target="_blank" rel="noopener">https://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management</a></p>
 
       
     </div>
@@ -547,8 +523,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/devops/k8s/kubesphere-devops/" rel="next" title="KubeSphere 多节点安装k8s">
-                <i class="fa fa-chevron-left"></i> KubeSphere 多节点安装k8s
+              <a href="/computer-network/tcpdump-manual-analysis-network-package/" rel="next" title="tcpdump 捕获中文传输数据包，并手动解析">
+                <i class="fa fa-chevron-left"></i> tcpdump 捕获中文传输数据包，并手动解析
               </a>
             
           </div>
@@ -557,8 +533,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/devops/k8s/rancher-devops/" rel="prev" title="Rancher 2.x 部署 管理k8s集群">
-                Rancher 2.x 部署 管理k8s集群 <i class="fa fa-chevron-right"></i>
+              <a href="/distribution/the-eight-fallacies-of-distributed-computing/" rel="prev" title="分布式计算的八大谬论">
+                分布式计算的八大谬论 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -641,7 +617,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-count">236</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -652,7 +628,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -663,7 +639,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -710,7 +686,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-Docker"><span class="nav-text">安装 Docker</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装-Rancher-2-x"><span class="nav-text">安装 Rancher 2.x</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#登录-Rancher-界面并配置初始设置"><span class="nav-text">登录 Rancher 界面并配置初始设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建业务集群"><span class="nav-text">创建业务集群</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署带有-Ingress-的工作负载"><span class="nav-text">部署带有 Ingress 的工作负载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#先决条件"><span class="nav-text">#先决条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署工作负载"><span class="nav-text">#部署工作负载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#暴露服务"><span class="nav-text">#暴露服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看您的应用"><span class="nav-text">#查看您的应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果"><span class="nav-text">#结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续操作"><span class="nav-text">#后续操作</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#适用环境"><span class="nav-text">适用环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#简单的镜像构建示例"><span class="nav-text">简单的镜像构建示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apk包管理"><span class="nav-text">apk包管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-text">结语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文档"><span class="nav-text">参考文档</span></a></li></ol></div>
             
 
           </div>

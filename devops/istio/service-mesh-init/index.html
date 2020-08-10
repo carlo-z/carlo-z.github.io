@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="来源：https://developer.aliyun.com/article/723524  前言计算机软件技术发展到现在，软件架构的演进无不朝着让开发者能够更加轻松快捷地构建大型复杂应用的方向发展。容器技术最初是为了解决运行环境的不一致问题而产生的，随着不断地发展，围绕容器技术衍生出来越来越多的新方向。 最近几年，云计算领域不断地出现很多新的软件架构模式，其中有一些很热门的概念名词如：云">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Service Mesh 初体验">
+<meta property="og:url" content="https://carlo-z.com/devops/istio/service-mesh-init/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="来源：https://developer.aliyun.com/article/723524  前言计算机软件技术发展到现在，软件架构的演进无不朝着让开发者能够更加轻松快捷地构建大型复杂应用的方向发展。容器技术最初是为了解决运行环境的不一致问题而产生的，随着不断地发展，围绕容器技术衍生出来越来越多的新方向。 最近几年，云计算领域不断地出现很多新的软件架构模式，其中有一些很热门的概念名词如：云">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/feb43679e45874c02f6e6c22e8bf4441.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/7c01430ea43e3669a874822631b15048.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/0dbc3158dffdae8d73a5e8efc031c75c.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/b5831ce53a0abc03f438ef4a8085b28b.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/2ef0e49eaff46aa8847014ce1a33d0fe.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/ead7fcc503e4e6c2e10d4160c5be0858.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/c68b6f2f5093077d196c8c9b83e034ff.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/11222886203b348637235ce5abf95325.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/bc9d938db0b4949eb127838956f9bc8d.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/647e656d33fef1410d8f816e1d349c67.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/634554bf1f3647071057357a4d577cc9.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/801a66c5ed3e49f6eac068a20bc22ebe.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/403cc8c2367ca7efa446d002ffc3f34f.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/d0e35169905977c5aaac8572d2e78f0f.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/3c0ea5bcdd7d095c8fb9534bdb222731.png">
+<meta property="og:updated_time" content="2020-08-10T16:38:41.024Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Service Mesh 初体验">
+<meta name="twitter:description" content="来源：https://developer.aliyun.com/article/723524  前言计算机软件技术发展到现在，软件架构的演进无不朝着让开发者能够更加轻松快捷地构建大型复杂应用的方向发展。容器技术最初是为了解决运行环境的不一致问题而产生的，随着不断地发展，围绕容器技术衍生出来越来越多的新方向。 最近几年，云计算领域不断地出现很多新的软件架构模式，其中有一些很热门的概念名词如：云">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/feb43679e45874c02f6e6c22e8bf4441.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/devops/istio/service-mesh-init/">
+
+
+
+
+
+  <title>Service Mesh 初体验 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/istio/service-mesh-init/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Service Mesh 初体验</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-02T00:00:00+08:00">
+                2020-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/service-mesh/" itemprop="url" rel="index">
+                    <span itemprop="name">service-mesh</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<blockquote>
+<p>来源：<a href="https://developer.aliyun.com/article/723524" target="_blank" rel="noopener">https://developer.aliyun.com/article/723524</a></p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>计算机软件技术发展到现在，软件架构的演进无不朝着让开发者能够更加轻松快捷地构建大型复杂应用的方向发展。容器技术最初是为了解决运行环境的不一致问题而产生的，随着不断地发展，围绕容器技术衍生出来越来越多的新方向。</p>
+<p>最近几年，云计算领域不断地出现很多新的软件架构模式，其中有一些很热门的概念名词如：云原生、函数计算、Serverless、ServiceMesh等等，而本文将初窥一下ServiceMesh的面纱。下面结合自己的理解尽量以通俗的话进行叙述。</p>
+<h1 id="背景和定义"><a href="#背景和定义" class="headerlink" title="背景和定义"></a>背景和定义</h1><h2 id="微服务及服务治理"><a href="#微服务及服务治理" class="headerlink" title="微服务及服务治理"></a>微服务及服务治理</h2><p>在微服务之前的软件开发中，往往通过一个应用的方式将所有的模块都包括进去，并一起编译、打包、部署、运维。这种方式存在很多问题，由于单个应用包含的东西太多，其中某个模块出现问题或者需要更新那么整个应用就需要重新部署。这种方式给开发和运维带来了很大的麻烦。随着应用的逐渐复杂，单个应用涉及的东西就会越来越多，慢慢地大家发现了其中很多的缺点，开始对服务进行划分，将一个大的应用按照不同的维度进行划分从而产生很多个小的应用，各应用之间会形成一个调用关系，每个小的应用由不同的开发负责，大家各自部署和运维，这样微服务就出现了。</p>
+<p>由于微服务中各应用部署在不同的机器上，服务之间需要进行通信和协调，相比单个应用来说会麻烦很多。在同一个应用内不同方法之间的调用由于在相同的内存中，在代码编译打包时已经进行了链接，因此调用是可寻址且快速的。微服务下不同服务之间的调用涉及到不同进程或者机器之间的通信，一般需要通过第三方中间件的方式作为中介和协调，由于种种这些，面向微服务出现了很多中间件包括服务治理的框架。通过服务治理工具可以管理其接入的所有应用，使得服务之间的通信和协调更加简单高效。</p>
+<h2 id="容器及容器编排"><a href="#容器及容器编排" class="headerlink" title="容器及容器编排"></a>容器及容器编排</h2><p>最初容器技术是为了解决应用运行环境不一致的问题而出现的，避免在本地环境或者测试环境能够跑通，等发到生产环境却出现问题。通过容器将程序及其依赖一起打包到镜像中去，将程序的镜像在任何安装并运行了容器软件的机器上启动若干的容器，每个容器就是应用运行时的实例，这些实例一般拥有完全相同的运行环境和参数。使得不管在任何机器上应用都可以表现出一样的效果。这给开发、测试、运维带来了极大的便利，不再需要为不同机器上构建相同的运行环境而头大。且镜像可以Push到镜像仓库，这使得应用可以进行很方便的迁移和部署。Docker就是一个应用广泛的容器技术。目前越来越多的应用以微服务的方式并通过容器进行部署，给了软件开发极大的活力。</p>
+<p>与微服务和服务治理的关系类似，越来越多的应用通过容器进行部署，使得集群上的容器数量急剧增加，通过人工的管理和运维这些容器已经变得很艰难且低效，为了解决诸多容器及容器之间的关系出现了很多编排工具，容器编排工具能够管理容器的整个生命周期。如Docker官方出的docker-compose和docker swarm，这两个工具能实现批量容器的启动和编排，但功能较为简单，不足以支撑大型的容器集群。Google基于内部大量的容器管理经验，开源出了Kubernetes项目，Kubernetes（K8S）是针对Google集群上每周亿级别的容器而设计的，具有很强大的容器编排能力和丰富的功能。K8S通过定义了很多资源，这些资源以声明式的方式进行创建，可以通过JSON或者YAML文件表示一个资源，K8S支持多种容器，但主流的是Docker容器，K8S提供了容器接入的相关标准，只要容器实现了该标准就可以被K8S所编排。由于K8S的功能较多，不在此一一叙述，有兴趣可以参考官方文档或者ATA上搜索相关文章。</p>
+<p>当某个公司的应用已经完全微服务化后，选择以容器的方式部署应用，此时可以在集群上部署K8S，通过K8S提供的能力进行应用容器的管理，运维可以也可以面向K8S进行工作。由于K8S是目前使用最广泛的容器编排工具，因此成为了容器编排的一个标准了，目前集团内部也有自己的容器和容器编排工具。</p>
+<p>面向以K8S为代表的容器管理方式衍生出了一些新的技术。</p>
+<h2 id="云原生"><a href="#云原生" class="headerlink" title="云原生"></a>云原生</h2><p>最近两年云原生被炒的很火，可以在各处看到很多大佬对云原生的高谈阔论，下面直接抛出CNCF对云原生的定义：</p>
+<blockquote>
+<p>云原生技术有利于各组织在公有云、私有云和混合云等新型动态环境中，构建和运行可弹性扩展的应用。云原生的代表技术包括容器、服务网格、微服务、不可变基础设施和声明式API。<br>这些技术能够构建容错性好、易于管理和便于观察的松耦合系统。结合可靠的自动化手段，云原生技术使工程师能够轻松地对系统作出频繁和可预测的重大变更。</p>
+</blockquote>
+<p>在我看来，通过微服务的方式开发应用，以容器进行部署，使用K8S等容器编排工具进行容器集群的管理，使得开发运维都面向K8S，这就是云原生。云原生可以方便的构建应用，并对应用进行完整的监控，以及在应用针对不同流量时能进行快速的扩容和缩容。如下图：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/feb43679e45874c02f6e6c22e8bf4441.png" alt="image.png"></p>
+<p>云原生主要包括四个部分:</p>
+<ul>
+<li>微服务</li>
+<li>容器</li>
+<li>持续集成和交付</li>
+<li>DevOps</li>
+</ul>
+<p>PS：总是觉得云原生这个叫法太抽象了，很难让人通过名字想到这是个啥东西。</p>
+<h2 id="ServiceMesh的定义"><a href="#ServiceMesh的定义" class="headerlink" title="ServiceMesh的定义"></a>ServiceMesh的定义</h2><p>前面讲了微服务、容器、容器编排、云原生等，其实就是为了得出什么是ServiceMesh，自己总结了一下：<strong>SeviceMesh是云原生下的微服务治理方案</strong>。</p>
+<p>当我们通过微服务的方式将应用以容器的形式部署在K8S上后，服务之间调用和治理其实有新的方案，可以不需要依赖传统的微服务治理框架。ServiceMesh通过对每个应用在其Pod中启动一个Sidecar（边车）实现对应用的透明代理，所有出入应用的流量都先经过该应用的Sidecar，服务之间的调用转变成了Sidecar之间的调用，服务的治理转变成了对Sidecar的治理。在ServiceMesh中Sidecar是透明的，开发无感知的，之前一直觉得奇怪，总觉得一个应用要让别人发现它从而调用它，总得引入一些库然后进行主动的服务注册，不然啥都不做，别人咋知道这个应用的存在，为什么在ServiceMesh中就可以省去这些，做到对开发者完全地透明呢？这个的实现依赖于容器编排工具，通过K8S进行应用的持续集成和交付时，在启动应用Pod后，其实已经通过Yaml文件的形式向K8S注册了自己的服务以及声明了服务之间的关系，ServiceMesh通过和K8S进行通信获取集群上所有的服务信息，通过K8S这个中间者实现了对开发者的透明。如下图所示，是ServiceMesh的一个基本结构，包括数据平面和控制平面。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/7c01430ea43e3669a874822631b15048.png" alt="image.png"></p>
+<p>这种方式存在很多好处，我们可以发现在这种模式下应用的语言其实不会对整个服务治理过程有什么影响，对于ServiceMesh来说，它只关心Pod或者说是Pod中的容器实例，并不需要在乎容器中应用的实现语言是啥，Sidecar和其负责的容器在同一个Pod中。这样ServiceMesh就可以实现跨语言，这也是目前很多传统的服务治理框架的一大缺点，而且采用传统的服务治理，需要对应用引入大量的依赖，这样就会造成依赖之间的各种冲突，集团通过Pandora对应用的各种依赖进行隔离。再者传统的服务治理门槛较高，需要开发者对整个架构有一定的了解，且发现问题排查较为麻烦。这也造成了开发和运维之间的界限不清，在ServiceMesh中开发只需要交付代码，运维可以基于K8S去维护整个容器集群。</p>
+<h1 id="发展现状"><a href="#发展现状" class="headerlink" title="发展现状"></a>发展现状</h1><p>通过目前查阅的资料来看，ServiceMesh一词最早出现在2016年，最近两年被炒的很火，蚂蚁金服已经有了自己的一套完整的ServiceMesh服务框架–SofaMesh，集团很多团队也在进行相应的跟进。</p>
+<p>从历史发展的路线来看，程序的开发方式经历了很多的变化，但总的方向是变得越来越简单了，现在我们在集团内进行开发，可以很简单的构建一个支撑较大QPS的服务，这得益于集团的整个技术体系的完整和丰富以及强大的技术积淀。</p>
+<p>我们下面来看看应用开发到底经历了啥？</p>
+<h2 id="发展历史"><a href="#发展历史" class="headerlink" title="发展历史"></a>发展历史</h2><h3 id="主机直接阶段"><a href="#主机直接阶段" class="headerlink" title="主机直接阶段"></a>主机直接阶段</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/0dbc3158dffdae8d73a5e8efc031c75c.png" alt="image.png"></p>
+<p>如上图，这一阶段应该是最古老的阶段，两台机器通过网线直接连接，一个应用包含了你能想到的所有的功能，包括两台机器的连接管理，这时还没有网络的概念，毕竟只能和通过网线直接连接在一起的机器进行通信。</p>
+<h3 id="网络层的出现"><a href="#网络层的出现" class="headerlink" title="网络层的出现"></a>网络层的出现</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/b5831ce53a0abc03f438ef4a8085b28b.png" alt="image.png"></p>
+<p>如上图，随着技术的发展，网络层出现了，机器可以和通过网络连接的其他所有机器进行通信，不再限制于必须要网线直连两台机器。</p>
+<h3 id="集成到应用程序内部的流量控制"><a href="#集成到应用程序内部的流量控制" class="headerlink" title="集成到应用程序内部的流量控制"></a>集成到应用程序内部的流量控制</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/2ef0e49eaff46aa8847014ce1a33d0fe.png" alt="image.png"></p>
+<p>如上图，由于每个应用所在环境和机器配置不一样，接受流量的能力也不相同，当A应用发送的流量大于了B应用的接受能力时，那么无法接收的数据包必定会被丢弃，这时就需要对流量进行控制，最开始流量的控制需要应用自己去实现，网络层只负责接收应用下发的数据包并进行传输。</p>
+<h3 id="流量控制转移到网络层"><a href="#流量控制转移到网络层" class="headerlink" title="流量控制转移到网络层"></a>流量控制转移到网络层</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/ead7fcc503e4e6c2e10d4160c5be0858.png" alt="image.png"></p>
+<p>如上图，慢慢地大家发应用中的网络流量控制是可以转移到网络层的，所以网络层中的流量控制出现了，我想大概就是指TCP的流量控制吧，这样还能保证可靠的网络通信。</p>
+<h3 id="应用程序的中集成服务发现和断路器"><a href="#应用程序的中集成服务发现和断路器" class="headerlink" title="应用程序的中集成服务发现和断路器"></a>应用程序的中集成服务发现和断路器</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/c68b6f2f5093077d196c8c9b83e034ff.png" alt="image.png"></p>
+<p>如上图，开发者通过在自己的代码模块中实现服务发现和断路器。</p>
+<h3 id="专门用于服务发现和断路器的软件包-库"><a href="#专门用于服务发现和断路器的软件包-库" class="headerlink" title="专门用于服务发现和断路器的软件包/库"></a>专门用于服务发现和断路器的软件包/库</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/11222886203b348637235ce5abf95325.png" alt="image.png"></p>
+<p>如上图，开发者通过引用第三方依赖去实现服务发现和断路器。</p>
+<h3 id="出现了专门用于服务发现和断路器的开源软件"><a href="#出现了专门用于服务发现和断路器的开源软件" class="headerlink" title="出现了专门用于服务发现和断路器的开源软件"></a>出现了专门用于服务发现和断路器的开源软件</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/bc9d938db0b4949eb127838956f9bc8d.png" alt="image.png"></p>
+<p>如上图，基于各种中间件去实现服务发现和断路器。</p>
+<h3 id="ServiceMesh出现"><a href="#ServiceMesh出现" class="headerlink" title="ServiceMesh出现"></a>ServiceMesh出现</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/647e656d33fef1410d8f816e1d349c67.png" alt="image.png"></p>
+<p>最终到了现在，ServiceMesh大法诞生，进一步解放了生产力，提高了软件整个生命周期的效率。</p>
+<h2 id="ServiceMesh市场竞争"><a href="#ServiceMesh市场竞争" class="headerlink" title="ServiceMesh市场竞争"></a>ServiceMesh市场竞争</h2><blockquote>
+<p>虽然直到2017年底，ServiceMesh才开始较大规模被世人了解，这场微服务市场之争也才显现，但是其实ServiceMesh这股微服务的新势力，早在 2016年初就开始萌芽：</p>
+<p>2016年1月，离开Twitter的基础设施工程师William Morgan和Oliver Gould，在github上发布了Linkerd 0.0.7版本，业界第一个ServiceMesh项目就此诞生。Linkerd基于Twitter的Finagle开源项目，大量重用了Finagle的类库，但是实现了通用性，成为了业界第一个ServiceMesh项目。而Envoy是第二个ServiceMesh项目，两者的开发时间差不多，在2017年都相继成为CNCF项目。2017年5月24日，Istio 0.1 release版本发布，Google和IBM高调宣讲，社区反响热烈，很多公司在这时就纷纷站队表示支持Istio。Linkerd的风光瞬间被盖过，从意气风发的少年一夜之间变成过气网红。当然，从产品成熟度上来说，linkerd作为业界仅有的两个生产级ServiceMesh实现之一，暂时还可以在Istio成熟前继续保持市场。但是，随着Istio的稳步推进和日益成熟，外加第二代ServiceMesh的天然优势，Istio取代第一代的Linkerd只是个时间问题。自从在2016年决定委身于Istio之后，Envoy就开始了一条波澜不惊的平稳发展之路，和Linkerd的跌宕起伏完全不同。在功能方面，由于定位在数据平面，因此Envoy无需考虑太多，很多工作在Istio的控制平面完成就好，Envoy从此专心于将数据平面做好，完善各种细节。在市场方面，Envoy和Linkerd性质不同，不存在生存和发展的战略选择，也没有正面对抗生死大敌的巨大压力。</p>
+<p>从Google和IBM联手决定推出Istio开始，Istio就注定永远处于风头浪尖，无论成败，Istio面世之后，赞誉不断，尤其是ServiceMesh技术的爱好者，可以说是为之一振：以新一代ServiceMesh之名横空出世的Istio，对比Linkerd，优势明显。同时产品路线图上有一大堆令人眼花缭乱的功能。假以时日，如果Istio能顺利地完成开发，稳定可靠，那么这会是一个非常美好、值得憧憬的大事件，</p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/634554bf1f3647071057357a4d577cc9.png" alt="image.png"></p>
+<h1 id="Istio介绍"><a href="#Istio介绍" class="headerlink" title="Istio介绍"></a>Istio介绍</h1><p>Istio是目前最热的ServiceMesh开源项目，Istio主要分为两个部分：数据平面和控制平面。Istio实现了云原生下的微服务治理，能实现服务发现，流量控制，监控安全等。Istio通过在一个Pod里启动一个应用和Sidecar方式实现透明代理。Istio是一个拓展性较高的框架，其不仅可以支持K8S，还可以支持其他如Mesos等资源调度器。如下图所示，为Istio的整体架构：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/801a66c5ed3e49f6eac068a20bc22ebe.png" alt="image.png"></p>
+<ul>
+<li>逻辑上分为数据平面（上图中的上半部分）和控制平面（上图中的下半部分）。</li>
+<li>数据平面由一组以 Sidecar 方式部署的智能代理（Envoy）组成。这些代理可以调节和控制微服务及 Mixer 之间所有的网络通信。</li>
+<li>控制平面负责管理和配置代理来路由流量。此外控制平面配置 Mixer 以实施策略和收集遥测数据。</li>
+<li>Pilot是整个架构中的抽象层，将对接K8S等资源调度器的步骤进行抽象并以适配器的形式展现，并和用户以及Sidecar交互。</li>
+<li>Galley负责资源配置为验证。</li>
+<li>Citadel用于生成身份，及密钥和证书管理</li>
+<li>核心功能包括流量控制、安全控制、可观测性、多平台支持、可定制化。</li>
+</ul>
+<h2 id="Mixer"><a href="#Mixer" class="headerlink" title="Mixer"></a>Mixer</h2><p>Mixer同样是一个可拓展的模块，其负责遥感数据的采集以及集成了一些后端服务（BAAS），Sidecar会不断向Mixer报告自己的流量情况，Mixer对流量情况进行汇总，以可视化的形式展现，此外Sidecar可以调用Mixer提供的一些后端服务能力，例如鉴权、登录、日志等等，Mixer通过适配器的方式对接各种后端服务。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/403cc8c2367ca7efa446d002ffc3f34f.png" alt="image.png"></p>
+<h4 id="In-process-Adapter形式"><a href="#In-process-Adapter形式" class="headerlink" title="In-process Adapter形式"></a>In-process Adapter形式</h4><p>之前版本的Isito采用这种将后端服务适配器集成在Mixer内部的形式，这种方式会有一个问题，就是某个后端服务适配器出现问题即会影响整个Mixer模块，但由于适配器和Mixer集成在一起，在同一个进程内，方法的调用会很快。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/d0e35169905977c5aaac8572d2e78f0f.png" alt="image.png"></p>
+<h4 id="Out-of-process-Adapter形式"><a href="#Out-of-process-Adapter形式" class="headerlink" title="Out-of-process Adapter形式"></a>Out-of-process Adapter形式</h4><p>目前版本的Istio将Adapter移到Mixer外部，这样可以实现Mixer与Adapter的解耦，当Adapter出现问题并不会影响Mixer，但这种方式同样也存在问题，即Adapter在Mixer外，是两个不同的进程，二者之间的调用是通过RPC的方式，这种方式比同进程内部的方法调用会慢很多，因此性能会受到影响。</p>
+<h2 id="Pilot"><a href="#Pilot" class="headerlink" title="Pilot"></a>Pilot</h2><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/3c0ea5bcdd7d095c8fb9534bdb222731.png" alt="image.png"></p>
+<ul>
+<li>Envoy API负责和Envoy的通讯, 主要是发送服务发现信息和流量控制规则给Envoy。</li>
+<li>Abstract Model 是 Pilot 定义的服务的抽象模型, 以从特定平台细节中解耦, 为跨平台提供基础。</li>
+<li>Platform Adapter则是这个抽象模型的实现版本, 用于对接外部的不同平台如k8s/mesos等。</li>
+<li>Rules API提供接口给外部调用以管理 Pilot, 包括命令行工具Istioctl以及未来可能出现的第三方管理界面。</li>
+</ul>
+<h2 id="Galley"><a href="#Galley" class="headerlink" title="Galley"></a>Galley</h2><p>Galley 原来仅负责进行配置验证, 1.1 后升级为整个控制面的配置管理中心, 除了继续提供配置验证功能外, Galley还负责配置的管理和分发, Galley 使用 网格配置协议(Mesh Configuration Protocol) 和其他组件进行配置的交互.</p>
+<p>Istio 创造了50多个CRD, 其复杂度可见一斑, 所以有人说面向k8s编程近似于面向yaml编程.早期的Galley 仅仅负责对配置进行运行时验证, Istio 控制面各个组件各自去list/watch 各自关注的配置。越来越多且复杂的配置给Istio用户带来了诸多不便, 主要体现在:</p>
+<ul>
+<li>配置的缺乏统一管理, 组件各自订阅, 缺乏统一回滚机制, 配置问题难以定位。</li>
+<li>配置可复用度低, 比如在1.1之前, 每个Mixer adpater 就需要定义个新的CRD。</li>
+<li>配置的隔离, ACL 控制, 一致性, 抽象程度, 序列化等等问题都还不太令人满意</li>
+</ul>
+<p>随着Istio功能的演进, 可预见的Istio CRD数量还会继续增加, 社区计划将Galley 强化为Istio配置控制层, Galley 除了继续提供配置验证功能外, 还将提供配置管理流水线, 包括输入, 转换, 分发, 以及适合Istio控制面的配置分发协议(MCP)。</p>
+<h2 id="Citadel"><a href="#Citadel" class="headerlink" title="Citadel"></a>Citadel</h2><p>将服务拆分为微服务之后，在带来各种好处的同时，在安全方面也带来了比单体时代更多的需求，毕竟不同功能模块之间的调用方式从原来单体架构中的方法调用变成了微服务之间的远程调用：</p>
+<ul>
+<li>加密：为了不泄露信息，为了抵御中间人攻击，需要对服务间通讯进行加密。</li>
+<li>访问控制：不是每个服务都容许被任意访问，因此需要提供灵活的访问控制，如双向 TLS 和细粒度的访问策略。</li>
+<li>审计：如果需要审核系统中哪些用户做了什么，则需要提供审计功能。</li>
+</ul>
+<p><strong>Citadel 是 Istio 中负责安全性的组件，但是 Citadel 需要和其他多个组件配合才能完成工作：</strong></p>
+<ul>
+<li>Citadel：用于密钥管理和证书管理，下发到Envoy等负责通讯转发的组件。</li>
+<li>Envoy：使用从Citadel下发而来的密钥和证书，实现服务间通讯的安全，注意在应用和Envoy之间是走Localhost，通常不用加密。</li>
+<li>Pilot：将授权策略和安全命名信息分发给Envoy。</li>
+<li>Mixer：负责管理授权，完成审计等。</li>
+</ul>
+<p><strong>Istio支持的安全类功能有：</strong></p>
+<ul>
+<li>流量加密：加密服务间的通讯流量。</li>
+<li>身份认证：通过内置身份和凭证管理可以提供强大的服务间和最终用户身份验证，包括传输身份认证和来源身份认证，支持双向TLS。</li>
+<li>授权和鉴权：提供基于角色的访问控制（RBAC），提供命名空间级别，服务级别和方法级别的访问控制。</li>
+</ul>
+<p><strong>作者信息：</strong>彭家浩，花名毅忻，阿里巴巴淘系技术部开发工程师，热爱云计算。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/devops/sonar/sonarqube-server-setup/" rel="next" title="sonarqube-8.3 安装">
+                <i class="fa fa-chevron-left"></i> sonarqube-8.3 安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/message-queue/rocketmq/rocketmq-how-to-submit-pr/" rel="prev" title="如何向rocketmq提交pr">
+                如何向rocketmq提交pr <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">236</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">59</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#背景和定义"><span class="nav-text">背景和定义</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#微服务及服务治理"><span class="nav-text">微服务及服务治理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器及容器编排"><span class="nav-text">容器及容器编排</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#云原生"><span class="nav-text">云原生</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ServiceMesh的定义"><span class="nav-text">ServiceMesh的定义</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发展现状"><span class="nav-text">发展现状</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#发展历史"><span class="nav-text">发展历史</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主机直接阶段"><span class="nav-text">主机直接阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络层的出现"><span class="nav-text">网络层的出现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集成到应用程序内部的流量控制"><span class="nav-text">集成到应用程序内部的流量控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流量控制转移到网络层"><span class="nav-text">流量控制转移到网络层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用程序的中集成服务发现和断路器"><span class="nav-text">应用程序的中集成服务发现和断路器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#专门用于服务发现和断路器的软件包-库"><span class="nav-text">专门用于服务发现和断路器的软件包/库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#出现了专门用于服务发现和断路器的开源软件"><span class="nav-text">出现了专门用于服务发现和断路器的开源软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ServiceMesh出现"><span class="nav-text">ServiceMesh出现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ServiceMesh市场竞争"><span class="nav-text">ServiceMesh市场竞争</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Istio介绍"><span class="nav-text">Istio介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mixer"><span class="nav-text">Mixer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#In-process-Adapter形式"><span class="nav-text">In-process Adapter形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Out-of-process-Adapter形式"><span class="nav-text">Out-of-process Adapter形式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pilot"><span class="nav-text">Pilot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Galley"><span class="nav-text">Galley</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Citadel"><span class="nav-text">Citadel</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

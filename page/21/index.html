@@ -314,6 +314,1138 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/reverse-linked-list/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/reverse-linked-list/" itemprop="url">单链表反转 —— 变形</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-03T00:05:58+08:00">
+                2016-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：单链表反转"><a href="#算法：单链表反转" class="headerlink" title="算法：单链表反转"></a>算法：单链表反转</h1><h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">这其实是一道变形的链表反转题，大致描述如下</span><br><span class="line"></span><br><span class="line">给定一个单链表的头节点 <span class="selector-tag">head</span>,实现一个调整单链表的函数，使得每<span class="selector-tag">K</span>个节点之间为一组进行逆序，并且从链表的尾部开始组起，头部剩余节点数量不够一组的不需要逆序。（不能使用队列或者栈作为辅助）</span><br><span class="line"></span><br><span class="line">例如：</span><br><span class="line">链表:1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;6-&gt;7-&gt;8-&gt;null, K = 3。那么 6-&gt;7-&gt;8，3-&gt;4-&gt;5，1-&gt;2各位一组。调整后：1-&gt;2-&gt;5-&gt;4-&gt;3-&gt;8-&gt;7-&gt;6-&gt;null。其中 1，2不调整，因为不够一组。</span><br></pre></td></tr></table></figure>
+
+<p>解析</p>
+<blockquote>
+<p>这道题的难点在于，是从链表的尾部开始组起的，而不是从链表的<strong>头部</strong>，如果是头部的话，那我们还是比较容易做的，因为你可以遍历链表，每遍历 k 个就拆分为一组来逆序。但是从尾部的话就不一样了，因为是单链表，不能往后遍历组起；</p>
+</blockquote>
+<blockquote>
+<p>思路1：整体反转，然后从头开始截取 K个节点 ，被后续截图的K个节点 的尾部连接；最后长度不足K的节点再局部反转 作为 队头</p>
+</blockquote>
+<blockquote>
+<p>思路2：整体反转，</p>
+</blockquote>
+<p>​                       </p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    Node next;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> d)</span> </span>&#123; <span class="keyword">this</span>.val = d; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">reverse</span><span class="params">(Node node)</span> </span>&#123;</span><br><span class="line">        Node pre = node;</span><br><span class="line">        Node cur = node.next;</span><br><span class="line">        node.next = <span class="keyword">null</span>;</span><br><span class="line">        Node tmp;</span><br><span class="line">        <span class="keyword">while</span>(cur!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            tmp = cur.next;</span><br><span class="line">            cur.next = pre;</span><br><span class="line">            pre = cur;</span><br><span class="line">            cur = tmp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> pre;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Node <span class="title">reverseByK</span><span class="params">(Node node, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        Node tmp = node;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;k &amp;&amp; tmp != <span class="keyword">null</span>; i++) &#123;</span><br><span class="line">            tmp = tmp.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (tmp == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> node;</span><br><span class="line">        &#125;</span><br><span class="line">        Node childList = tmp.next;</span><br><span class="line">        tmp.next = <span class="keyword">null</span>;</span><br><span class="line">        Node retNode = reverse(node);</span><br><span class="line">        Node newChildNode = reverseByK(childList, k);</span><br><span class="line">        node.next = newChildNode;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> retNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Node link = <span class="keyword">null</span>;</span><br><span class="line">        Node tmp = link;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;<span class="number">9</span>; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">null</span> == tmp) &#123;</span><br><span class="line">            	tmp = <span class="keyword">new</span> Node(i);</span><br><span class="line">            	link = tmp;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            	tmp.next = <span class="keyword">new</span> Node(i);</span><br><span class="line">            	tmp = tmp.next;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Solution solution = <span class="keyword">new</span> Solution();</span><br><span class="line">        link = solution.reverse(solution.reverseByK(solution.reverse(link), <span class="number">3</span>));</span><br><span class="line">        <span class="keyword">while</span>(link!=<span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.print(link.val + <span class="string">" "</span>);</span><br><span class="line">            link = link.next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><p>​                         </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/longest-palindromic-substring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/longest-palindromic-substring/" itemprop="url">Longest Palindromic Substring</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-01T00:25:11+08:00">
+                2016-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：动态规划"><a href="#算法：动态规划" class="headerlink" title="算法：动态规划"></a>算法：动态规划</h1><h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>URL：<a href="https://leetcode-cn.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/longest-palindromic-substring/</a></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">给定一个字符串 <span class="selector-tag">s</span>，找到 <span class="selector-tag">s</span> 中最长的回文子串。你可以假设 <span class="selector-tag">s</span> 的最大长度为 1000。</span><br><span class="line"></span><br><span class="line">示例 1：</span><br><span class="line"></span><br><span class="line">输入: "<span class="selector-tag">babad</span>"</span><br><span class="line">输出: "<span class="selector-tag">bab</span>"</span><br><span class="line">注意: "<span class="selector-tag">aba</span>" 也是一个有效答案。</span><br><span class="line">示例 2：</span><br><span class="line"></span><br><span class="line">输入: "<span class="selector-tag">cbbd</span>"</span><br><span class="line">输出: "<span class="selector-tag">bb</span>"</span><br></pre></td></tr></table></figure>
+
+<p>分析</p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><p>扩展中心算法</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190826121546.png" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Stack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        String longestS=<span class="keyword">null</span>, curS=<span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;s.length(); ++i) &#123;</span><br><span class="line">            curS = palindrome(s.toCharArray(), i);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == curS) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == longestS) longestS = curS;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (longestS.length() &lt;= curS.length()) longestS = curS;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">null</span> == longestS) ? <span class="string">""</span> : longestS;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">palindrome</span><span class="params">(<span class="keyword">char</span>[] chArr, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">        Stack&lt;Character&gt; stack1 = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line">        Stack&lt;Character&gt; stack2 = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line">        <span class="keyword">int</span> len1=<span class="number">0</span>, len2=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(index-<span class="number">1</span>&gt;=<span class="number">0</span> &amp;&amp; chArr[index] == chArr[index-<span class="number">1</span>]) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=index-<span class="number">1</span>; i&gt;=<span class="number">0</span>; --i) &#123;</span><br><span class="line">                <span class="keyword">int</span> delta = index-<span class="number">1</span>-i;</span><br><span class="line">                <span class="keyword">if</span>(index+delta&gt;=chArr.length) <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">if</span>(chArr[i] == chArr[index+delta]) &#123;</span><br><span class="line">                    stack1.push(chArr[i]);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            len1 = stack1.size()*<span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(index-<span class="number">2</span>&gt;=<span class="number">0</span> &amp;&amp; chArr[index] == chArr[index-<span class="number">2</span>]) &#123;</span><br><span class="line">            stack2.push(chArr[index-<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=index-<span class="number">2</span>; i&gt;=<span class="number">0</span>; --i) &#123;</span><br><span class="line">                <span class="keyword">int</span> delta = index-<span class="number">2</span>-i;</span><br><span class="line">                <span class="keyword">if</span>(index+delta&gt;=chArr.length) <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">if</span>(chArr[i] == chArr[index+delta]) &#123;</span><br><span class="line">                    stack2.push(chArr[i]);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            len2 = stack2.size()*<span class="number">2</span> - <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// System.out.printf("%d, %d %c \n", len1, len2, chArr[index]);</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span>==len1 &amp;&amp; <span class="number">0</span>==len2) <span class="keyword">return</span> String.valueOf(chArr[index]);</span><br><span class="line">        <span class="keyword">if</span> (len1&gt;len2) &#123;</span><br><span class="line">            <span class="keyword">char</span>[] res = <span class="keyword">new</span> <span class="keyword">char</span>[len1];</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; !stack1.isEmpty(); ++i) &#123;</span><br><span class="line">                <span class="keyword">char</span> c = stack1.pop().charValue();</span><br><span class="line">                res[i] = res[len1-<span class="number">1</span>-i] = c;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> String.copyValueOf(res);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">char</span>[] res = <span class="keyword">new</span> <span class="keyword">char</span>[len2];</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; !stack2.isEmpty(); ++i) &#123;</span><br><span class="line">                <span class="keyword">char</span> c = stack2.pop().charValue();</span><br><span class="line">                res[i] = res[len2-<span class="number">1</span>-i] = c;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> String.copyValueOf(res);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            String s = <span class="string">"ba"</span>;</span><br><span class="line">            String ret = <span class="keyword">new</span> Solution().longestPalindrome(s);</span><br><span class="line">            String out = (ret);</span><br><span class="line">            System.out.print(out);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样解法的代码优化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (s == <span class="keyword">null</span> || s.length() &lt; <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="string">""</span>;</span><br><span class="line">		<span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">			<span class="keyword">int</span> len1 = expandAroundCenter(s, i, i);</span><br><span class="line">			<span class="keyword">int</span> len2 = expandAroundCenter(s, i, i + <span class="number">1</span>);</span><br><span class="line">			<span class="keyword">int</span> len = Math.max(len1, len2);</span><br><span class="line">			<span class="keyword">if</span> (len &gt; end - start) &#123;</span><br><span class="line">				start = i - (len - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">				end = i + len / <span class="number">2</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> s.substring(start, end + <span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">expandAroundCenter</span><span class="params">(String s, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> L = left, R = right;</span><br><span class="line">		<span class="keyword">while</span> (L &gt;= <span class="number">0</span> &amp;&amp; R &lt; s.length() &amp;&amp; s.charAt(L) == s.charAt(R)) &#123;</span><br><span class="line">			L--;</span><br><span class="line">			R++;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> R - L - <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>动态规划的解法</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190826121624.png" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		String s = <span class="string">"aba1ab"</span>;</span><br><span class="line">		String ret = <span class="keyword">new</span> Solution().longestPalindrome(s);</span><br><span class="line">		String out = (ret);</span><br><span class="line">		System.out.print(out);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">longestPalindrome</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">null</span> == s || s.length() &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> s;</span><br><span class="line">        &#125;</span><br><span class="line">        String origin = s;</span><br><span class="line">        String reverse = <span class="keyword">new</span> StringBuffer(s).reverse().toString();</span><br><span class="line">        <span class="keyword">int</span> length = s.length();</span><br><span class="line">        <span class="keyword">int</span>[][] arr = <span class="keyword">new</span> <span class="keyword">int</span>[length][length];</span><br><span class="line">        <span class="keyword">int</span> maxLen = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> maxEnd = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;length; ++j) &#123;</span><br><span class="line">                <span class="keyword">if</span>(origin.charAt(i) == reverse.charAt(j)) &#123;</span><br><span class="line">                    <span class="keyword">if</span>(<span class="number">0</span>==i || <span class="number">0</span>==j) &#123;</span><br><span class="line">                        arr[i][j] = <span class="number">1</span>;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        arr[i][j] = arr[i-<span class="number">1</span>][j-<span class="number">1</span>] + <span class="number">1</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (arr[i][j]&gt;= maxLen) &#123;</span><br><span class="line">                    <span class="keyword">int</span> beforeRev = length-<span class="number">1</span> - j;</span><br><span class="line">                    <span class="keyword">if</span>(arr[i][j]-<span class="number">1</span>+beforeRev == i) &#123;</span><br><span class="line">                        maxLen = arr[i][j];</span><br><span class="line">                        maxEnd = i;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> s.substring(maxEnd-(maxLen-<span class="number">1</span>), maxEnd+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><p>​          </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/kth-largest-element-in-an-array/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/kth-largest-element-in-an-array/" itemprop="url">Kth Largest Element in an Array</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-29T00:13:17+08:00">
+                2016-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：Heap-堆"><a href="#算法：Heap-堆" class="headerlink" title="算法：Heap 堆"></a>算法：Heap 堆</h1><h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>url:<a href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">https://leetcode.com/problems/kth-largest-element-in-an-array/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">215. Kth Largest Element in an Array</span><br><span class="line"></span><br><span class="line">Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.</span><br><span class="line"></span><br><span class="line">Example 1:</span><br><span class="line"></span><br><span class="line">Input: [3,2,1,5,6,4] and k = 2</span><br><span class="line">Output: 5</span><br><span class="line">Example 2:</span><br><span class="line"></span><br><span class="line">Input: [3,2,3,1,2,4,5,5,6] and k = 4</span><br><span class="line">Output: 4</span><br><span class="line">Note: </span><br><span class="line">You may assume k is always valid, 1 ≤ k ≤ array's length.</span><br></pre></td></tr></table></figure>
+
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>用数据结构 Head（堆）来实现</p>
+<p>堆：完全二叉树，常常用数组表示</p>
+<p><img src="https://images2018.cnblogs.com/blog/1297600/201802/1297600-20180225121948371-554379317.png" alt></p>
+<blockquote>
+<p>用数组表示一棵树时，如果数组中节点的索引位x，则<br>a、它的父节点的下标是：(x-1)/2；<br>b、它的左子节点的下标为：2<em>x + 1；<br>c、它的右子节点的下标是：2</em>x + 2；</p>
+</blockquote>
+<p>堆的数组实现：<a href="https://www.cnblogs.com/g177w/p/8469399.html" target="_blank" rel="noopener">https://www.cnblogs.com/g177w/p/8469399.html</a></p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> data;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.data = d;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getValue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.data;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(<span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.data = d;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Head</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> Node[] headArray;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> maxSize;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> currentSize;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Head</span><span class="params">(<span class="keyword">int</span> maxSize)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.maxSize = maxSize;</span><br><span class="line">            currentSize = <span class="number">0</span>;</span><br><span class="line">            headArray = <span class="keyword">new</span> Node[maxSize];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEmpty</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span> == currentSize;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.currentSize == <span class="keyword">this</span>.maxSize) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            Node node = <span class="keyword">new</span> Node(d);</span><br><span class="line">            headArray[currentSize] = node;</span><br><span class="line">            trickleUp(currentSize++);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">trickleUp</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">int</span> parentIndex = (index - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">            Node node = headArray[index];</span><br><span class="line">            <span class="keyword">while</span> (index &gt; <span class="number">0</span> &amp;&amp; </span><br><span class="line">                   headArray[parentIndex].getValue() &lt; node.getValue()) &#123;</span><br><span class="line">                headArray[index] = headArray[parentIndex];</span><br><span class="line">                index = parentIndex;</span><br><span class="line">                parentIndex = (index - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            headArray[index] = node;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> Node <span class="title">remove</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            Node root = headArray[<span class="number">0</span>];</span><br><span class="line">            headArray[<span class="number">0</span>] = headArray[--currentSize];</span><br><span class="line">            trickleDown(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">return</span> root;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">trickleDown</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">int</span> largeChild;</span><br><span class="line">            Node node = headArray[index];</span><br><span class="line">            <span class="keyword">while</span> (index &lt; currentSize/<span class="number">2</span>) &#123;</span><br><span class="line">                <span class="keyword">int</span> leftChild = <span class="number">2</span> * index + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">int</span> rightChild = <span class="number">2</span> * index +<span class="number">2</span>;</span><br><span class="line">                <span class="keyword">if</span> (rightChild &lt; currentSize &amp;&amp; headArray[leftChild].getValue()</span><br><span class="line">                    &lt; headArray[rightChild].getValue()) &#123;</span><br><span class="line">                    largeChild = rightChild;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    largeChild = leftChild;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (node.getValue() &gt;= headArray[largeChild].getValue()) &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                headArray[index] = headArray[largeChild];</span><br><span class="line">                index = largeChild;</span><br><span class="line">            &#125;</span><br><span class="line">            headArray[index] = node;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">change</span><span class="params">(<span class="keyword">int</span> index, <span class="keyword">int</span> newValue)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (index &lt; <span class="number">0</span> || index &gt; currentSize) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> oldValue = headArray[index].getValue();</span><br><span class="line">            headArray[index].setValue(newValue);</span><br><span class="line">            <span class="keyword">if</span> (oldValue &lt; newValue) &#123;</span><br><span class="line">                trickleUp(index);</span><br><span class="line">            &#125; <span class="keyword">else</span>  &#123;</span><br><span class="line">                trickleDown(index);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayHead</span><span class="params">()</span> </span>&#123;</span><br><span class="line">             System.out.print(<span class="string">"headArray:"</span>);</span><br><span class="line">             <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; currentSize; i++) &#123;</span><br><span class="line">                 <span class="keyword">if</span> (headArray[i] != <span class="keyword">null</span>)</span><br><span class="line">                     System.out.print(headArray[i].getValue()+<span class="string">"  "</span>);</span><br><span class="line">                 <span class="keyword">else</span></span><br><span class="line">                     System.out.print(<span class="string">"--"</span>);</span><br><span class="line">             &#125;</span><br><span class="line">             System.out.println(<span class="string">""</span>);</span><br><span class="line">             <span class="keyword">int</span> nBlanks = <span class="number">32</span>;</span><br><span class="line">             <span class="keyword">int</span> itemsPerrow = <span class="number">1</span>;</span><br><span class="line">             <span class="keyword">int</span> column = <span class="number">0</span>;</span><br><span class="line">             <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">             String dots = <span class="string">"........................"</span>;</span><br><span class="line">             System.out.println(dots + dots);</span><br><span class="line">             <span class="keyword">while</span> (currentSize &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                 <span class="keyword">if</span> (column == <span class="number">0</span>)</span><br><span class="line">                     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nBlanks; i++) &#123;</span><br><span class="line">                         System.out.print(<span class="string">" "</span>);</span><br><span class="line">                     &#125;</span><br><span class="line">                 System.out.print(headArray[j].getValue());</span><br><span class="line">                 <span class="keyword">if</span> (++ j == currentSize)</span><br><span class="line">                     <span class="keyword">break</span>;</span><br><span class="line">                 <span class="keyword">if</span> (++ column == itemsPerrow)&#123;</span><br><span class="line">                     nBlanks /= <span class="number">2</span>;</span><br><span class="line">                     itemsPerrow *= <span class="number">2</span>;</span><br><span class="line">                     column = <span class="number">0</span>;</span><br><span class="line">                     System.out.println();</span><br><span class="line">                 &#125;</span><br><span class="line">                 <span class="keyword">else</span></span><br><span class="line">                     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nBlanks * <span class="number">2</span> - <span class="number">2</span>; i++) </span><br><span class="line">                         System.out.print(<span class="string">' '</span>);</span><br><span class="line">             &#125;</span><br><span class="line">             System.out.println(<span class="string">"\n"</span>+dots + dots);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k)</span> </span>&#123;</span><br><span class="line">        Head head = <span class="keyword">new</span> Solution().new Head(nums.length);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> x : nums) &#123;</span><br><span class="line">            head.insert(x);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;k-<span class="number">1</span>; ++i) &#123;</span><br><span class="line">            head.remove();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> ret = head.remove().getValue();</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/h-index-ii/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/h-index-ii/" itemprop="url">h index ii</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-27T22:41:01+08:00">
+                2016-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法："><a href="#算法：" class="headerlink" title="算法："></a>算法：</h1><p>url：<a href="https://leetcode.com/problems/h-index-ii/" target="_blank" rel="noopener">https://leetcode.com/problems/h-index-ii/</a></p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Given an array of citations sorted in ascending order (each citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.</span><br><span class="line"></span><br><span class="line">According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h citations each, and the other N − h papers have no more than h citations each."</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span>:</span><br><span class="line"></span><br><span class="line">Input: citations = [0,1,3,5,6]</span><br><span class="line"><span class="selector-tag">Output</span>: 3 </span><br><span class="line"><span class="selector-tag">Explanation</span>: <span class="selector-attr">[0,1,3,5,6]</span> <span class="selector-tag">means</span> <span class="selector-tag">the</span> <span class="selector-tag">researcher</span> <span class="selector-tag">has</span> 5 <span class="selector-tag">papers</span> <span class="selector-tag">in</span> <span class="selector-tag">total</span> <span class="selector-tag">and</span> <span class="selector-tag">each</span> <span class="selector-tag">of</span> <span class="selector-tag">them</span> <span class="selector-tag">had</span> </span><br><span class="line">             <span class="selector-tag">received</span> 0, 1, 3, 5, 6 <span class="selector-tag">citations</span> <span class="selector-tag">respectively</span>. </span><br><span class="line">             <span class="selector-tag">Since</span> <span class="selector-tag">the</span> <span class="selector-tag">researcher</span> <span class="selector-tag">has</span> 3 <span class="selector-tag">papers</span> <span class="selector-tag">with</span> <span class="selector-tag">at</span> <span class="selector-tag">least</span> 3 <span class="selector-tag">citations</span> <span class="selector-tag">each</span> <span class="selector-tag">and</span> <span class="selector-tag">the</span> <span class="selector-tag">remaining</span> </span><br><span class="line">             <span class="selector-tag">two</span> <span class="selector-tag">with</span> <span class="selector-tag">no</span> <span class="selector-tag">more</span> <span class="selector-tag">than</span> 3 <span class="selector-tag">citations</span> <span class="selector-tag">each</span>, <span class="selector-tag">her</span> <span class="selector-tag">h-index</span> <span class="selector-tag">is</span> 3.</span><br><span class="line"><span class="selector-tag">Note</span>:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">If</span> <span class="selector-tag">there</span> <span class="selector-tag">are</span> <span class="selector-tag">several</span> <span class="selector-tag">possible</span> <span class="selector-tag">values</span> <span class="selector-tag">for</span> <span class="selector-tag">h</span>, <span class="selector-tag">the</span> <span class="selector-tag">maximum</span> <span class="selector-tag">one</span> <span class="selector-tag">is</span> <span class="selector-tag">taken</span> <span class="selector-tag">as</span> <span class="selector-tag">the</span> <span class="selector-tag">h-index</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Follow</span> <span class="selector-tag">up</span>:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">This</span> <span class="selector-tag">is</span> <span class="selector-tag">a</span> <span class="selector-tag">follow</span> <span class="selector-tag">up</span> <span class="selector-tag">problem</span> <span class="selector-tag">to</span> <span class="selector-tag">H-Index</span>, <span class="selector-tag">where</span> <span class="selector-tag">citations</span> <span class="selector-tag">is</span> <span class="selector-tag">now</span> <span class="selector-tag">guaranteed</span> <span class="selector-tag">to</span> <span class="selector-tag">be</span> <span class="selector-tag">sorted</span> <span class="selector-tag">in</span> <span class="selector-tag">ascending</span> <span class="selector-tag">order</span>.</span><br><span class="line"><span class="selector-tag">Could</span> <span class="selector-tag">you</span> <span class="selector-tag">solve</span> <span class="selector-tag">it</span> <span class="selector-tag">in</span> <span class="selector-tag">logarithmic</span> <span class="selector-tag">time</span> <span class="selector-tag">complexity</span>?</span><br></pre></td></tr></table></figure>
+
+<h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>[0,1,3,5,6]</p>
+<p>数组长度 n，存在一个元素 h， 使得 n 中有 h个元素 大于等于h， 其他 （n-h）个元素 &lt; h；</p>
+<p>求h？</p>
+<p>数组是有序的 递增数组</p>
+<p>遍历 arr，存在 arr[i], 使得  n-i == arr[i]</p>
+<h2 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hIndex</span><span class="params">(<span class="keyword">int</span>[] citations)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=citations.length-<span class="number">1</span>; i&gt;=<span class="number">0</span>; --i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(citations[i] == citations.length-i) &#123;</span><br><span class="line">                <span class="keyword">return</span> citations[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hIndex</span><span class="params">(<span class="keyword">int</span>[] citations)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> l = <span class="number">1</span>, r = citations.length;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(l &lt;= r)&#123;</span><br><span class="line">            <span class="keyword">int</span> m = l + ((r - l)&gt;&gt;<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">int</span> p = citations[citations.length - m];</span><br><span class="line">            <span class="keyword">if</span>(m == p)&#123;</span><br><span class="line">                <span class="keyword">return</span> m;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(m &gt; p)&#123;</span><br><span class="line">                r = m - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                ans = Math.max(ans, m);</span><br><span class="line">                l = m + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/binary-tree-right-side-view/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/binary-tree-right-side-view/" itemprop="url">Binary Tree Right Side View</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-26T23:33:05+08:00">
+                2016-03-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：二叉树广度优先遍历-BFS"><a href="#算法：二叉树广度优先遍历-BFS" class="headerlink" title="算法：二叉树广度优先遍历 BFS"></a>算法：二叉树广度优先遍历 BFS</h1><p>URL：<a href="https://leetcode.com/problems/binary-tree-right-side-view/" target="_blank" rel="noopener">https://leetcode.com/problems/binary-tree-right-side-view/</a></p>
+<p>​                       </p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">Binary</span> <span class="selector-tag">Tree</span> <span class="selector-tag">Right</span> <span class="selector-tag">Side</span> <span class="selector-tag">View</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Given</span> <span class="selector-tag">a</span> <span class="selector-tag">binary</span> <span class="selector-tag">tree</span>, <span class="selector-tag">imagine</span> <span class="selector-tag">yourself</span> <span class="selector-tag">standing</span> <span class="selector-tag">on</span> <span class="selector-tag">the</span> <span class="selector-tag">right</span> <span class="selector-tag">side</span> <span class="selector-tag">of</span> <span class="selector-tag">it</span>, <span class="selector-tag">return</span> <span class="selector-tag">the</span> <span class="selector-tag">values</span> <span class="selector-tag">of</span> <span class="selector-tag">the</span> <span class="selector-tag">nodes</span> <span class="selector-tag">you</span> <span class="selector-tag">can</span> <span class="selector-tag">see</span> <span class="selector-tag">ordered</span> <span class="selector-tag">from</span> <span class="selector-tag">top</span> <span class="selector-tag">to</span> <span class="selector-tag">bottom</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span>:</span><br><span class="line"><span class="selector-tag">Input</span>: <span class="selector-attr">[1,2,3,null,5,null,4]</span></span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-attr">[1, 3, 4]</span></span><br><span class="line"><span class="selector-tag">Explanation</span>:</span><br><span class="line"></span><br><span class="line">   1            &lt;<span class="selector-tag">---</span></span><br><span class="line"> /   \</span><br><span class="line">2     3         &lt;<span class="selector-tag">---</span></span><br><span class="line"> \     \</span><br><span class="line">  5     4       &lt;<span class="selector-tag">---</span></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: <span class="selector-attr">[1,2,3,null,5,null,4,null,null,8]</span></span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-attr">[1, 3, 4, 8]</span></span><br><span class="line"><span class="selector-tag">Explanation</span>:</span><br><span class="line"></span><br><span class="line">       1            &lt;<span class="selector-tag">---</span></span><br><span class="line">     /   \</span><br><span class="line">    2     3         &lt;<span class="selector-tag">---</span></span><br><span class="line">     \     \</span><br><span class="line">      5     4       &lt;<span class="selector-tag">---</span></span><br><span class="line">     /</span><br><span class="line">    8               &lt;<span class="selector-tag">---</span></span><br></pre></td></tr></table></figure>
+
+<p>分析</p>
+<p>使用层序遍历（level traversal），即广度优先搜索 —— 借助Queue</p>
+<p>难点是 标注每一层，来标注 每层的最后一个节点</p>
+<p>当前层节点总数：count1，当前访问到节点数 i</p>
+<p>下一层几点总数：count2</p>
+<p>​                              </p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">rightSideView</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BFS(root);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">BFS</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        List&lt;Integer&gt; retList = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">null</span> == root) <span class="keyword">return</span> retList;</span><br><span class="line">        <span class="keyword">int</span> count1=<span class="number">1</span>, count2=<span class="number">0</span>;</span><br><span class="line">        Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;TreeNode&gt;();</span><br><span class="line">        queue.add(root);</span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;count1; ++i) &#123;</span><br><span class="line">                TreeNode tn = queue.poll();</span><br><span class="line">                <span class="keyword">if</span>(<span class="keyword">null</span> != tn) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (i == count1-<span class="number">1</span>) &#123;</span><br><span class="line">                        retList.add(tn.val);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span>(<span class="keyword">null</span> != tn.left) &#123;</span><br><span class="line">                        queue.add(tn.left);</span><br><span class="line">                        count2++;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (<span class="keyword">null</span> != tn.right) &#123;</span><br><span class="line">                        queue.add(tn.right);</span><br><span class="line">                        count2++;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            count1 = count2;</span><br><span class="line">            count2 = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> retList;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<p>Runtime: 1 ms, faster than 98.22% of Java online submissions for Binary Tree Right Side View.</p>
+<p>Memory Usage: 36.3 MB, less than 100.00% of Java online submissions for Binary Tree Right Side View.</p>
+<p>1次AC，Niubility</p>
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>​                       </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/binary-tree-maximum-path-sum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/binary-tree-maximum-path-sum/" itemprop="url">Binary Tree Maximum Path Sum</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-25T00:11:05+08:00">
+                2016-03-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：二叉树-动态规划"><a href="#算法：二叉树-动态规划" class="headerlink" title="算法：二叉树 + 动态规划"></a>算法：二叉树 + 动态规划</h1><p>url：<a href="https://leetcode.com/problems/binary-tree-maximum-path-sum/" target="_blank" rel="noopener">https://leetcode.com/problems/binary-tree-maximum-path-sum/</a></p>
+<p>​                            </p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">124. Binary Tree Maximum Path Sum</span><br><span class="line">Given a non-empty binary tree, find the maximum path sum.</span><br><span class="line"></span><br><span class="line">For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path must contain at least one node and does not need to go through the root.</span><br><span class="line"></span><br><span class="line">Example 1:</span><br><span class="line"></span><br><span class="line">Input: [1,2,3]</span><br><span class="line"></span><br><span class="line">       1</span><br><span class="line">      / \</span><br><span class="line">     2   3</span><br><span class="line"></span><br><span class="line">Output: 6</span><br><span class="line">Example 2:</span><br><span class="line"></span><br><span class="line">Input: [-10,9,20,null,null,15,7]</span><br><span class="line"></span><br><span class="line">   -10</span><br><span class="line">   / \</span><br><span class="line">  9  20</span><br><span class="line">    /  \</span><br><span class="line">   15   7</span><br><span class="line"></span><br><span class="line">Output: 42</span><br></pre></td></tr></table></figure>
+
+<p>分析：</p>
+<p>不要求 最大值的路径，只要求最大值</p>
+<p>​          </p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ret = Integer.MIN_VALUE;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxPathSum</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> maxSum(root);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSum</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == root) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> l = Math.max(<span class="number">0</span>, maxSum(root.left));</span><br><span class="line">        <span class="keyword">int</span> r = Math.max(<span class="number">0</span>, maxSum(root.right));</span><br><span class="line">        <span class="keyword">int</span> sum = l + r + root.val;</span><br><span class="line">        ret = Math.max(ret, sum);</span><br><span class="line">        <span class="keyword">return</span> Math.max(l, r) + root.val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/add-two-numbers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/add-two-numbers/" itemprop="url">Add Two Numbers</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-24T00:31:05+08:00">
+                2016-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：链表-Linked-list"><a href="#算法：链表-Linked-list" class="headerlink" title="算法：链表 Linked list"></a>算法：链表 Linked list</h1><h1 id="题目：Add-Two-Numbers"><a href="#题目：Add-Two-Numbers" class="headerlink" title="题目：Add Two Numbers"></a>题目：Add Two Numbers</h1><p>url：<a href="https://leetcode.com/problems/add-two-numbers/" target="_blank" rel="noopener">https://leetcode.com/problems/add-two-numbers/</a></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">You</span> <span class="selector-tag">are</span> <span class="selector-tag">given</span> <span class="selector-tag">two</span> <span class="selector-tag">non-empty</span> <span class="selector-tag">linked</span> <span class="selector-tag">lists</span> <span class="selector-tag">representing</span> <span class="selector-tag">two</span> <span class="selector-tag">non-negative</span> <span class="selector-tag">integers</span>. <span class="selector-tag">The</span> <span class="selector-tag">digits</span> <span class="selector-tag">are</span> <span class="selector-tag">stored</span> <span class="selector-tag">in</span> <span class="selector-tag">reverse</span> <span class="selector-tag">order</span> <span class="selector-tag">and</span> <span class="selector-tag">each</span> <span class="selector-tag">of</span> <span class="selector-tag">their</span> <span class="selector-tag">nodes</span> <span class="selector-tag">contain</span> <span class="selector-tag">a</span> <span class="selector-tag">single</span> <span class="selector-tag">digit</span>. <span class="selector-tag">Add</span> <span class="selector-tag">the</span> <span class="selector-tag">two</span> <span class="selector-tag">numbers</span> <span class="selector-tag">and</span> <span class="selector-tag">return</span> <span class="selector-tag">it</span> <span class="selector-tag">as</span> <span class="selector-tag">a</span> <span class="selector-tag">linked</span> <span class="selector-tag">list</span>.</span><br><span class="line"><span class="selector-tag">You</span> <span class="selector-tag">may</span> <span class="selector-tag">assume</span> <span class="selector-tag">the</span> <span class="selector-tag">two</span> <span class="selector-tag">numbers</span> <span class="selector-tag">do</span> <span class="selector-tag">not</span> <span class="selector-tag">contain</span> <span class="selector-tag">any</span> <span class="selector-tag">leading</span> <span class="selector-tag">zero</span>, <span class="selector-tag">except</span> <span class="selector-tag">the</span> <span class="selector-tag">number</span> 0 <span class="selector-tag">itself</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span>:</span><br><span class="line"><span class="selector-tag">Input</span>: (2 <span class="selector-tag">-</span>&gt; 4 <span class="selector-tag">-</span>&gt; 3) + (5 <span class="selector-tag">-</span>&gt; 6 <span class="selector-tag">-</span>&gt; 4)</span><br><span class="line"><span class="selector-tag">Output</span>: 7 <span class="selector-tag">-</span>&gt; 0 <span class="selector-tag">-</span>&gt; 8</span><br><span class="line">Explanation: 342 + 465 = 807.</span><br></pre></td></tr></table></figure>
+
+<p>分析</p>
+<ul>
+<li>百位大数相加</li>
+</ul>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>链表增加节点</td>
+<td></td>
+</tr>
+<tr>
+<td>单链表反转</td>
+<td>不需要，只是为了练习算法</td>
+</tr>
+<tr>
+<td>遍历链表</td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.test.demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ListNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    ListNode next;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ListNode</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;<span class="keyword">this</span>.val = x;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">addTwoNumbers</span><span class="params">(ListNode l1, ListNode l2)</span> </span>&#123;</span><br><span class="line">    	ListNode retNode = <span class="keyword">null</span>;</span><br><span class="line">    	<span class="keyword">int</span> carryBit = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(l1 != <span class="keyword">null</span> || l2!= <span class="keyword">null</span>) &#123;</span><br><span class="line">        	<span class="keyword">int</span> d1 = <span class="keyword">null</span>==l1 ? <span class="number">0</span> : l1.val;</span><br><span class="line">        	<span class="keyword">int</span> d2 = <span class="keyword">null</span>==l2 ? <span class="number">0</span> : l2.val;</span><br><span class="line">        	<span class="keyword">int</span> d = d1 + d2 + carryBit;</span><br><span class="line">        	retNode = add(retNode, <span class="keyword">new</span> ListNode(d%<span class="number">10</span>));</span><br><span class="line">        	carryBit = d/<span class="number">10</span>;</span><br><span class="line">        	l1 = <span class="keyword">null</span>==l1 ? l1 : l1.next;</span><br><span class="line">        	l2 = <span class="keyword">null</span>==l2 ? l2 : l2.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = carryBit; i&gt;<span class="number">0</span>; i = i/<span class="number">10</span>) &#123;</span><br><span class="line">        	retNode = add(retNode, <span class="keyword">new</span> ListNode(i%<span class="number">10</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> retNode;</span><br><span class="line"><span class="comment">//        return reverse(retNode);</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">add</span><span class="params">(ListNode headNode, ListNode node)</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">if</span> (<span class="keyword">null</span> == headNode) &#123;</span><br><span class="line">    		headNode = node;</span><br><span class="line">    	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	        ListNode index = headNode;</span><br><span class="line">	        <span class="keyword">while</span>(index.next != <span class="keyword">null</span>) &#123;index = index.next;&#125;</span><br><span class="line">	        index.next = node;</span><br><span class="line">    	&#125;</span><br><span class="line">        <span class="keyword">return</span> headNode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> ListNode <span class="title">reverse</span><span class="params">(ListNode headNode)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(headNode == <span class="keyword">null</span>) <span class="keyword">return</span> headNode;</span><br><span class="line">        ListNode pre = headNode;</span><br><span class="line">        ListNode cur;</span><br><span class="line">        ListNode temp;</span><br><span class="line">        <span class="keyword">for</span>(cur = headNode.next; cur!=<span class="keyword">null</span>; ) &#123;</span><br><span class="line">        	temp = cur.next;</span><br><span class="line">        	cur.next = pre; </span><br><span class="line">            pre = cur;</span><br><span class="line">            cur = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        headNode.next = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">return</span> pre;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] stringToIntegerArray(String input) &#123;</span><br><span class="line">        input = input.trim();</span><br><span class="line">        input = input.substring(<span class="number">1</span>, input.length() - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (input.length() == <span class="number">0</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        String[] parts = input.split(<span class="string">","</span>);</span><br><span class="line">        <span class="keyword">int</span>[] output = <span class="keyword">new</span> <span class="keyword">int</span>[parts.length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; parts.length; index++) &#123;</span><br><span class="line">            String part = parts[index].trim();</span><br><span class="line">            output[index] = Integer.parseInt(part);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> output;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ListNode <span class="title">stringToListNode</span><span class="params">(String input)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Generate array from the input</span></span><br><span class="line">        <span class="keyword">int</span>[] nodeValues = stringToIntegerArray(input);</span><br><span class="line">    </span><br><span class="line">        <span class="comment">// Now convert that list into linked list</span></span><br><span class="line">        ListNode dummyRoot = <span class="keyword">new</span> ListNode(<span class="number">0</span>);</span><br><span class="line">        ListNode ptr = dummyRoot;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> item : nodeValues) &#123;</span><br><span class="line">            ptr.next = <span class="keyword">new</span> ListNode(item);</span><br><span class="line">            ptr = ptr.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dummyRoot.next;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">listNodeToString</span><span class="params">(ListNode node)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">"[]"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        String result = <span class="string">""</span>;</span><br><span class="line">        <span class="keyword">while</span> (node != <span class="keyword">null</span>) &#123;</span><br><span class="line">            result += Integer.toString(node.val) + <span class="string">", "</span>;</span><br><span class="line">            node = node.next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"["</span> + result.substring(<span class="number">0</span>, result.length() - <span class="number">2</span>) + <span class="string">"]"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">            ListNode l1 = stringToListNode(<span class="string">"[9]"</span>);</span><br><span class="line">            ListNode l2 = stringToListNode(<span class="string">"[1,9,9,9,9,9,9,9,9,9]"</span>);</span><br><span class="line">            </span><br><span class="line">            ListNode ret = <span class="keyword">new</span> Solution().addTwoNumbers(l1, l2);</span><br><span class="line">            String out = listNodeToString(ret);</span><br><span class="line">            </span><br><span class="line">            System.out.print(out);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><p>​                     </p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/collection/java-collection-class/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/java/collection/java-collection-class/" itemprop="url">Java集合类</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-15T00:00:00+08:00">
+                2016-02-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/collection/" itemprop="url" rel="index">
+                    <span itemprop="name">collection</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<blockquote>
+<p>参考：<a href="https://www.jianshu.com/p/32420c73941b?t=123" target="_blank" rel="noopener">https://www.jianshu.com/p/32420c73941b?t=123</a></p>
+</blockquote>
+<br>
+
+<br>
+
+<h1 id="总纲"><a href="#总纲" class="headerlink" title="总纲"></a>总纲</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830161431.png" alt></p>
+<p><br><br></p>
+<h1 id="全貌"><a href="#全貌" class="headerlink" title="全貌"></a>全貌</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830162419.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830162500.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830162305.png" alt></p>
+<p><br><br></p>
+<h1 id="Set集合"><a href="#Set集合" class="headerlink" title="Set集合"></a>Set集合</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830161820.png" alt></p>
+<p><br><br></p>
+<h1 id="List列表"><a href="#List列表" class="headerlink" title="List列表"></a>List列表</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830161954.png" alt></p>
+<p><br><br></p>
+<h1 id="Queue队列"><a href="#Queue队列" class="headerlink" title="Queue队列"></a>Queue队列</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830165707.png" alt></p>
+<p><br><br></p>
+<h1 id="Map键值对"><a href="#Map键值对" class="headerlink" title="Map键值对"></a>Map键值对</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830165241.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830171358.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-dstat/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -689,1508 +1821,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-vmstat/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-vmstat/" itemprop="url">linux vmstat命令详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
-                2016-02-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <br>
-
-<h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>​    很显然，从名字我们就可以知道 vmstat 是一个<u><strong>查看虚拟内存（Virtual Memory）使用状况的工具</strong></u>，但是怎样通过vmstat 来发现系统中的瓶颈呢？在回答这个问题前，还是让我们回顾一下Linux中关于虚拟内存的相关内容。</p>
-<br>
-
-<h1 id="二、虚拟内存"><a href="#二、虚拟内存" class="headerlink" title="二、虚拟内存"></a>二、虚拟内存</h1><p>​    在系统中运行的每个进程都需要使用到内存，但不是每个进程都需要每时每刻使用系统分配的内存空间。当系统运行所需内存超过实际的物理内存，内核会释放某些进程所占用但未使用的部分或所有物理内存，将这部分资料存储在磁盘上直到下一次调用，将释放出的内存提供给有需要的进程使用。</p>
-<p>​    在Linux内存管理中，主要通过”调页Paging“和”交换Swapping“来完成内存调度。调页算法是将内存中最近<u><strong>不常使用的页面换到磁盘上，把活动页面保留在内存中供进程使用</strong></u>。交换技术是将整个进程，而不是部分页面，全部交换到磁盘上。</p>
-<p>​    <u><strong>分页（Page）写入磁盘的过程被称为Page-Out，分页（Page）从磁盘重新回到内存的过程叫Page-In</strong></u>。当内核需要一个分页时，但发现此分页不再物理内存中（因为已经被Page-Out了），此时就发生了分页错误（Page-Fault）。</p>
-<p>​    当系统内核发现可运行内存变少时，会通过Page-Out来释放一部分物理内存。尽管Page-Out不是经常发生，但是如果Page-Out频繁不断的发生，直到当内核管理分页的时间超过运行程式的时间时，熊效能会急剧下降。这时系统已经运行非常慢或进入暂停状态，这种状态被称为 thrashing（颠簸）。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">1、page fault出现的原因：</span><br><span class="line">   a). 页表中找不到对应虚拟地址的PTE(无效地址/有效地址但是没有载入主存);</span><br><span class="line">   b). 对应虚拟地址的PTE拒绝访问。</span><br><span class="line"></span><br><span class="line">2、page fault在哪里进行处理</span><br><span class="line">   page fault被CPU捕获，跳转到 page_fault_handler 进行处理。</span><br><span class="line"></span><br><span class="line">3、page fault的处理方式</span><br><span class="line">   page fault -&gt; 访问地址是否合法</span><br><span class="line">   a. 无效地址：segment fault，返回(用户地址杀死进程、内核地址杀死内核)</span><br><span class="line">   b. 有效地址：</span><br><span class="line">    1) page第一次被访问: demand_page_faults (demanding pages，请求调页)</span><br><span class="line">       检查页表中是否存在该PTE　　　　pmd_none, pte_none</span><br><span class="line">       分配新的页帧，初始化(从磁盘读入内存)</span><br><span class="line">    2) page被交换到swap分区</span><br><span class="line">       检查present标志位，如果该位为0表示不在主存中。</span><br><span class="line">       分配新的页帧，从磁盘重新读入内存。</span><br><span class="line">    3) COW(Copy-On-Write)</span><br><span class="line">        vm_area_struct允许写，但是对应的PTE禁止写操作。</span><br><span class="line"></span><br><span class="line">4、如何判断访问地址是否合法？如果地址合法有什么操作？</span><br><span class="line">   判断地址合法的方式：</span><br><span class="line">   static int __do_page_fault()函数 vma = find_vma(mm, addr);</span><br><span class="line">   根据传入的地址addr查找对应的vm_area_struct，如果没有找到证明该地址访问无效，返回segment fault。</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="三、vmstat详解"><a href="#三、vmstat详解" class="headerlink" title="三、vmstat详解"></a>三、vmstat详解</h1><h3 id="1、用法"><a href="#1、用法" class="headerlink" title="1、用法"></a>1、用法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vmstat [-a] [-n] [-S unit] [delay [ count]]</span><br><span class="line">vmstat [-s] [-n] [-S unit]</span><br><span class="line">vmstat [-m] [-n] [delay [ count]]</span><br><span class="line">vmstat [-d] [-n] [delay [ count]]</span><br><span class="line">vmstat [-p disk partition] [-n] [delay [ count]]</span><br><span class="line">vmstat [-f]</span><br><span class="line">vmstat [-V]</span><br></pre></td></tr></table></figure>
-
-<p>-a：显示活跃和非活跃内存<br>-f：显示从系统启动至今的fork数量 。<br>-m：显示slabinfo<br>-n：只在开始时显示一次各字段名称。<br>-s：显示内存相关统计信息及多种系统活动数量。<br>delay：刷新时间间隔。如果不指定，只显示一条结果。<br>count：刷新次数。如果不指定刷新次数，但指定了刷新时间间隔，这时刷新次数为无穷。<br>-d：显示磁盘相关统计信息。<br>-p：显示指定磁盘分区统计信息<br>-S：使用指定单位显示。参数有 k 、K 、m 、M ，分别代表1000、1024、1000000、1048576字节（byte）。默认单位为K（1024 bytes）<br>-V：显示vmstat版本信息。</p>
-<br>
-
-<h3 id="2、使用说明"><a href="#2、使用说明" class="headerlink" title="2、使用说明"></a>2、使用说明</h3><p><u><strong>vmstat 5 5 【在5秒时间内进行5次采样】</strong></u> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmstat 5 5</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191026111456.png" alt></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">procs（进程）：</span><br><span class="line">  r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）</span><br><span class="line">  b： 等待IO的进程数量</span><br><span class="line">  </span><br><span class="line">memory（内存）：</span><br><span class="line">  swpd: 使用虚拟内存大小。注意：如果swpd的值不为0，但是si，so的值长期为0，这种情况不会影响系统性能。</span><br><span class="line">  free: 空闲物理内存大小</span><br><span class="line">  buff: 用作缓冲的内存大小</span><br><span class="line">  cache: 用作缓存的内存大小。注意：如果cache的值大的时候，说明cache处的文件数多，如果频繁访问到的文件都能被cache处，那么磁盘的读IO bi会非常小。</span><br><span class="line">  inact: 非活跃内存大小（当使用-a选项时显示）</span><br><span class="line">  active: 活跃的内存大小（当使用-a选项时显示）</span><br><span class="line">  </span><br><span class="line">swap：</span><br><span class="line">  si: 每秒从交换区写到内存的大小，由磁盘调入内存</span><br><span class="line">  so: 每秒写入交换区的内存大小，由内存调入磁盘</span><br><span class="line">  注意：内存够用的时候，这2个值都是0，如果这2个值长期大于0时，系统性能会受到影响，磁盘IO和CPU资源都会被消耗。有些朋友看到空闲内存（free）很少的或接近于0时，就认为内存不够用了，不能光看这一点，还要结合si和so，如果free很少，但是si和so也很少（大多时候是0），那么不用担心，系统性能这时不会受到影响的。</span><br><span class="line">  </span><br><span class="line">io：（现在的Linux版本块的大小为1024bytes）</span><br><span class="line">  bi: 每秒读取的块数</span><br><span class="line">  bo: 每秒写入的块数</span><br><span class="line"></span><br><span class="line">system：</span><br><span class="line">  in: 每秒中断数，包括时钟中断。【interrupt】</span><br><span class="line">  cs: 每秒上下文切换数。【count/second】</span><br><span class="line">  注意：随机磁盘读写的时候，这2个值越大（如超出1024k)，能看到CPU在IO等待的值也会越大。</span><br><span class="line"></span><br><span class="line">cpu（以百分比表示）：</span><br><span class="line">  us: 用户进程执行时间(user time)。注意： us的值比较高时，说明用户进程消耗的CPU时间多，但是如果长期超50%的使用，那么我们就该考虑优化程序算法或者进行加速。</span><br><span class="line">  sy: 系统进程执行时间(system time)。注意：sy的值高时，说明系统内核消耗的CPU资源多，这并不是良性表现，我们应该检查原因。</span><br><span class="line">  id: 空闲时间(包括IO等待时间),中央处理器的空闲时间 。</span><br><span class="line">  wa: 等待IO时间。注意：wa的值高时，说明IO等待比较严重，这可能由于磁盘大量作随机访问造成，也有可能磁盘出现瓶颈（块操作）。</span><br></pre></td></tr></table></figure>
-
-<p> <u><strong>vmstat -a 2 5 【-a 显示活跃和非活跃内存,所显示的内容除增加inact和active 】</strong></u></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191026145904.png" alt></p>
-<p> <u><strong>vmstat -f 【 linux下创建进程的系统调用是fork】</strong></u> </p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191028094204.png" alt></p>
-<br>
-
-<h1 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h1><p>目前说来，对于服务器监控有用处的度量主要有：</p>
-<ul>
-<li>r（运行队列）</li>
-<li>pi（页导入）</li>
-<li>us（用户CPU）</li>
-<li>sy（系统CPU）</li>
-<li>id（空闲）</li>
-</ul>
-<p><strong>注意：如果r经常大于4 ，且id经常少于40，表示cpu的负荷很重。如果bi，bo 长期不等于0，表示内存不足。</strong></p>
-<p>通过VMSTAT识别CPU瓶颈：<br><strong>r（运行队列）展示了正在执行和等待CPU资源的任务个数。当这个值超过了CPU数目，就会出现CPU瓶颈了。</strong></p>
-<p>Linux下查看CPU核心数的命令：<br><code>cat /proc/cpuinfo|grep processor|wc -l</code></p>
-<p><strong>当r值超过了CPU个数，就会出现CPU瓶颈，解决办法大体几种：</strong></p>
-<ol>
-<li>最简单的就是增加CPU个数和核数</li>
-<li>通过调整任务执行时间，如大任务放到系统不繁忙的情况下进行执行，进尔平衡系统任务</li>
-<li>调整已有任务的优先级</li>
-</ol>
-<p>通过vmstat识别CPU满负荷：<br>    首先需要声明一点的是，vmstat中CPU的度量是百分比的。当us＋sy的值接近100的时候，表示CPU正在接近满负荷工作。但要注意的是，CPU 满负荷工作并不能说明什么，Linux总是试图要CPU尽可能的繁忙，使得任务的吞吐量最大化。唯一能够确定CPU瓶颈的还是r（运行队列）的值。</p>
-<p>通过vmstat识别RAM瓶颈：</p>
-<p>数据库服务器都只有有限的RAM，出现内存争用现象是Oracle的常见问题。</p>
-<p>首先用free查看RAM的数量：<br>[oracle@oracle-db02 ~]$ free<br>total    used    free   shared  buffers   cached<br>Mem:    2074924  2071112    3812     0   40616  1598656<br>-/+ buffers/cache:   431840  1643084<br>Swap:   3068404   195804  2872600</p>
-<p><strong>当内存的需求大于RAM的数量，服务器启动了虚拟内存机制，通过虚拟内存，可以将RAM段移到SWAP DISK的特殊磁盘段上，这样会 出现虚拟内存的页导出和页导入现象，页导出并不能说明RAM瓶颈，虚拟内存系统经常会对内存段进行页导出，但页导入操作就表明了服务器需要更多的内存了， 页导入需要从SWAP DISK上将内存段复制回RAM，导致服务器速度变慢。</strong></p>
-<p>解决的办法有几种：</p>
-<ol>
-<li>最简单的，加大RAM；</li>
-<li>改小SGA，使得对RAM需求减少；</li>
-<li>减少RAM的需求。（如：减少PGA）</li>
-</ol>
-<p>如果disk经常不等于0，且在b中的队列大于3，表示io性能不好。</p>
-<ol>
-<li>如果在processes中运行的序列(process r)是连续的大于在系统中的CPU的个数表示系统现在运行比较慢,有多数的进程等待CPU。</li>
-<li>如果r的输出数大于系统中可用CPU个数的4倍的话,则系统面临着CPU短缺的问题,或者是CPU的速率过低,系统中有多数的进程在等待CPU,造成系统中进程运行过慢。</li>
-<li>如果空闲时间(cpu id)持续为0并且系统时间(cpu sy)是用户时间的两倍(cpu us)系统则面临着CPU资源的短缺。</li>
-</ol>
-<p>解决办法:<br>当发生以上问题的时候请先调整应用程序对CPU的占用情况.使得应用程序能够更有效的使用CPU.同时可以考虑增加更多的CPU. 关于CPU的使用情况还可以结合mpstat, ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的CPU的使用情况,和那些进程在占用大量的CPU时间.一般情况下，应用程序的问题会比较大一些.比如一些sql语句不合理等等都会造成这样的现象.</p>
-<p>内存问题现象:<br>内存的瓶颈是由scan rate (sr)来决定的.scan rate是通过每秒的始终算法来进行页扫描的.如果scan rate(sr)连续的大于每秒200页则表示可能存在内存缺陷.同样的如果page项中的pi和po这两栏表示每秒页面的调入的页数和每秒调出的页数.如果该值经常为非零值,也有可能存在内存的瓶颈,当然,如果个别的时候不为0的话,属于正常的页面调度这个是虚拟内存的主要原理.</p>
-<p>解决办法:</p>
-<ol>
-<li>调节applications &amp; servers使得对内存和cache的使用更加有效.</li>
-<li>增加系统的内存.</li>
-<li>Implement priority paging in s in pre solaris 8 versions by adding line “set priority paging=1” in /etc/system. Remove this line if upgrading from Solaris 7 to 8 &amp; retaining old /etc/system file.</li>
-</ol>
-<p>关于内存的使用情况还可以结ps aux top prstat –a等等一些相应的命令来综合考虑关于具体的内存的使用情况,和那些进程在占用大量的内存.一般情况下，如果内存的占用率比较高,但是,CPU的占用很低的时候,可以考虑是有很多的应用程序占用了内存没有释放,但是,并没有占用CPU时间,可以考虑应用程序,对于未占用CPU时间和一些后台的程序,释放内存的占用。</p>
-<br>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-keepalived/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/nginx/nginx-keepalived/" itemprop="url">Nginx+keepalived双机热备（主从模式）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
-                2016-02-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">nginx</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<blockquote>
-<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-reverse-proxy-http/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/nginx/nginx-reverse-proxy-http/" itemprop="url">Nginx+keepalived双机热备（主从模式）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
-                2016-02-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">nginx</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<blockquote>
-<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-reverse-proxy-tcp-and-udp/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/nginx/nginx-reverse-proxy-tcp-and-udp/" itemprop="url">nginx 转发 tcp/udp</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-02-01T00:00:00+08:00">
-                2016-02-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">nginx</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<blockquote>
-<p>参考：<a href="https://blog.csdn.net/l1028386804/article/details/80098334" target="_blank" rel="noopener">https://blog.csdn.net/l1028386804/article/details/80098334</a></p>
-<p><a href="https://www.cnblogs.com/gongjingyun123--/p/11424424.html" target="_blank" rel="noopener">Nginx四层负载均衡</a></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-301-and-302/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/nginx/nginx-301-and-302/" itemprop="url">nginx 永久跳转（301） 和 临时重定向（302）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-14T00:00:00+08:00">
-                2016-01-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">nginx</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="科普"><a href="#科普" class="headerlink" title="科普"></a>科普</h1><p>301永久跳转：当用户或搜索引擎向网站服务器发出浏览请求时，服务器返回的HTTP数据流中头信息中的状态码的一种，表示本网页永久性转移到另一个地址。</p>
-<p>302临时跳转：也是状态码的一种，意义是暂时转向到另外一个网址。</p>
-<p>主要区别</p>
-<p>一句话，302容易被搜索引擎视为spam，301则不会。</p>
-<h1 id="conf设置"><a href="#conf设置" class="headerlink" title="conf设置"></a>conf设置</h1><h3 id="301跳转设置"><a href="#301跳转设置" class="headerlink" title="301跳转设置"></a>301跳转设置</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">	<span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">	<span class="attribute">server_name</span> <span class="number">123</span>.com;</span><br><span class="line">	<span class="attribute">rewrite</span><span class="regexp"> ^/(.*)</span> http://456.com/<span class="variable">$1</span> <span class="literal">permanent</span>;</span><br><span class="line">	<span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="302跳转设置"><a href="#302跳转设置" class="headerlink" title="302跳转设置"></a>302跳转设置</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">	<span class="attribute">server_name</span> <span class="number">123</span>.com;</span><br><span class="line">	<span class="attribute">rewrite</span><span class="regexp"> ^/(.*)</span> http://456.com/<span class="variable">$1</span> <span class="literal">redirect</span>;</span><br><span class="line">	<span class="attribute">access_log</span> <span class="literal">off</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="研究"><a href="#研究" class="headerlink" title="研究"></a>研究</h1><p>Nginx的重定向用到了Nginx的HttpRewriteModule</p>
-<h3 id="rewrite命令"><a href="#rewrite命令" class="headerlink" title="rewrite命令"></a>rewrite命令</h3><p>nginx的rewrite相当于apache的rewriterule(大多数情况下可以把原有apache的rewrite规则加上引号就可以直接使用)，它可以用在server,location 和IF条件判断块中</p>
-<p>rewrite 正则表达式 替换目标 flag标记，flag标记可以用以下几种格式：</p>
-<ul>
-<li>last – 基本上都用这个Flag。</li>
-<li>break – 中止Rewirte，不在继续匹配</li>
-<li>redirect – 返回临时重定向的HTTP状态302</li>
-<li>permanent – 返回永久重定向的HTTP状态301</li>
-</ul>
-<p>特别注意：</p>
-<p>last和break用来实现URL重写，浏览器地址栏的URL地址不变，但是在服务器端访问的路径发生了变化；</p>
-<p>redirect和permanent用来实现URL跳转，浏览器地址栏会显示跳转后的URL地址；</p>
-<p>例如下面这段设定nginx将某个目录下面的文件重定向到另一个目录,$2对应第二个括号(.*)中对应的字符串：</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> /download/ &#123;</span><br><span class="line">	<span class="attribute">rewrite</span><span class="regexp"> ^(/download/.*)/m/(.*)\..*1</span> /nginx-rewrite/<span class="variable">$2</span>.gz <span class="literal">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>例如下面设定nginx在用户使用ie的使用重定向到/nginx-ie目录下：</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">if</span> (httpuseragent MSIE)</span><br><span class="line">	rewrite (.∗)$ /nginx−ie/<span class="variable">$1</span> <span class="literal">break</span>;</span><br></pre></td></tr></table></figure>
-
-<p>文件和目录判断：</p>
-<ul>
-<li>−f和!−f判断是否存在文件</li>
-<li>−d和!−d判断是否存在目录</li>
-<li>−e和!−e判断是否存在文件或目录</li>
-<li>−x和!−x判断文件是否可执行</li>
-</ul>
-<p>例如下面设定nginx在文件和目录不存在的时候重定向：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if(!−e request_filename) &#123;</span><br><span class="line">	<span class="attribute">proxy_pass</span> http://127.0.0.1;</span><br><span class="line">&#125;</span><br><span class="line">return</span><br></pre></td></tr></table></figure>
-
-<h3 id="nginx防盗链"><a href="#nginx防盗链" class="headerlink" title="nginx防盗链"></a>nginx防盗链</h3><p>返回http代码，例如设置nginx防盗链：</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">location</span> <span class="regexp">~* \.(gif|jpg|png|swf|flv)$</span> &#123;</span><br><span class="line">    <span class="attribute">valid_referers</span> <span class="literal">none</span> <span class="literal">blocked</span> www.test.com www.test1.com;</span><br><span class="line">    <span class="attribute">if</span> (<span class="variable">$invalid_referer</span>) &#123;</span><br><span class="line">    	<span class="attribute">return</span> <span class="number">404</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-synamic-and-static-separation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/nginx/nginx-synamic-and-static-separation/" itemprop="url">nginx 动静分离配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-14T00:00:00+08:00">
-                2016-01-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/nginx/" itemprop="url" rel="index">
-                    <span itemprop="name">nginx</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200114201511.png" alt></p>
-<h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">~ 或 ^：  表示 正则表达式的开始</span><br><span class="line">.  ： 匹配除 \n 之外 的 一个任意字符</span><br><span class="line">(  ：子表达式的开始</span><br><span class="line">)  ：子表达式的结束</span><br><span class="line">|  ：表示 在两个 或者 多个之间进行的选择</span><br><span class="line">\  ：转义字符</span><br><span class="line"><span class="meta">$</span><span class="bash"> 或 ^ ：表示 表达式的结尾</span></span><br><span class="line">*  ：0个或多个匹配前面的 正则表达式</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-cpu-load-average/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-cpu-load-average/" itemprop="url">Linux系统负载</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
-                2016-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="一、查看系统负荷"><a href="#一、查看系统负荷" class="headerlink" title="一、查看系统负荷"></a>一、查看系统负荷</h1><p>如果你的电脑很慢，你或许想查看一下，它的工作量是否太大了。</p>
-<p>在Linux系统中，我们一般使用 <code>uptime</code> 命令查看（w命令和top命令也行）。（另外，它们在苹果公司的Mac电脑上也适用。）</p>
-<p>你在终端窗口键入<code>uptime</code>，系统会返回一行信息。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101201.png" alt></p>
-<p>这行信息的后半部分，显示 <code>load average</code>，它的意思是”系统的平均负荷”，里面有三个数字，我们可以从中判断系统负荷是大还是小。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101242.png" alt></p>
-<p>为什么会有三个数字呢？你从手册中查到，它们的意思分别是1分钟、5分钟、15分钟内系统的平均负荷。</p>
-<p>如果你继续看手册，它还会告诉你，当CPU完全空闲的时候，平均负荷为0；当CPU工作量饱和的时候，平均负荷为1。</p>
-<p>那么很显然，<code>load average</code> 的值越低，比如等于0.2或0.3，就说明电脑的工作量越小，系统负荷比较轻。</p>
-<p>但是，什么时候能看出系统负荷比较重呢？等于1的时候，还是等于0.5或等于1.5的时候？如果1分钟、5分钟、15分钟三个值不一样，怎么办？</p>
-<br>
-
-<h1 id="二、一个类比"><a href="#二、一个类比" class="headerlink" title="二、一个类比"></a>二、一个类比</h1><p>判断系统负荷是否过重，必须理解load average的真正含义。下面，我根据”<a href="http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages" target="_blank" rel="noopener">Understanding Linux CPU Load</a>“这篇文章，尝试用最通俗的语言，解释这个问题。</p>
-<p>首先，假设最简单的情况，你的电脑只有一个CPU，所有的运算都必须由这个CPU来完成。</p>
-<p>那么，我们不妨把这个CPU想象成一座大桥，桥上只有一根车道，所有车辆都必须从这根车道上通过。（很显然，这座桥只能单向通行。）</p>
-<p>系统负荷为0，意味着大桥上一辆车也没有。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101323.png" alt></p>
-<p>系统负荷为0.5，意味着大桥一半的路段有车。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101339.png" alt></p>
-<p>系统负荷为1.0，意味着大桥的所有路段都有车，也就是说大桥已经”满”了。但是必须注意的是，直到此时大桥还是能顺畅通行的。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101357.png" alt></p>
-<p>系统负荷为1.7，意味着车辆太多了，大桥已经被占满了（100%），后面等着上桥的车辆为桥面车辆的70%。以此类推，系统负荷2.0，意味着等待上桥的车辆与桥面的车辆一样多；系统负荷3.0，意味着等待上桥的车辆是桥面车辆的2倍。总之，当系统负荷大于1，后面的车辆就必须等待了；系统负荷越大，过桥就必须等得越久。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101411.png" alt></p>
-<p>CPU的系统负荷，基本上等同于上面的类比。大桥的通行能力，就是CPU的最大工作量；桥梁上的车辆，就是一个个等待CPU处理的进程（process）。</p>
-<p>如果CPU每分钟最多处理100个进程，那么系统负荷0.2，意味着CPU在这1分钟里只处理20个进程；系统负荷1.0，意味着CPU在这1分钟里正好处理100个进程；系统负荷1.7，意味着除了CPU正在处理的100个进程以外，还有70个进程正排队等着CPU处理。</p>
-<p>为了电脑顺畅运行，系统负荷最好不要超过1.0，这样就没有进程需要等待了，所有进程都能第一时间得到处理。很显然，1.0是一个关键值，超过这个值，系统就不在最佳状态了，你要动手干预了。</p>
-<br>
-
-<h1 id="三、系统负荷的经验法则"><a href="#三、系统负荷的经验法则" class="headerlink" title="三、系统负荷的经验法则"></a>三、系统负荷的经验法则</h1><p>1.0是系统负荷的理想值吗？</p>
-<p>不一定，系统管理员往往会留一点余地，当这个值达到0.7，就应当引起注意了。经验法则是这样的：</p>
-<p>当系统负荷持续大于0.7，你必须开始调查了，问题出在哪里，防止情况恶化。</p>
-<p>当系统负荷持续大于1.0，你必须动手寻找解决办法，把这个值降下来。</p>
-<p>当系统负荷达到5.0，就表明你的系统有很严重的问题，长时间没有响应，或者接近死机了。你不应该让系统达到这个值。</p>
-<br>
-
-<h1 id="四、多处理器"><a href="#四、多处理器" class="headerlink" title="四、多处理器"></a>四、多处理器</h1><p>上面，我们假设你的电脑只有1个CPU。如果你的电脑装了2个CPU，会发生什么情况呢？</p>
-<p>2个CPU，意味着电脑的处理能力翻了一倍，能够同时处理的进程数量也翻了一倍。</p>
-<p>还是用大桥来类比，两个CPU就意味着大桥有两根车道了，通车能力翻倍了。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108101433.png" alt></p>
-<p>所以，2个CPU表明系统负荷可以达到2.0，此时每个CPU都达到100%的工作量。推广开来，n个CPU的电脑，可接受的系统负荷最大为n.0。</p>
-<br>
-
-<h1 id="五、多核处理器"><a href="#五、多核处理器" class="headerlink" title="五、多核处理器"></a>五、多核处理器</h1><p>芯片厂商往往在一个CPU内部，包含多个CPU核心，这被称为多核CPU。</p>
-<p>在系统负荷方面，多核CPU与多CPU效果类似，所以考虑系统负荷的时候，必须考虑这台电脑有几个CPU、每个CPU有几个核心。然后，把系统负荷除以总的核心数，只要每个核心的负荷不超过1.0，就表明电脑正常运行。</p>
-<p>怎么知道电脑有多少个CPU核心呢？</p>
-<p><code>cat /proc/cpuinfo</code>命令，可以查看CPU信息。<code>grep -c &#39;model name&#39; /proc/cpuinfo</code>命令，直接返回CPU的总核心数。</p>
-<br>
-
-<h1 id="六、最佳观察时长"><a href="#六、最佳观察时长" class="headerlink" title="六、最佳观察时长"></a>六、最佳观察时长</h1><p>最后一个问题，”load average”一共返回三个平均值—-1分钟系统负荷、5分钟系统负荷，15分钟系统负荷，—-应该参考哪个值？</p>
-<p>如果只有1分钟的系统负荷大于1.0，其他两个时间段都小于1.0，这表明只是暂时现象，问题不大。</p>
-<p>如果15分钟内，平均系统负荷大于1.0（调整CPU核心数之后），表明问题持续存在，不是暂时现象。所以，你应该主要观察”15分钟系统负荷”，将它作为电脑正常运行的指标。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-monitor-atop/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-monitor-atop/" itemprop="url">linux atop详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-08T00:00:00+08:00">
-                2016-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-
-<p><strong>atop</strong> 是一个功能非常强大的linux服务器监控工具，它的数据采集主要包括：CPU、内存、磁盘、网络、进程等，并且内容非常的详细，特别是当那一部分存在压力它会以特殊的颜色进行展示，如果颜色是红色那么说明已经非常严重了。</p>
-<p> 注意：所有的信息都是反映过去10s的状态信息</p>
-<br>
-
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>1.官网：http://www.atoptool.nl/downloadatop.php找下载链接</span><br><span class="line"><span class="meta">#</span>2.下载解压编译</span><br><span class="line">wget http://www.atoptool.nl/download/atop-2.2-3.tar.gz</span><br><span class="line">tar xvf atop-2.2-3.tar.gz</span><br><span class="line">cd atop-2.2-3</span><br><span class="line">make prefix=/usr/local/atop install</span><br><span class="line"><span class="meta">#</span>3.（报错rawlog.c:154:18: fatal error: zlib.h: No such file or directory，yum -y install zlib未解决，因为只安装lib没有头文件，提示需要zlib头文件）</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>4.解决方案：标准安装zlib</span><br><span class="line"><span class="meta">#</span>官网: http://www.zlib.net/</span><br><span class="line"><span class="meta">#</span>找下载链接：http://zlib.net/zlib-1.2.8.tar.gz 或者：http://iweb.dl.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz</span><br><span class="line">cd ../</span><br><span class="line">wget http://zlib.net/zlib-1.2.8.tar.gz</span><br><span class="line">tar xzf zlib-1.2.8.tar.gz</span><br><span class="line">cd zlib-1.2.8</span><br><span class="line"><span class="meta">#</span>创建动态库</span><br><span class="line">./configure --shared</span><br><span class="line">make test</span><br><span class="line">make install</span><br><span class="line">cp zutil.h /usr/local/include</span><br><span class="line">cp zutil.c /usr/local/include</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span>5.重新编译</span><br><span class="line">cd atop-2.2-3</span><br><span class="line">make clean</span><br><span class="line">make install</span><br><span class="line"><span class="meta">#</span>提示Choose either 'make systemdinstall' or 'make sysvinstall' #关于采用哪种方式安装可以参考这里：http://www.linuxdiyf.com/linux/10711.html</span><br><span class="line">make systemdimstall</span><br><span class="line"><span class="meta">#</span>6.运行</span><br><span class="line">atop</span><br><span class="line"><span class="meta">#</span>7.退出</span><br><span class="line">q</span><br><span class="line">参考：http://my.oschina.net/nox/blog/221014</span><br><span class="line">http://blog.sina.com.cn/s/blog_714dacd10102v6et.html</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="资源监控字段含义"><a href="#资源监控字段含义" class="headerlink" title="资源监控字段含义"></a>资源监控字段含义</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108110401.png" alt></p>
-<p>上图中列出了不少字段以及数值，各字段的含义是什么？我们应该怎么看？以上每个字段的含义都是相对采样周期而言的，下面我们先来关注上图显示的上半部分。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108110858.png" alt></p>
-<p><strong>ATOP列</strong>：该列显示了主机名、信息采样日期和时间点</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108110924.png" alt></p>
-<p><strong>PRC列</strong>：该列显示进程整体运行情况</p>
-<ol>
-<li>sys：过去10s所有的进程在<u><strong>内核态</strong></u>运行的时间总和</li>
-<li>usr：过去10s所有的进程在<u><strong>用户态</strong></u>的运行时间总和</li>
-<li>#proc：<u><strong>进程总数</strong></u></li>
-<li>#trun：过去10s转换的进程数</li>
-<li>#zombie：过去10s僵死进程的数量</li>
-<li>#exit：在10s采样周期期间退出的进程数量</li>
-</ol>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108110948.png" alt></p>
-<p><strong>CPU列</strong>：该列显示CPU整体(即多核CPU作为一个整体CPU资源)的使用情况，我们知道CPU可被用于执行进程、处理中断，也可处于空闲状态(空闲状态分两种，一种是活动进程等待磁盘IO导致CPU空闲，另一种是完全空闲)</p>
-<ol>
-<li>sys：cpu在处理进程时处于<u><strong>内核态</strong></u>的时间所占的比例</li>
-<li>usr：cpu在处理进程时处于用户态的时间所占的比例</li>
-<li>irq：cpu在处理进程的<u><strong>中断请求</strong></u>所占的实际比例</li>
-<li>idle：CPU处在<u><strong>完全空闲</strong></u>状态的时间比例</li>
-<li>wait：CPU处在“进程<u><strong>等待磁盘IO导致CPU空闲</strong></u>”状态的时间比例</li>
-</ol>
-<p>CPU列各个字段指示值相加结果为N00%，其中N为cpu核数。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111025.png" alt></p>
-<p><strong>cpu列</strong>：该列显示某一核cpu的使用情况，各字段含义可参照CPU列，各字段值相加结果为100%</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111116.png" alt></p>
-<p><strong>CPL列</strong>：该列显示<u><strong>CPU负载</strong></u>情况</p>
-<ol>
-<li>avg1、avg5和avg15字段：过去1分钟、5分钟和15分钟内运行队列中的平均进程数量</li>
-<li><code>csw(context swapping)</code>：<u><strong>上下文交换次数</strong></u></li>
-<li><code>intr(interrupt)</code>：<u><strong>中断发生次数</strong></u></li>
-<li>numcpu：cpu的核心数</li>
-</ol>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111141.png" alt></p>
-<p><strong>MEM列</strong>：列主要展示内存的使用信息</p>
-<ol>
-<li>tot：<u><strong>物理内存总量</strong></u></li>
-<li>free：<u><strong>空闲内存</strong></u>的大小</li>
-<li>cache：用于<u><strong>页缓存</strong></u>的内存大小</li>
-<li>buff：用于<u><strong>文件缓存</strong></u>的内存大小</li>
-<li>slab：系统<u><strong>内核占用</strong></u>的内存大小</li>
-<li>dirty：内存中的脏页大小</li>
-</ol>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111207.png" alt></p>
-<p><strong>SWP列</strong>：该列指示交换空间的使用情况</p>
-<ol>
-<li>tot：<u><strong>交换区总量</strong></u></li>
-<li>free：<u><strong>空闲交换空间</strong></u>大小</li>
-</ol>
-<p><strong>PAG列</strong>：该列指示虚拟内存分页情况</p>
-<ol>
-<li>swin:换入内存页数</li>
-<li>swout：换出内存页数</li>
-</ol>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108123406.png" alt></p>
-<p><strong>LVM/DSK列</strong>：该列指示磁盘使用情况，每一个磁盘设备对应一列，如果有sdb设备，那么增多一列DSK信息</p>
-<ol>
-<li>sda字段：磁盘设备标识</li>
-<li>busy：磁盘忙时所占比例</li>
-<li>read、KiB/r 、MBr/s：每秒读的请求数和请求的kb、mb数</li>
-<li>write、KiB/w 、MBr/w：每秒写的请求数和请求的kb、mb数</li>
-<li>avq:磁盘平均队列长度（根据实际的监控该列好像是磁盘平均请求数avgrq）</li>
-<li>avio:磁盘的平均io时间</li>
-</ol>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108111547.png" alt></p>
-<p><strong>NET列</strong>：多列NET展示了传输层（TCP/UDP）、网络层（ip）、网络接口的网络传输信息。</p>
-<ol>
-<li>XXXi 字段指示各层或活动网口<u><strong>收包数</strong></u>目</li>
-<li>XXXo 字段指示各层或活动网口<u><strong>发包数</strong></u>目</li>
-</ol>
-<p><strong>transport：</strong>传输层（TCP/UDP）的数据输入输出的展示，例如在服务器的内部进程之间的数据传输就是在传输层展示，以为还不需要往下通过网络进行传输。</p>
-<p><strong>network：</strong>网络层（ip）的数据输入输出的展示；</p>
-<p><strong>eth0：</strong>默认的网络接口的数据输入输出的展示，也就是通过etho的ip的数据传输的展示，</p>
-<ol>
-<li>sp:网卡的带宽（1000M）</li>
-<li>pcki：传入的数据包的大小</li>
-<li>pcko：传出的数据包的大小</li>
-<li>si:每秒传入的数据大小</li>
-<li>so：每秒传出的数据大小</li>
-<li>coll（collisions）：每秒的冲突数</li>
-<li>mlti（MULTICAST）：每秒的多路广播的数量</li>
-<li>erri/erro:每秒输入输出的错误数</li>
-<li>drpi/drpo:每秒的输入输出的丢包数</li>
-</ol>
-<p><strong>lo:</strong>通过127.0.0.1网络接口的数据传输的数据展示，参数和上面的eth0是一样的</p>
-<h1 id="视图切换"><a href="#视图切换" class="headerlink" title="视图切换"></a>视图切换</h1><ol>
-<li>g：默认视图</li>
-<li>m：内存视图</li>
-<li>c：命令视图</li>
-</ol>
-<h3 id="默认视图（g）"><a href="#默认视图（g）" class="headerlink" title="默认视图（g）"></a>默认视图（g）</h3><p>按g键可以从其他视图跳到默认视图</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108121220.png" alt></p>
-<p>从上图中，我们可以看到PID为3061的find进程在退出前在</p>
-<p>内核模式下占用了3.43秒CPU时间，</p>
-<p>在用户模式下占用了0.96秒CPU时间，共使用CPU时间为4.39秒，相对10分钟采样周期，CPU时间占用比例为1%，</p>
-<p>ST列表示进程状态，N表示该进程是前一个采样周期新生成的进程，E表示该进程已退出，</p>
-<p>EXC列指示进程的退出码。从进程名在“&lt;&gt;”符号中，我们亦可知该进程已退出。</p>
-<br>
-
-<h3 id="内存视图（m）"><a href="#内存视图（m）" class="headerlink" title="内存视图（m）"></a>内存视图（m）</h3><p>内存视图展示了进程使用内存情况，按m键可进入内存视图。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108121630.png" alt></p>
-<ul>
-<li><p>SYSCPU：过去10s内进程处于内核模式占用的CPU时间</p>
-</li>
-<li><p>USRCPU：过去10s进程处于<u><strong>用户模式</strong></u>占用的CPU时间</p>
-</li>
-<li><p>VSIZE：过去10s 进程占用的<u><strong>虚拟空间</strong></u>大小</p>
-</li>
-<li><p>RSIZE：过去10s 进程占用的<u><strong>内存空间</strong></u>大小</p>
-</li>
-<li><p>PSIZE：过去10s 进程占用的<u><strong>页</strong></u>大小</p>
-</li>
-<li><p>VGROW：过去10s 进程<u><strong>增长的虚拟空间</strong></u>大小</p>
-</li>
-<li><p>RGROW：过去10s 进程<u><strong>增长的内存</strong></u>大小</p>
-</li>
-<li><p>SWAPSZ：过去10s 进程使用<u><strong>交换空间</strong></u>的大小。</p>
-</li>
-<li><p>MEM：过去10s 进程占用内存百分比</p>
-</li>
-</ul>
-<br>
-
-<h3 id="磁盘状态模式（d）"><a href="#磁盘状态模式（d）" class="headerlink" title="磁盘状态模式（d）"></a>磁盘状态模式（d）</h3><p>RDDSK:过去10S进程读磁盘的数据量</p>
-<p>WRDSK:过去10S进程写磁盘的数据量</p>
-<p>DSK:过去10S进程所占磁盘的百分比</p>
-<p>CMD:进程名 </p>
-<br>
-
-<h3 id="进程状态模式（p）"><a href="#进程状态模式（p）" class="headerlink" title="进程状态模式（p）"></a>进程状态模式（p）</h3><p>同一个名称的进程显示一列，根据进程名进行分组显示</p>
-<p>NPROCS:相同名称的进程数量</p>
-<p>其它的参数上面已经有列出</p>
-<br>
-
-<h3 id="线程状态模式（v）"><a href="#线程状态模式（v）" class="headerlink" title="线程状态模式（v）"></a>线程状态模式（v）</h3><br>
-
-<h3 id="用户模式（u）"><a href="#用户模式（u）" class="headerlink" title="用户模式（u）"></a>用户模式（u）</h3><p>根据用户进行分组显示</p>
-<br>
-
-<h3 id="命令视图模式（c）"><a href="#命令视图模式（c）" class="headerlink" title="命令视图模式（c）"></a>命令视图模式（c）</h3><p>按c键我们可以进入命令视图，该视图展示了与每个进程相对应的命令。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200108121900.png" alt></p>
-<p>有时我们某位“马大哈”同事执行了某个脚本或命令，使得系统资源占用率异常飙高，这时，我们可以很容易地通过atop的命令视图找到导致异常的命令。</p>
-<br>
-
-<h1 id="atop的相关文件"><a href="#atop的相关文件" class="headerlink" title="atop的相关文件"></a>atop的相关文件</h1><p>/etc/atop：目录保存的是atop的配置文件<br>/etc/rc.d/init.d/atop：atop的启动文件<br>/etc/cron.d/atop：atop的定时任务文件，默认是每天0点开始<br>/var/log/atop：atop日志文件，默认是每天0点开始会产生当天的一个日志文件，然后可以通过atop -r file 查看信息，但是没有找到自动播放的的功能，只能通过输入b显示一个指定的时间的信息，可以写个循环来实现<br>/usr/bin/atop：atop命令目录</p>
-<br>
-
-<h1 id="atop日志"><a href="#atop日志" class="headerlink" title="atop日志"></a>atop日志</h1><p>每个时间点采样页面组合起来就形成了一个atop日志文件，我们可以使用”atop -r XXX”命令对日志文件进行查看。那以什么形式保存atop日志文件呢？</p>
-<p>对于atop日志文件的保存方式，我们可以这样：</p>
-<ol>
-<li>每天保存一个atop日志文件，该日志文件记录当天信息</li>
-<li>日志文件以”atop_YYYYMMDD”的方式命名</li>
-<li>设定日志失效期限，自动删除一段时间前的日志文件</li>
-</ol>
-<p>其实atop开发者已经提供了以上日志保存方式，相应的atop.daily脚本可以在源码目录下找到。在atop.daily脚本中，我们可以通过修改INTERVAL变量改变atop信息采样周期(默认为10分钟)；通过修改以下命令中的数值改变日志保存天数(默认为28天)：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(sleep 3; find $LOGPATH -name 'atop_*' -mtime +28 -exec rm &#123;&#125; \; )&amp;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/20/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/22/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2236,7 +1871,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-count">236</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2247,7 +1882,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2258,7 +1893,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

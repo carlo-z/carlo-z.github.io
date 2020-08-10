@@ -314,6 +314,1254 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-6-Lucene文件检索实战-查询界面/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/3-6-Lucene文件检索实战-查询界面/" itemprop="url">3.6、Lucene文件检索实战 —— 查询界面</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-09T00:05:00+08:00">
+                2019-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>1、工程结构</p>
+<p>2、index.html 文件</p>
+<p>3、效果图</p>
+<p>-———————————-</p>
+<p>代码仓库：<a href="https://gitee.com/carloz/lucene-learn.git" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn.git</a></p>
+<p><a href="https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch</a></p>
+<p>-———————————-</p>
+<p>索引构建完成以后，编写index.jsp页面接收用户 关键词。</p>
+<h1 id="1、工程结构"><a href="#1、工程结构" class="headerlink" title="1、工程结构"></a>1、工程结构</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133308.png" alt></p>
+<p>​    </p>
+<h1 id="2、index-html-文件"><a href="#2、index-html-文件" class="headerlink" title="2、index.html 文件"></a>2、<strong>index.html 文件</strong></h1><p>对应的css文件，从我的代码仓库中获取</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"content-type"</span> <span class="attr">content</span>=<span class="string">"text/html; ; charset=UTF-8"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>文件检索<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"../css/base.css"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"../css/index.css"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">type</span>=<span class="string">"text/css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"../css/moudle_g_search_bar.css"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wrap"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"main"</span> <span class="attr">class</span>=<span class="string">"clearfix"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"header"</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"g_search_bar"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"f-large tc"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">h1</span>&gt;</span>文件&amp;nbsp;&amp;nbsp;</span><br><span class="line">                    <span class="tag">&lt;<span class="name">img</span> <span class="attr">alt</span>=<span class="string">"文件检索"</span> <span class="attr">src</span>=<span class="string">"images/logo.png"</span> <span class="attr">width</span>=<span class="string">"70px"</span> <span class="attr">height</span>=<span class="string">"60px"</span>/&gt;</span></span><br><span class="line">                    &amp;nbsp;&amp;nbsp;搜索</span><br><span class="line">                <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"tc"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">form</span> <span class="attr">class</span>=<span class="string">"search_form"</span> <span class="attr">style</span>=<span class="string">"display: inline-block"</span> <span class="attr">action</span>=<span class="string">"/search"</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">"search_text"</span> <span class="attr">name</span>=<span class="string">"keywords"</span> <span class="attr">type</span>=<span class="string">"text"</span> /&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">input</span> <span class="attr">class</span>=<span class="string">"btn_submit"</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"搜索"</span> /&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"clear"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"footer"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"copyright"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span>基于Lucene的文件检索系统<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span>Copyright ©<span class="tag">&lt;<span class="name">strong</span>&gt;</span>CarloZ<span class="tag">&lt;/<span class="name">strong</span>&gt;</span>&amp;nbsp; All Rights Reversed.<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucenefilesearch.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SearchFileController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"index"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="3、效果图"><a href="#3、效果图" class="headerlink" title="3、效果图"></a>3、效果图</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133354.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-4-Lucene文件检索实战-工程搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/3-4-Lucene文件检索实战-工程搭建/" itemprop="url">3.5、Lucene文件检索实战 —— 索引文档</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-09T00:04:00+08:00">
+                2019-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<ol>
+<li>先建立model对象</li>
+<li>创建索引</li>
+</ol>
+<p>-———————————-</p>
+<p>代码仓库：<a href="https://gitee.com/carloz/lucene-learn.git" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn.git</a></p>
+<p><a href="https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn/tree/master/lucene-filesearch</a></p>
+<p>-———————————-</p>
+<p>工程搭建完成以后，首先构建索引；</p>
+<p>检索的对象：文件；</p>
+<p>为了简单：只索引 文档名 和 文档内容；</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133058.png" alt></p>
+<h1 id="1、先建立model对象"><a href="#1、先建立model对象" class="headerlink" title="1、先建立model对象"></a>1、先建立model对象</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucenefilesearch.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 文件对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@Setter</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileModel</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String title; <span class="comment">// 文件标题</span></span><br><span class="line">	<span class="keyword">private</span> String content;  <span class="comment">// 文件内容</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="2、创建索引"><a href="#2、创建索引" class="headerlink" title="2、创建索引"></a>2、创建索引</h1><p>将 IKTokenizer8x 和 IKAnalyzer8x 从第2章的工程里复制过来；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucenefilesearch.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucenefilesearch.model.FileModel;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Field;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.FieldType;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexOptions;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriter;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriterConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.exception.TikaException;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.metadata.Metadata;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.parser.AutoDetectParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.parser.ParseContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.parser.Parser;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.sax.BodyContentHandler;</span><br><span class="line"><span class="keyword">import</span> org.xml.sax.SAXException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileNotFoundException;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Files;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 对 webapp/files 下的文档生成索引，保存在webapp/indexdir中</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateIndex</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>);</span><br><span class="line">		IndexWriterConfig indexWriterConfig = <span class="keyword">new</span> IndexWriterConfig(analyzer);</span><br><span class="line">		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);</span><br><span class="line">		Directory directory = <span class="keyword">null</span>;</span><br><span class="line">		IndexWriter indexWriter = <span class="keyword">null</span>;</span><br><span class="line">		Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">		FieldType fieldType = <span class="keyword">new</span> FieldType();</span><br><span class="line">		fieldType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);</span><br><span class="line">		fieldType.setStored(<span class="keyword">true</span>);</span><br><span class="line">		fieldType.setTokenized(<span class="keyword">true</span>);</span><br><span class="line">		fieldType.setStoreTermVectors(<span class="keyword">true</span>);</span><br><span class="line">		fieldType.setStoreTermVectorPositions(<span class="keyword">true</span>);</span><br><span class="line">		fieldType.setStoreTermVectorOffsets(<span class="keyword">true</span>);</span><br><span class="line">		Date start = <span class="keyword">new</span> Date();</span><br><span class="line">		<span class="keyword">if</span> (!Files.isReadable(indexPath)) &#123;</span><br><span class="line">			System.out.println(indexPath.toAbsolutePath() + <span class="string">"不存在或不可读，请检查"</span>);</span><br><span class="line">			System.exit(<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		directory = FSDirectory.open(indexPath);</span><br><span class="line">		indexWriter = <span class="keyword">new</span> IndexWriter(directory, indexWriterConfig);</span><br><span class="line">		ArrayList&lt;FileModel&gt; fileModelList = (ArrayList&lt;FileModel&gt;) extractFile();</span><br><span class="line">		<span class="keyword">for</span> (FileModel f : fileModelList) &#123;</span><br><span class="line">			Document doc = <span class="keyword">new</span> Document();</span><br><span class="line">			doc.add(<span class="keyword">new</span> Field(<span class="string">"title"</span>, f.getTitle(), fieldType));</span><br><span class="line">			doc.add(<span class="keyword">new</span> Field(<span class="string">"content"</span>, f.getContent(), fieldType));</span><br><span class="line">			indexWriter.addDocument(doc);</span><br><span class="line">		&#125;</span><br><span class="line">		indexWriter.commit();</span><br><span class="line">		indexWriter.close();</span><br><span class="line">		directory.close();</span><br><span class="line">		Date end = <span class="keyword">new</span> Date();</span><br><span class="line">		System.out.println(<span class="string">"索引文档完成，共耗时："</span> + (end.getTime() - start.getTime()) + <span class="string">" 毫秒。"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;FileModel&gt; <span class="title">extractFile</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		ArrayList&lt;FileModel&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		File fileDir = <span class="keyword">new</span> File(<span class="string">"files"</span>);</span><br><span class="line">		File[] allFiles = fileDir.listFiles();</span><br><span class="line">		<span class="keyword">for</span> (File f : allFiles) &#123;</span><br><span class="line">			FileModel fm = <span class="keyword">new</span> FileModel(f.getName(), ParserExtraction(f));</span><br><span class="line">			list.add(fm);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> list;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">ParserExtraction</span><span class="params">(File file)</span> </span>&#123;</span><br><span class="line">		String fileContent = <span class="string">""</span>;</span><br><span class="line">		BodyContentHandler handler = <span class="keyword">new</span> BodyContentHandler();</span><br><span class="line">		Parser parser = <span class="keyword">new</span> AutoDetectParser(); <span class="comment">// 自动解析器接口</span></span><br><span class="line">		Metadata metadata = <span class="keyword">new</span> Metadata();</span><br><span class="line">		FileInputStream inputStream;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			inputStream = <span class="keyword">new</span> FileInputStream(file);</span><br><span class="line">			ParseContext context = <span class="keyword">new</span> ParseContext();</span><br><span class="line">			parser.parse(inputStream, handler, metadata, context);</span><br><span class="line">			fileContent = handler.toString();</span><br><span class="line">			inputStream.close();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (SAXException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (TikaException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> fileContent;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133148.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825133156.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-3-Lucene文件检索实战-文本内容抽取/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/3-3-Lucene文件检索实战-文本内容抽取/" itemprop="url">3.3、Lucene文件检索实战 —— 文本内容抽取</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-08T00:03:00+08:00">
+                2019-03-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>3.3.1 Tika 简介</p>
+<p>3.3.2、Tika下载</p>
+<p>3.3.3、搭建工程</p>
+<p>3.3.4、内容抽取</p>
+<p>3.3.5、自动解析</p>
+<p>-—————————————–</p>
+<p>代码仓库：<a href="https://gitee.com/carloz/lucene-learn/tree/master/tika-demo" target="_blank" rel="noopener">https://gitee.com/carloz/lucene-learn/tree/master/tika-demo</a></p>
+<p>-—————————————–</p>
+<p>​    </p>
+<h1 id="3-3-1-Tika-简介"><a href="#3-3-1-Tika-简介" class="headerlink" title="3.3.1 Tika 简介"></a>3.3.1 Tika 简介</h1><p>Apache Tika 用于 文件类型检测 和 文件内容提取；</p>
+<p>使用目标群体： 搜索引擎、 内容索引和分析工具；</p>
+<p>编程语言：Java；</p>
+<ul>
+<li>Tika 可以检测超过1000种不同类型的文档，比如  DOC、DOCX、PPT、PPTX、TXT、PDF；</li>
+<li>所有的文本类型 都可以通过一个简单的接口被解析；</li>
+<li>广泛应用于 搜索引擎、内容分析、文本翻译、数字资产管理 等领域；</li>
+<li>通过一个通用的API提取 多种文件格式 的内容；</li>
+</ul>
+<p>Tika特点：</p>
+<ul>
+<li>统一解析器接口</li>
+<li>低内存占用</li>
+<li>快速处理</li>
+<li>灵活元数据</li>
+<li>解析器集成</li>
+<li>MIME类型检测</li>
+<li>语言检测</li>
+</ul>
+<p>​    </p>
+<h1 id="3-3-2、Tika下载"><a href="#3-3-2、Tika下载" class="headerlink" title="3.3.2、Tika下载"></a>3.3.2、Tika下载</h1><p>官网：<a href="https://tika.apache.org/download.html" target="_blank" rel="noopener">https://tika.apache.org/download.html</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132510.png" alt></p>
+<p>下载地址：<a href="http://mirror.bit.edu.cn/apache/tika/tika-app-1.20.jar" target="_blank" rel="noopener"><strong>http://mirror.bit.edu.cn/apache/tika/tika-app-1.20.jar</strong></a></p>
+<p>以 GUI 的方式打开：java -jar tika-app-1.20.jar -g</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132529.png" alt></p>
+<p>使用 File -&gt; open 代开一个本地文件，查看提取完成以后的数据</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132545.png" alt></p>
+<p>​    </p>
+<h1 id="3-3-3、搭建工程——Java中使用Tika"><a href="#3-3-3、搭建工程——Java中使用Tika" class="headerlink" title="3.3.3、搭建工程——Java中使用Tika"></a>3.3.3、搭建工程——Java中使用Tika</h1><p>1、创建Maven工程 TikaDemo</p>
+<p>2、添加pom引用</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tika<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tika-app<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.20<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>3、工程根目录下 新建 files文件夹， 存放 待提取的测试文件</p>
+<p>4、新建名为 TikaParsePdfDemo.java</p>
+<p> <img src="C:%5CUsers%5CCarloZ%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1566710783346.png" alt="1566710783346"></p>
+<p>​    </p>
+<h1 id="3-3-4、内容抽取——提取PDF文件的内容"><a href="#3-3-4、内容抽取——提取PDF文件的内容" class="headerlink" title="3.3.4、内容抽取——提取PDF文件的内容"></a>3.3.4、内容抽取——提取PDF文件的内容</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.tikademo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.tika.exception.TikaException;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.io.TikaInputStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.metadata.Metadata;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.parser.ParseContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.parser.pdf.PDFParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.sax.BodyContentHandler;</span><br><span class="line"><span class="keyword">import</span> org.xml.sax.SAXException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 3.3.4 Tika提供PDF文件内容</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TikaParsePdfDemo</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> FileNotFoundException, IOException, TikaException, SAXException </span>&#123;</span><br><span class="line">		<span class="comment">// 文件路径</span></span><br><span class="line">		String filepath = <span class="string">"files/IKAnalyzer中文分词器V2012使用手册.pdf"</span>;</span><br><span class="line">		<span class="comment">// 新建File对象</span></span><br><span class="line">		File pdfFile = <span class="keyword">new</span> File(filepath);</span><br><span class="line">		<span class="comment">// 创建 内容处理器对象</span></span><br><span class="line">		BodyContentHandler handler = <span class="keyword">new</span> BodyContentHandler();</span><br><span class="line">		<span class="comment">// 创建 元数据对象</span></span><br><span class="line">		Metadata metadata = <span class="keyword">new</span> Metadata();</span><br><span class="line">		<span class="comment">// 读入文件</span></span><br><span class="line"><span class="comment">//		FileInputStream inputStream = new FileInputStream(pdfFile);</span></span><br><span class="line">		InputStream inputStream = TikaInputStream.get(pdfFile);</span><br><span class="line">		<span class="comment">// 创建解析器对象</span></span><br><span class="line">		ParseContext parseContext = <span class="keyword">new</span> ParseContext();</span><br><span class="line">		<span class="comment">// 实例化 PDFParser 对象</span></span><br><span class="line">		PDFParser pdfParser = <span class="keyword">new</span> PDFParser();</span><br><span class="line">		<span class="comment">// 调用 parse() 方法解析文件</span></span><br><span class="line">		pdfParser.parse(inputStream, handler, metadata, parseContext);</span><br><span class="line">		<span class="comment">// 遍历元数据内容</span></span><br><span class="line">		System.out.println(<span class="string">"文件属性信息"</span>);</span><br><span class="line">		<span class="keyword">for</span> (String name : metadata.names()) &#123;</span><br><span class="line">			System.out.println(name + <span class="string">":"</span> + metadata.get(name));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 打印 pdf 文件中的内容</span></span><br><span class="line">		System.out.println(<span class="string">"pdf 文件中的内容："</span>);</span><br><span class="line">		System.out.println(handler.toString());</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132650.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132700.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132707.png" alt></p>
+<ul>
+<li>PDFParser  —— 用于解析 PDF 文件； PDFParser pdfParser = new PDFParser();</li>
+<li>OOXMLParser  —— 用于解析 MS Office 文件；OOXMLParser ooxmlParser = new OOXMLParser();</li>
+<li>TXTParser  —— 用于解析 文本文件； TXTParser txtParser = new TXTParser();</li>
+<li>HtmlParser —— 用于解析 HTML 文件；HtmlParser htmlParser = new HtmlParser();</li>
+<li>XMLParser —— 用于解析 XML 文件；XMLParser xmlParser = new XMLParser();</li>
+<li>ClassParser  —— 用于解析 class 文件；ClassParser classParser = new ClassParser();</li>
+</ul>
+<p>Tika还可以解析 图像、音频（如 MP3）、视频（如MP4）等多种类型的文件</p>
+<p>​    </p>
+<h1 id="3-3-5、自动解析"><a href="#3-3-5、自动解析" class="headerlink" title="3.3.5、自动解析"></a>3.3.5、自动解析</h1><p>上述解析pdf的例子如下：确定PDF文件 -&gt; 实例化PDFParser -&gt; 提取内容；</p>
+<p>强大之处：Tika可以 先判断文件类型， 再根据文档类型实例化解析接口；</p>
+<p><strong>自动解析文档过程</strong>：</p>
+<ol>
+<li>传任意类型文件到 Tika ==&gt; Tika 自身检测文件类型；</li>
+<li>Tika解析器库，根据 文件类型，选择合适的解析器；</li>
+<li>解析完成后，对文档内容 进行提取，元数据提取；</li>
+</ol>
+<p><strong>两种解析方案</strong>：</p>
+<ul>
+<li>使用Tika对象解析</li>
+<li>使用Parse接口解析</li>
+</ul>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132735.png" alt></p>
+<h4 id="使用Tika对象解析："><a href="#使用Tika对象解析：" class="headerlink" title="使用Tika对象解析："></a>使用Tika对象解析：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.tikademo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.tika.Tika;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.exception.TikaException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 3.3.5、自动解析 —— 使用Tika对象解析</span></span><br><span class="line"><span class="comment"> * 1、传任意类型文件到 Tika ==&gt; Tika 自身检测文件类型；</span></span><br><span class="line"><span class="comment"> * 2、Tika解析器库，根据 文件类型，选择合适的解析器；</span></span><br><span class="line"><span class="comment"> * 3、解析完成后，对文档内容 进行提取，元数据提取；</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TikaExtractionDemo</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, TikaException </span>&#123;</span><br><span class="line">		Tika tika = <span class="keyword">new</span> Tika();</span><br><span class="line">		<span class="comment">// 新建存放各种文件的文件里 files</span></span><br><span class="line">		File fileDir = <span class="keyword">new</span> File(<span class="string">"files"</span>);</span><br><span class="line">		<span class="comment">// 如果文件夹路径错误，退出程序</span></span><br><span class="line">		<span class="keyword">if</span> (!fileDir.exists()) &#123;</span><br><span class="line">			System.out.println(<span class="string">"文件夹不存在，请检查"</span>);</span><br><span class="line">			System.exit(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 获取文件夹下的所有文件，存放在File数组中</span></span><br><span class="line">		File[] fileArr = fileDir.listFiles();</span><br><span class="line">		String fileContent;</span><br><span class="line">		<span class="keyword">for</span> (File f : fileArr) &#123;</span><br><span class="line">			fileContent = tika.parseToString(f); <span class="comment">// 自动解析</span></span><br><span class="line">			System.out.println(<span class="string">"Extracted Content: "</span> + fileContent);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132804.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132816.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132825.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132836.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132843.png" alt></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132850.png" alt></p>
+<h4 id="使用Parse接口解析"><a href="#使用Parse接口解析" class="headerlink" title="使用Parse接口解析"></a>使用Parse接口解析</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.tikademo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.tika.exception.TikaException;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.metadata.Metadata;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.parser.AutoDetectParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.parser.ParseContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.parser.Parser;</span><br><span class="line"><span class="keyword">import</span> org.apache.tika.sax.BodyContentHandler;</span><br><span class="line"><span class="keyword">import</span> org.xml.sax.SAXException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileNotFoundException;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 3.3.5、自动解析 —— 使用Parse接口解析</span></span><br><span class="line"><span class="comment"> * 1、传任意类型文件到 Tika ==&gt; Tika 自身检测文件类型；</span></span><br><span class="line"><span class="comment"> * 2、Tika解析器库，根据 文件类型，选择合适的解析器；</span></span><br><span class="line"><span class="comment"> * 3、解析完成后，对文档内容 进行提取，元数据提取；</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ParserExtractionDemo</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> FileNotFoundException, IOException, SAXException, TikaException </span>&#123;</span><br><span class="line">		<span class="comment">// 新建存放各种文件的文件里 files</span></span><br><span class="line">		File fileDir = <span class="keyword">new</span> File(<span class="string">"files"</span>);</span><br><span class="line">		<span class="comment">// 如果文件夹路径错误，退出程序</span></span><br><span class="line">		<span class="keyword">if</span> (!fileDir.exists()) &#123;</span><br><span class="line">			System.out.println(<span class="string">"文件夹不存在，请检查"</span>);</span><br><span class="line">			System.exit(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		Metadata metadata = <span class="keyword">new</span> Metadata(); <span class="comment">// 创建元数据对象</span></span><br><span class="line">		Parser parser = <span class="keyword">new</span> AutoDetectParser();</span><br><span class="line">		ParseContext parseContext = <span class="keyword">new</span> ParseContext();  <span class="comment">// 自动检测分词器</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">// 获取文件夹下的所有文件，存放在File数组中</span></span><br><span class="line">		FileInputStream inputStream = <span class="keyword">null</span>;</span><br><span class="line">		File[] fileArr = fileDir.listFiles();</span><br><span class="line">		<span class="keyword">for</span> (File f : fileArr) &#123;</span><br><span class="line">			inputStream = <span class="keyword">new</span> FileInputStream(f);</span><br><span class="line">			BodyContentHandler handler = <span class="keyword">new</span> BodyContentHandler();  <span class="comment">// 创建内容处理器对象</span></span><br><span class="line">			parser.parse(inputStream, handler, metadata, parseContext);</span><br><span class="line">			System.out.println(<span class="string">"ParserExtractionDemo-"</span> + f.getName() + <span class="string">":\n"</span> + handler.toString());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果查询： <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132923.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-2-Lucene文件检索实战-架构设计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/3-2-Lucene文件检索实战-架构设计/" itemprop="url">3.2、Lucene文件检索实战 —— 架构设计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-08T00:02:00+08:00">
+                2019-03-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<ol>
+<li><p>文档存储系统 —— 存储了不同类型的文件；</p>
+<p>后台 —— 提取出 文件名 和 文档内容；</p>
+<p>Lucene —— 使用Lucune对 文件名 和 文档内容 进行索引；</p>
+<p>前端 —— 对用户提供查询接口；</p>
+</li>
+</ol>
+<p>   检索过程 —— 用户提交关键词，检索索引库， 返回匹配文档至前端页面</p>
+<ol start="2">
+<li><p>能够下载检索到的文件；</p>
+</li>
+<li><p>能够实现关键字的高亮；</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825132346.png" alt></p>
+</li>
+</ol>
+<p>工具准备：</p>
+<ol>
+<li>使用 Tika 完成信息抽取；</li>
+<li>使用 Lucene 构建索引；</li>
+<li>使用 JSP页面 给用户提供查询接口；</li>
+<li>使用 Servlet 完成搜索；</li>
+</ol>
+<p>构建类似百度文库的小型文件检索系统</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/3-1-Lucene文件检索实战-需求分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/3-1-Lucene文件检索实战-需求分析/" itemprop="url">3.1、Lucene文件检索实战 —— 需求分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-08T00:01:00+08:00">
+                2019-03-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>假设有一批文档，文档格式有 DOC、DOCX、PPT、PPTX、TXT、PDF</p>
+<p>要实现类似于百度文库的文件检索系统。</p>
+<p>需求如下：</p>
+<ol>
+<li>能够对文件名进行检索；</li>
+<li>能够对文件内容进行检索；</li>
+<li>能够下载检索到的文件；</li>
+<li>能够实现关键字的高亮；</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-7-Lucene新闻高频词提取/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/2-7-Lucene新闻高频词提取/" itemprop="url">2.7、Lucene新闻高频词提取</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-04T00:07:00+08:00">
+                2019-03-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>2.7.1、问题提出</p>
+<p>2.7.2、需求分析</p>
+<p>2.7.3、编程实现</p>
+<p>-———————————————-</p>
+<h1 id="2-7-1、问题提出"><a href="#2-7-1、问题提出" class="headerlink" title="2.7.1、问题提出"></a>2.7.1、问题提出</h1><p>统计 一篇新闻文档，统计出现频率最高的哪些词语</p>
+<h1 id="2-7-2、需求分析"><a href="#2-7-2、需求分析" class="headerlink" title="2.7.2、需求分析"></a>2.7.2、需求分析</h1><p>文本关键词提取算法、开源工具很多</p>
+<p>本文：《从Lucene索引中 提取 词项频率Top N》</p>
+<p><strong>词条化</strong>：从文本中 去除 标点、停用词等；</p>
+<p><strong>索引过程的本质</strong>：词条化 生成 倒排索引的过程；</p>
+<p><strong>代码思路</strong>：IndexReader的getTermVector获取文档的某一个字段 Terms，从 terms 中获取 tf（term frequency），拿到词项的 tf 以后，放到map中 降序排序，取出 Top-N.</p>
+<h1 id="2-7-3、编程实现"><a href="#2-7-3、编程实现" class="headerlink" title="2.7.3、编程实现"></a>2.7.3、编程实现</h1><p>网上找到新闻稿《李开复：无人驾驶进入黄金时代 AI有巨大投资机会》，放在 testfile/news.txt 文件中。</p>
+<p>对 testfile/news.txt  生成索引：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.highfrequency;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Field;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.FieldType;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexOptions;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriter;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexWriterConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2.7.1、问题提出</span></span><br><span class="line"><span class="comment"> * 统计 一篇新闻文档，统计出现频率最高的哪些词语</span></span><br><span class="line"><span class="comment"> * 2.7.2、需求分析</span></span><br><span class="line"><span class="comment"> * 文本关键词提取算法、开源工具很多</span></span><br><span class="line"><span class="comment"> * 本文：《从Lucene索引中 提取 词项频率Top N》</span></span><br><span class="line"><span class="comment"> * 词条化：从文本中 去除 标点、停用词等；</span></span><br><span class="line"><span class="comment"> * 索引过程的本质：词条化 生成 倒排索引的过程；</span></span><br><span class="line"><span class="comment"> * 代码思路：IndexReader的getTermVector获取文档的某一个字段 Terms，从 terms 中获取 tf（term frequency），拿到词项的 tf 以后，放到map中 降序排序，取出 Top-N.</span></span><br><span class="line"><span class="comment"> * 2.7.3、编程实现</span></span><br><span class="line"><span class="comment"> * 网上找到新闻稿《李开复：无人驾驶进入黄金时代 AI有巨大投资机会》，放在 testfile/news.txt 文件中。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 索引文档</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexDocs</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		File newfile = <span class="keyword">new</span> File(<span class="string">"testfile/news.txt"</span>);</span><br><span class="line">		String text1 = textToString(newfile);</span><br><span class="line">		Analyzer smcAnalyzer = <span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>);</span><br><span class="line">		IndexWriterConfig indexWriterConfig = <span class="keyword">new</span> IndexWriterConfig(smcAnalyzer);</span><br><span class="line">		indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);</span><br><span class="line">		<span class="comment">// 索引的存储路径</span></span><br><span class="line">		Directory directory = FSDirectory.open(Paths.get(<span class="string">"indexdir"</span>));</span><br><span class="line">		<span class="comment">// 索引的增删改由 IndexWriter 创建</span></span><br><span class="line">		IndexWriter indexWriter = <span class="keyword">new</span> IndexWriter(directory, indexWriterConfig);</span><br><span class="line">		<span class="comment">// 新建 FieldType，用于指定字段索引时的信息</span></span><br><span class="line">		FieldType type = <span class="keyword">new</span> FieldType();</span><br><span class="line">		type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);</span><br><span class="line">		type.setStored(<span class="keyword">true</span>);  <span class="comment">// 原始字符串全部被保存在索引中</span></span><br><span class="line">		type.setStoreTermVectors(<span class="keyword">true</span>);  <span class="comment">// 存储词项 量</span></span><br><span class="line">		type.setTokenized(<span class="keyword">true</span>);  <span class="comment">// 词条化</span></span><br><span class="line">		Document doc1 = <span class="keyword">new</span> Document();</span><br><span class="line">		Field field1 = <span class="keyword">new</span> Field(<span class="string">"content"</span>, text1, type);</span><br><span class="line">		doc1.add(field1);</span><br><span class="line">		indexWriter.addDocument(doc1);</span><br><span class="line">		indexWriter.close();</span><br><span class="line">		directory.close();</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">textToString</span><span class="params">(File file)</span> </span>&#123;</span><br><span class="line">		StringBuilder result = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 构造一个 BufferedReader 类来读取文件</span></span><br><span class="line">			BufferedReader bufferedReader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(file));</span><br><span class="line">			String str = <span class="keyword">null</span>;</span><br><span class="line">			<span class="comment">// 使用 readline 方法，一次读一行</span></span><br><span class="line">			<span class="keyword">while</span> (<span class="keyword">null</span> != (str = bufferedReader.readLine())) &#123;</span><br><span class="line">				result.append(System.lineSeparator() + str);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result.toString();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行。</p>
+<p>提取高频词：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.highfrequency;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.Terms;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.TermsEnum;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.util.BytesRef;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 提取高频词</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetTopTerms</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		Directory directory = FSDirectory.open(Paths.get(<span class="string">"indexdir"</span>));</span><br><span class="line">		IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">		<span class="comment">// 因为之索引了一个文档，所以DocID为0</span></span><br><span class="line">		<span class="comment">// 通过 getTermVector 获取 content 字段的词项</span></span><br><span class="line">		Terms terms = reader.getTermVector(<span class="number">0</span>, <span class="string">"content"</span>);</span><br><span class="line">		<span class="comment">// 遍历词项</span></span><br><span class="line">		TermsEnum termsEnum = terms.iterator();</span><br><span class="line">		Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;String, Integer&gt;();</span><br><span class="line">		BytesRef thisTerm;</span><br><span class="line">		<span class="keyword">while</span> (<span class="keyword">null</span> != (thisTerm = termsEnum.next())) &#123;</span><br><span class="line">			String termText = thisTerm.utf8ToString();  <span class="comment">// 词项</span></span><br><span class="line">			<span class="comment">// 通过 totalTermFreq() 方法获取词项频率</span></span><br><span class="line">			map.put(termText, (<span class="keyword">int</span>) termsEnum.totalTermFreq());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 按 value 排序</span></span><br><span class="line">		List&lt;Map.Entry&lt;String, Integer&gt;&gt; sortedMap = <span class="keyword">new</span> ArrayList&lt;&gt;(map.entrySet());</span><br><span class="line">		Collections.sort(sortedMap, <span class="keyword">new</span> Comparator&lt;Map.Entry&lt;String, Integer&gt;&gt;() &#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Map.Entry&lt;String, Integer&gt; o1, Map.Entry&lt;String, Integer&gt; o2)</span> </span>&#123;</span><br><span class="line">				<span class="keyword">return</span> (o2.getValue() - o1.getValue());</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">		getTopN(sortedMap, <span class="number">10</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getTopN</span><span class="params">(List&lt;Map.Entry&lt;String, Integer&gt;&gt; sortedMap, <span class="keyword">int</span> N)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">			System.out.println(sortedMap.get(i).getKey() + <span class="string">":"</span> + sortedMap.get(i).getValue());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825130620.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-6-Lucene查询高亮/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/doc/2-6-Lucene查询高亮/" itemprop="url">2.6、Lucene查询高亮</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-03T00:06:00+08:00">
+                2019-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<p>找到需要高亮的片段</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.hignlight;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.document.Document;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.DirectoryReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.index.IndexReader;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.ParseException;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.queryparser.classic.QueryParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.IndexSearcher;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.Query;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.ScoreDoc;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.TopDocs;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.search.highlight.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.Directory;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.store.FSDirectory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 找到需要高亮的片段</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HighlighterTest</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ParseException, InvalidTokenOffsetsException </span>&#123;</span><br><span class="line">      String field = <span class="string">"title"</span>;</span><br><span class="line">      Path indexPath = Paths.get(<span class="string">"indexdir"</span>);</span><br><span class="line">      Directory directory = FSDirectory.open(indexPath);</span><br><span class="line">      IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">      IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line">      Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer8x();</span><br><span class="line">      QueryParser parser = <span class="keyword">new</span> QueryParser(field, analyzer);</span><br><span class="line">      Query query = parser.parse(<span class="string">"北大"</span>);</span><br><span class="line">      System.out.println(<span class="string">"Query: "</span> + query);</span><br><span class="line">      QueryScorer scorer = <span class="keyword">new</span> QueryScorer(query, field);</span><br><span class="line">      SimpleHTMLFormatter htmlFormatter = <span class="keyword">new</span> SimpleHTMLFormatter(<span class="string">"&lt;span style=\"color:red;\"&gt;"</span>, <span class="string">"&lt;/span&gt;"</span>);</span><br><span class="line">      Highlighter highlighter = <span class="keyword">new</span> Highlighter(htmlFormatter, scorer);</span><br><span class="line">      <span class="comment">// 高亮分词器</span></span><br><span class="line">      TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line">      <span class="keyword">for</span> (ScoreDoc scoreDoc : topDocs.scoreDocs) &#123;</span><br><span class="line">         Document doc = searcher.doc(scoreDoc.doc);</span><br><span class="line">         System.out.println(<span class="string">"DocID: "</span> + scoreDoc.doc);</span><br><span class="line">         System.out.println(<span class="string">"id: "</span> + doc.get(<span class="string">"id"</span>));</span><br><span class="line">         System.out.println(<span class="string">"title: "</span> + doc.get(<span class="string">"title"</span>));</span><br><span class="line">         System.out.println(<span class="string">"content: "</span> + doc.get(<span class="string">"content"</span>));</span><br><span class="line">         System.out.println(<span class="string">"reply: "</span> + doc.get(<span class="string">"reply_display"</span>));</span><br><span class="line">         System.out.println(<span class="string">"文档评分: "</span> + scoreDoc.score);</span><br><span class="line">         TokenStream tokenStream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), scoreDoc.doc, field, analyzer);</span><br><span class="line">         Fragmenter fragmenter = <span class="keyword">new</span> SimpleSpanFragmenter(scorer);</span><br><span class="line">         highlighter.setTextFragmenter(fragmenter);</span><br><span class="line">         String str = highlighter.getBestFragment(tokenStream, doc.get(field));</span><br><span class="line">         System.out.println(<span class="string">"高亮的片段："</span> + str);</span><br><span class="line">      &#125;</span><br><span class="line">      directory.close();</span><br><span class="line">      reader.close();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> <img src="C:%5CUsers%5CCarloZ%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1566709467482.png" alt="1566709467482"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-5-Lucene查询详解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -936,1204 +2184,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-3-Lucene分词详解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/2-3-Lucene分词详解/" itemprop="url">2.3、Lucene分词详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-02T00:03:00+08:00">
-                2019-03-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p>2.3.1、Lucene分词系统</p>
-<p>2.3.2、分词测试</p>
-<p>2.3.3、IK分词器配置</p>
-<p>2.3.4、中文分词器对比</p>
-<p>2.3.5、扩展停用词词典</p>
-<p>2.3.6、扩展自定义词典</p>
-<p>-——————————————————————</p>
-<p>​    </p>
-<h1 id="2-3-1、Lucene分词系统"><a href="#2-3-1、Lucene分词系统" class="headerlink" title="2.3.1、Lucene分词系统"></a>2.3.1、Lucene分词系统</h1><p>索引和查询 都是以 词项 为基本单位</p>
-<p>Lucene中，分词 主要依靠 Analyzer类 解析实现</p>
-<p>Analyzer是抽象类，内部调用 TokenStream 实现</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123942.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123952.png" alt></p>
-<p>​     </p>
-<h1 id="2-3-2、分词测试"><a href="#2-3-2、分词测试" class="headerlink" title="2.3.2、分词测试"></a>2.3.2、分词测试</h1><p>StandardAnalyzer 分词器测试：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.analyzer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.standard.StandardAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.CharTermAttribute;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.StringReader;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * StandardAnalyzer demo</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StdAnalyzerDemo</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String strCh = <span class="string">"中华人名共和国简称中国，是一个有13亿人口的国家"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String strEn = <span class="string">"Dogs can not achieve a place, eyes can reach;"</span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"StandardAnalyzer 对中文分词："</span>);</span><br><span class="line">		stdAnalyzer(strCh);</span><br><span class="line">		System.out.println(<span class="string">"StandardAnalyzer 对英文分词："</span>);</span><br><span class="line">		stdAnalyzer(strEn);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stdAnalyzer</span><span class="params">(String str)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		Analyzer analyzer = <span class="keyword">null</span>;</span><br><span class="line">		analyzer = <span class="keyword">new</span> StandardAnalyzer();</span><br><span class="line">		StringReader reader = <span class="keyword">new</span> StringReader(str);</span><br><span class="line">		TokenStream tokenStream = analyzer.tokenStream(str, reader);</span><br><span class="line">		tokenStream.reset();</span><br><span class="line">		CharTermAttribute charTermAttribute = tokenStream.getAttribute(CharTermAttribute.class);</span><br><span class="line">		System.out.println(<span class="string">"分词结果："</span>);</span><br><span class="line">		<span class="keyword">while</span> (tokenStream.incrementToken()) &#123;</span><br><span class="line">			System.out.print(charTermAttribute.toString() + <span class="string">"|"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">"\n"</span>);</span><br><span class="line">		analyzer.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124040.png" alt></p>
-<p>测试多种Analyzer，注意要特意指定 jdk8： </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.analyzer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.cjk.CJKAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.core.KeywordAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.core.SimpleAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.core.StopAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.core.WhitespaceAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.standard.StandardAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.CharTermAttribute;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.StringReader;</span><br><span class="line"><span class="keyword">import</span> java.util.StringJoiner;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试多种分词器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VariousAnalyzersDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String strCh = <span class="string">"中华人民共和国简称中国，是一个有13亿人口的国家"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String strEn = <span class="string">"Dogs can not achieve a place, eyes can reach;"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"标准分词："</span> + printAnalyzer(<span class="keyword">new</span> StandardAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"空格分词："</span> + printAnalyzer(<span class="keyword">new</span> WhitespaceAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"简单分词："</span> + printAnalyzer(<span class="keyword">new</span> SimpleAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"二分法分词："</span> + printAnalyzer(<span class="keyword">new</span> CJKAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"关键字分词："</span> + printAnalyzer(<span class="keyword">new</span> KeywordAnalyzer(), strCh));</span><br><span class="line">		System.out.println(<span class="string">"停用词分词："</span> + printAnalyzer(<span class="keyword">new</span> StopAnalyzer(<span class="keyword">new</span> StringReader(strCh)), strCh));</span><br><span class="line">		System.out.println(<span class="string">"中文智能分词："</span> + printAnalyzer(<span class="keyword">new</span> SmartChineseAnalyzer(), strCh));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">printAnalyzer</span><span class="params">(Analyzer analyzer, String str)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		StringReader reader = <span class="keyword">new</span> StringReader(str);</span><br><span class="line">		TokenStream tokenStream = analyzer.tokenStream(str, reader);</span><br><span class="line">		tokenStream.reset();</span><br><span class="line">		CharTermAttribute charTermAttribute = tokenStream.getAttribute(CharTermAttribute.class);</span><br><span class="line">		StringJoiner stringJoiner = <span class="keyword">new</span> StringJoiner(<span class="string">"|"</span>);</span><br><span class="line">		<span class="keyword">while</span> (tokenStream.incrementToken()) &#123;</span><br><span class="line">			stringJoiner.add(charTermAttribute.toString());</span><br><span class="line">		&#125;</span><br><span class="line">		analyzer.close();</span><br><span class="line">		<span class="keyword">return</span> stringJoiner.toString();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124340.png" alt></p>
-<p>​    </p>
-<h1 id="2-3-3、IK分词器配置"><a href="#2-3-3、IK分词器配置" class="headerlink" title="2.3.3、IK分词器配置"></a>2.3.3、IK分词器配置</h1><p>Lucene 8.0 实用 IK分词器需要修改 IKTokenizer 和 IKAnalyzer</p>
-<p>在 com.learn.lucene.chapter2.ik 下 新建 IKTokenizer8x.java 和 IKAnalyzer8x.java</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.ik;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Tokenizer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.CharTermAttribute;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.OffsetAttribute;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.TypeAttribute;</span><br><span class="line"><span class="keyword">import</span> org.wltea.analyzer.core.IKSegmenter;</span><br><span class="line"><span class="keyword">import</span> org.wltea.analyzer.core.Lexeme;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 修改 IKTokenizer —— incrementToken()</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IKTokenizer8x</span> <span class="keyword">extends</span> <span class="title">Tokenizer</span> </span>&#123;</span><br><span class="line">	<span class="comment">// IK分词器实现</span></span><br><span class="line">	<span class="keyword">private</span> IKSegmenter _IKIkSegmenter;</span><br><span class="line">	<span class="comment">// 词元文本属性</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> CharTermAttribute termAttribute;</span><br><span class="line">	<span class="comment">// 词元位移属性</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> OffsetAttribute offsetAttribute;</span><br><span class="line">	<span class="comment">// 词元分类属性</span></span><br><span class="line">	<span class="comment">// (该属性分类参考 org.wltea.analyzer.core.Lexeme 中的分类常量)</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> TypeAttribute typeAttribute;</span><br><span class="line">	<span class="comment">// 记录最后一个词元的结束位置</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> endPosttion;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Lucene 8.x Tokenizer适配器类构造函数，实现最新的 Tokenizer 接口</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">IKTokenizer8x</span><span class="params">(<span class="keyword">boolean</span> useSmart)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>();</span><br><span class="line">		offsetAttribute = addAttribute(OffsetAttribute.class);</span><br><span class="line">		termAttribute = addAttribute(CharTermAttribute.class);</span><br><span class="line">		typeAttribute = addAttribute(TypeAttribute.class);</span><br><span class="line">		_IKIkSegmenter = <span class="keyword">new</span> IKSegmenter(input, useSmart);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">incrementToken</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		clearAttributes();      <span class="comment">// 清除所有的词元属性</span></span><br><span class="line">		Lexeme nextLexeme = _IKIkSegmenter.next();</span><br><span class="line">		<span class="keyword">if</span> (nextLexeme != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="comment">// 将 Lexeme 转化成 Attributes</span></span><br><span class="line">			termAttribute.append(nextLexeme.getLexemeText());  <span class="comment">// 设置词元文本</span></span><br><span class="line">			termAttribute.setLength(nextLexeme.getLength());  <span class="comment">// 设置词元长度</span></span><br><span class="line">			offsetAttribute.setOffset(nextLexeme.getBeginPosition(), nextLexeme.getEndPosition());  <span class="comment">// 设置词元位移</span></span><br><span class="line">			endPosttion = nextLexeme.getEndPosition();  <span class="comment">// 记录 分词的最后位置</span></span><br><span class="line">			typeAttribute.setType(nextLexeme.getLexemeText()); <span class="comment">// 记录词元分分类</span></span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">true</span>; <span class="comment">// 返回true 告知 还有下个词元</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.reset();</span><br><span class="line">		_IKIkSegmenter.reset(input);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">end</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> finalOffset = correctOffset(<span class="keyword">this</span>.endPosttion);</span><br><span class="line">		offsetAttribute.setOffset(finalOffset, finalOffset);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">package com.learn.lucene.chapter2.ik;</span><br><span class="line"></span><br><span class="line">import org.apache.lucene.analysis.Analyzer;</span><br><span class="line">import org.apache.lucene.analysis.Tokenizer;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 修改IKAnalyzer —— createComponents(String fieldName)</span><br><span class="line"> */</span><br><span class="line">public class IKAnalyzer8x extends Analyzer &#123;</span><br><span class="line"></span><br><span class="line">	private boolean useSmart;</span><br><span class="line"></span><br><span class="line">	public IKAnalyzer8x() &#123;</span><br><span class="line">		this(false);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public IKAnalyzer8x(boolean useSmart) &#123;</span><br><span class="line">		super();</span><br><span class="line">		this.useSmart = useSmart;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	protected TokenStreamComponents createComponents(String fieldName) &#123;</span><br><span class="line">		Tokenizer _IKTokenizer = new IKTokenizer8x(this.isUseSmart());</span><br><span class="line">		return new TokenStreamComponents(_IKTokenizer);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public boolean isUseSmart() &#123;</span><br><span class="line">		return useSmart;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setUseSmart(boolean useSmart) &#123;</span><br><span class="line">		this.useSmart = useSmart;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>实例化 IKAnalyzer8x 就能实用IK分词器了</p>
-<p>1、 默认使用细粒度切分算法：</p>
-<p>​        Analyzer analyzer = new IKAnalyzer8x();</p>
-<p>2、创建智能切分算法的 IKAnalyzer：</p>
-<p>​        Analyzer analyzer = new IKAnalyzer8x(true);</p>
-<p>​    </p>
-<h1 id="2-3-4、中文分词器对比"><a href="#2-3-4、中文分词器对比" class="headerlink" title="2.3.4、中文分词器对比"></a>2.3.4、中文分词器对比</h1><p>​        分词效果会直接影响文档搜索的准确性</p>
-<p>​        我们对比一下 Lucene自带的 SmartChineseAnalyzer 和 IK Analyzer的效率。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.learn.lucene.chapter2.analyzer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.learn.lucene.chapter2.ik.IKAnalyzer8x;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.Analyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.TokenStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;</span><br><span class="line"><span class="keyword">import</span> org.apache.lucene.analysis.tokenattributes.CharTermAttribute;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.StringReader;</span><br><span class="line"><span class="keyword">import</span> java.util.StringJoiner;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 中文分词器效果对比</span></span><br><span class="line"><span class="comment"> * 1、Lucene 自带的 SmartChineseAnalyzer 分词器</span></span><br><span class="line"><span class="comment"> * 2、IKAnalyzer8x分词器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IkVSSmartchDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String str1 = <span class="string">"公路局正在治理解放大道路面积水问题。"</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> String str2 = <span class="string">"IKAnalyzer 是一个开源的，基于java语言开发的轻量级的中文分词工具包。"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"句子一："</span> + str1);</span><br><span class="line">		System.out.println(<span class="string">"SmartChineseAnalyzer分词结果："</span> + printAnalyzer(<span class="keyword">new</span> SmartChineseAnalyzer(), str1));</span><br><span class="line">		System.out.println(<span class="string">"IKAnalyzer8x分词结果："</span> + printAnalyzer(<span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>), str1));</span><br><span class="line"><span class="comment">//		System.out.println("IKAnalyzer分词结果(bug)：" + printAnalyzer(new IKAnalyzer(), str1));</span></span><br><span class="line">		System.out.println(<span class="string">"----------------------------------------"</span>);</span><br><span class="line">		System.out.println(<span class="string">"句子二："</span> + str2);</span><br><span class="line">		System.out.println(<span class="string">"SmartChineseAnalyzer分词结果："</span> + printAnalyzer(<span class="keyword">new</span> SmartChineseAnalyzer(), str2));</span><br><span class="line">		System.out.println(<span class="string">"IKAnalyzer8x分词结果："</span> + printAnalyzer(<span class="keyword">new</span> IKAnalyzer8x(<span class="keyword">true</span>), str2));</span><br><span class="line"><span class="comment">//		System.out.println("IKAnalyzer分词结果(bug)：" + printAnalyzer(new IKAnalyzer(true), str2));</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">printAnalyzer</span><span class="params">(Analyzer analyzer, String str)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		StringReader reader = <span class="keyword">new</span> StringReader(str);</span><br><span class="line">		TokenStream tokenStream = analyzer.tokenStream(str, reader);</span><br><span class="line">		tokenStream.reset();</span><br><span class="line">		CharTermAttribute charTermAttribute = tokenStream.getAttribute(CharTermAttribute.class);</span><br><span class="line">		StringJoiner stringJoiner = <span class="keyword">new</span> StringJoiner(<span class="string">"|"</span>);</span><br><span class="line">		<span class="keyword">while</span> (tokenStream.incrementToken()) &#123;</span><br><span class="line">			stringJoiner.add(charTermAttribute.toString());</span><br><span class="line">		&#125;</span><br><span class="line">		analyzer.close();</span><br><span class="line">		<span class="keyword">return</span> stringJoiner.toString();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    </p>
-<h1 id="2-3-5、扩展停用词词典"><a href="#2-3-5、扩展停用词词典" class="headerlink" title="2.3.5、扩展停用词词典"></a>2.3.5、扩展停用词词典</h1><p>IK Analyzer 默认的停用词词典为 IKAnalyzer2012_u6/stopword.dic</p>
-<p>这个词典只有30多个英文停用词，并不完整</p>
-<p>推荐使用扩展额停用词词表：<a href="https://github.com/cseryp/stopwords" target="_blank" rel="noopener">https://github.com/cseryp/stopwords</a></p>
-<p>在工程中新建 ext_stopword.dic，放在IKAnalyzer.cfg.xml同一目录；</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124519.png" alt></p>
-<p>编辑IKAnalyzer.cfg.xml，</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825124535.png" alt></p>
-<p>​       </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-2-Lucene开发准备/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/2-2-Lucene开发准备/" itemprop="url">2.2、Lucene开发准备</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-02T00:02:00+08:00">
-                2019-03-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<hr>
-<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ol>
-<li>官网</li>
-<li>下载Lucune文件库</li>
-<li>下载Luke——查看索引的GUI工具</li>
-<li>下载 IK 分词工具 —— 轻量级中文分词工具包</li>
-<li>工程搭建</li>
-</ol>
-<p>-—————————————————</p>
-<p>​    </p>
-<h1 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h1><p><a href="http://lucene.apache.org/" target="_blank" rel="noopener">http://lucene.apache.org/</a></p>
-<h1 id="下载Lucune文件库"><a href="#下载Lucune文件库" class="headerlink" title="下载Lucune文件库"></a>下载Lucune文件库</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123502.png" alt></p>
-<p><a href="https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/java/8.0.0/" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/java/8.0.0/</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123519.png" alt></p>
-<p>或者在工程中添加maven依赖</p>
-<p><a href="https://mvnrepository.com/artifact/org.apache.lucene/lucene-core/" target="_blank" rel="noopener">https://mvnrepository.com/artifact/org.apache.lucene/lucene-core/</a></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.lucene<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lucene-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">version</span>&gt;</span>8.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>​    </p>
-<h1 id="下载Luke——查看索引的GUI工具"><a href="#下载Luke——查看索引的GUI工具" class="headerlink" title="下载Luke——查看索引的GUI工具"></a>下载Luke——查看索引的GUI工具</h1><p>主要功能：</p>
-<ul>
-<li>查看文档和分析字段内容；</li>
-<li>搜索索引；</li>
-<li>执行索引维护；</li>
-<li>从HDFS读取索引；</li>
-<li>将全部或部分索引转换为XML格式导出；</li>
-<li>测试自定义的Lucene分词器；</li>
-</ul>
-<p>注意：Luke的版本要跟Lucene保持一致</p>
-<p>项目地址：<a href="https://github.com/DmitryKey/luke/releases" target="_blank" rel="noopener">https://github.com/DmitryKey/luke/releases</a></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123636.png" alt></p>
-<p>​    </p>
-<h1 id="下载-IK-分词工具-——-轻量级中文分词工具包"><a href="#下载-IK-分词工具-——-轻量级中文分词工具包" class="headerlink" title="下载 IK 分词工具 —— 轻量级中文分词工具包"></a>下载 IK 分词工具 —— 轻量级中文分词工具包</h1><p>独立于Lucene，面向Java的公用分词组件</p>
-<p>同时提供了 对Lucene的默认优化实现</p>
-<p>IK Analyzer2012的特性：</p>
-<ol>
-<li>采用“正向迭代最细力度切分算法”，支持细粒度和智能分词两种切分模式；</li>
-<li>具有 160万字/s 的高速处理能力，i73.4G双核、4G内存，win7 64位，jdk1.6；</li>
-<li>支持简单的分词排歧义处理、数量词合并输出；</li>
-<li>多子处理器分析模式，支持英文字母、数字、中文词汇等分词处理、兼容韩文、日文字符；</li>
-<li>优化词典存储，更小的内存占用。</li>
-</ol>
-<p>下载地址（需要翻墙）：<a href="https://code.google.com/p/ik-analyzer/downloads/list" target="_blank" rel="noopener">https://code.google.com/p/ik-analyzer/downloads/list</a></p>
-<p>也可有上我的 oschina上下载：</p>
-<p>安装包文件列表：</p>
-<ul>
-<li>drwxr-xr-x 1 doc/        —— API 文档说明</li>
-<li>-rw-r–r– 1 IKAnalyzer.cfg.xml    —— 分词器扩展配置文件</li>
-<li>-rw-r–r– 1 IKAnalyzer2012_u6.jar        —— 主jar包</li>
-<li>-rw-r–r– 1 IKAnalyzer中文分词器V2012_U5使用手册.pdf</li>
-<li>-rw-r–r– 1 IKAnalyzer中文分词器V2012使用手册.pdf</li>
-<li>-rw-r–r– 1 LICENSE.txt    —— Apache版权申明</li>
-<li>-rw-r–r– 1 NOTICE.txt        —— Apache版权申明</li>
-<li>-rw-r–r– 1 stopword.dic        —— 停止词典</li>
-</ul>
-<p>部署步骤：</p>
-<p>把 IKAnalyzer2012_u6.jar 放在部署项目的lib目录下</p>
-<p>把 stopword.dic 和 IKAnalyzer.cfg.xml 放在 class根目录，对于web工程时 WEB-INFO/classes 目录下</p>
-<p>​    </p>
-<h1 id="工程搭建"><a href="#工程搭建" class="headerlink" title="工程搭建"></a>工程搭建</h1><p>1、maven 安装 IKAnalyzer2012_u6.jar</p>
-<p>mvn install:install-file -Dfile=D:\java\oschina\lucene-learn\lucene-chapter2\lib\IKAnalyzer2012_u6.jar -DgroupId=org.wltea.analyzer -DartifactId=IKAnalyzer -Dversion=2012_u6 -Dpackaging=jar -DgeneratePom=true -DcreateChecksum=true</p>
-<p>2、在pom.xml中添加</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.wltea.analyzer<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>IKAnalyzer<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">​    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2012_u6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>3、 stopword.dic 和 IKAnalyzer.cfg.xml 放在 src\main\resources 目录下</p>
-<p>这样编译完成后，它就会放在 classes 目录下</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123751.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/2-1-Lucene概述/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/2-1-Lucene概述/" itemprop="url">2.1、Lucene概述</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-02T00:01:00+08:00">
-                2019-03-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="Lucene-3个优点"><a href="#Lucene-3个优点" class="headerlink" title="Lucene 3个优点"></a>Lucene 3个优点</h1><p>1、稳定、索引性能高</p>
-<p>2、高效、准确、高性能的搜索算法</p>
-<p>3、跨平台解决方案</p>
-<p>​    </p>
-<h1 id="Lucene架构"><a href="#Lucene架构" class="headerlink" title="Lucene架构"></a>Lucene架构</h1><p>1、信息采集 —— 文件、数据库、万维网、及手工输入，都能作为采集对象</p>
-<p>2、索引文档 —— 即倒排序索引的构建过程</p>
-<p>3、搜索文档 —— 用户发起查询 到 拿到结果的过程</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825123234.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rocketmq/8-rocketmq-transaction-msg/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/message-queue/rocketmq/8-rocketmq-transaction-msg/" itemprop="url">RocketMQ 事务消息</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-16T00:00:00+08:00">
-                2019-02-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/" itemprop="url" rel="index">
-                    <span itemprop="name">mq</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/rocketmq/" itemprop="url" rel="index">
-                    <span itemprop="name">rocketmq</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rocketmq/7-rocketmq-ha-synchronize/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/message-queue/rocketmq/7-rocketmq-ha-synchronize/" itemprop="url">RocketMQ 主从同步机制（HA）</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-15T00:00:00+08:00">
-                2019-02-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/" itemprop="url" rel="index">
-                    <span itemprop="name">mq</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/rocketmq/" itemprop="url" rel="index">
-                    <span itemprop="name">rocketmq</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rocketmq/6-rocketmq-filterserver/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/message-queue/rocketmq/6-rocketmq-filterserver/" itemprop="url">RocketMQ 消息过滤 FilterServer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-14T00:00:00+08:00">
-                2019-02-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/" itemprop="url" rel="index">
-                    <span itemprop="name">mq</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/rocketmq/" itemprop="url" rel="index">
-                    <span itemprop="name">rocketmq</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/message-queue/rocketmq/5-rocketmq-consumer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/message-queue/rocketmq/5-rocketmq-consumer/" itemprop="url">RocketMQ 消息消费 Consumer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-13T00:00:00+08:00">
-                2019-02-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/" itemprop="url" rel="index">
-                    <span itemprop="name">mq</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mq/rocketmq/" itemprop="url" rel="index">
-                    <span itemprop="name">rocketmq</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2179,7 +2234,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-count">236</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2190,7 +2245,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2201,7 +2256,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

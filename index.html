@@ -528,6 +528,163 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/k8s/rancher2-k8s-piplines/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/k8s/rancher2-k8s-piplines/" itemprop="url">rancher2 流水线（CI/CD）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-25T00:00:00+08:00">
+                2020-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/rancher/" itemprop="url" rel="index">
+                    <span itemprop="name">rancher</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <br>
+
+<blockquote>
+<p>官方文档：<a href="https://rancher2.docs.rancher.cn/docs/k8s-in-rancher/pipelines/_index/" target="_blank" rel="noopener">https://rancher2.docs.rancher.cn/docs/k8s-in-rancher/pipelines/_index/</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/serverless/from-single-to-serverless/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2431,416 +2588,128 @@
 <p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200721215430586.png" alt="image-20200721215430586"></p>
 <p>k8s 转发模式</p>
 <p>linux 内核态，用户态</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724201832504.png" alt="image-20200724201832504"></p>
 <p>userspace</p>
 <p>k8s 1.4 之前 使用 iptables</p>
 <p>ipvs（ipv server） 虚拟ip地址服务 VIP 在1.8-beta版本里加入使用，在1.14版本里成为正式的转发协议</p>
 <p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200721220829050.png" alt="image-20200721220829050"></p>
-<h3 id="服务类型"><a href="#服务类型" class="headerlink" title="服务类型"></a>服务类型</h3><h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><h3 id="ingress"><a href="#ingress" class="headerlink" title="ingress"></a>ingress</h3><h1 id="k8s-存储类型"><a href="#k8s-存储类型" class="headerlink" title="k8s 存储类型"></a>k8s 存储类型</h1><h1 id="k8s-调度器及HELM"><a href="#k8s-调度器及HELM" class="headerlink" title="k8s 调度器及HELM"></a>k8s 调度器及HELM</h1><h1 id="k8s-集群安全机制"><a href="#k8s-集群安全机制" class="headerlink" title="k8s 集群安全机制"></a>k8s 集群安全机制</h1>
-          
-        
-      
-    </div>
-    
-    
-    
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724203048934.png" alt="image-20200724203048934"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724203345123.png" alt="image-20200724203345123"></p>
+<p>iptables 协助维护内核netfilter中的各种路由</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724203804993.png" alt="image-20200724203804993"></p>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>做资源隔离</p>
+<p>6种命名空间</p>
+<ol>
+<li>挂载文件系统：mount</li>
+<li>进程：pid</li>
+<li>网络Network：不同namespace之间的网络是不通的</li>
+<li>IPC 进程间通信</li>
+<li>UTS： 隔离主机名 和 NIS域名</li>
+<li>User：</li>
+</ol>
+<h3 id="Cgroup"><a href="#Cgroup" class="headerlink" title="Cgroup"></a>Cgroup</h3><p>cgroup：linux 2.6以后出现的，google工程师导入linux内核的</p>
+<p>基于 cpuset 开发</p>
+<p>作用：做资源管控</p>
+<h4 id="cpuset"><a href="#cpuset" class="headerlink" title="cpuset"></a>cpuset</h4><p>linux操作系统启动以后，会mount一个cpu的子系统，我们可以对cpu的子系统做各种各样的操作和定制。这样我们就可以管控每个应用程序使用资源的多少了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 安装工具管理 cgroup</span></span><br><span class="line">yum install -y libcgroup-tools</span><br><span class="line">cgcreate -g cpu:/test</span><br><span class="line">cgget</span><br><span class="line">cgset</span><br></pre></td></tr></table></figure>
 
-    
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724205038988.png" alt="image-20200724205038988"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724205105451.png" alt="image-20200724205105451"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724211455990.png" alt="image-20200724211455990"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724211519041.png" alt="image-20200724211519041"></p>
+<p>虚拟设备对 就相当于 虚拟网卡之间的桥</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 列出所有网络命名空间</span></span><br><span class="line">ip netns list</span><br><span class="line">ip netns add test1</span><br><span class="line">ip a</span><br><span class="line"><span class="meta">#</span><span class="bash"> 定义虚拟设备对</span></span><br><span class="line">ip link add veth0 type veth peer name veth1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 将veth1转给test1</span></span><br><span class="line">ip link set veth1 netns test1</span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定test1 的网段</span></span><br><span class="line">ip netns exec test1 ip addr add 10.0.5.5/24 dev veth1</span><br><span class="line">ip netns exec test1 ip link set veth1 up</span><br><span class="line">ip netns exec test1 ip link set lo up</span><br><span class="line">ip netns exec test1 ip addr show</span><br><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line">ip addr add 10.0.5.6/24 dev veth0</span><br><span class="line">ip link set veth0 up</span><br></pre></td></tr></table></figure>
 
-    
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724212031275.png" alt="image-20200724212031275"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724213155070.png" alt="image-20200724213155070"></p>
+<p>k8s 各个节点之所以能互相访问是因为每个节点上都部署了 kube-proxy</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724213252839.png" alt="image-20200724213252839"></p>
+<p>上图中的架构，kube-proxy 太繁忙了，所以可以优化成iptables转发</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724213404820.png" alt="image-20200724213404820"></p>
+<p>但iptables转发规则太多的时候又不利于维护，所以又引入了ipvs （VIP server）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum search ipvs</span><br><span class="line">yum install -y ipvsadm.x86_64</span><br><span class="line">ipvsadm -Ln</span><br><span class="line">ipvsadm --clear</span><br></pre></td></tr></table></figure>
 
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/micro-service/microserv-command-and-event-model/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/micro-service/microserv-command-and-event-model/" itemprop="url">走出微服务误区：避免从单体到分布式单体</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-08T00:00:00+08:00">
-                2020-07-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/micro-service/" itemprop="url" rel="index">
-                    <span itemprop="name">micro-service</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <br>
-
-<p>作者 | 敖小剑</p>
-<p>最近，社区频繁出现各种对微服务的质疑和反思声音，甚至放弃微服务回归单体。鉴于此，本文从“分布式单体”问题出发，介绍通过引入非侵入式方案和引入 Event/EDA 来走出微服务实践误区——从单体到微服务，最后却沦为分布式单体。</p>
-<h1 id="1、回顾：从单体到微服务到-Function"><a href="#1、回顾：从单体到微服务到-Function" class="headerlink" title="1、回顾：从单体到微服务到 Function"></a>1、回顾：从单体到微服务到 Function</h1><p>在过去几年间，微服务架构成为业界主流，很多公司开始采用微服务，并将原有的单体应用迁移到微服务架构。从架构上说，微服务和单体之间最大的变化在于微服务架构下应用的粒度被“拆小”：将所有业务逻辑都集中在一起的单体应用，按照领域模型拆分为多个内聚而自治的“更小”应用。而 Function 则在拆分上更进一步，拆分粒度变成“单个操作”，基于 Function 逐渐演进出现了 FaaS 形态和 Serverless 架构。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124527.png" alt></p>
-<p>在微服务和 Serverless 喧嚣中，业界逐渐出现很多质疑和反对的声音：越来越多的人发现，当他们兴冲冲的迁移单体应用到微服务和 Serverless 架构后，收益却并没有期望中的那么理想。而最近，也出现了一些对微服务的各种质疑、反思的声音，甚至放弃微服务回归单体。举例，我在Infoq 中国网站简单搜索关键字“微服务”，前三页中就出现了如下内容：</p>
-<p>我们为什么停用微服务？</p>
-<p>这些公司为什么放弃微服务？</p>
-<p><a href="https://www.infoq.cn/article/KSzctluch2ijbRbKYBgO" target="_blank" rel="noopener">https://www.infoq.cn/article/KSzctluch2ijbRbKYBgO</a></p>
-<p>致传统企业朋友：不够痛就别微服务，有坑</p>
-<p><a href="https://www.infoq.cn/article/Nd0RofAUp0WtlvlQArbu" target="_blank" rel="noopener">https://www.infoq.cn/article/Nd0RofAUp0WtlvlQArbu</a></p>
-<p>微服务带来的心理阴影</p>
-<p>Uber 团队放弃微服务改用宏服务，网友评论炸锅了</p>
-<p>为什么 Segment 从微服务回归单体</p>
-<p>无论是支持还是反对微服务的声音，大多都是着眼于组织架构（康威定律，对应用和代码的 ownership）、微服务拆分（粒度大小，如何识别领域模型和业务边界）、分布式事务（跨多个微服务调用时维持一致性），工具（自动化构建、部署、可测试性、监控、分布式链路跟踪、CI/CD），数据库分离（避免多个微服务，尤其是领域模型外的微服务共享数据库）等方面进行合理性分析和观点阐述，相信大家都对这些问题都有了解。</p>
-<p>而我今天的文章，将从另外一个角度来看待微服务（也包括 Serverless）实践中存在的误区——辛辛苦苦从单体走到微服务，却最后沦为分布式单体。</p>
-<h1 id="2、分布式单体"><a href="#2、分布式单体" class="headerlink" title="2、分布式单体"></a>2、分布式单体</h1><p>“Distributed Monolith”，分布式单体，这真是一个悲伤的技术术语。而这偏偏是企业采用微服务后通常最容易掉进去的一个“陷阱”。事实上，我看到的很多微服务落地最终都是以”分布式单体”收场，无法获得微服务的完整收益。</p>
-<p>问题源于微服务实施的方式 —— 按照业务逻辑拆解单体，划分为多个微服务，定义 API 接口，然后通过 REST 或者 RPC 进行远程调用，最终把这些微服务组合起来提供各种业务功能。简单说，就是在业务拆分的基础上，用进程间的远程调用简单替代原来进程内的方法调用。期间，对于原来使用的各种分布式能力，继续采用之前的方式。简单说：方式不变，只是粒度变小。</p>
-<p>从方法论说，这样做无可厚非，这也是微服务采用过程中非常标准的做法。但问题在于，止步于此是不够的 —— 至少存在两个有待继续努力改进的地方。</p>
-<h3 id="分布式单体起因之一：通过共享库和网络客户端访问分布式能力"><a href="#分布式单体起因之一：通过共享库和网络客户端访问分布式能力" class="headerlink" title="分布式单体起因之一：通过共享库和网络客户端访问分布式能力"></a>分布式单体起因之一：通过共享库和网络客户端访问分布式能力</h3><p>分布式能力的共享库和网络客户端是造成分布式单体问题的原因之一，关于这一点，来自 verizon 的 Mohamad Byan 在他的名为 Avoid the Distributed Monolith!! 的演讲中有详细阐述，我这里援引他的图片和观点：</p>
-<p><a href="https://www.slideshare.net/DevOpsDaysDFW/avoid-the-distributed-monolith" target="_blank" rel="noopener">https://www.slideshare.net/DevOpsDaysDFW/avoid-the-distributed-monolith</a></p>
-<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="img"><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124559.png" alt></p>
-<p>上图是微服务体系的逻辑架构，由两部分组成：</p>
-<ul>
-<li>内层架构（图上浅蓝色部分），是每个微服务的实现架构；</li>
-<li>外层架构 (图上黄色部分)，是构建强大微服务架构所需要的各种能力。这里通常有大家熟悉的各种分布式能力。</li>
-</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724214332452.png" alt="image-20200724214332452"></p>
 <blockquote>
-<p>特别提示：这里说的“网络客户端”是各种分布式能力的客户端，如服务注册发现 /MQ 中间件 /Redis 等 key-value 存储 / 数据库 / 监控日志追踪系统 / 安全体系等，不是服务间通讯如 RPC 的客户端。</p>
+<p>cm -  ConfigMap 配置中心，涉及k8s的很多配置，都是用configMap来做的</p>
+<p>通过配置 可以 选择使用 iptables 还是 ipvs</p>
 </blockquote>
-<p>而内层的微服务是通过共享类库和网络客户端来访问外层架构提供的分布式能力：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124629.png" alt></p>
-<p>分布式能力的共享类库和网络客户端会迫使内层微服务和外层架构的各种分布式能力之间产生强耦合，增加运维的复杂性（如升级困难造成版本碎片化），多语言受限于类库和网络客户端支持的语言，各种组件（如消息中间件）往往使用自定义数据格式和通讯协议 —— 所有这些迫使内层微服务不得不实质性受限于外层架构的技术选型。</p>
-<p>对于 Function，这个问题就更加明显：Function 的粒度更小，更专注业务逻辑。某些简短的 Function 可能只有几百行代码，但是，为了让这几百行代码运转起来而需要引入的共享类库和网络客户端可能相比之下就规模惊人了。援引一张网上图片作为示意：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124654.png" alt></p>
-<h3 id="分布式单体起因之二：简单用远程调用替代进程内方法调用"><a href="#分布式单体起因之二：简单用远程调用替代进程内方法调用" class="headerlink" title="分布式单体起因之二：简单用远程调用替代进程内方法调用"></a>分布式单体起因之二：简单用远程调用替代进程内方法调用</h3><p>在微服务架构改造过程中，熟悉单体系统和架构的开发人员，习惯性的会将这些单体时代的知识和经验重用到新的微服务架构之中。其中最典型的做法就是：在遵循领域模型将现有单体应用按照业务边界拆分为多个微服务时，往往选择用 REST 或者 RPC 等远程调用方式简单替代原有的进程内方法调用。</p>
-<p>当两个逻辑上的业务模块存在协作需求时：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124717.png" alt></p>
-<p>从单体到微服务，直接方法调用被替换为远程调用（REST 或者 RPC），即使采用 Service Mesh 也只是在链路中多增加了 sidecar 节点，并未改变远程调用的性质：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124739.png" alt></p>
-<p>这导致了前面所说的 “分布式单体”：</p>
-<ul>
-<li>在微服务之前：应用程序由多个耦合在一起的模块组成，这些模块通过内存空间进行方法调用…..</li>
-<li>在微服务之后：应用程序由多个耦合在一起的微服务组成，这些微服务通过网络进行远程调用…..</li>
-</ul>
-<p>抛开调用方式的差异来看采用微服务前后的系统架构，会发现：<strong>两者几乎是完全一样的！！</strong></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124806.png" alt></p>
-<p>而微服务版本在某些情况下可能表现的更糟糕：因为调用方式更脆弱，因为网络远比内存不可靠。而我们将网络当成 “胶水” 来使用，试图把分散的业务逻辑模块（已经拆分为微服务）按照单体时代的同样方式简单粘在一起，这当然比单体在同一个进程内直接方法调用更加的不可靠。</p>
-<p>关于这一点，在”The Eight Fallacies of Distributed Computing/ 分布式计算的 8 个谬论”一文中有详细阐述。</p>
-<p><a href="https://www.red-gate.com/simple-talk/blogs/the-eight-fallacies-of-distributed-computing/" target="_blank" rel="noopener">https://www.red-gate.com/simple-talk/blogs/the-eight-fallacies-of-distributed-computing/</a></p>
-<p>类似的，在采用 Function 时，如果依然沿用上面的方式，以单体或微服务架构的思维方式和设计模式来创建 FaaS/Serverless 架构：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124859.png" alt></p>
-<p>其本质不会发生变化 —— 不过是将微服务变成粒度更小的函数，导致系统中的远程调用数量大为增加：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708124924.png" alt></p>
-<p>系统内的耦合并没有发生变化，Serverless 并不能改变微服务中存在的这个内部耦合问题：调用在哪里，则耦合就在哪里！只是把将组件的粒度从 “微服务“换成了 “Function/ 函数”。</p>
-<p>耦合的存在是源于系统不同组件之间的通讯模式，而不是实现通讯的技术。</p>
-<p>如果让两个组件通过“<strong>调用</strong>”（后面再展开讲何为调用）进行远程通信，那么不管调用是如何实现的，这两个组件都是紧密耦合。因此，当系统从单体到微服务到 Serverless，如果止步于简单的用远程调用替代进程内方法调用，那么系统依然是高度耦合的，从这个角度来说：</p>
-<p><strong>单体应用 ≈ 分布式单体 ≈ Serverless 单体</strong></p>
-<h3 id="分布式单体起因小结"><a href="#分布式单体起因小结" class="headerlink" title="分布式单体起因小结"></a>分布式单体起因小结</h3><p>上面，我们列出了微服务和 Serverless 实践中容易形成“分布式单体”的两个主要原因：</p>
-<ol>
-<li>通过共享库和网络客户端访问分布式能力；</li>
-<li>简单用远程调用替代进程内方法调用。</li>
-</ol>
-<p>下面我们针对这两个问题探讨解决的思路和对策。</p>
-<h1 id="3、引入非侵入式方案：物理隔离-逻辑抽象"><a href="#3、引入非侵入式方案：物理隔离-逻辑抽象" class="headerlink" title="3、引入非侵入式方案：物理隔离 + 逻辑抽象"></a>3、引入非侵入式方案：物理隔离 + 逻辑抽象</h1><p>前面谈到分布式单体产生的一个原因是“<strong>通过共享库和网络客户端访问分布式能力</strong>”，造成微服务和 Lambda 函数和分布式能力强耦合。以 Service Mesh 为典型代表的非侵入式方案是解决这一问题的有效手段，其他类似方案有 RSocket / Multiple Runtime Architecture，以及数据库和消息的 Mesh 化产品，其基本思路有两点：</p>
-<ol>
-<li><strong>委托</strong>：通过 Sidecar 或者 Runtime 来进行对分布式能力的访问，避免应用和提供分布式能力的组件直接通讯造成强绑定 —— <strong>通过物理隔离进行解耦。</strong></li>
-<li><strong>抽象</strong>：对内层微服务隐藏实现细节，只暴露网络协议和数据契约，将外围架构的各种分布式能力以 API 的方式暴露出来，而屏蔽提供这些能力的具体实现 —— <strong>通过逻辑抽象进行解耦。</strong></li>
-</ol>
-<p>以 Service Mesh 的 Sidecar 为例，在植入 Sidecar 之后，业务应用需要直接对接的分布式能力就大为减少（物理隔离）：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125044.png" alt></p>
-<p>最近出现的 Multiple Runtime / Mecha 架构，以及遵循这一架构思想的微软开源产品 Dapr ，则将这个做法推进到服务间通讯之外更多的分布式能力。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125101.png" alt></p>
-<p>此外在委托之外，还提供对分布式能力的抽象。比如在 Dapr 中，业务应用只需要使用 Dapr 提供的标准 API，就可以使用这些分布式能力而无法关注提供这些能力的具体产品（逻辑抽象）：</p>
-<p>以 pub-sub 模型中的发消息为例，这是 Dapr 提供的 Java 客户端 SDK API：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">DaprClient</span> </span>&#123;</span><br><span class="line">    <span class="function">Mono&lt;Void&gt; <span class="title">publishEvent</span><span class="params">(String topic, Object event)</span></span>;</span><br><span class="line">   <span class="function">Mono&lt;Void&gt; <span class="title">publishEvent</span><span class="params">(String topic, Object event, Map&lt;String, String&gt; metadata)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724214418390.png" alt="image-20200724214418390"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724215025073.png" alt="image-20200724215025073"></p>
+<h3 id="服务类型"><a href="#服务类型" class="headerlink" title="服务类型"></a>服务类型</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724215456247.png" alt="image-20200724215456247"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724215522003.png" alt="image-20200724215522003"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724215717140.png" alt="image-20200724215717140"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724215704461.png" alt="image-20200724215704461"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724215821221.png" alt="image-20200724215821221"></p>
+<blockquote>
+<p>32659 是宿主机ip，指向容器的8000端口</p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724215926221.png" alt="image-20200724215926221"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724215944494.png" alt="image-20200724215944494"></p>
+<p>在yaml文件中可指定端口</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200724220348401.png" alt="image-20200724220348401"></p>
+<h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><h3 id="ingress"><a href="#ingress" class="headerlink" title="ingress"></a>ingress</h3><h1 id="k8s-存储类型"><a href="#k8s-存储类型" class="headerlink" title="k8s 存储类型"></a>k8s 存储类型</h1><h3 id="configMap"><a href="#configMap" class="headerlink" title="configMap"></a>configMap</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200728203419455.png" alt="image-20200728203419455"></p>
+<h3 id="pv-pvc"><a href="#pv-pvc" class="headerlink" title="pv/pvc"></a>pv/pvc</h3><p>pv：Persistence Volume</p>
+<p>pvc：Persistence Volume Claim（声明）</p>
+<p>pv 支持 filesystem 和 blockDevice</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pv -n devops</span><br></pre></td></tr></table></figure>
 
-<p>可见在发送事件时，Dapr 完全屏蔽了底层消息机制的具体实现，通过客户端 SDK 为应用提供发送消息的高层抽象，在 Dapr Runtime 中对接底层 MQ 实现——完全解耦应用和 MQ：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125239.png" alt></p>
-<p>关于 Multiple Runtime / Mecha 架构的介绍不在这里深入展开，有兴趣的同学可以浏览我之前的博客文章——“Mecha：将 Mesh 进行到底”。</p>
-<p><a href="https://skyao.io/talk/202004-mecha-mesh-through-to-the-end/" target="_blank" rel="noopener">https://skyao.io/talk/202004-mecha-mesh-through-to-the-end/</a></p>
-<p>稍后我会有一篇深度文章针对上面这个话题，详细介绍在消息通讯领域和 EDA 架构下如何实现消息通讯和事件驱动的抽象和标准化，以避免业务应用和底层消息产品绑定和强耦合，敬请关注。</p>
-<h1 id="4-引入-Event：解除不必要的强耦合"><a href="#4-引入-Event：解除不必要的强耦合" class="headerlink" title="4 引入 Event：解除不必要的强耦合"></a>4 引入 Event：解除不必要的强耦合</h1><p>在解决了微服务 /Serverless 系统和外部分布式能力之间紧耦合的问题后，我们继续看微服务 /Serverless 系统内部紧耦合的问题。前面讨论到，从单体到微服务到 Function/Serverless，如果只是简单的将直接方法调用替换为远程调用（REST 或者 RPC），那么两个通讯的模块之间会因为这个紧密耦合的调用而形成依赖，而且依赖关系会伴随调用链继续传递，导致形成一个树形的依赖关系网络，表现为系统间的高度耦合：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125349.png" alt></p>
-<p>要解决这个问题，基本思路在于审视两个组件之间通讯行为的业务语义，然后据此决定两者之间究竟是应该采用 Command/ 命令模式还是 Event/ 事件模式。</p>
-<h3 id="温故而知新：Event-和-Command"><a href="#温故而知新：Event-和-Command" class="headerlink" title="温故而知新：Event 和 Command"></a>温故而知新：Event 和 Command</h3><p>首先，我们来温习一下 Event 和 Command 的概念和差别，借用一张图片，总结的非常到位：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125408.png" alt></p>
-<p>什么是 Event？</p>
-<blockquote>
-<p>Event: “A significant change in state” — K. Mani Chandy</p>
-</blockquote>
-<p>Event 代表领域中已经发生的事情：通常意味着有行为（Action）已经发生，有状态（Status）已经改变。</p>
-<p>因为是已经发生的事情，因此：</p>
-<ul>
-<li>Event 可以被理解为是对已经发生的事实的客观陈述；</li>
-<li>这意味着 Event 通常是不可变的：Event 的信息（代表着客观事实）不能被篡改，Event 的产生不能逆转；</li>
-<li>命名：Event 通常以动词的完成时态命名，如 UserRegistredEvent。</li>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200728221059607.png" alt="image-20200728221059607"></p>
+<p>如果pvc没有指定pv，则按照最小匹配原则 匹配PV</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200728221135855.png" alt="image-20200728221135855"></p>
+<h4 id="访问模式"><a href="#访问模式" class="headerlink" title="访问模式"></a>访问模式</h4><ul>
+<li>NFS：以linux方式搭建</li>
+<li>RWO (Read-Write-Once)：单个节点读写</li>
+<li>ROX (Read-Only-Many)：多个节点只读</li>
+<li>RWX（Read-Write-Many）：多个节点读写</li>
 </ul>
-<p>产生 Event 的目标是为了接下来的 Event 传播：</p>
-<ul>
-<li>将已经发生的 Event 通知给对此感兴趣的观察者；</li>
-<li>收到 Event 的观察者将根据 Event 的内容进行判断和决策：可能会有接下来的动作（Action），有些动作可能需要和其他模块通讯而触发命令（Command），这些动作执行完毕可能会造成领域状态的改变从而继续触发新的事件（Event）。</li>
+<h4 id="回收策略"><a href="#回收策略" class="headerlink" title="回收策略"></a>回收策略</h4><ul>
+<li>Retain：手动回收</li>
+<li>Recycle：基本擦除（rm -rf /somevolume/*）</li>
+<li>Delete： 和 会提供商有关</li>
 </ul>
-<p>Event 传播的方式：</p>
-<ul>
-<li>Event 有明确的“源 /source”，即 Event 产生（或者说状态改变）的发生地；</li>
-<li>但由于生产者并不知道（不愿意 / 不关心）会有哪些观察者对 Event 感兴趣，因此 Event 中并不包含“目的地 /Destination”信息；</li>
-<li>Event 通常是通过 MessageQueue 机制，以 pub-sub 的方式传播；</li>
-<li>Event 通常不需要回复（ reply）或者应答（response）；</li>
-<li>Event 通常用 发布（publish）。</li>
+<h4 id="PV生命周期"><a href="#PV生命周期" class="headerlink" title="PV生命周期"></a>PV生命周期</h4><ul>
+<li>Avaliable：空闲没有被绑定</li>
+<li>Bound：已经被绑定</li>
+<li>Release：已经被释放，但没有重新声明</li>
+<li>Failed：回收失败</li>
 </ul>
-<p>什么是 Command？</p>
-<p>Command 用于传递一个要求执行某个动作（Action）的请求。</p>
-<p>Command 代表将要发生的事情：</p>
-<ul>
-<li>通常意味着行为（Action）还未发生但即将发生（如果请求被接受和执行）；</li>
-<li>存在被拒绝的可能：不愿意执行（参数校验失败，权限不足），不能执行（接收者故障或者资源无法访问）；</li>
-<li>命名：Command 通常以动词的普通形态命名，如 UserRegisterCommand。</li>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731203239975.png" alt="image-20200731203239975"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200728220139919.png" alt="image-20200728220139919"></p>
+<h3 id="k8s-生命周期"><a href="#k8s-生命周期" class="headerlink" title="k8s 生命周期"></a>k8s 生命周期</h3><ul>
+<li>Pending</li>
+<li>ContainerCreating</li>
+<li>Running</li>
+<li></li>
 </ul>
-<p>产生 Command 的目标是为了接下来的 Command 执行：</p>
+<h1 id="k8s-调度器及HELM"><a href="#k8s-调度器及HELM" class="headerlink" title="k8s 调度器及HELM"></a>k8s 调度器及HELM</h1><h3 id="亲和力"><a href="#亲和力" class="headerlink" title="亲和力"></a>亲和力</h3><h4 id="节点亲和力"><a href="#节点亲和力" class="headerlink" title="节点亲和力"></a>节点亲和力</h4><p>硬亲和：requiredDuringSchedulingIgnoredDuringExecution。如果节点label改了，服务会被驱逐</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731211448916.png" alt="image-20200731211448916"></p>
+<p>软亲和：perferredDuringSchedulingIgnoredDuringExecution。如果节点label改了，服务还能迁移到其他节点</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731212040097.png" alt="image-20200731212040097"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731212408234.png" alt="image-20200731212408234"></p>
+<h4 id="pod-亲和力"><a href="#pod-亲和力" class="headerlink" title="pod 亲和力"></a>pod 亲和力</h4><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731212542351.png" alt="image-20200731212542351"></p>
+<h3 id="驱逐（排除）"><a href="#驱逐（排除）" class="headerlink" title="驱逐（排除）"></a>驱逐（排除）</h3><h3 id="污点节点taint"><a href="#污点节点taint" class="headerlink" title="污点节点taint"></a>污点节点taint</h3><p>让pod部署不到这个节点上</p>
 <ul>
-<li>将 Command 发送给期望的执行者；</li>
-<li>收到 Command 的执行者将根据 Command 的要求进行执行：在执行的过程中内部可能有多个动作（Action），有些动作可能需要和其他模块通讯而触发命令（Command），这些动作执行完毕可能会造成领域状态的改变从而继续触发新的事件（Event）。</li>
-</ul>
-<p>Command 的传播方式：</p>
-<ul>
-<li>Command 有明确的源（Source），即 Command 的发起者；</li>
-<li>Command 也有非常明确的执行者（而且通常是一个），因此命名通常包含“目的地 /Destination”信息；</li>
-<li>Command 通常是通过 HTTP / RPC 这样的点对点远程通讯机制，通常是同步；</li>
-<li>Command 通常需要应答（Response）：回应 Command 是否被执行（因为可能被拒绝），执行结果（因为可能执行失败）；</li>
-<li>Command 通常用 发送（Send）。</li>
-</ul>
-<p>Command 和 Event 总结</p>
-<p>总结 —— Command 和 Event 的本质区别在于他们的意图：</p>
-<ul>
-<li>Command 的意图是告知希望发生的事情；</li>
-<li>Event 的意图是告知已经发生的事情。</li>
-</ul>
-<p>意图上的差异最终会在服务间依赖关系上有特别的体现：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125437.png" alt></p>
-<ul>
-<li>Command 的发起者必须明确知晓 Command 的接收者并明确指示需要做什么（所谓的命令、指示、操纵、编排），尤其当发起者连续发出多个 Command 时，通常这些 Command 会有非常明确的顺序和逻辑关系，以组合为特定的业务逻辑。</li>
-</ul>
-<p>Command 的依赖关系简单明确: 发起者 “显式依赖” 接收者</p>
-<ul>
-<li>Event 的发起者只需负责发布 Event，而无需关注 Event 的接收者，包括接收者是谁（一个还是多个）以及会做什么（所谓的通知、驱动、协调）。即使 Event 实际有多个接收者，这些接受者之间往往没有明确的顺序关系，其处理过程中的业务逻辑也往往是彼此独立的。</li>
-</ul>
-<p>Event 的依赖关系稍微复杂一些：发起者明确不依赖接收者，接收者则存在对发起者 “隐式的反向依赖” ——反向是指和 Command 的依赖关系相比方向调转，是接受者反过来依赖发起者；隐式则是指这种依赖只体现于 “接受者依赖 Event，而 Event 是由发起者发布” 的间接关系中，接受者和发起者之间并不存在直接依赖关系。</p>
-<h3 id="从业务视角出发：关系模型决定通讯行为"><a href="#从业务视角出发：关系模型决定通讯行为" class="headerlink" title="从业务视角出发：关系模型决定通讯行为"></a>从业务视角出发：关系模型决定通讯行为</h3><p>在温习完 Command 和 Event 之后，我们再来看我们前面的问题：<strong>为什么简单的将直接方法调用替换为远程调用（REST 或者 RPC）会出问题？</strong>主要原因是在这个替换过程中，所谓简单是指不假思索直接选择远程调用，也就是选择全程 Command 方式：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125503.png" alt></p>
-<p>真实业务场景下各个组件（微服务或者 Function）的业务逻辑关系，通常不会像上图这么夸张，不应该全是 Command （后面会谈到也不应该全是 Event） ，而应该是类似下图描述的两者结合，以微服务为例（Function 类推）：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125521.png" alt></p>
-<p>业务输入：图上微服务 A 接收到业务请求的输入（可能是 Command 方式，也可能是 Event 方式）</p>
-<p>业务逻辑 “实现” 的执行过程：</p>
-<ul>
-<li>微服务 A 在执行 Command（或者被 Event 触发）的过程中，会有很多动作（Action）；</li>
-<li>有些是微服务 A 内部的动作，比如操作数据库，操作 key-value 存储，内存中的业务逻辑处理等；</li>
-<li>有些是和外部微服务进行通讯，如执行查询或要求对方进行某些操作，这些通讯方式是以 Command 的形式，如图上和微服务 B 的通讯；</li>
-<li>在这些内部和外部动作完成之后，执行过程完成；</li>
-<li>如果是 Command，则需要以应答的形式给回 Command 操作的结果。</li>
-</ul>
-<p>业务状态变更触发的后续行为：</p>
-<ul>
-<li>在上面的执行过程完成后，如果涉及到业务状态的变更，则需要为此发布事件；</li>
-<li>事件通过 event bus 分发给对该事件感兴趣的其他微服务：注意这个过程是解耦的，微服务 A 不清楚也不关心哪些微服务对此事件感兴趣，事件也不需要应答。</li>
-</ul>
-<p>上面微服务 A 的业务逻辑执行处理过程中，需要以 Command 或者 Event 方式和其他微服务通讯，如图中的微服务 B/C/D/E。而对于这些微服务 B/C/D/E（视为微服务 A 的下游服务），他们在接受到业务请求后的处理流程和微服务 A 的处理流程是类似的。</p>
-<p>因此我们可以简单推导一下，当业务处理逻辑从微服务 A 延展到微服务 A 的下游服务（图中的微服务 B/C/D/E）时的场景：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125536.png" alt></p>
-<p>将图中涉及的微服务 A/B/C/D/E 在处理业务逻辑的行为总结下来，通讯行为大体是一样的：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125604.png" alt></p>
-<p>抽象起来，一个典型的微服务在业务处理流程中的通讯行为可以概括为以下四点：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125642.png" alt></p>
-<ol>
-<li>输入：以一个 Command 请求或者一个 Event 通知为输入，这是业务处理流程的起点。</li>
-<li>内部 Action：微服务的内部逻辑，典型如数据库操作，访问 Redis 等 key-value 存储（对应于 Multiple Runtime/Mecha 架构中的各种分布式能力）。可选，通常为 0-N 个。</li>
-<li>外部访问：以 Command 形式访问外部的其他微服务。可选，通常为 0-N 个。</li>
-<li>通告变更：以 Event 形式对外发布事件，通告上述操作产生的业务状态的变更。可选，通常为 0-1 个。</li>
-</ol>
-<p>在这个行为模式中，2 和 3 是没有顺序的，而且可能交错执行，而 4 通常都是在流程的最后：只有当各种内部 Action 和外部 Command 都完成，业务逻辑实现结束，状态变更完成，“木已成舟”，才能以 Event 的方式对外发布：“操作已完成，状态已变更，望周知”。</p>
-<p>这里我们回顾一下前面的总结 —— Event 和 Command 的本质区别在于他们的意图：</p>
-<ul>
-<li>Event 的意图是告知已经发生的事情；</li>
-<li>Command 的意图是告知希望发生的事情。</li>
-</ul>
-<p>从业务逻辑处理的角度来看，外部访问的 Command 和内部操作的 Action 是业务逻辑的 “实现” 部分：这些操作组成了完整的业务逻辑——如果这些操作失败，则业务处理将会直接影响（失败或者部分失败）。而发布事件则是业务逻辑完成之后的后续 “通知” 部分：当业务逻辑处理完毕，状态变更完成后，以事件的方式驱动后续的进一步处理。注意是驱动，而不是直接操纵。</p>
-<p>从时间线的角度来看整个业务处理流程如下图所示：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125658.png" alt></p>
-<h3 id="全程-Command-带来的问题：不必要的强耦合"><a href="#全程-Command-带来的问题：不必要的强耦合" class="headerlink" title="全程 Command 带来的问题：不必要的强耦合"></a>全程 Command 带来的问题：不必要的强耦合</h3><p>全程 Command 的微服务系统，存在的问题就是在上述最后阶段的“状态变更通知”环节，没有采用 Event 和 pub-sub 模型，而是继续使用 Command 逐个调用下游相关的其他微服务：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125719.png" alt></p>
-<p>Event 可以解耦生产者和消费者，因此图中的微服务 A 和微服务 C/D/E 之间没有强烈的依赖关系，彼此无需锁定对方的存在。但是 Command 不同，在采用 Command 方式后微服务 A 和下游相关微服务 C/D/E 会形成强依赖，而且这种依赖关系会蔓延，最终导致形成一颗巨大而深层次的依赖树，而 Function 由于粒度更细，问题往往更严重：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125751.png" alt></p>
-<p>而如果在“状态变更通知”环节引入 Event，则可以解耦微服务和下游被通知的微服务，从而将依赖关系解除，避免无限制的蔓延。如下图所示，左边图形是使用 Event 代替 Command 来进行状态变更通知之后的依赖关系，考虑到 Event 对生产者和消费者的解耦作用，我们“斩断”绿色的 Event 箭头，这样就得到了右边这样一个被分解为多个小范围依赖树的系统依赖关系图：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125805.png" alt></p>
-<p>对 Event 和 Command 使用的建议：</p>
-<ul>
-<li>在单体应用拆分为微服务时，不应该简单的将原有的方法调用替换为 Command；</li>
-<li>应该审视每个调用在业务逻辑上的语义：是业务逻辑执行的组成部分？还是执行完成之后的状态通知？</li>
-<li>然后据此决定采用 Command 还是 Event。</li>
-</ul>
-<h3 id="编排和协调"><a href="#编排和协调" class="headerlink" title="编排和协调"></a>编排和协调</h3><p>在 Command 和 Event 的使用上，还有两个概念：<strong>编排和协调。</strong></p>
-<p>这里强烈推荐一篇博客文章， Microservices Choreography vs Orchestration: The Benefits of Choreography，作者 Jonathan Schabowsky ，Solace 的 CTO。他在这边博客中总结了让微服务协同工作的两种模式，并做了一个生动的比喻：</p>
-<p><a href="https://solace.com/blog/microservices-choreography-vs-orchestration/" target="_blank" rel="noopener">https://solace.com/blog/microservices-choreography-vs-orchestration/</a></p>
-<p><strong>编排</strong>（Orchestration）：需要主动控制所有的元素和交互，就像指挥家指挥乐团的乐手一样——对应 Command。</p>
-<p><strong>协调</strong>（Choreography）：需要建立一个模式，微服务会跟随音乐起舞，不需要监督和指令——对应 Event。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125835.png" alt></p>
-<p>也曾看到很多持类似观点的文章，其中有一张图片印象深刻，我摘录过来：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125849.png" alt></p>
-<p>左边是期望通过编排（Orchestration）方式得到的整齐划一的理想目标，右边是实际得到的大型翻车现场。</p>
-<h3 id="全程-Event-带来的问题：开发困难和业务边界不清晰"><a href="#全程-Event-带来的问题：开发困难和业务边界不清晰" class="headerlink" title="全程 Event 带来的问题：开发困难和业务边界不清晰"></a>全程 Event 带来的问题：开发困难和业务边界不清晰</h3><p>在 Command 和 Event 的使用上，除了全程使用 Command 之外，还有一个极端是全程使用 Event，这一点在 Lambda（FaaS）中更常见一些：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125913.png" alt></p>
-<p>这个方式首当其冲的问题就是在适用 Command 语义的地方采用了 Event 来替代，而由于 Command 和 Event 在使用语义上的差异，这个替代会显得别扭：</p>
-<ul>
-<li><p>Command 是一对一的，替代它的 Event 也不得不从 “1:N” 退化为 “1:1”，pub-sub 模型不再存在。</p>
+<li><p>NoSchedule：Pod 不会被分配到该节点</p>
 </li>
-<li><p>Command 是需要返回结果的，尤其是 Query 类的 Command 必须要有查询结果，使用 Event 替代之后，就不得不实现 “支持 Response 的 Event”，典型如在消息机制中实现 Request-Reply 模型的。</p>
+<li><p>PerferNoSchedule：尝试不要将pod分配到该节点</p>
 </li>
-<li><p>或者引入另外一个 Event 来反向通知结果，即用两个异步 Event 来替代一个同步的 Command —— 这需要让发起者进行额外的订阅和处理，开发复杂性远远超过使用简单的 Command。</p>
-</li>
-<li><p>而且还引入了一个非常麻烦的状态问题：即服务间通讯的上下文中通常是有状态的，Reply Event 必须准确的发送给 Request Event 的发起者的实例，而不能任意选择一个。这使得 Reply Event 不仅仅要 1:1 的绑定订阅者服务，还必须绑定这个服务的特定实例 —— 这样的 Reply Event 已经没法称为 Event 了。</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125925.png" alt></p>
-</li>
-<li><p>绕开这个状态问题的常见方案是选择无状态的场景，如果处理 Reply Event 时无需考虑状态，那么 Event Reply 才能简单的发送给任意的实例。</p>
+<li><p>NoExecute：Pod肯定不会被分配到该节点，部署在该节点的pod会被驱逐</p>
 </li>
 </ul>
-<p>对于粒度较大的微服务系统，通常很难实现无状态，所以在微服务中全程采用 Event 通常会比较别扭的，事实上也很少有人这样做。而在粒度非常小的 Function/FaaS 系统中，全程采用 Event 方式比较常见。</p>
-<p>关于全程使用 Event，我个人持保留态度，我倾向于即使是在 FaaS 中，也适当保留 Command 的用法：如果某个操作是“业务逻辑”执行中不可或缺的一部分，那么 Command 方式的紧耦合反而更能体现出这个“业务逻辑”的存在：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708125941.png" alt></p>
-<p>如果完全采用 Event 方式，“彻底”解耦，则产生新的问题（且不论在编码方面额外带来的复杂度） —— 在海量细粒度的 Event 调用下，业务逻辑已经很难体现，领域模型（Domain Modeling）和 有界上下文（Bounded Context）则淹没在这些 Event 调用下，难于识别：</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708130010.png" alt></p>
-<blockquote>
-<p>备注：这个问题被称为“Lambda Pinball”，这里不深入展开，后续计划会有一篇文章单独详细探讨“Lambda Pinball”的由来和解决的思路。</p>
-</blockquote>
-<h3 id="Command-和-Event-的选择：实事求是不偏不倚"><a href="#Command-和-Event-的选择：实事求是不偏不倚" class="headerlink" title="Command 和 Event 的选择：实事求是不偏不倚"></a>Command 和 Event 的选择：实事求是不偏不倚</h3><p>总结一下 Command 和 Event 的选择，我个人的建议是不要一刀切：全程 Command 方式的缺点容易理解，但简单替换为全程 Event 也未必合适。</p>
-<p>我的个人观点是倾向于从实际“业务逻辑”处理的语义出发，判断：</p>
-<ul>
-<li>如果是业务逻辑的 “实现” 部分：倾向于选择使用 Command；</li>
-<li>如果是业务逻辑完成之后的后续 “通知” 部分：强烈建议选择使用 Event。</li>
-</ul>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200708130038.png" alt></p>
-<h1 id="5、总结与反思"><a href="#5、总结与反思" class="headerlink" title="5、总结与反思"></a>5、总结与反思</h1><h3 id="警惕：不要沦为分布式单体"><a href="#警惕：不要沦为分布式单体" class="headerlink" title="警惕：不要沦为分布式单体"></a>警惕：不要沦为分布式单体</h3><p>上面我们列出了微服务和 Serverless 实践中容易形成 “分布式单体” 的两个主要原因和对策：</p>
-<ul>
-<li>通过共享库和网络客户端访问分布式能力：引入非侵入方案解耦应用和各种分布式能力；</li>
-<li>简单用远程调用替代进程内方法调用：区分 Command 和 Event，引入 Event 来解除微服务间不必要的强耦合。</li>
-</ul>
-<p>前者在技术上目前还不太成熟，典型如 Istio/Dapr 项目都还有待加强，暂时在落地上阻力比较大。但后者已经是业界多年的成熟实践，甚至在微服务和 Serverless 兴起之前就广泛使用，因此建议可以立即着手改进。</p>
-<p>关于如何更方便的将 Event 和 Event Driven Architecture 引入到微服务和 Serverless 中，同时又不与提供 Message Queue 分布式能力的具体实现耦合，我将在稍后文章中详细展开，敬请期待。</p>
-<h3 id="反思：喧闹和谩骂之外的冷静思考"><a href="#反思：喧闹和谩骂之外的冷静思考" class="headerlink" title="反思：喧闹和谩骂之外的冷静思考"></a>反思：喧闹和谩骂之外的冷静思考</h3><p>如果我们在微服务和 Serverless 实践中，始终停留在“用远程调用简单替代进程内方法调用”的程度，并固守单体时代的习惯引入各种 SDK，那么分布式单体问题就必然不可避免。我们的微服务转型、Serverless 实践最后得到的往往是：</p>
-<h4 id="把单体变成…更糟糕的分布式单体"><a href="#把单体变成…更糟糕的分布式单体" class="headerlink" title="把单体变成…更糟糕的分布式单体"></a>把单体变成…更糟糕的分布式单体</h4><p>当然，微服务可能成为分布式单体，但这并不意味着微服务架构是个谎言，也不意味着比单体架构更差。Serverless 可能同样遭遇分布式单体（还有后续要深入探讨的 Lambda Pinball），但这也不意味着 Serverless 不可取 —— 微服务和 Serverless 都是解决特定问题的工具，和所有的工具一样，在使用工具之前，我们需要先研究和了解它们，学习如何正确的使用它们：</p>
-<ul>
-<li>需要为微服务创建正确的架构，和单体架构必然会有很大的不同：一定不是“原封不动”的将方法调替换为远程调用，最好不要用共享类库和网络客户端的方式直接使用各种分布式能力；</li>
-<li>Serverless 更是需要我们对架构进行彻底的反思，需要改变思维方式，才能保证收益大于弊端。</li>
-</ul>
-<p>参考资料和推荐阅读：</p>
-<ol>
-<li>《Avoid the Distributed Monolith!!》：Verizon 的 Mohamad Byan 在 2018 年 9 月的一个演讲，描述微服务实践中的分布式单体陷阱和解决的方式。——<a href="https://www.slideshare.net/DevOpsDaysDFW/avoid-the-distributed-monolith" target="_blank" rel="noopener">https://www.slideshare.net/DevOpsDaysDFW/avoid-the-distributed-monolith</a></li>
-<li>《Mecha：将 Mesh 进行到底》：详细介绍 Multiple Runtime / Macha 架构，将更多的分布式能力进行 Mesh 化——<a href="https://skyao.io/talk/202004-mecha-mesh-through-to-the-end/" target="_blank" rel="noopener">https://skyao.io/talk/202004-mecha-mesh-through-to-the-end/</a></li>
-<li>《The Eight Fallacies of Distributed Computing》：分布式计算领域的经典文章，中文翻译如下——<a href="http://www.xumenger.com/the-eight-fallacies-of-distributed-computing-20180817/" target="_blank" rel="noopener">http://www.xumenger.com/the-eight-fallacies-of-distributed-computing-20180817/</a></li>
-<li>《Opportunities and Pitfalls of Event-driven Utopia》：Bernd Rücker 在 QCon 上的一个演讲，讲述“事件驱动乌托邦的机遇与陷阱”，本文部分图片来自这份 PPT——<a href="https://www.youtube.com/watch?v=jjYAZ0DPLNM" target="_blank" rel="noopener">https://www.youtube.com/watch?v=jjYAZ0DPLNM</a></li>
-<li>《Practical DDD: Bounded Contexts + Events =&gt; Microservices》：Indu Alagarsamy 的一个演讲，介绍领域驱动开发（DDD）和 Messaging 的交集。推荐使用消息技术在干净、定义良好的有界上下文之间进行通信，以去除时空耦合。——<a href="https://www.infoq.com/presentations/microservices-ddd-bounded-contexts/" target="_blank" rel="noopener">https://www.infoq.com/presentations/microservices-ddd-bounded-contexts/</a></li>
-<li>《Building Event-Driven Cloud Applications and Services》：讨论构建事件驱动的应用和服务的通用实践和技术，是一个序列教程——<a href="https://medium.com/@ratrosy/building-event-driven-cloud-applications-and-services-ad0b5b970036。" target="_blank" rel="noopener">https://medium.com/@ratrosy/building-event-driven-cloud-applications-and-services-ad0b5b970036。</a></li>
-<li>《The Architect’s Guide to Event-Driven Microservices》：Solace 公司网站上的一份 PDF 格式的小册子——<a href="https://go.solace.com/wp-download-eventdrivenmicroservices.html" target="_blank" rel="noopener">https://go.solace.com/wp-download-eventdrivenmicroservices.html</a></li>
-<li>《致传统企业朋友：不够痛就别微服务，有坑》：网易云刘超刘老师的超级好文章，极其实在而全面的讲述微服务落地需要考虑的方方面面以及各种问题，强烈推荐阅读。——<a href="https://www.infoq.cn/article/Nd0RofAUp0WtlvlQArbu" target="_blank" rel="noopener">https://www.infoq.cn/article/Nd0RofAUp0WtlvlQArbu</a></li>
-</ol>
+<p><img src="C:%5CUsers%5CCarloZ%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200731214656698.png" alt="image-20200731214656698"></p>
+<p>加污点</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731213938727.png" alt="image-20200731213938727"></p>
+<p>去除污点</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731214208090.png" alt="image-20200731214208090"></p>
+<h3 id="容忍tolerations"><a href="#容忍tolerations" class="headerlink" title="容忍tolerations"></a>容忍tolerations</h3><p>容忍是对于pod来说的</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731214531002.png" alt="image-20200731214531002"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731214738005.png" alt="image-20200731214738005"></p>
+<h1 id="k8s-集群安全机制"><a href="#k8s-集群安全机制" class="headerlink" title="k8s 集群安全机制"></a>k8s 集群安全机制</h1><p>configMap 配置k8s 程序配置 非加密</p>
+<p>secret</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731220718131.png" alt="image-20200731220718131"></p>
+<p>ServiceAccount token</p>
+<p>opaque passwork 密钥</p>
 
           
         
@@ -2880,7 +2749,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2926,7 +2795,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-count">236</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2937,7 +2806,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2948,7 +2817,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -314,6 +314,1387 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/maximum-subarray/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/leetcode/maximum-subarray/" itemprop="url">最大子序和</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-01T00:00:00+08:00">
+                2017-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="算法：动态规划"><a href="#算法：动态规划" class="headerlink" title="算法：动态规划"></a>算法：动态规划</h1><p>​     </p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>url：<a href="https://leetcode-cn.com/problems/maximum-subarray/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/maximum-subarray/</a></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">给定一个整数数组 <span class="selector-tag">nums</span> ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。</span><br><span class="line"></span><br><span class="line">示例:</span><br><span class="line"></span><br><span class="line">输入: <span class="selector-attr">[-2,1,-3,4,-1,2,1,-5,4]</span>,</span><br><span class="line">输出: 6</span><br><span class="line">解释: 连续子数组 <span class="selector-attr">[4,-1,2,1]</span> 的和最大，为 6。</span><br><span class="line">进阶:</span><br><span class="line"></span><br><span class="line">如果你已经实现复杂度为 <span class="selector-tag">O</span>(<span class="selector-tag">n</span>) 的解法，尝试使用更为精妙的分治法求解。</span><br></pre></td></tr></table></figure>
+
+<p>分析： 根据 最大和求最长子序列</p>
+<p>长度为1的最大和子序列 =&gt; 长度为2的最大和子序列 =&gt; 长度为3的最大和子序列</p>
+<p>​     </p>
+<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><h3 id="1、动态规划"><a href="#1、动态规划" class="headerlink" title="1、动态规划"></a>1、动态规划</h3><p>求出每个位置（及其之前累计）的最大和：</p>
+<p>max(i-1) &gt;0 : max(i) =  max(i-1) + nums[i]</p>
+<p>max(i-1) &lt;=0 : max(i) =  nums[i]</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MaxKV</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MaxKV</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">this</span>.i = i; <span class="keyword">this</span>.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> maxVal=Integer.MIN_VALUE;</span><br><span class="line">        MaxKV[] maxKV = <span class="keyword">new</span> MaxKV[nums.length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;nums.length; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="number">0</span>==i) &#123;</span><br><span class="line">            	maxKV[i] = <span class="keyword">new</span> MaxKV(i, nums[i]);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(maxKV[i-<span class="number">1</span>].val &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                	maxKV[i] = <span class="keyword">new</span> MaxKV(maxKV[i-<span class="number">1</span>].i, nums[i]+maxKV[i-<span class="number">1</span>].val);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                	maxKV[i] = <span class="keyword">new</span> MaxKV(i, nums[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(maxVal &lt; maxKV[i].val) maxVal = maxKV[i].val;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxVal;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] nums = <span class="keyword">new</span> <span class="keyword">int</span>[] &#123;-<span class="number">1</span>&#125;;</span><br><span class="line"><span class="comment">//        int[] nums = new int[] &#123;-2,1,-3,4,-1,2,1,-5,4&#125;;</span></span><br><span class="line">        System.out.println(<span class="keyword">new</span> Solution().maxSubArray(nums));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​      </p>
+<h3 id="2、分治法"><a href="#2、分治法" class="headerlink" title="2、分治法"></a>2、分治法</h3>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/tools/jenkins-gitlab-harbor-k8s/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/tools/jenkins-gitlab-harbor-k8s/" itemprop="url">GitLab+Jenkins+Harbor+Kubernetes集成应用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-29T00:00:00+08:00">
+                2017-01-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="docker安装jenkins"><a href="#docker安装jenkins" class="headerlink" title="docker安装jenkins"></a>docker安装jenkins</h1><p>jenkins官网：<a href="http://mirrors.jenkins.io/war-stable/" target="_blank" rel="noopener">http://mirrors.jenkins.io/war-stable/</a></p>
+<p>docker仓库：<a href="https://hub.docker.com/_/jenkins" target="_blank" rel="noopener">https://hub.docker.com/_/jenkins</a></p>
+<p>docker pull jenkins:2.7.4-alpine</p>
+<p>docker run -d -p 8180:8080 -p 50100:50000 –name jenkins-dev jenkins:2.7.4-alpine</p>
+<p>访问：<a href="http://172.18.1.84:8180/" target="_blank" rel="noopener">http://172.18.1.84:8180</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191011112350.png" alt></p>
+<p>docker exec -it jenkins-dev /bin/bash</p>
+<p>cd /var/jenkins_home/</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191011112150.png" alt></p>
+<p>cat /var/jenkins_home/secrets/initialAdminPassword</p>
+<p>e8ad89a38a244e80a174b9be916e0f12</p>
+<p>选择推荐安装，安装插件 -&gt;  设置管理员账号admin/admin -&gt; 开始使用</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191011133802.png" alt></p>
+<br>
+
+<h1 id="centos7部署jenkins-war"><a href="#centos7部署jenkins-war" class="headerlink" title="centos7部署jenkins.war"></a>centos7部署jenkins.war</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">echo $JAVA_HOME</span><br><span class="line">/usr/lib/jvm/java-1.8-openjdk</span><br><span class="line"></span><br><span class="line">mkdir -p /data/jenkins</span><br><span class="line">chmod 666 /data/jenkins</span><br><span class="line">cd /data/jenkins/</span><br><span class="line"></span><br><span class="line">java -version</span><br><span class="line"><span class="meta">#</span><span class="bash"> https://jenkins.io/zh/download/ 下载jenkins.war</span></span><br><span class="line">java -Xmx512m -jar jenkins.war --httpPort=9090</span><br><span class="line"><span class="meta">#</span><span class="bash"> java -Djenkins.install.runSetupWizard=<span class="literal">false</span> -jar jenkins.war --httpPort=9090</span></span><br><span class="line">1136d6ccb876433a9d4204578a73bdfd</span><br><span class="line"><span class="meta">#</span><span class="bash"> 跳过插件安装</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置用户名密码</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改站点升级镜像地址</span></span><br><span class="line">vi ~/.jenkins/hudson.model.UpdateCenter.xml</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h1 id="jenkins-插件安装"><a href="#jenkins-插件安装" class="headerlink" title="jenkins 插件安装"></a>jenkins 插件安装</h1><h3 id="使用国内插件镜像"><a href="#使用国内插件镜像" class="headerlink" title="使用国内插件镜像"></a>使用国内插件镜像</h3><p>路径： jenkins -&gt; 插件管理 -&gt; 高级 -&gt; 升级站点，修改地址：</p>
+<p><a href="https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191015135814.png" alt></p>
+<br>
+
+
+
+<h3 id="安装Gitlab插件"><a href="#安装Gitlab插件" class="headerlink" title="安装Gitlab插件"></a>安装Gitlab插件</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016103415.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016103542.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191016103603.png" alt></p>
+<br>
+
+<h3 id="安装Docker插件"><a href="#安装Docker插件" class="headerlink" title="安装Docker插件"></a>安装Docker插件</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191015164537.png" alt></p>
+<br>
+
+<h3 id="安装k8s插件"><a href="#安装k8s插件" class="headerlink" title="安装k8s插件"></a>安装k8s插件</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191015145356.png" alt></p>
+<br>
+
+<h1 id="打通jenkins与k8s-master两台机器ssh免密登陆"><a href="#打通jenkins与k8s-master两台机器ssh免密登陆" class="headerlink" title="打通jenkins与k8s-master两台机器ssh免密登陆"></a>打通jenkins与k8s-master两台机器ssh免密登陆</h1><h1 id="Jenkins-Kubernetes配置"><a href="#Jenkins-Kubernetes配置" class="headerlink" title="Jenkins Kubernetes配置"></a><strong>Jenkins Kubernetes配置</strong></h1>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/tomcat/tomcat-log-catalina-cronlog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/java/tomcat/tomcat-log-catalina-cronlog/" itemprop="url">使用cronlog 对 tomcat 的 catalina.out 日志自动切割</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-17T00:00:00+08:00">
+                2017-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/tomcat/" itemprop="url" rel="index">
+                    <span itemprop="name">tomcat</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+
+<h1 id="一、cronlog"><a href="#一、cronlog" class="headerlink" title="一、cronlog"></a>一、cronlog</h1><blockquote>
+<p>采用cronlolog工具对日志拆分的方式处理该问题</p>
+</blockquote>
+<p>1、下载cronolog工具，我下载的版本是<a href="https://links.jianshu.com/go?to=http%3A%2F%2Fdownload.chinaunix.net%2Fdown.php%3Fid%3D3457%26ResourceID%3D1851%26site%3D1" target="_blank" rel="noopener">cronolog-1.6.2</a><br> （yum安装:yum install cronolog）<br> 2、将下载好的文件解压，tar xvzf cronolog-1.6.2.tar.gz</p>
+<p>3、切换到解压后的文件目录下：cd cronolog-1.6.2</p>
+<p>4、初始化和编译安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./configure  --prefix=/usr/<span class="built_in">local</span>/cronolog</span><br><span class="line"><span class="comment">#make</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#make install</span></span><br><span class="line"><span class="comment">#ln -s  /usr/local/cronolog/sbin/* /usr/local/sbin/</span></span><br></pre></td></tr></table></figure>
+
+<p>5、查看安装版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#cronolog --version</span></span><br></pre></td></tr></table></figure>
+
+<p>6、修改tomcat的启动文件（tomcat目录/bin/catalina.sh）</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">vi</span> <span class="selector-tag">catalina</span><span class="selector-class">.sh</span></span><br></pre></td></tr></table></figure>
+
+<p>（1）修改输出日志路径<br> 修改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">if</span> [ -z <span class="string">"<span class="variable">$CATALINA_OUT</span>"</span> ] ; <span class="keyword">then</span></span><br><span class="line">       CATALINA_OUT=<span class="string">"<span class="variable">$CATALINA_BASE</span>"</span>/logs/catalina.out</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> [ -z <span class="string">"<span class="variable">$CATALINA_OUT</span>"</span> ] ; <span class="keyword">then</span></span><br><span class="line">      CATALINA_OUT=<span class="string">"<span class="variable">$CATALINA_BASE</span>"</span>/logs/catalina.%Y-%m-%d.out</span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+<p>（2）删除生成日志文件<br> 注释：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">touch <span class="string">"<span class="subst">$CATALINA_OUT</span>"</span></span><br><span class="line">   为：</span><br><span class="line">#touch <span class="string">"<span class="subst">$CATALINA_OUT</span>"</span></span><br></pre></td></tr></table></figure>
+
+<p>（3）修改启动脚本参数（两项）<br> 修改：<br> <code>org.apache.catalina.startup.Bootstrap &quot;$@&quot; start \</code><br> <code>&gt;&gt; &quot;$CATALINA_OUT&quot; 2&gt;&amp;1 &quot;&amp;&quot;</code><br> 为：<br> <code>org.apache.catalina.startup.Bootstrap &quot;$@&quot; start 2&gt;&amp;1 \</code><br> <code>| /usr/local/sbin/cronolog &quot;$CATALINA_OUT&quot; &gt;&gt; /dev/null &amp;</code><br> 7、重启tomcat<br> tomcat输出日志文件分割成功，输出log文件格式为：catalina.2015-06-30.out</p>
+<h1 id="二、logrotate"><a href="#二、logrotate" class="headerlink" title="二、logrotate"></a>二、logrotate</h1><blockquote>
+<p>利用Linux自带的logrotate程序来解决catalina.out的日志轮转问题</p>
+</blockquote>
+<p>1.首先编辑logrotate.conf文件，打开compress选项（去掉注释）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="meta"># cat /etc/logrotate.conf | grep -v <span class="meta-string">"^$"</span>| grep -v <span class="meta-string">"#"</span></span></span><br><span class="line">weekly</span><br><span class="line">rotate <span class="number">4</span></span><br><span class="line">create</span><br><span class="line">dateext</span><br><span class="line">compress   &lt;&lt;这一项</span><br></pre></td></tr></table></figure>
+
+<p>2.添加指定文件，在/etc/logrotate.d/目录下新建一个名为tomcat的文件</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@localhost ~</span>]<span class="meta"># cat &gt; /etc/logrotate.d/tomcat &lt;&lt;EOF</span></span><br><span class="line">/home/tomcat/utr/logs/catalina.<span class="keyword">out</span>&#123; <span class="meta">#要轮转的文件</span></span><br><span class="line">    copytruncate    <span class="meta"># 创建新的catalina.out副本后，截断源catalina.out文件</span></span><br><span class="line">    daily    <span class="meta"># 每天进行catalina.out文件的轮转</span></span><br><span class="line">    rotate <span class="number">7</span>     <span class="meta"># 至多保留7个副本</span></span><br><span class="line">    missingok    <span class="meta"># 如果要轮转的文件丢失了，继续轮转而不报错</span></span><br><span class="line">    compress     <span class="meta"># 使用压缩的方式（节省硬盘空间；一个2~3GB的日志文件可以压缩成60MB左右）</span></span><br><span class="line">    size <span class="number">16</span>M     <span class="meta"># 当catalina.out文件大于16MB时，就轮转</span></span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<p>参数说明：</p>
+<blockquote>
+<p>copytruncate    #备份日志并截断源文件<br> nocopytruncate # 备份日志文件不截断<br> dateext   #使用当期日期作为命名格式<br> notifempty #当日志文件为空时，不进行轮转<br> daily    # 每天进行文件的轮转<br> size 16M     # 当文件大于16MB时，就会轮转<br> rotate 30 #指定日志文件删除之前转储的次数</p>
+</blockquote>
+<p>3.执行方式<br> ①自动执行原理</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1.每天晚上crond守护进程会运行在/etc/cron.daily目录中的任务列表；</span><br><span class="line">2.与logrotate相关的脚本也在/etc/cron.daily目录中。运行的方式为<span class="string">"/usr/bin/logrotate /etc/logrotate.conf"</span>；</span><br><span class="line">3./etc/logrotate.conf文件include了/etc/logrotate.d/目录下的所有文件。还包括我们上面刚创建的tomcat文件；</span><br><span class="line">4./etc/logrotate.d/tomcat文件会触发/usr/<span class="built_in">local</span>/apache-tomcat-8.0.28/logs/catalina.out文件的轮转。</span><br></pre></td></tr></table></figure>
+
+<p>②手动执行：logrotate /etc/logrotate.conf<br> ③只轮转刚刚的tomcat配置文件:logrotate –force /etc/logrotate.d/tomcat</p>
+<h1 id="三、log4j"><a href="#三、log4j" class="headerlink" title="三、log4j"></a>三、log4j</h1><blockquote>
+<p>Tomcat7.0.55下使用Log4j 接管 catalina.out 日志文件生成方式，按天存放，解决catalina.out日志文件过大问题</p>
+</blockquote>
+<ol>
+<li>准备jar包：<br> log4j-1.2.17.jar （从 <a href="https://links.jianshu.com/go?to=http%3A%2F%2Fwww.apache.org%2Fdist%2Flogging%2Flog4j%2F1.2.17%2F" target="_blank" rel="noopener">http://www.apache.org/dist/logging/log4j/1.2.17/</a> 下载）<br> tomcat-juli.jar, tomcat-juli-adapters.jar （从<a href="https://links.jianshu.com/go?to=http%3A%2F%2Fwww.apache.org%2Fdist%2Ftomcat%2Ftomcat-7%2Fv7.0.55%2Fbin%2Fextras%2F" target="_blank" rel="noopener">http://www.apache.org/dist/tomcat/tomcat-7/v7.0.55/bin/extras/</a>下载，根据你的Tomcat版本选择对应的分支）</li>
+<li>将上面的三个jar包拷贝到 Tomcat 的 lib 目录下；</li>
+<li>将 tomcat-juli.jar 拷贝到 Tomcat 的 bin 目录下，替换原有的jar包；</li>
+<li>修改 Tomcat 的 conf/context.xml 文件，将<context>为<context swallowoutput="true"><br> （增加 swallowOutput=”true” 的属性配置，只有这样才能完全的把tomcat的stdout给接管过来。这一步很关键 在官网及网上找了许多资料都没有提及。）；</context></context></li>
+<li>删除 Tomcat 的 conf/logging.properties 文件（或者重命名-建议）；</li>
+<li>在 Tomcat 的 lib 目录下创建 log4j.properties 文件，然后重启服务器：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">log4j.rootLogger=INFO, CATALINA</span><br><span class="line">log4j.logger.org.apache=INFO, CATALINA</span><br><span class="line">log4j.logger.org.[hibernate](http://lib.csdn.net/base/javaee)=WARN, CATALINA</span><br><span class="line">log4j.logger.org.springframework=WARN, CATALINA</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Define all the appenders</span></span><br><span class="line">log4j.appender.CATALINA=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.CATALINA.File=<span class="variable">$&#123;catalina.base&#125;</span>/logs/catalina.out</span><br><span class="line">log4j.appender.CATALINA.Append=<span class="literal">true</span></span><br><span class="line">log4j.appender.CATALINA.Encoding=UTF-8</span><br><span class="line"><span class="comment"># Roll-over the log once per day</span></span><br><span class="line">log4j.appender.CATALINA.DatePattern=<span class="string">'.'</span>yyyy-MM-dd<span class="string">'.log'</span></span><br><span class="line">log4j.appender.CATALINA.layout = org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.CATALINA.layout.ConversionPattern = %d [%t] %-5p %c- %m%n</span><br><span class="line"> </span><br><span class="line">log4j.appender.LOCALHOST=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.LOCALHOST.File=<span class="variable">$&#123;catalina.base&#125;</span>/logs/localhost.</span><br><span class="line">log4j.appender.LOCALHOST.Append=<span class="literal">true</span></span><br><span class="line">log4j.appender.LOCALHOST.Encoding=UTF-8</span><br><span class="line">log4j.appender.LOCALHOST.DatePattern=<span class="string">'.'</span>yyyy-MM-dd<span class="string">'.log'</span></span><br><span class="line">log4j.appender.LOCALHOST.layout = org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.LOCALHOST.layout.ConversionPattern = %d [%t] %-5p %c- %m%n</span><br><span class="line"> </span><br><span class="line">log4j.appender.MANAGER=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.MANAGER.File=<span class="variable">$&#123;catalina.base&#125;</span>/logs/manager.</span><br><span class="line">log4j.appender.MANAGER.Append=<span class="literal">true</span></span><br><span class="line">log4j.appender.MANAGER.Encoding=UTF-8</span><br><span class="line">log4j.appender.MANAGER.DatePattern=<span class="string">'.'</span>yyyy-MM-dd<span class="string">'.log'</span></span><br><span class="line">log4j.appender.MANAGER.layout = org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.MANAGER.layout.ConversionPattern = %d [%t] %-5p %c- %m%n</span><br><span class="line"> </span><br><span class="line">log4j.appender.HOST-MANAGER=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">log4j.appender.HOST-MANAGER.File=<span class="variable">$&#123;catalina.base&#125;</span>/logs/host-manager.</span><br><span class="line">log4j.appender.HOST-MANAGER.Append=<span class="literal">true</span></span><br><span class="line">log4j.appender.HOST-MANAGER.Encoding=UTF-8</span><br><span class="line">log4j.appender.HOST-MANAGER.DatePattern=<span class="string">'.'</span>yyyy-MM-dd<span class="string">'.log'</span></span><br><span class="line">log4j.appender.HOST-MANAGER.layout = org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.HOST-MANAGER.layout.ConversionPattern = %d [%t] %-5p %c- %m%n</span><br><span class="line"> </span><br><span class="line">log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.CONSOLE.Encoding=UTF-8</span><br><span class="line">log4j.appender.CONSOLE.layout = org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.CONSOLE.layout.ConversionPattern = %d [%t] %-5p %c- %m%n</span><br><span class="line"> </span><br><span class="line"><span class="comment"># Configure which loggers log to which appenders</span></span><br><span class="line"><span class="comment"># Configure which loggers log to which appenders</span></span><br><span class="line">log4j.logger.org.apache.catalina.core.ContainerBase.[Catalina].[localhost]=INFO, LOCALHOST</span><br><span class="line">log4j.logger.org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/manager]=\</span><br><span class="line">  INFO, MANAGER</span><br><span class="line">log4j.logger.org.apache.catalina.core.ContainerBase.[Catalina].[localhost].[/host-manager]=\</span><br><span class="line">  INFO, HOST-MANAGER</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、shell脚本切割"><a href="#四、shell脚本切割" class="headerlink" title="四、shell脚本切割"></a>四、shell脚本切割</h1><blockquote>
+<p>通过shell脚本的方式切割每天的日志</p>
+</blockquote>
+<h3 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h3><p>部署在windows服务器下的tomcat，将tomcat控制台日志记录到日志文件中<br> <a href="https://links.jianshu.com/go?to=https%3A%2F%2Fwww.cnblogs.com%2FlinaGh%2Fp%2F7777915.html" target="_blank" rel="noopener">https://www.cnblogs.com/linaGh/p/7777915.html</a><br> 对于抛出的异常错误，不会被存到文件中的，可以修改代码或者修改cmd属性-布局中的高度，默认是300<br> 高度即行数，设置大点就可以看到没有存到文件中的日志信息</p>
+<blockquote>
+<p>作者：Rooot<br>链接：<a href="https://www.jianshu.com/p/396675386a43" target="_blank" rel="noopener">https://www.jianshu.com/p/396675386a43</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/tcp-backlog/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/computer-network/tcp-backlog/" itemprop="url">TCP/IP协议中backlog参数</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-03T00:00:00+08:00">
+                2017-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-network/" itemprop="url" rel="index">
+                    <span itemprop="name">computer-network</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/computer-network/tcp-ip/" itemprop="url" rel="index">
+                    <span itemprop="name">tcp/ip</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<p>　　TCP建立连接是要进行三次握手，但是否完成三次握手后，服务器就处理（accept）呢？</p>
+<p>　　backlog其实是一个连接队列，在Linux内核2.2之前，backlog大小包括半连接状态和全连接状态两种队列大小。</p>
+<p>　　半连接状态为：服务器处于Listen状态时收到客户端SYN报文时放入半连接队列中，即SYN queue（服务器端口状态为：SYN_RCVD）。</p>
+<p>　　全连接状态为：TCP的连接状态从服务器（SYN+ACK）响应客户端后，到客户端的ACK报文到达服务器之前，则一直保留在半连接状态中；当服务器接收到客户端的ACK报文后，该条目将从半连接队列搬到全连接队列尾部，即 accept queue （服务器端口状态为：ESTABLISHED）。</p>
+<p>　　在Linux内核2.2之后，分离为两个backlog来分别限制半连接（SYN_RCVD状态）队列大小和全连接（ESTABLISHED状态）队列大小。</p>
+<p>　　SYN queue 队列长度由 /proc/sys/net/ipv4/tcp_max_syn_backlog 指定，默认为2048。</p>
+<p>　　Accept queue 队列长度由 /proc/sys/net/core/somaxconn 和使用listen函数时传入的参数，二者取最小值。默认为128。在Linux内核2.4.25之前，是写死在代码常量 SOMAXCONN ，在Linux内核2.4.25之后，在配置文件 /proc/sys/net/core/somaxconn 中直接修改，或者在 /etc/sysctl.conf 中配置 net.core.somaxconn = 128 。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200103102329.png" alt></p>
+<p>可以通过ss命令来显示</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ss -l</span><br><span class="line">State       Recv-Q Send-Q      Local Address:Port      Peer Address:Port     </span><br><span class="line">LISTEN      0      128                     *:http                 *:*       </span><br><span class="line">LISTEN      0      128                    :::ssh                 :::*       </span><br><span class="line">LISTEN      0      128                     *:ssh                  *:*       </span><br><span class="line">LISTEN      0      100                   ::1:smtp                :::*       </span><br><span class="line">LISTEN      0      100             127.0.0.1:smtp                 *:*</span><br></pre></td></tr></table></figure>
+
+<p>　在LISTEN状态，其中 Send-Q 即为Accept queue的最大值，Recv-Q 则表示Accept queue中等待被服务器accept()。</p>
+<p>　　另外客户端connect()返回不代表TCP连接建立成功，有可能此时accept queue 已满，系统会直接丢弃后续ACK请求；客户端误以为连接已建立，开始调用等待至超时；服务器则等待ACK超时，会重传SYN+ACK 给客户端，重传次数受限 net.ipv4.tcp_synack_retries ，默认为5，表示重发5次，每次等待30~40秒，即半连接默认时间大约为180秒，该参数可以在tcp被洪水攻击是临时启用这个参数。</p>
+<p>查看SYN queue 溢出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# netstat -s | grep LISTEN</span><br><span class="line">102324 SYNs to LISTEN sockets dropped</span><br></pre></td></tr></table></figure>
+
+<p>查看Accept queue 溢出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# netstat -s | grep TCPBacklogDrop</span><br><span class="line">TCPBacklogDrop: 2334</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@nauru-084 ~]# netstat -s</span><br></pre></td></tr></table></figure>
+
+<p>参考资料：</p>
+<p><a href="http://www.cnxct.com/something-about-phpfpm-s-backlog/" target="_blank" rel="noopener">TCP SOCKET中backlog参数的用途是什么？</a></p>
+<p><a href="http://www.2cto.com/net/201307/224634.html" target="_blank" rel="noopener">TCP/IP协议中backlog分析与设置以及TCP状态变化</a></p>
+<p><a href="http://blog.itpub.net/15480802/viewspace-1399303/" target="_blank" rel="noopener">TCP3次握手和backlog溢出</a> </p>
+<p><a href="http://jaseywang.me/2014/07/20/tcp-queue-的一些问题/" target="_blank" rel="noopener">TCP queue 的一些问题</a></p>
+<p><a href="http://www.2cto.com/Article/201309/241096.html" target="_blank" rel="noopener">TCP洪水攻击（SYN Flood）的诊断和处理</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/nginx/nginx-docs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/nginx/nginx-docs/" itemprop="url">nginx 文档</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-17T00:00:00+08:00">
+                2016-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>官网：<a href="http://nginx.org/" target="_blank" rel="noopener">http://nginx.org/</a></p>
+<p>官方文档：<a href="https://www.nginx.com/resources/wiki/" target="_blank" rel="noopener">https://www.nginx.com/resources/wiki/</a></p>
+<p>中文文档：<a href="http://www.nginx.cn/doc/" target="_blank" rel="noopener">http://www.nginx.cn/doc/</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/operating-system/os-basic-concept/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/operating-system/os-basic-concept/" itemprop="url">那些让你起飞的计算机基础知识</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-16T00:00:00+08:00">
+                2016-12-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/operating-system/" itemprop="url" rel="index">
+                    <span itemprop="name">operating-system</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="1、信息的表示和处理"><a href="#1、信息的表示和处理" class="headerlink" title="1、信息的表示和处理"></a>1、信息的表示和处理</h1><p>计算机如何表示整数：有符号数和无符号数，尤其是如何用补码表示负数，数字的取值范围。</p>
+<p>计算机如何表示浮点数，为什么小数的二进制表示法只能近似表示十进制小数。</p>
+<p>数值的转换、移位</p>
+<p>这几点非常重要，因为几乎所有的编程语言都有数据类型，而最基本数据类型必然包括整数和浮点数。</p>
+<p>搞不清这些表示和运算，在编程中就会遇到一些稀奇古怪的问题。</p>
+<br>
+
+<h1 id="2、从汇编层面理解程序的执行"><a href="#2、从汇编层面理解程序的执行" class="headerlink" title="2、从汇编层面理解程序的执行"></a>2、从汇编层面理解程序的执行</h1><p>顺序、分支、循环、函数调用、数组、结构体等在汇编层面是怎么实现的，寄存器和内存是怎么使用的。</p>
+<p>理解了这些其实也就理解了冯诺依曼计算机体系结构，这是计算机学科一个基础性的东西。</p>
+<p>知道程序在底层是怎么运转的， 对于学习各种虚拟机有很大的帮助，比如 <code>JVM</code>，它要解析执行的是字节码，字节码本质上要表达的就是这些东西，只不过有所扩展。</p>
+<p>理解了栈帧，就能理解函数调用的本质，递归，以及尾递归的实现。还有安全相关的概念，如缓冲区溢出这个臭名卓著的漏洞及其防范办法。</p>
+<br>
+
+<h1 id="3、进程和线程"><a href="#3、进程和线程" class="headerlink" title="3、进程和线程"></a>3、进程和线程</h1><p>程序员必备的知识，不了解这个，简直是无法编程。</p>
+<p>需要掌握进程的地址空间，代码在哪里，堆在哪里，栈在哪里。</p>
+<p>要准确理解进程和线程之间的关系，为什么说进程是拥有资源的基本单位， 线程是CPU调度的基本单位？</p>
+<p>进程切换和线程切换之间的区别和联系。</p>
+<p>他们是如何创建，执行，有哪些状态，状态之间的转换。 由此会涉及到 <code>并发和并行</code>，线程之间的竞争和合作。</p>
+<p><code>锁</code> 的本质（硬件层面），乐观锁，悲观锁，死锁等问题。</p>
+<p>线程的实现方式，用户级线程和内核级线程的对应方式。</p>
+<p>在编程的过程中，有些知识点会直接使用，如多线程编程，锁。 还有一些概念能用到很多地方，例如CAS，不仅仅是编程语言的概念，还能在更新数据库时使用。再比如你理解了线程的实现方式，迅速就能掌握go语言中并发的手段：goroutine。</p>
+<br>
+
+<h1 id="4、存储器的层次结构"><a href="#4、存储器的层次结构" class="headerlink" title="4、存储器的层次结构"></a>4、存储器的层次结构</h1><p>Tomcat用了多线程执行请求，Redis用了单线程来处理请求，Node.js也用了单线程来，这是为什么？ 秘密都在存储器的层次结构。</p>
+<p>人类制造的计算机设备之间有着巨大的速度差异：</p>
+<p>总之，CPU超级快，内存比较快，硬盘非常慢，网络更慢， 这个速度差异是IT行业的一个核心问题，人类想了很多办法试图去弥补这个差异：多线程，缓存(局部性原理)，异步，多路复用，硬件层面的DMA。</p>
+<p>记着下面这张图，每当你遇到某个软件的特性的时候，想一想和它有什么关系：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191216142229.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191216153159.png" alt></p>
+<br>
+
+<h1 id="5、数据结构和算法"><a href="#5、数据结构和算法" class="headerlink" title="5、数据结构和算法"></a>5、数据结构和算法</h1><p>它的重要性我罗嗦过很多次了，不用再重复了， 我就举个最简单的例子： 理解了B+ Tree才能理解MySQL的InnoDB的索引，理解了索引才能更好地优化查询，对吧？</p>
+<br>
+
+<h1 id="6、计算机网络"><a href="#6、计算机网络" class="headerlink" title="6、计算机网络"></a>6、计算机网络</h1><p>现在的程序基本上都是网络程序， 所以这也是一个必备的基础知识，学习计算机网络的一大好处就是和工作直接相关，能直接使用，比较有动力。</p>
+<p>HTTP协议肯定跑不掉，TCP, UDP也得会，尤其是TCP可靠传输的原理：如何在一个不可靠的网络中进行可靠的传输， 这是无数前辈总结的经验，一定得掌握。</p>
+<p>要理解什么是通信协议，也许某一天你自己就需要定制一个协议来传输数据。</p>
+<p>分组交换是什么意思？ 协议分层的本质是什么？ 什么叫无状态的协议？</p>
+<p>Socket相关的编程更是重点，尤其是涉及到服务器端高并发的时候，如何维持和处理这些海量的socket， epoll等技术就得上场了。</p>
+<p>还有非常重要的https的基本原理，也是网络安全的精华所在：对称加密，非对称加密，消息摘要，数字证书，中间人攻击。</p>
+<br>
+
+<h1 id="7、数据库"><a href="#7、数据库" class="headerlink" title="7、数据库"></a>7、数据库</h1><p>不多说，关系模型、范式、SQL、索引、事务等知识都得掌握，尤其是要了解他们的实现方式。</p>
+<br>
+
+<h1 id="8、分布式的基础知识"><a href="#8、分布式的基础知识" class="headerlink" title="8、分布式的基础知识"></a>8、分布式的基础知识</h1><p>这些已经偏向应用层面了，但是现在很多系统都是分布式的了，分布式就变成了一种基础知识。</p>
+<p>系统通信：RPC, 消息队列等</p>
+<p>负载均衡的原理</p>
+<p>CAP原理，BASE原理，幂等性，一致性模型（强一致性，最终一致性…）和相关协议(两阶段提交，Raft，Paxos…)</p>
+<p>数据分片：取模算法，一致性Hash，虚拟桶</p>
+<br>
+
+<h1 id="9、基本的设计思想"><a href="#9、基本的设计思想" class="headerlink" title="9、基本的设计思想"></a>9、基本的设计思想</h1><p>下面这几种设计思想对我影响很大，需要大家特别注意。但是掌握起来却很不容易，需要在实践中不断地体会：</p>
+<p>正交：各个概念之间可以独立变化</p>
+<p>抽象：抛弃细节，找到本质和共性</p>
+<p>《深入理解计算机系统》一书中提到：“指令集是对CPU的抽象， 文件是对输入/输出设备的抽象， 虚拟存储器是对程序存储的抽象， 进程是对一个正在运行的程序的抽象， 而虚拟机是对整个计算机（包括操作系统、处理器和程序）的抽象。 如果你对这句话透彻理解了，说明对计算机系统的认识已经很深刻了。</p>
+<p>分层：我只想和我的邻居打交道， 如网络协议，Web应用开发。</p>
+<p>分而治之：大事化小，小事化了，架构设计必备。</p>
+<br>
+
+<h1 id="10、关键点来了，怎么学习呢？"><a href="#10、关键点来了，怎么学习呢？" class="headerlink" title="10、关键点来了，怎么学习呢？"></a>10、关键点来了，怎么学习呢？</h1><p>我原来的方式是先看书，看了很多书，数据结构，操作系统，汇编，网络… 这种办法的最大问题就是枯燥（嗯，那时候还没有码农翻身这样用故事讲解技术的文章）。</p>
+<p>理论多，实践少，很多知识点体会不深， 等到参与的项目多了，Coding多了，这些知识点才慢慢地鲜活起来。</p>
+<p>一种更加有效的办法是从工作中用到的知识点出发，从这个知识点向外扩展，由点到线，由线到面，然后让各个层次都连接起来，形成一个立体的网络。</p>
+<p>切记，学习是一个螺旋上升的过程，想要上升就得深度思考，多问几个为什么。</p>
+<p>比如工作中用到了Redis，你在学习过程中发现这个Redis用了单线程来处理读写请求，为什么要这么做？ 对于成千上万的请求它是如何处理的？ 然后再联想一下别的软件：Tomcat为什么不这么干？ 想回答这些问题，需要发掘很多基础知识。</p>
+<p>这样做的次数多了，积累到一定程度，量变就会引起质变，整个系统就被你看透了，你的知识又扩大了一圈，更多的疑问出现了…</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/spring/spring-ioc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/java/spring/spring-ioc/" itemprop="url">Spring IoC</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-08T00:00:00+08:00">
+                2016-12-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/dns-base-tcp-and-udp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/computer-network/dns-base-tcp-and-udp/" itemprop="url">DNS分别在什么情况下使用UDP和TCP</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-04T00:00:00+08:00">
+                2016-12-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<p>DNS同时占用UDP和TCP端口53是公认的，这种单个应用协议同时使用两种传输协议的情况在TCP/IP栈也算是个另类。但很少有人知道DNS分别在什么情况下使用这两种协议。</p>
+<p>   如果用wireshark、sniffer或古老些的tcpdump抓包分析，会发现几乎所有的情况都是在使用UDP，使用TCP的情况非常罕见，神秘兮兮。其实当解析器发出一个request后，返回的response中的tc删节标志比特位被置1时，说明反馈报文因为超长而有删节。这是因为UDP的报文最大长度为512字节。解析器发现后，将使用TCP重发request，TCP允许报文长度超过512字节。既然TCP能将data stream分成多个segment，它就能用更多的segment来传送任意长度的数据。</p>
+<p>   另外一种情况是，当一个域的辅助域名服务器启动时，将从该域的主域名服务器primary DNS server执行区域传送。除此之外，辅域名服务器也会定时（一般时3小时）向PDS进行查询以便了解SOA的数据是否有变动。如有变动，也会执行一次区域传送。区域传送将使用TCP而不是UDP，因为传送的数据量比一个request或response多得多。</p>
+<p>   DNS主要还是使用UDP，解析器还是服务端都必须自己处理重传和超时。DNS往往需要跨越广域网或互联网，分组丢失率和往返时间的不确定性要更大些，这对于DNS客户端来说是个考验，好的重传和超时检测就显得更重要了。</p>
+ <br>
+
+<h1 id="DNS为什么用TCP和UDP"><a href="#DNS为什么用TCP和UDP" class="headerlink" title="DNS为什么用TCP和UDP"></a>DNS为什么用TCP和UDP</h1><p>DNS同时占用UDP和TCP端口53是公认的，这种单个应用协议同时使用两种传输协议的情况在TCP/IP栈也算是个另类。但很少有人知道DNS分别在什么情况下使用这两种协议。 </p>
+ <br>
+
+<h3 id="先简单介绍下TCP与UDP"><a href="#先简单介绍下TCP与UDP" class="headerlink" title="先简单介绍下TCP与UDP"></a>先简单介绍下TCP与UDP</h3><ul>
+<li><p>TCP是一种面向连接的协议，提供可靠的数据传输，一般服务质量要求比较高的情况，使用这个协议。</p>
+</li>
+<li><p>UDP—用户数据报协议，是一种无连接的传输层协议，提供面向事务的简单不可靠信息传送服务。 </p>
+<br>
+
+</li>
+</ul>
+<h3 id="TCP与UDP的区别"><a href="#TCP与UDP的区别" class="headerlink" title="TCP与UDP的区别"></a>TCP与UDP的区别</h3><p>​        UDP和TCP协议的主要区别是两者在如何实现信息的可靠传递方面不同。TCP协议中包含了专门的传递保证机制，当数据接收方收到发送方传来的信息时，会自动向发送方发出确认消息；发送方只有在接收到该确认消息之后才继续传送其它信息，否则将一直等待直到收到确认信息为止。 与TCP不同，UDP协议并不提供数据传送的保证机制。如果在从发送方到接收方的传递过程中出现数据报的丢失，协议本身并不能做出任何检测或提示。因此，通常人们把UDP协议称为不可靠的传输协议。相对于TCP协议，UDP协议的另外一个不同之处在于如何接收突发性的多个数据报。不同于TCP，UDP并不能确保数据的发送和接收顺序。事实上，UDP协议的这种乱序性基本上很少出现，通常只会在网络非常拥挤的情况下才有可能发生。 </p>
+<p>​        既然UDP是一种不可靠的网络协议，那么还有什么使用价值或必要呢？其实不然，在有些情况下UDP协议可能会变得非常有用。因为UDP具有TCP所望尘莫及的速度优势。虽然TCP协议中植入了各种安全保障功能，但是在实际执行的过程中会占用大量的系统开销，无疑使速度受到严重的影响。反观UDP由于排除了信息可靠传递机制，将安全和排序等功能移交给上层应用来完成，极大降低了执行时间，使速度得到了保证。 </p>
+<blockquote>
+<p>DNS在进行区域传输的时候使用TCP协议，其它时候则使用UDP协议； </p>
+</blockquote>
+<p>​    DNS的规范规定了2种类型的DNS服务器，一个叫主DNS服务器，一个叫辅助DNS服务器。在一个区中主DNS服务器从自己本机的数据文件中读取该区的DNS数据信息，而辅助DNS服务器则从区的主DNS服务器中读取该区的DNS数据信息。当一个辅助DNS服务器启动时，它需要与主DNS服务器通信，并加载数据信息，这就叫做区传送（zone transfer）。 </p>
+<h3 id="为什么既使用TCP又使用UDP？"><a href="#为什么既使用TCP又使用UDP？" class="headerlink" title="为什么既使用TCP又使用UDP？"></a>为什么既使用TCP又使用UDP？</h3><p>首先了解一下TCP与UDP传送字节的长度限制：<br>    UDP报文的最大长度为512字节，而TCP则允许报文长度超过512字节。当DNS查询超过512字节时，协议的TC标志出现删除标志，这时则使用TCP发送。通常传统的UDP报文一般不会大于512字节。 </p>
+<h4 id="区域传送时使用TCP"><a href="#区域传送时使用TCP" class="headerlink" title="区域传送时使用TCP"></a>区域传送时使用TCP</h4><p>主要有一下两点考虑： </p>
+<ol>
+<li><p>辅域名服务器会定时（一般时3小时）向主域名服务器进行查询以便了解数据是否有变动。如有变动，则会执行一次区域传送，进行数据同步。区域传送将使用TCP而不是UDP，因为<code>数据同步传送的数据量比一个请求和应答的数据量要多得多</code>。 </p>
+</li>
+<li><p>TCP是一种可靠的连接，保证了数据的准确性。 </p>
+</li>
+</ol>
+<h4 id="域名解析时使用UDP协议"><a href="#域名解析时使用UDP协议" class="headerlink" title="域名解析时使用UDP协议"></a>域名解析时使用UDP协议</h4><p>​        <code>客户端向DNS服务器查询域名，一般返回的内容都不超过512字节，用UDP传输即可。不用经过TCP三次握手，这样DNS服务器负载更低，响应更快</code>。虽然从理论上说，客户端也可以指定向DNS服务器查询的时候使用TCP，但事实上，很多DNS服务器进行配置的时候，仅支持UDP查询包。</p>
+<br>
+
+<h1 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h1><p>​        UDP 与 TCP 的主要区别在于 UDP 不一定提供可靠的数据传输。事实上，该协议不能保证数据准确无误地到达目的地。UDP 在许多方面非常有效。当某个程序的目标是尽快地传输尽可能多的信息时（其中任意给定数据的重要性相对较低），可使用 UDP。ICQ 短消息使用 UDP 协议发送消息。 </p>
+<p>​        许多程序将使用单独的TCP连接和单独的UDP连接。重要的状态信息随可靠的TCP连接发送，而主数据流通过UDP发送。</p>
+<br>
+
+<h1 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h1><p>​        TCP的目的是提供可靠的数据传输，并在相互进行通信的设备或服务之间保持一个虚拟连接。TCP在数据包接收无序、丢失或在交付期间被破坏时，负责数据恢复。它通过为其发送的每个数据包提供一个序号来完成此恢复。记住，较低的网络层会将每个数据包视为一个独立的单元，因此，数据包可以沿完全不同的路径发送，即使它们都是同一消息的组成部分。这种路由与网络层处理分段和重新组装数据包的方式非常相似，只是级别更高而已。</p>
+<p>​        为确保正确地接收数据，TCP要求在目标计算机成功收到数据时发回一个确认（即 ACK）。如果在某个时限内未收到相应的 ACK，将重新传送数据包。如果网络拥塞，这种重新传送将导致发送的数据包重复。但是，接收计算机可使用数据包的序号来确定它是否为重复数据包，并在必要时丢弃它。</p>
+<br>
+
+<h1 id="TCP与UDP的选择"><a href="#TCP与UDP的选择" class="headerlink" title="TCP与UDP的选择"></a>TCP与UDP的选择</h1><p>​        如果比较UDP包和TCP包的结构，很明显UDP包不具备TCP包复杂的可靠性与控制机制。与TCP协议相同，UDP的源端口数和目的端口数也都支持一台主机上的多个应用。一个16位的UDP包包含了一个字节长的头部和数据的长度，校验码域使其可以进行整体校验。（许多应用只支持UDP，如：多媒体数据流，不产生任何额外的数据，即使知道有破坏的包也不进行重发。） </p>
+<p>​        很明显，当数据传输的性能必须让位于数据传输的完整性、可控制性和可靠性时，TCP协议是当然的选择。当强调传输性能而不是传输的完整性时，如：音频和多媒体应用，UDP是最好的选择。在数据传输时间很短，以至于此前的连接过程成为整个流量主体的情况下，UDP也是一个好的选择，如：DNS交换。把SNMP建立在UDP上的部分原因是设计者认为当发生网络阻塞时，UDP较低的开销使其有更好的机会去传送管理数据。TCP丰富的功能有时会导致不可预料的性能低下，但是我们相信在不远的将来，TCP可靠的点对点连接将会用于绝大多数的网络应用。</p>
+<p>​        TCP（Transmission Control Protocol，<strong>传输控制协议</strong>）是基于连接的协议，也就是说，在正式收发数据前，必须和对方建立可靠的连接。一个TCP连接必须要经过三次“对话”才能建立起来。三次对话的简单过程：主机A向主机B发出连接请求数据包：“我想给你发数据，可以吗？”，这是第一次对话；主机B向主机A发送同意连接和要求同步（同步就是两台主机一个在发送，一个在接收，协调工作）的数据包：“可以，你什么时候发？”，这是第二次对话；主机A再发出一个数据包确认主机B的要求同步：“我现在就发，你接着吧！”，这是第三次对话。三次“对话”的目的是使数据包的发送和接收同步，经过三次“对话”之后，主机A才向主机B正式发送数据。 </p>
+<p>​        UDP（User Data Protocol，<strong>用户数据报协议</strong>）是与TCP相对应的协议。它是面向非连接的协议，它不与对方建立连接，而是直接就把数据包发送过去！ </p>
+<p> UDP适用于一次只传送少量数据、对可靠性要求不高的应用环境。比如，我们经常使用“ping”命令来测试两台主机之间TCP/IP通信是否正常，其实“ping”命令的原理就是向对方主机发送UDP数据包，然后对方主机确认收到数据包，如果数据包是否到达的消息及时反馈回来，那么网络就是通的。例如，在默认状态下，一次“ping”操作发送4个数据包（如图2所示）。大家可以看到，发送的数据包数量是4包，收到的也是4包（因为对方主机收到后会发回一个确认收到的数据包）。这充分说明了UDP协议是面向非连接的协议，没有建立连接的过程。正因为UDP协议没有连接的过程，所以它的通信效果高；但也正因为如此，它的可靠性不如TCP协议高。QQ就使用UDP发消息，因此有时会出现收不到消息的情况。HTTP是用TCP协议传输的。</p>
+<h1 id="TCP协议与UDP协议的区别"><a href="#TCP协议与UDP协议的区别" class="headerlink" title="TCP协议与UDP协议的区别"></a>TCP协议与UDP协议的区别</h1><p>TCP基于面向连接的协议，数据传输可靠，传输速度慢，适用于传输大量数据，可靠性要求高的场合。</p>
+<p>UDP协议面向非连接协议，数据传输不可靠，传输速度快，适用于一次只传送少量数据、对可靠性要求不高的应用环境。</p>
+<p><strong>面向连接的TCP</strong></p>
+<p>“<strong>面向连接</strong>”就是在正式通信前必须要与对方建立起连接。比如你给别人打电话，必须等线路接通了、对方拿起话筒才能相互通话。</p>
+<p>TCP协议能为应用程序提供可靠的通信连接，使一台计算机发出的字节流无差错地发往网络上的其他计算机，对可靠性要求高的数据通信系统往往使用TCP协议传输数据。</p>
+<p><strong>面向非连接的UDP协议</strong></p>
+<p>“<strong>面向非连接</strong>”就是在正式通信前不必与对方先建立连接，不管对方状态就直接发送。这与现在风行的手机短信非常相似：你在发短信的时候，只需要输入对方手机号就OK了。</p>
+<p>UDP适用于一次只传送少量数据、对可靠性要求不高的应用环境</p>
+<p>UDP协议是面向非连接的协议，没有建立连接的过程。正因为UDP协议没有连接的过程，所以它的通信效果高；但也正因为如此，它的可靠性不如TCP协议高。QQ就使用UDP发消息，因此有时会出现收不到消息的情况。</p>
+<p><strong>TCP**</strong>协议与UDP协议支持的应用协议**</p>
+<p>TCP支持的应用协议主要有：<strong>Telnet**</strong>、FTP、SMTP**等；</p>
+<p>UDP支持的应用层协议主要有：<strong>NFS</strong>（网络文件系统）、<strong>SNMP</strong>（简单网络管理协议）、<strong>DNS</strong>（主域名称系统）、<strong>TFTP</strong>（通用文件传输协议）等。</p>
+<p>TCP和UDP都是位于OSI模型中的<strong>传输层</strong>中。</p>
+<p>TCP优点:面向连接的,具有实时性,就象打电话一样,两者必须建立连接.<br>    它保证你所传输的东西是准确到达的,并且收方要给你一个收到或没有\   收到的回复,所以它具有安全性的特点..<br>UDP优点:面向无连接的,就象给某人寄信一样,对方不需要在邮局等着你的信到.<br>    所以说,它没有保障性,不能确保你一定能收到信,不象TCP那样,,但是 它比TCP好的一点,就是速度快,因为他不需要双方交流是否收到,对发的东西有一个确认的过程.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/spring/spring-ioc-di-aop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1131,1356 +2512,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/spring/spring-transaction/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/java/spring/spring-transaction/" itemprop="url">Spring 事务</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-01T00:00:00+08:00">
-                2016-12-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/spring/" itemprop="url" rel="index">
-                    <span itemprop="name">spring</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-network-traffic-monitor/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-network-traffic-monitor/" itemprop="url">linux网络流量监控</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-20T00:00:00+08:00">
-                2016-11-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="iftop"><a href="#iftop" class="headerlink" title="iftop"></a>iftop</h1><p>centos7：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install -y iftop</span><br><span class="line">ifconfig -a</span><br><span class="line"></span><br><span class="line">iftop -i eth0 -n -P</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191120143552.png" alt></p>
-<br>
-
-<h1 id="watch-cat-proc-net-dev"><a href="#watch-cat-proc-net-dev" class="headerlink" title="watch cat /proc/net/dev"></a>watch cat /proc/net/dev</h1><p>监控网卡流量</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">watch cat /proc/net/dev</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191120143722.png" alt></p>
-<h1 id="iftop编译安装"><a href="#iftop编译安装" class="headerlink" title="iftop编译安装"></a>iftop编译安装</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">yum install -y flex byacc libpcap ncurses-devel libpcap-devel   #先要安装必需的软件  </span><br><span class="line">mkdir iftop  </span><br><span class="line">cd iftop/  </span><br><span class="line">wget http://www.ex-parrot.com/pdw/iftop/download/iftop-1.0pre4.tar.gz #下载  </span><br><span class="line">tar zxvf iftop-1.0pre4.tar.gz #解压  </span><br><span class="line">cd iftop-1.0pre4  </span><br><span class="line">./configure #配置  </span><br><span class="line">make &amp;&amp; make install #编译安装</span><br></pre></td></tr></table></figure>
-
-<p>命令说明</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">语法: iftop -h | [-npblNBP] [-i interface] [-f filter code] [-F net/mask] [-G net6/mask6]  </span><br><span class="line">   -h                  显示本帮助（Help）信息  </span><br><span class="line">   -n                  不进行主机名（hostName）查找  </span><br><span class="line">   -N                  不将端口号（port Number）转换成对应的服务 to services  </span><br><span class="line">   -p                  混合（Promiscuous）模式（显示网络相关的其他主机信息）  </span><br><span class="line">   -b                  不显示流量图形条（Bar）  </span><br><span class="line">   -B                  以字节（Byte）为单位，显示带宽（Bandwidth）；默认以比特（bit）显示的  </span><br><span class="line">   -i interface        监控的网卡接口（interface）  </span><br><span class="line">   -f filter code      包统计时，使用过滤码；默认：无，只统计IP包  </span><br><span class="line">   -F net/mask         显示特定IPv4网段的进出流量（Flow）；如# iftop -F 10.10.1.0/24  </span><br><span class="line">   -G net6/mask6       显示特定IPv6网段的进出流量（Flow）  </span><br><span class="line">   -l                  显示并统计IPv6本地（Local）链接的流量（默认：关）  </span><br><span class="line">   -P                  显示端口（Port）  </span><br><span class="line">   -m limit            设置显示界面上侧的带宽刻度（liMit）  </span><br><span class="line">   -c config file      指定配置（Config）文件  </span><br><span class="line">   -t                  使用不带窗口菜单的文本（text）接口  </span><br><span class="line">  </span><br><span class="line">   排序:  </span><br><span class="line">   -o 2s                Sort by first column (2s traffic average)  </span><br><span class="line">   -o 10s               Sort by second column (10s traffic average) [default]  </span><br><span class="line">   -o 40s               Sort by third column (40s traffic average)  </span><br><span class="line">   -o source            Sort by source address  </span><br><span class="line">   -o destination       Sort by destination address  </span><br><span class="line">  </span><br><span class="line">   The following options are only available in combination with -t  </span><br><span class="line">   -s num              print one single text output afer num seconds, then quit  </span><br><span class="line">   -L num              number of lines to print</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-tcp-and-udp-buffer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-tcp-and-udp-buffer/" itemprop="url">centos7 tcp缓冲区和udp缓冲区大小设置_未完</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-17T00:00:00+08:00">
-                2016-11-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="设置TCP缓冲区大小"><a href="#设置TCP缓冲区大小" class="headerlink" title="设置TCP缓冲区大小"></a>设置TCP缓冲区大小</h1><br>
-
-<h1 id="设置UPD缓冲区大小"><a href="#设置UPD缓冲区大小" class="headerlink" title="设置UPD缓冲区大小"></a>设置UPD缓冲区大小</h1><p>鉴于tcp有重传机制，更多的时候udp对收发缓冲区的大小可能更加敏感一点。</p>
-<p>udp缓冲区的大小主要和以下几个值有关：</p>
-<ol>
-<li>/proc/sys/net/core/rmem_max ——— udp缓冲区的最大值，单位字节，下同</li>
-<li>/proc/sys/net/core/rmem_default ———- udp缓冲区的默认值，如果不更改的话程序的udp缓冲区默认值就是这个。</li>
-</ol>
-<p>查看方法可以直接 <code>cat</code> 以上两个文件进行查看，也可以通过 <code>sysctl</code> 查看。</p>
-<p>sysctl -a | grep rmem_max</p>
-<p>其实sysctl信息来源就是 <code>proc</code> 下的文件。</p>
-<h3 id="程序中进行更改"><a href="#程序中进行更改" class="headerlink" title="程序中进行更改"></a>程序中进行更改</h3><p>程序中可以使用setsockopt函数与SO_RCVBUF选项对udp缓冲区的值进行更改，但是要注意不管设置的值有多大，超过rmem_max的部分都会被无视。</p>
-<p>int a = value_wanted;</p>
-<p>if (setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, &amp;a, sizeof(int)) == - 1 ) {</p>
-<p>…</p>
-<p>}</p>
-<h3 id="更改系统值"><a href="#更改系统值" class="headerlink" title="更改系统值"></a>更改系统值</h3><p>如果确实要把udp缓冲区改到一个比较大的值，那就需要更改rmem_max的值。编辑/etc/rc.local文件添加以下代码可使系统在每次启动的时候自动更改系统缓冲区的最大值。</p>
-<p>echo value_wanted &gt; / proc /sys/net/core/rmem_default</p>
-<p>或者在/etc/sysctl.conf添加以下代码即可在重启后永久生效。</p>
-<p>rmem_max = MAX</p>
-<p>不想重启的话使用命令 <code>sysctl -p</code> 即可。</p>
-<p>可以顺便看下setsockopt在linux下的相关实现</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> SO_SNDBUF:</span><br><span class="line">    <span class="keyword">if</span> (val &gt; sysctl_wmem_max)</span><br><span class="line">        val = sysctl_wmem_max;</span><br><span class="line">    <span class="keyword">if</span> ((val * <span class="number">2</span> ) &lt; SOCK_MIN_SNDBUF)</span><br><span class="line">        sk-&gt;sk_sndbuf = SOCK_MIN_SNDBUF;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        sk-&gt;sk_sndbuf = val * <span class="number">2</span> ; <span class="comment">//当然缓冲区在系统中的实际值要大一点，因为udp报头以及IP报头等都是需要空间的。</span></span><br></pre></td></tr></table></figure>
-
-<br>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-performance-tools/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/linux/linux-performance-tools/" itemprop="url">Linux性能分析工具总纲_未完</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-11T00:00:00+08:00">
-                2016-11-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<p>linux 更详细的性能分析工具网址：<strong><a href="http://www.brendangregg.com/" target="_blank" rel="noopener">http://www.brendangregg.com/</a></strong></p>
-<p>CSDN中文介绍：<a href="https://www.cnblogs.com/tcicy/p/8461807.html" target="_blank" rel="noopener">https://www.cnblogs.com/tcicy/p/8461807.html</a> </p>
-<p> <img src="https://images2018.cnblogs.com/blog/1213536/201803/1213536-20180302093835823-228635776.png" alt="img"> </p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191114142810.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191114142659.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191114142615.png" alt></p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191114142044.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/dns-resolution-process/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/computer-network/dns-resolution-process/" itemprop="url">DNS解析过程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-02T00:00:00+08:00">
-                2016-09-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/computer-network/" itemprop="url" rel="index">
-                    <span itemprop="name">computer-network</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830131855.png" alt></p>
-<br>
-
-<p>先说一下DNS的几个基本概念：</p>
-<h1 id="一．-根域"><a href="#一．-根域" class="headerlink" title="一． 根域"></a>一． 根域</h1><p>就是所谓的“.”，其实我们的网址<a href="http://www.baidu.com在配置当中应该是www.baidu.com.（最后有一点），一般我们在浏览器里输入时会省略后面的点，而这也已经成为了习惯。" target="_blank" rel="noopener">www.baidu.com在配置当中应该是www.baidu.com.（最后有一点），一般我们在浏览器里输入时会省略后面的点，而这也已经成为了习惯。</a></p>
-<p>根域服务器我们知道有13台，但是这是错误的观点。</p>
-<p>根域服务器只是具有13个IP地址，但机器数量却不是13台，因为这些IP地址借助了任播的技术，所以我们可以在全球设立这些IP的镜像站点，你访问到的这个IP并不是唯一的那台主机。</p>
-<p>具体的镜像分布可以参考维基百科。这些主机的内容都是一样的</p>
-<h1 id="二．-域的划分"><a href="#二．-域的划分" class="headerlink" title="二． 域的划分"></a>二． 域的划分</h1><p>根域下来就是顶级域或者叫一级域，</p>
-<p>有两种划分方式，一种互联网刚兴起时的按照行业性质划分的com.，net.等，一种是按国家划分的如cn.，jp.，等。</p>
-<p>具体多少你可以自己去查，我们这里不关心。</p>
-<p>每个域都会有域名服务器，也叫权威域名服务器。</p>
-<p>Baidu.com就是一个顶级域名，而<a href="http://www.baidu.com却不是顶级域名，他是在baidu.com" target="_blank" rel="noopener">www.baidu.com却不是顶级域名，他是在baidu.com</a> 这个域里的一叫做www的主机。</p>
-<p>一级域之后还有二级域，三级域，只要我买了一个顶级域，并且我搭建了自己BIND服务器（或者其他软件搭建的）注册到互联网中，那么我就可以随意在前面多加几个域了（当然长度是有限制的）。</p>
-<p>比如a.<a href="http://www.baidu.com，在这个网址中，www.baidu.com变成了一个二级域而不是一台主机，主机名是a。" target="_blank" rel="noopener">www.baidu.com，在这个网址中，www.baidu.com变成了一个二级域而不是一台主机，主机名是a。</a></p>
-<h1 id="三．-域名服务器"><a href="#三．-域名服务器" class="headerlink" title="三． 域名服务器"></a>三． 域名服务器</h1><p>能提供域名解析的服务器，上面的记录类型可以是A(address)记录，NS记录（name server），MX（mail），CNAME等。</p>
-<p>（详解参见博客：域名解析中A记录、CNAME、MX记录、NS记录的区别和联系）</p>
-<p>A记录是什么意思呢，就是记录一个IP地址和一个主机名字，比如我这个域名服务器所在的域test.baidu.com，我们知道这是一个二级的域名，然后我在里面有一条A记录,记录了主机为a的IP，查到了就返回给你了。</p>
-<p>如果我现在要想baidu.com这个域名服务器查询a.test.baidu.com，那么这个顶级域名服务器就会发现你请求的这个网址在test.baidu.com这个域中，我这里记录了这个二级域的域名服务器test.baidu.com的NS的IP。我返回给你这个地址你再去查主机为a的主机把。</p>
-<p>这些域内的域名服务器都称为权威服务器，直接提供DNS查询服务。（这些服务器可不会做递归哦）</p>
-<h1 id="四．解析过程"><a href="#四．解析过程" class="headerlink" title="四．解析过程"></a>四．解析过程</h1><p>那么我们的DNS是怎么解析一个域名的呢？</p>
-<p>1、现在我有一台计算机，通过ISP接入了互联网，那么ISP就会给我分配一个DNS服务器，这个DNS服务器不是权威服务器，而是相当于一个代理的dns解析服务器，他会帮你迭代权威服务器返回的应答，然后把最终查到IP返回给你。</p>
-<p>2、现在的我计算机要向这台ISPDNS发起请求查询<a href="http://www.baidu.com这个域名了，(经网友提醒：这里其实准确来说不是ISPDNS，而应该是用户自己电脑网络设置里的DNS，并不一定是ISPDNS。比如也有可能你手工设置了8.8.8.8)" target="_blank" rel="noopener">www.baidu.com这个域名了，(经网友提醒：这里其实准确来说不是ISPDNS，而应该是用户自己电脑网络设置里的DNS，并不一定是ISPDNS。比如也有可能你手工设置了8.8.8.8)</a></p>
-<p>3、ISPDNS拿到请求后，先检查一下自己的缓存中有没有这个地址，有的话就直接返回。这个时候拿到的ip地址，会被标记为非权威服务器的应答。</p>
-<p>4、如果缓存中没有的话，ISPDNS会从配置文件里面读取13个根域名服务器的地址（这些地址是不变的，直接在BIND的配置文件中），</p>
-<p>5、然后像其中一台发起请求。</p>
-<p>6、根服务器拿到这个请求后，知道他是com.这个顶级域名下的，所以就会返回com域中的NS记录，一般来说是13台主机名和IP。</p>
-<p>7、然后ISPDNS向其中一台再次发起请求，com域的服务器发现你这请求是baidu.com这个域的，我一查发现了这个域的NS，那我就返回给你，你再去查。</p>
-<p>（目前百度有4台baidu.com的顶级域名服务器）。</p>
-<p>8、ISPDNS不厌其烦的再次向baidu.com这个域的权威服务器发起请求，baidu.com收到之后，查了下有www的这台主机，就把这个IP返回给你了，</p>
-<p>9、然后ISPDNS拿到了之后，将其返回给了客户端，并且把这个保存在高速缓存中。</p>
-<p>下面我们来用 <strong>nslookup 这个工具</strong>详细来说一下解析步骤：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install bind-utils -y</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132429.png" alt></p>
-<p>从上图我们可以看到:</p>
-<p>​          第一行Server是：DNS服务器的主机名–210.32.32.1</p>
-<p>​          第二行Address是： 它的IP地址–210.32.32.1#53</p>
-<p>​          下面的Name是：解析的URL–    <a href="http://www.jsjzx.com" target="_blank" rel="noopener">www.jsjzx.com</a></p>
-<p>​          Address是：解析出来的IP–112.121.162.168</p>
-<p>但是也有像百度这样的DNS比较复杂的解析:</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132502.png" alt></p>
-<p>你会发现百度有一个cname = <a href="http://www.a.shifen.com" target="_blank" rel="noopener">www.a.shifen.com</a>  的别名。</p>
-<p>这是怎么一个过程呢？</p>
-<p>我们用dig工具来跟踪一下吧（linux系统自带有）</p>
-<p>-—————————————————————————————————————————————————————————————————————————–</p>
-<p>Dig工具会在本地计算机做迭代，然后记录查询的过程。</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132528.png" alt></p>
-<p>第一步是向我这台机器的ISPDNS获取到根域服务区的13个IP和主机名[b-j].root-servers.net.。</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132552.png" alt></p>
-<p>第二步是向其中的一台根域服务器（Servername就是末行小括号里面的）发送<a href="http://www.baidu.com的查询请求，他返回了com.顶级域的服务器IP（未显示）和名称" target="_blank" rel="noopener">www.baidu.com的查询请求，他返回了com.顶级域的服务器IP（未显示）和名称</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132622.png" alt></p>
-<p>第三步，便向com.域的一台服务器192.43.172.30请求,<a href="http://www.baidu.com，他返回了baidu.com域的服务器IP（未显示）和名称，百度有四台顶级域的服务器" target="_blank" rel="noopener">www.baidu.com，他返回了baidu.com域的服务器IP（未显示）和名称，百度有四台顶级域的服务器</a></p>
-<p>​     【此处可以用dig @192.43.172.30 <a href="http://www.baidu.com查看返回的百度顶级域名服务器IP地址】。" target="_blank" rel="noopener">www.baidu.com查看返回的百度顶级域名服务器IP地址】。</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132642.png" alt></p>
-<p>第四步呢，向百度的顶级域服务器（202.181.33.31）请求<a href="http://www.baidu.com，他发现这个www有个别名，而不是一台主机，别名是www.a.shifen.com。" target="_blank" rel="noopener">www.baidu.com，他发现这个www有个别名，而不是一台主机，别名是www.a.shifen.com。</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132642.png" alt></p>
-<p>-——————————————————————————————————————————————————————————————————————————–</p>
-<p>按照一般的逻辑，当dns请求到别名的时候，查询会终止，然后重新发起查询别名的请求，所以此处应该返回的是<a href="http://www.a.shifen.com。" target="_blank" rel="noopener">www.a.shifen.com。</a></p>
-<p>此处用dig +trace [<a href="http://www.a.shifen.com】跟踪一下" target="_blank" rel="noopener">www.a.shifen.com】跟踪一下</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132705.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132723.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830132733.png" alt></p>
-<p>用一个图来说明一下</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135134.png" alt></p>
-<p>以下内容为在虚拟机中搭建local dns服务器得到的实验数据，纠正上述结论</p>
-<p>在上面的分析中，我们用dig工具进行了追踪，但是dig没有继续追踪当我们从baidu.com拿到cname和ns2.a.shifen.com的IP之后的事情。</p>
-<p>我们就所以然的下结论认为local dns会向ns2.a.shifen.com请求<a href="http://www.a.shifenc.om。" target="_blank" rel="noopener">www.a.shifenc.om。</a></p>
-<p>其实这个想法是错误，在自己的本地搭建一个local dns，抓取整个解析过程中是所有包，看看就明白拉。</p>
-<p>实际的结果是虽然dns.baidu.com返回了a.shifen.com域的服务器地址和IP，</p>
-<p>但是local dns并不是直接向上述返回的IP请求<a href="http://www.a.shifen.com，而是再一次去请求com域，得到shifen.com域的服务器（也就是baidu.com的那四台），" target="_blank" rel="noopener">www.a.shifen.com，而是再一次去请求com域，得到shifen.com域的服务器（也就是baidu.com的那四台），</a></p>
-<p>然后又请求<a href="http://www.a.shifen.com，返回a.shifen.com的域的服务器，最后才是去请求www.a.shifen.com，" target="_blank" rel="noopener">www.a.shifen.com，返回a.shifen.com的域的服务器，最后才是去请求www.a.shifen.com，</a></p>
-<p>虽然上面已经返回了IP，但是实验的结果就是再走一遍shifen.com域的查询。</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135211.png" alt></p>
-<p>上图就是localdns在解析<a href="http://www.baidu.com的抓包全过程。蓝色那条就是在收到cname和响应的a.shifen.com的域名服务器IP地址之后，继续向com域请求shifen.com。" target="_blank" rel="noopener">www.baidu.com的抓包全过程。蓝色那条就是在收到cname和响应的a.shifen.com的域名服务器IP地址之后，继续向com域请求shifen.com。</a> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135255.png" alt></p>
-<p>这个图充分说明了返回cname的同时也返回了ns2.a.shifen.com的IP。</p>
-<p>因此总结一下便是</p>
-<p>​         ①本机向local dns请求<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a></p>
-<p>​         ②local dns向根域请求<a href="http://www.baidu.com，根域返回com.域的服务器IP" target="_blank" rel="noopener">www.baidu.com，根域返回com.域的服务器IP</a></p>
-<p>​         ③向com.域请求<a href="http://www.baidu.com，com.域返回baidu.com域的服务器IP" target="_blank" rel="noopener">www.baidu.com，com.域返回baidu.com域的服务器IP</a></p>
-<p>​         ④向baidu.com请求<a href="http://www.baidu.com，返回cname" target="_blank" rel="noopener">www.baidu.com，返回cname</a> <a href="http://www.a.shifen.com和a.shifen.com域的服务器IP" target="_blank" rel="noopener">www.a.shifen.com和a.shifen.com域的服务器IP</a></p>
-<p>​         ⑤向root域请求<a href="http://www.a.shifen.com" target="_blank" rel="noopener">www.a.shifen.com</a></p>
-<p>​         ⑥向com.域请求<a href="http://www.a.shife.com" target="_blank" rel="noopener">www.a.shife.com</a></p>
-<p>​         ⑦向shifen.com请求</p>
-<p>​         ⑧向a.shifen.com域请求</p>
-<p>​         ⑨拿到<a href="http://www.a.shifen.com的IP" target="_blank" rel="noopener">www.a.shifen.com的IP</a></p>
-<p>​         ⑩localdns返回本机<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> cname <a href="http://www.a.shifen.com" target="_blank" rel="noopener">www.a.shifen.com</a> 以及 <a href="http://www.a.shifen.com的IP先说一下DNS的几个基本概念：" target="_blank" rel="noopener">www.a.shifen.com的IP先说一下DNS的几个基本概念：</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190830135331.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/lambda/1-java-lambda-introduce/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/java/lambda/1-java-lambda-introduce/" itemprop="url">1、lambda表达式入门：Java多核编程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-11T00:00:00+08:00">
-                2016-08-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/lambda/" itemprop="url" rel="index">
-                    <span itemprop="name">lambda</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="第1章-新生代Java"><a href="#第1章-新生代Java" class="headerlink" title="第1章 新生代Java"></a>第1章 新生代Java</h1><h3 id="1、外部迭代-gt-内部迭代"><a href="#1、外部迭代-gt-内部迭代" class="headerlink" title="1、外部迭代 -&gt; 内部迭代"></a>1、外部迭代 -&gt; 内部迭代</h3><p>外部迭代示例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Point p : pointList) &#123;</span><br><span class="line">    p.distance(<span class="number">0</span>,<span class="number">0</span>); <span class="comment">// 点p 到 原点（0，0）的距离</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>内部迭代示例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pointList.forEach(p -&gt; p.distance(<span class="number">0</span>,<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
-
-<h4 id="1-1、内部迭代"><a href="#1-1、内部迭代" class="headerlink" title="1.1、内部迭代"></a>1.1、内部迭代</h4><p>外部迭代 -&gt; 串行、有序</p>
-<p>内部迭代 -&gt; 顺序不重要，重要的是行为；</p>
-<p>​                -&gt; 延迟加载，乱序执行；</p>
-<h4 id="1-2、命令模式"><a href="#1-2、命令模式" class="headerlink" title="1.2、命令模式"></a>1.2、命令模式</h4><p>类似与命令模式，将 行为 抽象出来，作为Action；</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 行为 接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Consumer</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(T t)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 具体定义行为</span></span><br><span class="line"><span class="keyword">public</span> Distance implements Consumer&lt;Point&gt; &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Point p)</span> </span>&#123;</span><br><span class="line">        p.distance(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 为了调用 p.distance(0, 0); 不断创建对象，而且不够直观</span></span><br><span class="line">pointList.forEach(<span class="keyword">new</span> Distance());</span><br></pre></td></tr></table></figure>
-
-<p>为了调用 p.distance(0, 0); 不断创建对象，而且不够直观。</p>
-<p>这是因为Java 方法只接受 对象引用 作为参数，因此要引入新语法 lambda 表达式</p>
-<h4 id="1-3、lambda-表达式"><a href="#1-3、lambda-表达式" class="headerlink" title="1.3、lambda 表达式"></a>1.3、lambda 表达式</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pointList.forEach(<span class="keyword">new</span> Consumer&lt;Point&gt; &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Point p)</span> </span>&#123;</span><br><span class="line">        p.distance(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>Consumer 是一种 ”单方法接口“，有利于 编译器直接 无歧义 的选择正确的方法执行；</p>
-<p>引入一个额外的愈发（”-&gt;“）之后，将 参数与 表达式 分隔开，得到简单形式的 lambda表达式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pointList.forEach(p -&gt; p.distance(<span class="number">0</span>,<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="2、集合-gt-流"><a href="#2、集合-gt-流" class="headerlink" title="2、集合 -&gt; 流"></a>2、集合 -&gt; 流</h3><p>场景：一个Integer集合 —&gt; 转换成一个 Point实例 集合 —&gt; 寻找 距离原点(0, 0) 最远的点到原点的距离；</p>
-<p>集合的写法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; intList = Arrays.asList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>);</span><br><span class="line">List&lt;Point&gt; pointList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span> (Integer i : intList) &#123;</span><br><span class="line">    pointList.add(<span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line">Double maxDistance = Double.MIN_VALUE;</span><br><span class="line"><span class="keyword">for</span> (Point p : pointList) &#123;</span><br><span class="line">    maxDistance = Math.max(maxDistance, p.distance(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>假如把 intList 看作一个无限流：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">intStream = intList.stream();</span><br><span class="line">Stream&lt;Point&gt; pointStream = intStream.map(i -&gt; <span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>));</span><br><span class="line">DoubleStream distanceStream = pointStream.mapToDouble(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line"><span class="comment">// 管道最后是终止操作max</span></span><br><span class="line">OptionalDouble maxDistance = distances.max();</span><br></pre></td></tr></table></figure>
-
-<p>完整的代码变成了如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">OptionalDouble maxDistance = intList</span><br><span class="line">    .stream()</span><br><span class="line">    .map(i -&gt; <span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>))</span><br><span class="line">    .mapToDouble(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    .max();</span><br></pre></td></tr></table></figure>
-
-<p>使用管道的好处是， 创建与管理中间集合所导致的性能消耗也随之消失；</p>
-<br>
-
-<h3 id="3、串行-gt-并行"><a href="#3、串行-gt-并行" class="headerlink" title="3、串行 -&gt; 并行"></a>3、串行 -&gt; 并行</h3><p>Java 8 支持对集合的并行处理，而 lambda表达式 是”提供这种支持“ 必备的一环；</p>
-<p>原理：</p>
-<ol>
-<li>将大任务  递归的 切分为 ”足够小“ 的 小任务（能串行执行为止）；</li>
-<li>使用 cpu 的多核 分别执行完以后；</li>
-<li>将结果 结合起来 返回；</li>
-</ol>
-<p>实现方式：fork/join 框架</p>
-<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191113211438.png" alt></p>
-<p>代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">OptionalDouble maxDistance = intList</span><br><span class="line">    .parallelStream()</span><br><span class="line">    .map(i -&gt; <span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>))</span><br><span class="line">    .mapToDouble(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>))</span><br><span class="line">    .max();</span><br></pre></td></tr></table></figure>
-
-<p>什么是 “足够小”的任务？ 取决于 可用核的数量；</p>
-<br>
-
-<h3 id="4、组合行为"><a href="#4、组合行为" class="headerlink" title="4、组合行为"></a>4、组合行为</h3><p>Java 原版的排序器</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;Point&gt; byX = <span class="keyword">new</span> Comparator&lt;Point&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Point p1, Point p2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Double.compare(p1.getX(), p2.getX());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>创建一个通用的 排序器 Comparator</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T,U extends Comparable&lt;U&gt;&gt; </span><br><span class="line">    <span class="function">Compatable&lt;T&gt; <span class="title">comparing</span><span class="params">(Function&lt;T, U&gt; keyExtractor)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (c1, c2) -&gt; </span><br><span class="line">        keyExtractor.apply(c1).compateTo(keyExtractor.apply(c2));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>那么 1.3 中的问题，根据距离排序 可以实现为 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Comparator&lt;Point&gt; byDistance = comparing(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>));</span><br></pre></td></tr></table></figure>
-
-<p>新需求：按所有点到 原点的距离 升序排列，打印点：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">intList</span><br><span class="line">    .stream()</span><br><span class="line">    .map(i -&gt; <span class="keyword">new</span> Point(i%<span class="number">3</span>, i/<span class="number">1</span>))</span><br><span class="line">    .sorted(comparing(p -&gt; p.distance(<span class="number">0</span>, <span class="number">0</span>)))</span><br><span class="line">    .forEach(p -&gt; System.out.printf(<span class="string">"(%f, %f)"</span>, p.getX(), p.getY()));</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<br>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/valid-parentheses/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/leetcode/valid-parentheses/" itemprop="url">Valid Parentheses</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-09T21:27:02+08:00">
-                2016-04-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="算法分类：Stack"><a href="#算法分类：Stack" class="headerlink" title="算法分类：Stack"></a>算法分类：Stack</h1><p>url：<a href="https://leetcode.com/problems/valid-parentheses/" target="_blank" rel="noopener">https://leetcode.com/problems/valid-parentheses/</a></p>
-<p>​                          </p>
-<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">20. <span class="selector-tag">Valid</span> <span class="selector-tag">Parentheses</span></span><br><span class="line">Given a string containing just the characters '(', ')', '&#123;', '&#125;', '[' and ']', determine if the input string is valid.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">An</span> <span class="selector-tag">input</span> <span class="selector-tag">string</span> <span class="selector-tag">is</span> <span class="selector-tag">valid</span> <span class="selector-tag">if</span>:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Open</span> <span class="selector-tag">brackets</span> <span class="selector-tag">must</span> <span class="selector-tag">be</span> <span class="selector-tag">closed</span> <span class="selector-tag">by</span> <span class="selector-tag">the</span> <span class="selector-tag">same</span> <span class="selector-tag">type</span> <span class="selector-tag">of</span> <span class="selector-tag">brackets</span>.</span><br><span class="line"><span class="selector-tag">Open</span> <span class="selector-tag">brackets</span> <span class="selector-tag">must</span> <span class="selector-tag">be</span> <span class="selector-tag">closed</span> <span class="selector-tag">in</span> <span class="selector-tag">the</span> <span class="selector-tag">correct</span> <span class="selector-tag">order</span>.</span><br><span class="line"><span class="selector-tag">Note</span> <span class="selector-tag">that</span> <span class="selector-tag">an</span> <span class="selector-tag">empty</span> <span class="selector-tag">string</span> <span class="selector-tag">is</span> <span class="selector-tag">also</span> <span class="selector-tag">considered</span> <span class="selector-tag">valid</span>.</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Example</span> 1:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "()"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">true</span></span><br><span class="line"><span class="selector-tag">Example</span> 2:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "()<span class="selector-attr">[]</span>&#123;&#125;"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">true</span></span><br><span class="line"><span class="selector-tag">Example</span> 3:</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">Input</span>: "(]"</span><br><span class="line"><span class="selector-tag">Output</span>: <span class="selector-tag">false</span></span><br></pre></td></tr></table></figure>
-
-<p>​                     </p>
-<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Stack&lt;String&gt; stack = <span class="keyword">new</span> Stack&lt;&gt;();</span><br><span class="line">        <span class="keyword">char</span>[] chArr = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> ch : chArr) &#123;</span><br><span class="line">            String top = stack.isEmpty() ? <span class="keyword">null</span> : stack.peek();</span><br><span class="line">            String c = String.valueOf(ch);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == top) &#123;</span><br><span class="line">                stack.push(c);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"&#123;"</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">"&#125;"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"["</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">"]"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top.equals(<span class="string">"("</span>)) &#123;</span><br><span class="line">                <span class="keyword">if</span> (c.equals(<span class="string">")"</span>)) &#123;</span><br><span class="line">                    stack.pop();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    stack.push(c);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                stack.push(c);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (stack.isEmpty()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Stack&lt;Character&gt; stack = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line">        HashMap&lt;Character, Character&gt; map = <span class="keyword">new</span> HashMap&lt;Character, Character&gt;() &#123;&#123;</span><br><span class="line">            put(<span class="string">'&#125;'</span>, <span class="string">'&#123;'</span>);</span><br><span class="line">            put(<span class="string">']'</span>, <span class="string">'['</span>);</span><br><span class="line">            put(<span class="string">')'</span>, <span class="string">'('</span>);</span><br><span class="line">        &#125;&#125;;</span><br><span class="line">        <span class="keyword">char</span>[] chArr = s.toCharArray();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> ch : chArr) &#123;</span><br><span class="line">            Character top = stack.isEmpty() ? <span class="keyword">null</span> : stack.peek();</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> == top) &#123;</span><br><span class="line">                stack.push(ch);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (top == map.get(ch)) &#123;</span><br><span class="line">                stack.pop();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                stack.push(ch);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> stack.isEmpty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​                          </p>
-<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">isValid</span><span class="params">(self, s)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        :type s: str</span></span><br><span class="line"><span class="string">        :rtype: bool</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        stack = []</span><br><span class="line">        map = &#123;<span class="string">u'&#125;'</span>:<span class="string">u'&#123;'</span>, <span class="string">u']'</span>:<span class="string">u'['</span>, <span class="string">u')'</span>:<span class="string">u'('</span>&#125;</span><br><span class="line">        <span class="keyword">for</span> ch <span class="keyword">in</span> s:</span><br><span class="line">            top = <span class="string">u'#'</span> <span class="keyword">if</span> (len(stack) == <span class="number">0</span>) <span class="keyword">else</span> stack[<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">if</span> map.has_key(ch) <span class="keyword">and</span> top == map[ch]:</span><br><span class="line">                stack.pop()</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                stack.append(ch)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> == len(stack)</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/leetcode/unique-binary-search-trees-ii/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/leetcode/unique-binary-search-trees-ii/" itemprop="url">Unique Binary Search Trees ii</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-04-07T00:37:33+08:00">
-                2016-04-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<h1 id="算法：二叉搜索树"><a href="#算法：二叉搜索树" class="headerlink" title="算法：二叉搜索树"></a>算法：二叉搜索树</h1><p>url：<a href="https://leetcode-cn.com/problems/unique-binary-search-trees-ii/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/unique-binary-search-trees-ii/</a></p>
-<p>​                   </p>
-<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">给定一个整数 <span class="selector-tag">n</span>，生成所有由 1 ... <span class="selector-tag">n</span> 为节点所组成的二叉搜索树。</span><br><span class="line">示例:</span><br><span class="line"></span><br><span class="line">输入: 3</span><br><span class="line">输出:</span><br><span class="line">[</span><br><span class="line">  <span class="selector-attr">[1,null,3,2]</span>,</span><br><span class="line">  <span class="selector-attr">[3,2,null,1]</span>,</span><br><span class="line">  <span class="selector-attr">[3,1,null,null,2]</span>,</span><br><span class="line">  <span class="selector-attr">[2,1,3]</span>,</span><br><span class="line">  <span class="selector-attr">[1,null,2,null,3]</span></span><br><span class="line">]</span><br><span class="line">解释:</span><br><span class="line">以上的输出对应以下 5 种不同结构的二叉搜索树：</span><br><span class="line"></span><br><span class="line">   1         3     3      2      1</span><br><span class="line">    \       /     /      / \      \</span><br><span class="line">     3     2     1      1   3      2</span><br><span class="line">    /     /       \                 \</span><br><span class="line">   2     1         2                 3</span><br></pre></td></tr></table></figure>
-
-<p>分析</p>
-<p>首先来计数需要构建的二叉树数量。可能的二叉搜素数数量是一个 卡特兰数。</p>
-<p>我们跟随上文的逻辑，只是这次是构建具体的树，而不是计数。</p>
-<p>算法</p>
-<p>我们从序列 1 ..n 中取出数字 i，作为当前树的树根。于是，剩余 i - 1 个元素可用于左子树，n - i 个元素用于右子树。<br>如 前文所述，这样会产生 G(i - 1) 种左子树 和 G(n - i) 种右子树，其中 G 是卡特兰数。</p>
-<p><img src="https://pic.leetcode-cn.com/f709dff506c20ac970d4cd7ace0436aafca7828c67b510cdbaaa60d54f5479b3-image.png" alt="image.png"></p>
-<p>现在，我们对序列 1 … i - 1 重复上述过程，以构建所有的左子树；然后对 i + 1 … n 重复，以构建所有的右子树。</p>
-<p>这样，我们就有了树根 i 和可能的左子树、右子树的列表。</p>
-<p>最后一步，对两个列表循环，将左子树和右子树连接在根上。</p>
-<p>​                       </p>
-<h1 id="Java解法"><a href="#Java解法" class="headerlink" title="Java解法"></a>Java解法</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> x) &#123; val = x; &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;TreeNode&gt; <span class="title">generateTrees</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> LinkedList&lt;TreeNode&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> listTrees(<span class="number">1</span>, n);        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> LinkedList&lt;TreeNode&gt; <span class="title">listTrees</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">        LinkedList&lt;TreeNode&gt; rootList = <span class="keyword">new</span> LinkedList&lt;TreeNode&gt;();</span><br><span class="line">        <span class="keyword">if</span>(start &gt; end) &#123;</span><br><span class="line">            rootList.add(<span class="keyword">null</span>);</span><br><span class="line">            <span class="keyword">return</span> rootList;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=start; i&lt;=end; ++i) &#123;</span><br><span class="line">            LinkedList&lt;TreeNode&gt; leftList = listTrees(start, i-<span class="number">1</span>); </span><br><span class="line">            LinkedList&lt;TreeNode&gt; rightList = listTrees(i+<span class="number">1</span>, end);</span><br><span class="line">            <span class="keyword">for</span>(TreeNode left : leftList) &#123;</span><br><span class="line">                <span class="keyword">for</span>(TreeNode right : rightList) &#123;</span><br><span class="line">                    TreeNode cur = <span class="keyword">new</span> TreeNode(i);</span><br><span class="line">                    cur.left = left;</span><br><span class="line">                    cur.right = right;</span><br><span class="line">                    rootList.add(cur);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> rootList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="Python解法"><a href="#Python解法" class="headerlink" title="Python解法"></a>Python解法</h1><p>​                        </p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/18/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/20/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2526,7 +2562,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-count">236</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2537,7 +2573,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2548,7 +2584,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1、准备1.1、安装k8s集群每个docker机器 1234567vi /etc/docker/daemon.json&amp;#123;  &quot;registry-mirrors&quot; : [    &quot;https://k8spv7nq.mirror.aliyuncs.com&quot;  ],  &quot;insecure-registries&quot;: [&quot;czharbor.com&quot;]&amp;#125;  1.2、harbor">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jenkins pipeline自动构建springboot并部署至k8s">
+<meta property="og:url" content="https://carlo-z.com/devops/jenkins/jenkins-deploy-springboot-to-k8s/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="1、准备1.1、安装k8s集群每个docker机器 1234567vi /etc/docker/daemon.json&amp;#123;  &quot;registry-mirrors&quot; : [    &quot;https://k8spv7nq.mirror.aliyuncs.com&quot;  ],  &quot;insecure-registries&quot;: [&quot;czharbor.com&quot;]&amp;#125;  1.2、harbor">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731133049536.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805234423183.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200726220714201.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805233316341.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200726222903171.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200726225212624.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200726225409947.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/7464841-42ee8f4af9caf7f7.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200804211825096.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810233931007.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200802204243247.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200802204912224.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200802205107574.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200802204224110.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810234404325.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810234326243.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810234516285.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810234702488.png">
+<meta property="og:updated_time" content="2020-08-10T15:47:40.376Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jenkins pipeline自动构建springboot并部署至k8s">
+<meta name="twitter:description" content="1、准备1.1、安装k8s集群每个docker机器 1234567vi /etc/docker/daemon.json&amp;#123;  &quot;registry-mirrors&quot; : [    &quot;https://k8spv7nq.mirror.aliyuncs.com&quot;  ],  &quot;insecure-registries&quot;: [&quot;czharbor.com&quot;]&amp;#125;  1.2、harbor">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731133049536.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/devops/jenkins/jenkins-deploy-springboot-to-k8s/">
+
+
+
+
+
+  <title>jenkins pipeline自动构建springboot并部署至k8s | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/jenkins/jenkins-deploy-springboot-to-k8s/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jenkins pipeline自动构建springboot并部署至k8s</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-11T00:00:00+08:00">
+                2018-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/jenkins/" itemprop="url" rel="index">
+                    <span itemprop="name">jenkins</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<blockquote>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200731133049536.png" alt="image-20200731133049536"></p>
+<h1 id="1、准备"><a href="#1、准备" class="headerlink" title="1、准备"></a>1、准备</h1><h3 id="1-1、安装k8s集群"><a href="#1-1、安装k8s集群" class="headerlink" title="1.1、安装k8s集群"></a>1.1、安装k8s集群</h3><p>每个docker机器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  "registry-mirrors" : [</span><br><span class="line">    "https://k8spv7nq.mirror.aliyuncs.com"</span><br><span class="line">  ],</span><br><span class="line">  "insecure-registries": ["czharbor.com"]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2、harbor-启动"><a href="#1-2、harbor-启动" class="headerlink" title="1.2、harbor 启动"></a>1.2、harbor 启动</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml stop</span><br><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml start</span><br></pre></td></tr></table></figure>
+
+<h1 id="2-k8s中部署jenkins"><a href="#2-k8s中部署jenkins" class="headerlink" title="2. k8s中部署jenkins"></a>2. k8s中部署jenkins</h1><h2 id="2-1、制作jenkins镜像"><a href="#2-1、制作jenkins镜像" class="headerlink" title="2.1、制作jenkins镜像"></a>2.1、制作jenkins镜像</h2><p><a href="https://hub.docker.com/r/jenkins/jenkins/tags" target="_blank" rel="noopener">https://hub.docker.com/r/jenkins/jenkins/tags</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker pull jenkins/jenkins:2.251-alpine</span><br><span class="line">mkdir -p /data/jenkins &amp;&amp; cd /data/jenkins</span><br><span class="line">vi Dockerfile</span><br></pre></td></tr></table></figure>
+
+<p>dockerfile</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> jenkins/jenkins:<span class="number">2.251</span>-alpine</span><br><span class="line"><span class="keyword">USER</span> root</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> sed -i <span class="string">'s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g'</span> /etc/apk/repositories \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk update \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add -U tzdata \</span></span><br><span class="line"><span class="bash">    &amp;&amp; cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \</span></span><br><span class="line"><span class="bash">    &amp;&amp; <span class="built_in">echo</span> <span class="string">"Asia/Shanghai"</span> &gt; /etc/timezone \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add git \</span></span><br><span class="line"><span class="bash"><span class="comment">#    &amp;&amp; apk add maven=3.3.9-r1 \</span></span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add docker</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"jenkins ALL=NOPASSWD: ALL"</span> &gt;&gt; /etc/sudoers</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> mkdir -p /opt/maven/repository</span></span><br></pre></td></tr></table></figure>
+
+<p>编译镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build -t czharbor.com/devops/cz-jenkins:lts-alpine .</span><br><span class="line">docker push czharbor.com/devops/cz-jenkins:lts-alpine</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805234423183.png" alt="image-20200805234423183"></p>
+<h2 id="2-2、共享存储NFS部署"><a href="#2-2、共享存储NFS部署" class="headerlink" title="2.2、共享存储NFS部署"></a>2.2、共享存储NFS部署</h2><p>NFS服务部署：<a href="https://www.jianshu.com/p/26003390626e" target="_blank" rel="noopener">https://www.jianshu.com/p/26003390626e</a><br>创建NFS 动态供给参考：<a href="https://www.jianshu.com/p/092eb3aacefc" target="_blank" rel="noopener">https://www.jianshu.com/p/092eb3aacefc</a></p>
+<blockquote>
+<ul>
+<li><p>centos7-hub(192.168.145.130)：磁盘所在机器</p>
+</li>
+<li><p>k8s-dn1()：使用centos7-hub共享的磁盘</p>
+</li>
+<li><p>k8s-dn2()：使用centos7-hub共享的磁盘</p>
+</li>
+<li><p>k8s-dn1()：使用centos7-hub共享的磁盘</p>
+</li>
+</ul>
+</blockquote>
+<h4 id="2-2-1、在-centos7-hub-上设置"><a href="#2-2-1、在-centos7-hub-上设置" class="headerlink" title="2.2.1、在 centos7-hub 上设置"></a>2.2.1、在 centos7-hub 上设置</h4><p>1、关闭防火墙</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl stop firewalld.service</span><br><span class="line">$ systemctl disable firewalld.service</span><br></pre></td></tr></table></figure>
+
+<p>2、安装配置 nfs</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum -y install nfs-utils rpcbind</span><br></pre></td></tr></table></figure>
+
+<p>3、共享目录设置权限：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p /<span class="keyword">data</span>/nfs/jenkins/</span><br><span class="line">$ chmod -R <span class="number">755</span> /<span class="keyword">data</span>/nfs/jenkins/</span><br></pre></td></tr></table></figure>
+
+<p>4、配置 nfs，nfs 的默认配置文件在 /etc/exports 文件下，在该文件中添加下面的配置信息：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/exports</span><br><span class="line">/data/nfs/jenkins/  *(rw,<span class="keyword">sync</span>,no_root_squash)</span><br></pre></td></tr></table></figure>
+
+<p>5、配置说明：<br> /data/nfs/jenkins/：是共享的数据目录<br> *：表示任何人都有权限连接，当然也可以是一个网段，一个 IP，也可以是域名<br> rw：读写的权限<br> sync：表示文件同时写入硬盘和内存<br> no_root_squash：当登录 NFS 主机使用共享目录的使用者是 root 时，其权限将被转换成为匿名使用者，通常它的 UID 与 GID，都会变成 nobody 身份</p>
+<p>启动服务 nfs 需要向 rpc 注册，rpc 一旦重启了，注册的文件都会丢失，向他注册的服务都需要重启</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vi /etc/netconfig</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200726220714201.png" alt="image-20200726220714201"></p>
+<p> 注意启动顺序，先启动 rpcbind</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl start rpcbind.service</span><br><span class="line">$ systemctl <span class="built_in">enable</span> rpcbind</span><br><span class="line">$ systemctl status rpcbind</span><br><span class="line">● rpcbind.service - RPC <span class="built_in">bind</span> service</span><br><span class="line">   Loaded: loaded (/usr/lib/systemd/system/rpcbind.service; disabled; vendor preset: enabled)</span><br><span class="line">   Active: active (running) since Tue 2018-07-10 20:57:29 CST; 1min 54s ago</span><br><span class="line">  Process: 17696 ExecStart=/sbin/rpcbind -w <span class="variable">$RPCBIND_ARGS</span> (code=exited, status=0/SUCCESS)</span><br><span class="line"> Main PID: 17697 (rpcbind)</span><br><span class="line">    Tasks: 1</span><br><span class="line">   Memory: 1.1M</span><br><span class="line">   CGroup: /system.slice/rpcbind.service</span><br><span class="line">           └─17697 /sbin/rpcbind -w</span><br><span class="line"></span><br><span class="line">Jul 10 20:57:29 master systemd[1]: Starting RPC <span class="built_in">bind</span> service...</span><br><span class="line">Jul 10 20:57:29 master systemd[1]: Started RPC <span class="built_in">bind</span> service.</span><br></pre></td></tr></table></figure>
+
+<p>看到上面的 Started 证明启动成功了。</p>
+<p>然后启动 nfs 服务：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl start nfs.service</span><br><span class="line">$ systemctl enable nfs</span><br><span class="line">$ systemctl status nfs</span><br><span class="line">● nfs-server.service - NFS server and services</span><br><span class="line">   Loaded: loaded (<span class="regexp">/usr/</span>lib/systemd/system/nfs-server.service; enabled; vendor preset: disabled)</span><br><span class="line">  Drop-In: <span class="regexp">/run/</span>systemd/generator/nfs-server.service.d</span><br><span class="line">           └─order-<span class="keyword">with</span>-mounts.conf</span><br><span class="line">   Active: active (exited) since Tue <span class="number">2018</span><span class="number">-07</span><span class="number">-10</span> <span class="number">21</span>:<span class="number">35</span>:<span class="number">37</span> CST; <span class="number">14</span>s ago</span><br><span class="line"> Main PID: <span class="number">32067</span> (code=exited, status=<span class="number">0</span>/SUCCESS)</span><br><span class="line">   CGroup: <span class="regexp">/system.slice/</span>nfs-server.service</span><br><span class="line"></span><br><span class="line">Jul <span class="number">10</span> <span class="number">21</span>:<span class="number">35</span>:<span class="number">37</span> master systemd[<span class="number">1</span>]: Starting NFS server and services...</span><br><span class="line">Jul <span class="number">10</span> <span class="number">21</span>:<span class="number">35</span>:<span class="number">37</span> master systemd[<span class="number">1</span>]: Started NFS server and services.</span><br></pre></td></tr></table></figure>
+
+<p>同样看到 Started 则证明 NFS Server 启动成功了。</p>
+<p>另外还可以通过下面的命令确认下：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ rpcinfo -p<span class="params">|grep nfs</span></span><br><span class="line"><span class="params">    100003    3   tcp   2049  nfs</span></span><br><span class="line"><span class="params">    100003    4   tcp   2049  nfs</span></span><br><span class="line"><span class="params">    100227    3   tcp   2049  nfs_acl</span></span><br><span class="line"><span class="params">    100003    3   udp   2049  nfs</span></span><br><span class="line"><span class="params">    100003    4   udp   2049  nfs</span></span><br><span class="line"><span class="params">    100227    3   udp   2049  nfs_acl</span></span><br></pre></td></tr></table></figure>
+
+<p>查看具体目录挂载权限：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cat /<span class="keyword">var</span>/lib/nfs/etab</span><br><span class="line">/data/nfs/jenkins	*(rw,<span class="keyword">sync</span>,wdelay,hide,nocrossmnt,secure,no_root_squash,no_all_squash,no_subtree_check,secure_locks,acl,no_pnfs,anonuid=<span class="number">65534</span>,anongid=<span class="number">65534</span>,sec=sys,rw,secure,no_root_squash,no_all_squash)</span><br></pre></td></tr></table></figure>
+
+<p>到这里nfs server就安装成功了，接下来在节点 <code>k8s-n1</code> 上来安装 nfs 的客户端来验证下 nfs</p>
+<h4 id="2-2-2、在-k8s-n1上设置"><a href="#2-2-2、在-k8s-n1上设置" class="headerlink" title="2.2.2、在 k8s-n1上设置"></a>2.2.2、在 k8s-n1上设置</h4><p>安装 nfs 当前也需要先关闭防火墙：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl stop firewalld.service</span><br><span class="line">$ systemctl disable firewalld.service</span><br></pre></td></tr></table></figure>
+
+<p>然后安装 nfs</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yum -y install nfs-utils rpcbind</span><br></pre></td></tr></table></figure>
+
+<p>禁用ipv6</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vi /etc/netconfig</span></span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，和上面的方法一样，先启动 rpc、然后启动 nfs：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> systemctl start rpcbind.service </span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl <span class="built_in">enable</span> rpcbind.service</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl status rpcbind.service</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl start nfs-server</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl <span class="built_in">enable</span> nfs-server</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> systemctl status nfs-server</span></span><br></pre></td></tr></table></figure>
+
+<p>挂载数据目录 客户端启动完成后，在客户端来挂载下 nfs 测试下：<br> 首先检查下 nfs 是否有共享目录：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ showmount -e <span class="number">192.168</span>.<span class="number">145.130</span></span><br><span class="line">Export list <span class="keyword">for</span> <span class="number">192.168</span>.<span class="number">145.130</span><span class="symbol">:</span></span><br><span class="line">/data/nfs/jenkins *</span><br></pre></td></tr></table></figure>
+
+<p>然后我们在客户端上新建目录：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /<span class="keyword">data</span></span><br></pre></td></tr></table></figure>
+
+<p>将 nfs 共享目录挂载到上面的目录：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount -t nfs <span class="number">192.168</span>.<span class="number">145.130</span><span class="symbol">:/data/nfs/jenkins</span> /data</span><br></pre></td></tr></table></figure>
+
+<p>挂载成功后，在客户端上面的目录中新建一个文件，然后观察下 nfs 服务端的共享目录下面是否也会出现该文件：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ touch /<span class="keyword">data</span>/test.txt</span><br></pre></td></tr></table></figure>
+
+<p>然后在 nfs 服务端查看：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ls -ls /<span class="keyword">data</span>/nfs/jenkins</span><br><span class="line">total <span class="number">4</span></span><br><span class="line"><span class="number">4</span> -rw-r--r--. <span class="number">1</span> root root <span class="number">4</span> Jul <span class="number">10</span> <span class="number">21</span>:<span class="number">50</span> test.txt</span><br></pre></td></tr></table></figure>
+
+<p>如果上面出现了 test.txt 的文件，那么证明 nfs 挂载成功了。</p>
+<h2 id="2-3、部署jenkins到k8s"><a href="#2-3、部署jenkins到k8s" class="headerlink" title="2.3、部署jenkins到k8s"></a>2.3、部署jenkins到k8s</h2><h4 id="jenkins-pv-pvc-yaml"><a href="#jenkins-pv-pvc-yaml" class="headerlink" title="jenkins-pv-pvc.yaml"></a>jenkins-pv-pvc.yaml</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolume</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins-home-pv</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  capacity:</span></span><br><span class="line"><span class="attr">    storage:</span> <span class="number">5</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteMany</span></span><br><span class="line"><span class="attr">  nfs:</span></span><br><span class="line"><span class="attr">    server:</span> <span class="number">192.168</span><span class="number">.145</span><span class="number">.130</span></span><br><span class="line"><span class="attr">    path:</span> <span class="string">"/data/nfs/jenkins"</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins-home-pvc</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">devops</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  accessModes:</span> <span class="string">["ReadWriteMany"]</span></span><br><span class="line"><span class="attr">  resources:</span></span><br><span class="line"><span class="attr">    requests:</span></span><br><span class="line"><span class="attr">      storage:</span> <span class="number">5</span><span class="string">Gi</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="jenkins-service-account-yaml"><a href="#jenkins-service-account-yaml" class="headerlink" title="jenkins-service-account.yaml"></a>jenkins-service-account.yaml</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">devops</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line"><span class="attr">- apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">  resources:</span> <span class="string">["pods"]</span></span><br><span class="line"><span class="attr">  verbs:</span> <span class="string">["create","delete","get","list","patch","update","watch"]</span></span><br><span class="line"><span class="attr">- apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">  resources:</span> <span class="string">["pods/exec"]</span></span><br><span class="line"><span class="attr">  verbs:</span> <span class="string">["create","delete","get","list","patch","update","watch"]</span></span><br><span class="line"><span class="attr">- apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">  resources:</span> <span class="string">["pods/log"]</span></span><br><span class="line"><span class="attr">  verbs:</span> <span class="string">["get","list","watch"]</span></span><br><span class="line"><span class="attr">- apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">  resources:</span> <span class="string">["secrets"]</span></span><br><span class="line"><span class="attr">  verbs:</span> <span class="string">["get"]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">RoleBinding</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line"><span class="attr">  apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="attr">  kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="attr">- kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">devops</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="jenkins-statefulset-yaml"><a href="#jenkins-statefulset-yaml" class="headerlink" title="jenkins-statefulset.yaml"></a>jenkins-statefulset.yaml</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StatefulSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">devops</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  serviceName:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  updateStrategy:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">RollingUpdate</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      terminationGracePeriodSeconds:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">      serviceAccountName:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">      hostNetwork:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">          image:</span> <span class="string">czharbor.com/devops/cz-jenkins:lts-alpine</span></span><br><span class="line"><span class="attr">          imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line"><span class="attr">          ports:</span></span><br><span class="line"><span class="attr">            - containerPort:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">            - containerPort:</span> <span class="number">50000</span></span><br><span class="line"><span class="attr">          resources:</span></span><br><span class="line"><span class="attr">            limits:</span></span><br><span class="line"><span class="attr">              cpu:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">              memory:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">            requests:</span></span><br><span class="line"><span class="attr">              cpu:</span> <span class="number">0.5</span></span><br><span class="line"><span class="attr">              memory:</span> <span class="number">500</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">          env:</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">LIMITS_MEMORY</span></span><br><span class="line"><span class="attr">              valueFrom:</span></span><br><span class="line"><span class="attr">                resourceFieldRef:</span></span><br><span class="line"><span class="attr">                  resource:</span> <span class="string">limits.memory</span></span><br><span class="line"><span class="attr">                  divisor:</span> <span class="number">1</span><span class="string">Mi</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">JAVA_OPTS</span></span><br><span class="line"><span class="attr">              value:</span> <span class="bullet">-Xmx$(LIMITS_MEMORY)m</span> <span class="attr">-XshowSettings:vm</span> <span class="bullet">-Dhudson.slaves.NodeProvisioner.initialDelay=0</span> <span class="bullet">-Dhudson.slaves.NodeProvisioner.MARGIN=50</span> <span class="bullet">-Dhudson.slaves.NodeProvisioner.MARGIN0=0.85</span> <span class="bullet">-Duser.timezone=GMT+08</span></span><br><span class="line"><span class="attr">          volumeMounts:</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">jenkins-home</span></span><br><span class="line"><span class="attr">              mountPath:</span> <span class="string">/var/jenkins_home</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">docker-sock</span></span><br><span class="line"><span class="attr">              mountPath:</span> <span class="string">/var/run/docker.sock</span></span><br><span class="line"><span class="attr">          livenessProbe:</span></span><br><span class="line"><span class="attr">            httpGet:</span></span><br><span class="line"><span class="attr">              path:</span> <span class="string">/login</span></span><br><span class="line"><span class="attr">              port:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">            initialDelaySeconds:</span> <span class="number">60</span></span><br><span class="line"><span class="attr">            timeoutSeconds:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">            failureThreshold:</span> <span class="number">12</span></span><br><span class="line"><span class="attr">          readinessProbe:</span></span><br><span class="line"><span class="attr">            httpGet:</span></span><br><span class="line"><span class="attr">              path:</span> <span class="string">/login</span></span><br><span class="line"><span class="attr">              port:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">            initialDelaySeconds:</span> <span class="number">60</span></span><br><span class="line"><span class="attr">            timeoutSeconds:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">            failureThreshold:</span> <span class="number">12</span></span><br><span class="line"><span class="attr">      securityContext:</span></span><br><span class="line"><span class="attr">        fsGroup:</span> <span class="number">1000</span></span><br><span class="line"><span class="attr">      volumes:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">jenkins-home</span></span><br><span class="line"><span class="attr">        persistentVolumeClaim:</span></span><br><span class="line"><span class="attr">          claimName:</span> <span class="string">jenkins-home-pvc</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">docker-sock</span></span><br><span class="line"><span class="attr">        hostPath:</span></span><br><span class="line"><span class="attr">          path:</span> <span class="string">/var/run/docker.sock</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong><u>问题1</u></strong>：jenkins镜像里已经安装了docker，千万不能把 主机的 /usr/bin/docker 挂载到 docker 里去，否则会出错：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> bash-4.4<span class="comment"># docker ps</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> bash: /usr/bin/docker: No such file or directory</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805233316341.png" alt="image-20200805233316341"></p>
+<p><u><strong>问题2</strong></u>：Jenkinsfile中运行docker 挂载 父容器的数据卷的时候，会继承父容器的网络，将 jenkins的网络模式指定为 <code>hostNetwork: true</code> 表示使用主机的网络和iptables，这样kubectl发布应用才能正常运行</p>
+</blockquote>
+<h4 id="jenkins-service-yaml"><a href="#jenkins-service-yaml" class="headerlink" title="jenkins-service.yaml"></a>jenkins-service.yaml</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">devops</span></span><br><span class="line"><span class="attr">  annotations:</span></span><br><span class="line">    <span class="string">prometheus.io/scrape:</span> <span class="string">'true'</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">NodePort</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">jenkins-web</span></span><br><span class="line"><span class="attr">    port:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">    targetPort:</span> <span class="number">8080</span></span><br><span class="line"><span class="attr">    nodePort:</span> <span class="number">31442</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">jenkins-agent</span></span><br><span class="line"><span class="attr">    port:</span> <span class="number">50000</span></span><br><span class="line"><span class="attr">    targetPort:</span> <span class="number">50000</span></span><br><span class="line"><span class="attr">    nodePort:</span> <span class="number">30005</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">jenkins</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="jenkins-ingress-yaml"><a href="#jenkins-ingress-yaml" class="headerlink" title="jenkins-ingress.yaml"></a>jenkins-ingress.yaml</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">devops</span></span><br><span class="line"><span class="attr">  annotations:</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/ssl-redirect:</span> <span class="string">"true"</span></span><br><span class="line">    <span class="string">kubernetes.io/tls-acme:</span> <span class="string">"true"</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/proxy-body-size:</span> <span class="number">50</span><span class="string">m</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/proxy-request-buffering:</span> <span class="string">"off"</span></span><br><span class="line">    <span class="string">ingress.kubernetes.io/ssl-redirect:</span> <span class="string">"true"</span></span><br><span class="line">    <span class="string">ingress.kubernetes.io/proxy-body-size:</span> <span class="number">50</span><span class="string">m</span></span><br><span class="line">    <span class="string">ingress.kubernetes.io/proxy-request-buffering:</span> <span class="string">"off"</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  rules:</span></span><br><span class="line"><span class="attr">  - host:</span> <span class="string">cz-jenkins.dev</span></span><br><span class="line"><span class="attr">    http:</span></span><br><span class="line"><span class="attr">      paths:</span></span><br><span class="line"><span class="attr">      - path:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">        backend:</span></span><br><span class="line"><span class="attr">          serviceName:</span> <span class="string">jenkins</span></span><br><span class="line"><span class="attr">          servicePort:</span> <span class="number">8080</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="执行部署动作"><a href="#执行部署动作" class="headerlink" title="执行部署动作"></a>执行部署动作</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-dn1 ~]# kubectl create ns devops</span><br><span class="line"></span><br><span class="line">kubectl apply -f /data/jenkins/jenkins-pv-pvc.yaml</span><br><span class="line">kubectl apply -f /data/jenkins/jenkins-service-account.yaml</span><br><span class="line">kubectl apply -f /data/jenkins/jenkins-statefulset.yaml</span><br><span class="line">kubectl apply -f /data/jenkins/jenkins-service.yaml</span><br><span class="line">kubectl apply -f /data/jenkins/jenkins-ingress.yaml</span><br><span class="line"></span><br><span class="line">kubectl delete -f /data/jenkins/jenkins-ingress.yaml</span><br><span class="line">kubectl delete -f /data/jenkins/jenkins-service.yaml</span><br><span class="line">kubectl delete -f /data/jenkins/jenkins-statefulset.yaml</span><br><span class="line">kubectl delete -f /data/jenkins/jenkins-service-account.yaml</span><br><span class="line">kubectl delete -f /data/jenkins/jenkins-pv-pvc.yaml</span><br><span class="line"></span><br><span class="line">kubectl get pv -n devops</span><br><span class="line">kubectl get sa -n devops</span><br><span class="line">kubectl get StatefulSet -n devops</span><br><span class="line">kubectl describe StatefulSet jenkins -n devops</span><br><span class="line">kubectl get Service -n devops</span><br><span class="line">kubectl describe Service jenkins -n devops</span><br><span class="line">kubectl get Ingress -n devops</span><br><span class="line">kubectl describe Ingress jenkins -n devops</span><br></pre></td></tr></table></figure>
+
+<h4 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h4><p>在hosts文件中添加</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.145.151     cz-jenkins.dev</span><br></pre></td></tr></table></figure>
+
+<p>访问jenkins</p>
+<blockquote>
+<p><a href="http://cz-jenkins.dev/" target="_blank" rel="noopener">http://cz-jenkins.dev/</a></p>
+<p>admin/123456</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat /data/nfs/jenkins/secrets/initialAdminPassword</span></span><br><span class="line">e8422ab2e6104faa8cf3a5033f1b0dd2</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200726222903171.png" alt="image-20200726222903171"></p>
+<h2 id="2-4、Jenkins初始化"><a href="#2-4、Jenkins初始化" class="headerlink" title="2.4、Jenkins初始化"></a>2.4、Jenkins初始化</h2><blockquote>
+<p><a href="http://focus-1.wiki/devops/jenkins/jenkins-centos7-setup/" target="_blank" rel="noopener">http://focus-1.wiki/devops/jenkins/jenkins-centos7-setup/</a></p>
+</blockquote>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200726225212624.png" alt="image-20200726225212624"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200726225409947.png" alt="image-20200726225409947"></p>
+<h2 id="2-5、Jenkins配置"><a href="#2-5、Jenkins配置" class="headerlink" title="2.5、Jenkins配置"></a>2.5、Jenkins配置</h2><p>系统管理 –&gt; 插件管理 –&gt; available，安装需要的插件，有的插件下载不下来可以去官网下载之后上传安装。</p>
+<p>系统管理——》插件管理——》可选插件——》安装</p>
+<ul>
+<li><p>Git</p>
+</li>
+<li><p>Git Parameter</p>
+</li>
+<li><p>Pipeline</p>
+</li>
+<li><p>Kubernetes</p>
+</li>
+<li><p>Kubernetes Continuous Deploy</p>
+</li>
+<li><p>Gitee</p>
+</li>
+</ul>
+<h1 id="3、构建Jenkins-Slave镜像"><a href="#3、构建Jenkins-Slave镜像" class="headerlink" title="3、构建Jenkins Slave镜像"></a>3、构建Jenkins Slave镜像</h1><p>参考:<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fgithub.com%2Fjenkinsci%2Fdocker-jnlp-slave" target="_blank" rel="noopener">https://github.com/jenkinsci/docker-jnlp-slave</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/7464841-42ee8f4af9caf7f7.png" alt="img"></p>
+<h2 id="1-构建Jenkins-Slave镜像环境准备"><a href="#1-构建Jenkins-Slave镜像环境准备" class="headerlink" title="1. 构建Jenkins Slave镜像环境准备"></a>1. 构建Jenkins Slave镜像环境准备</h2><p><strong>构建Jenkins Slave镜像环境准备：</strong><br> 代码拉取：git，安装git命令<br> 单元测试：忽略，这不是我们擅长的,如果公司有可以写进来<br> 代码编译：maven，安装maven包<br> 构建镜像：Dockerfile文件、docker命令(通过挂载宿主机docker)<br> 推送镜像：docker命令(通过挂载宿主机docker)<br> 镜像启动后支持slave: 下载官方slave.jar包（获取：<a href="https://links.jianshu.com/go?to=http%3A%2F%2F10.40.6.213%3A30006%2FjnlpJars%2Fslave.jar" target="_blank" rel="noopener">http://10.40.6.213:30006/jnlpJars/slave.jar</a>）<br> 启动 slave.ja包：jenkins-slave启动脚步(通过参考文档URL)<br> maven配置文件：settings.xml （这里配置阿里云的仓库源）</p>
+<p><strong>获取相关文件：</strong><br> Dockerfile<br> jenkins-slave 启动脚步<br> settings.xml<br> slave.jar</p>
+<p>创建目录并进入：<br> <code>mkdir jenkins-slave &amp;&amp; cd jenkins-slave</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz jenkin]# pwd</span><br><span class="line">/data/jenkins/</span><br><span class="line">[root@centos7cz jenkins]# mkdir jenkins-slave &amp;&amp; cd jenkins-slave</span><br><span class="line">[root@centos7cz jenkins-slave]# wget http://192.168.145.151:31442/jnlpJars/slave.jar</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-jenkins-slave启动脚本"><a href="#2-jenkins-slave启动脚本" class="headerlink" title="2. jenkins-slave启动脚本"></a>2. jenkins-slave启动脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz jenkins-slave]# vi jenkins-slave</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat jenkins-slave</span></span><br><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env sh</span></span><br><span class="line"></span><br><span class="line">if [ $# -eq 1 ]; then</span><br><span class="line"></span><br><span class="line">    # if `docker run` only has one arguments, we assume user is running alternate command like `bash` to inspect the image</span><br><span class="line">    exec "$@"</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line"></span><br><span class="line">    # if -tunnel is not provided try env vars</span><br><span class="line">    case "$@" in</span><br><span class="line">        *"-tunnel "*) ;;</span><br><span class="line">        *)</span><br><span class="line">        if [ ! -z "$JENKINS_TUNNEL" ]; then</span><br><span class="line">            TUNNEL="-tunnel $JENKINS_TUNNEL"</span><br><span class="line">        fi ;;</span><br><span class="line">    esac</span><br><span class="line"></span><br><span class="line">    # if -workDir is not provided try env vars</span><br><span class="line">    if [ ! -z "$JENKINS_AGENT_WORKDIR" ]; then</span><br><span class="line">        case "$@" in</span><br><span class="line">            *"-workDir"*) echo "Warning: Work directory is defined twice in command-line arguments and the environment variable" ;;</span><br><span class="line">            *)</span><br><span class="line">            WORKDIR="-workDir $JENKINS_AGENT_WORKDIR" ;;</span><br><span class="line">        esac</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    if [ -n "$JENKINS_URL" ]; then</span><br><span class="line">        URL="-url $JENKINS_URL"</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    if [ -n "$JENKINS_NAME" ]; then</span><br><span class="line">        JENKINS_AGENT_NAME="$JENKINS_NAME"</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    if [ -z "$JNLP_PROTOCOL_OPTS" ]; then</span><br><span class="line">        echo "Warning: JnlpProtocol3 is disabled by default, use JNLP_PROTOCOL_OPTS to alter the behavior"</span><br><span class="line">        JNLP_PROTOCOL_OPTS="-Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true"</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    # If both required options are defined, do not pass the parameters</span><br><span class="line">    OPT_JENKINS_SECRET=""</span><br><span class="line">    if [ -n "$JENKINS_SECRET" ]; then</span><br><span class="line">        case "$@" in</span><br><span class="line">            *"$&#123;JENKINS_SECRET&#125;"*) echo "Warning: SECRET is defined twice in command-line arguments and the environment variable" ;;</span><br><span class="line">            *)</span><br><span class="line">            OPT_JENKINS_SECRET="$&#123;JENKINS_SECRET&#125;" ;;</span><br><span class="line">        esac</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    OPT_JENKINS_AGENT_NAME=""</span><br><span class="line">    if [ -n "$JENKINS_AGENT_NAME" ]; then</span><br><span class="line">        case "$@" in</span><br><span class="line">            *"$&#123;JENKINS_AGENT_NAME&#125;"*) echo "Warning: AGENT_NAME is defined twice in command-line arguments and the environment variable" ;;</span><br><span class="line">            *)</span><br><span class="line">            OPT_JENKINS_AGENT_NAME="$&#123;JENKINS_AGENT_NAME&#125;" ;;</span><br><span class="line">        esac</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    #TODO: Handle the case when the command-line and Environment variable contain different values.</span><br><span class="line">    #It is fine it blows up for now since it should lead to an error anyway.</span><br><span class="line"></span><br><span class="line">    exec java $JAVA_OPTS $JNLP_PROTOCOL_OPTS -cp /usr/share/jenkins/slave.jar hudson.remoting.jnlp.Main -headless $TUNNEL $URL $WORKDIR $OPT_JENKINS_SECRET $OPT_JENKINS_AGENT_NAME "$@"</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、maven源配置文件settings-xml"><a href="#3、maven源配置文件settings-xml" class="headerlink" title="3、maven源配置文件settings.xml"></a>3、maven源配置文件settings.xml</h2><p>maven源配置文件settings.xml，这里配置阿里云的源。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz jenkins-slave]# vi settings.xml</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat settings.xml</span></span><br><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"></span><br><span class="line">&lt;settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"</span><br><span class="line">          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br><span class="line">          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;</span><br><span class="line">  &lt;pluginGroups&gt;</span><br><span class="line">  &lt;/pluginGroups&gt;</span><br><span class="line"></span><br><span class="line">  &lt;proxies&gt;</span><br><span class="line">  &lt;/proxies&gt;</span><br><span class="line"></span><br><span class="line">  &lt;servers&gt;</span><br><span class="line">  &lt;/servers&gt;</span><br><span class="line"></span><br><span class="line">  &lt;mirrors&gt;</span><br><span class="line">    &lt;mirror&gt;</span><br><span class="line">      &lt;id&gt;central&lt;/id&gt;</span><br><span class="line">      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;</span><br><span class="line">      &lt;name&gt;aliyun maven&lt;/name&gt;</span><br><span class="line">      &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;</span><br><span class="line">    &lt;/mirror&gt;</span><br><span class="line">  &lt;/mirrors&gt;</span><br><span class="line"></span><br><span class="line">  &lt;profiles&gt;</span><br><span class="line">  &lt;/profiles&gt;</span><br><span class="line"></span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Dockerfile配置文件"><a href="#4-Dockerfile配置文件" class="headerlink" title="4. Dockerfile配置文件"></a>4. Dockerfile配置文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz jenkins-slave]# vi Dockerfile</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:latest</span><br><span class="line">USER root</span><br><span class="line"></span><br><span class="line">RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \</span><br><span class="line">    &amp;&amp; apk update</span><br><span class="line">RUN apk add -U tzdata \</span><br><span class="line">    &amp;&amp; cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \</span><br><span class="line">    &amp;&amp; echo "Asia/Shanghai" &gt; /etc/timezone</span><br><span class="line">RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \</span><br><span class="line">    &amp;&amp; wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk \</span><br><span class="line">    &amp;&amp; apk add glibc-2.31-r0.apk</span><br><span class="line">RUN apk add openjdk8 \</span><br><span class="line">    &amp;&amp; apk add maven \</span><br><span class="line">    &amp;&amp; apk add protoc \</span><br><span class="line">    &amp;&amp; apk add grpc \</span><br><span class="line">    &amp;&amp; apk add git \</span><br><span class="line">    &amp;&amp; apk add docker\</span><br><span class="line">    &amp;&amp; apk add sshpass</span><br><span class="line"></span><br><span class="line">RUN echo "jenkins ALL=NOPASSWD: ALL" &gt;&gt; /etc/sudoers</span><br><span class="line"></span><br><span class="line">COPY slave.jar /usr/share/jenkins/slave.jar</span><br><span class="line">COPY jenkins-slave /usr/bin/jenkins-slave</span><br><span class="line">COPY settings.xml /etc/maven/settings.xml</span><br><span class="line">RUN chmod +x /usr/bin/jenkins-slave</span><br><span class="line"></span><br><span class="line">ENTRYPOINT ["jenkins-slave"]</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-构建镜像-并推送至私有镜像仓库"><a href="#5-构建镜像-并推送至私有镜像仓库" class="headerlink" title="5. 构建镜像, 并推送至私有镜像仓库"></a>5. 构建镜像, 并推送至私有镜像仓库</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz jenkins-slave]# docker build -t czharbor.com/devops/jenkins-slave:2.249 .</span><br><span class="line"></span><br><span class="line">[root@centos7cz jenkins-slave]# docker push czharbor.com/devops/jenkins-slave:2.249</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200804211825096.png" alt="image-20200804211825096"></p>
+<h1 id="4、构建maven镜像"><a href="#4、构建maven镜像" class="headerlink" title="4、构建maven镜像"></a>4、构建maven镜像</h1><h3 id="4-1、Dockerfile"><a href="#4-1、Dockerfile" class="headerlink" title="4.1、Dockerfile"></a>4.1、Dockerfile</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:latest</span><br><span class="line">USER root</span><br><span class="line"></span><br><span class="line">ENV LANG C.UTF-8</span><br><span class="line">ENV TZ Asia/Shanghai</span><br><span class="line"></span><br><span class="line">RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \</span><br><span class="line">    &amp;&amp; apk update</span><br><span class="line"></span><br><span class="line">RUN apk add -U tzdata \</span><br><span class="line">    &amp;&amp; cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \</span><br><span class="line">    &amp;&amp; echo "Asia/Shanghai" &gt; /etc/timezone</span><br><span class="line"></span><br><span class="line">RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \</span><br><span class="line">    &amp;&amp; wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk \</span><br><span class="line">    &amp;&amp; apk add glibc-2.31-r0.apk</span><br><span class="line"></span><br><span class="line">RUN apk add openjdk8 \</span><br><span class="line">    &amp;&amp; apk add maven \</span><br><span class="line">    &amp;&amp; apk add protoc \</span><br><span class="line">    &amp;&amp; apk add grpc \</span><br><span class="line">    &amp;&amp; apk add docker</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>为了调用protoc，一定要安装glibc</p>
+<p><a href="https://github.com/sgerrand/alpine-pkg-glibc" target="_blank" rel="noopener">https://github.com/sgerrand/alpine-pkg-glibc</a></p>
+<p>否则会碰到如下问题：</p>
+<blockquote>
+<p><a href="https://github.com/xolstice/protobuf-maven-plugin/issues/23" target="_blank" rel="noopener">https://github.com/xolstice/protobuf-maven-plugin/issues/23</a></p>
+</blockquote>
+<blockquote>
+<p>用Alpine跑了JDK8的镜像结果发现,JDK还是无法执行.后来翻阅文档才发现<br>Java是基于GUN Standard C library(glibc)<br>Alpine是基于MUSL libc(mini libc)</p>
+<p>所以Alpine需要安装glibc的库,以下是官方给出wiki<br><a href="https://wiki.alpinelinux.org/wiki/Running_glibc_programs" target="_blank" rel="noopener">https://wiki.alpinelinux.org/wiki/Running_glibc_programs</a></p>
+</blockquote>
+<blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> &gt; [ERROR] Failed to execute goal org.xolstice.maven.plugins:protobuf-maven-plugin:0.6.1:compile (default) on project nacos-grpc-iface: An error occurred <span class="keyword">while</span> invoking protoc: Error <span class="keyword">while</span> executing process.: Cannot run program <span class="string">"/var/jenkins_home/workspace/nacos-grpc-k8s@2/nacos-grpc-iface/target/protoc-plugins/protoc-3.12.2-linux-x86_64.exe"</span>: error=2, No such file or directory -&gt; [Help 1]</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> &gt;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+</blockquote>
+<h3 id="4-2、构建运行"><a href="#4-2、构建运行" class="headerlink" title="4.2、构建运行"></a>4.2、构建运行</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker build -t czharbor.com/devops/cz-maven:3.6.3-alpine .</span><br><span class="line"><span class="meta">#</span><span class="bash"> --net=host 表示使用主机iptables等网络环境，对docker <span class="keyword">in</span> docker 很重要</span></span><br><span class="line">docker --net=host run -it czharbor.com/devops/cz-maven:3.6.3-alpine</span><br><span class="line">java -version</span><br><span class="line">mvn -v</span><br><span class="line"></span><br><span class="line">docker push czharbor.com/devops/cz-maven:3.6.3-alpine</span><br></pre></td></tr></table></figure>
+
+<h1 id="5、构建kubectl镜像"><a href="#5、构建kubectl镜像" class="headerlink" title="5、构建kubectl镜像"></a>5、构建kubectl镜像</h1><p>dockerfile</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> alpine:latest</span><br><span class="line"><span class="keyword">USER</span> root</span><br><span class="line"></span><br><span class="line"><span class="keyword">ENV</span> LANG C.UTF-<span class="number">8</span></span><br><span class="line"><span class="keyword">ENV</span> TZ Asia/Shanghai</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> sed -i <span class="string">'s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g'</span> /etc/apk/repositories \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk update</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apk add -U tzdata \</span></span><br><span class="line"><span class="bash">    &amp;&amp; cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \</span></span><br><span class="line"><span class="bash">    &amp;&amp; <span class="built_in">echo</span> <span class="string">"Asia/Shanghai"</span> &gt; /etc/timezone</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \</span></span><br><span class="line"><span class="bash">    &amp;&amp; wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add glibc-2.31-r0.apk</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ADD kubectl /usr/local/bin/</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">docker build -t czharbor.com/devops/kubectl:1.18.6-alpine .</span><br><span class="line">docker push czharbor.com/devops/kubectl:1.18.6-alpine</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> --net=host 表示使用主机iptables等网络环境，对docker <span class="keyword">in</span> docker 很重要</span></span><br><span class="line">docker run -it --net=host \</span><br><span class="line">-v /root/.kube:/root/.kube \</span><br><span class="line">-v /usr/local/bin/kubectl:/usr/local/bin/kubectl \</span><br><span class="line">czharbor.com/devops/kubectl:1.18.6-alpine</span><br><span class="line"></span><br><span class="line">docker ps -a | grep kubectl</span><br></pre></td></tr></table></figure>
+
+<h1 id="6、SpringBoot项目准备"><a href="#6、SpringBoot项目准备" class="headerlink" title="6、SpringBoot项目准备"></a>6、SpringBoot项目准备</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810233931007.png" alt="image-20200810233931007"></p>
+<p> 关键文件： </p>
+<ul>
+<li><p>nacos-grpc-srv 本身的 Dockerfile</p>
+</li>
+<li><p>deployment.yaml的模板文件 k8s-deployment.tpl</p>
+</li>
+<li><p>jenkins Pipeline 文件 Jenkinsfile</p>
+</li>
+</ul>
+<h3 id="deployment-yaml"><a href="#deployment-yaml" class="headerlink" title="deployment.yaml"></a>deployment.yaml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">&#123;APP_NAME&#125;-deployment</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">&#123;APP_NAME&#125;</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">&#123;APP_NAME&#125;</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">&#123;APP_NAME&#125;</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">&#123;APP_NAME&#125;</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">&#123;IMAGE_URL&#125;:&#123;IMAGE_TAG&#125;</span></span><br><span class="line"><span class="attr">        imagePullPolicy:</span> <span class="string">Always</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">8010</span></span><br><span class="line"><span class="attr">        env:</span></span><br><span class="line"><span class="attr">          - name:</span> <span class="string">SPRING_PROFILES_ACTIVE</span></span><br><span class="line"><span class="attr">            value:</span> <span class="string">&#123;SPRING_PROFILE&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Jenkinsfile"><a href="#Jenkinsfile" class="headerlink" title="Jenkinsfile"></a>Jenkinsfile</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需要在jenkins的Credentials设置中配置jenkins-harbor-creds、jenkins-k8s-config参数</span></span><br><span class="line">pipeline &#123;</span><br><span class="line">    agent any</span><br><span class="line">    parameters &#123;</span><br><span class="line">        string(<span class="string">name:</span> <span class="string">'K8S_NAMESPACE'</span>, <span class="string">defaultValue:</span> <span class="string">'default'</span>, <span class="string">description:</span> <span class="string">'k8s的namespace名称'</span>)</span><br><span class="line">        string(<span class="string">name:</span> <span class="string">'HARBOR_HOST'</span>, <span class="string">defaultValue:</span> <span class="string">'czharbor.com/devops'</span>, <span class="string">description:</span> <span class="string">'harbor仓库地址'</span>)</span><br><span class="line">        <span class="comment">// string(name: 'DOCKER_IMAGE', defaultValue: 'czharbor.com/nacos-grpc-srv', description: 'docker镜像名')</span></span><br><span class="line">        <span class="comment">// string(name: 'APP_NAME', defaultValue: 'nacos-grpc-srv', description: 'k8s中标签名')</span></span><br><span class="line">        <span class="comment">// choice(name: 'APP_NAME_LIST', choices: ['nacos-grpc-srv', 'nacos-grpc-cli'], description: 'app_name')</span></span><br><span class="line">    &#125;</span><br><span class="line">    environment &#123;</span><br><span class="line">        HARBOR_CREDS = credentials(<span class="string">'jenkins-harbor-creds'</span>)</span><br><span class="line">        K8S_CONFIG = credentials(<span class="string">'jenkins-kubeconfig'</span>)</span><br><span class="line">        GIT_TAG = sh(<span class="string">returnStdout:</span> <span class="literal">true</span>,<span class="string">script:</span> <span class="string">'git describe --tags'</span>).trim()</span><br><span class="line">    &#125;</span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(<span class="string">'Maven Build'</span>) &#123;</span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123;</span><br><span class="line">                    image <span class="string">'czharbor.com/devops/cz-maven:3.6.3-alpine'</span></span><br><span class="line">                    args <span class="string">'-v $HOME/.m2:/root/.m2 -v /var/run/docker.sock:/var/run/docker.sock'</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                sh <span class="string">'mvn clean package -Dfile.encoding=UTF-8 -DskipTests=true'</span></span><br><span class="line">                sh <span class="string">"cd nacos-grpc-srv &amp;&amp; mvn docker:build &amp;&amp; cd .."</span></span><br><span class="line">                sh <span class="string">"cd nacos-grpc-srv/target/docker &amp;&amp; docker build --build-arg JAR_FILE='nacos-grpc-srv-0.0.1-SNAPSHOT.jar' -t $&#123;params.HARBOR_HOST&#125;/nacos-grpc-srv:1.0 ."</span></span><br><span class="line">                sh <span class="string">"docker login -u $&#123;HARBOR_CREDS_USR&#125; -p $&#123;HARBOR_CREDS_PSW&#125; $&#123;params.HARBOR_HOST&#125;"</span></span><br><span class="line">                sh <span class="string">"docker push $&#123;params.HARBOR_HOST&#125;/nacos-grpc-srv:1.0"</span></span><br><span class="line">                sh <span class="string">"docker rmi -f $&#123;params.HARBOR_HOST&#125;/nacos-grpc-srv:1.0"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// stage('Docker Build') &#123;</span></span><br><span class="line">        <span class="comment">//     when &#123;</span></span><br><span class="line">        <span class="comment">//         allOf &#123;</span></span><br><span class="line">        <span class="comment">//             expression &#123; env.GIT_TAG != null &#125;</span></span><br><span class="line">        <span class="comment">//         &#125;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">//     agent any</span></span><br><span class="line">        <span class="comment">//     steps &#123;</span></span><br><span class="line">        <span class="comment">//         script &#123;</span></span><br><span class="line">        <span class="comment">//             def APP_NAMES = ['nacos-grpc-srv']</span></span><br><span class="line">        <span class="comment">//             for (int i = 0;i &lt; APP_NAMES.size(); ++i) &#123;</span></span><br><span class="line">        <span class="comment">//                 sh "cd $&#123;APP_NAMES[i]&#125;/target/docker"</span></span><br><span class="line">        <span class="comment">//                 sh "docker login -u $&#123;HARBOR_CREDS_USR&#125; -p $&#123;HARBOR_CREDS_PSW&#125; $&#123;params.HARBOR_HOST&#125;"</span></span><br><span class="line">        <span class="comment">//                 sh "docker build --build-arg JAR_FILE=`ls *.jar |cut -d '/' -f1` -t $&#123;params.HARBOR_HOST&#125;/$&#123;APP_NAMES[i]&#125;:1.0 ."</span></span><br><span class="line">        <span class="comment">//                 sh "docker push $&#123;params.HARBOR_HOST&#125;/$&#123;APP_NAMES[i]&#125;:1.0"</span></span><br><span class="line">        <span class="comment">//                 sh "docker rmi -f $&#123;params.HARBOR_HOST&#125;/$&#123;APP_NAMES[i]&#125;:1.0"</span></span><br><span class="line">        <span class="comment">//                 sh "cd .."</span></span><br><span class="line">        <span class="comment">//                 sh "cd .."</span></span><br><span class="line">        <span class="comment">//                 sh "cd .."</span></span><br><span class="line">        <span class="comment">//             &#125;</span></span><br><span class="line">        <span class="comment">//         &#125;</span></span><br><span class="line">        <span class="comment">//     &#125;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        stage(<span class="string">'Deploy'</span>) &#123;</span><br><span class="line">            when &#123;</span><br><span class="line">                allOf &#123;</span><br><span class="line">                    expression &#123; env.GIT_TAG != <span class="literal">null</span> &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            agent &#123;</span><br><span class="line">                docker &#123;</span><br><span class="line">                    image <span class="string">'czharbor.com/devops/kubectl:1.18.6-alpine'</span></span><br><span class="line">                    args <span class="string">'--net=host -v /root/.kube:/root/.kube -v /usr/local/bin/kubectl:/usr/local/bin/kubectl'</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            steps &#123;</span><br><span class="line">                script &#123;</span><br><span class="line">                    <span class="keyword">def</span> APP_NAMES = [<span class="string">'nacos-grpc-srv'</span>]</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; APP_NAMES.size(); ++i) &#123;</span><br><span class="line">                        <span class="comment">// sh "mkdir -p ~/.kube"</span></span><br><span class="line">                        <span class="comment">// sh "echo $&#123;K8S_CONFIG&#125; | base64 -d &gt; ~/.kube/config"</span></span><br><span class="line">                        sh <span class="string">"sed -e 's#&#123;IMAGE_URL&#125;#$&#123;params.HARBOR_HOST&#125;/$&#123;APP_NAMES[i]&#125;#g;s#&#123;IMAGE_TAG&#125;#1.0#g;s#&#123;APP_NAME&#125;#$&#123;APP_NAMES[i]&#125;#g;s#&#123;SPRING_PROFILE&#125;#k8s#g' k8s-deployment.tpl &gt; k8s-deployment.yml"</span></span><br><span class="line">                        sh <span class="string">"kubectl apply -f k8s-deployment.yml --namespace=$&#123;params.K8S_NAMESPACE&#125;"</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="7、使用jenkins部署项目到k8s"><a href="#7、使用jenkins部署项目到k8s" class="headerlink" title="7、使用jenkins部署项目到k8s"></a>7、使用jenkins部署项目到k8s</h1><h3 id="gitee秘钥"><a href="#gitee秘钥" class="headerlink" title="gitee秘钥"></a>gitee秘钥</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200802204243247.png" alt="image-20200802204243247"></p>
+<h3 id="kubeconfig配置"><a href="#kubeconfig配置" class="headerlink" title="kubeconfig配置"></a>kubeconfig配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@k8s-dn1 ~]# base64 ~/.kube/config &gt; kube-config.txt</span><br></pre></td></tr></table></figure>
+
+<p>然后类似上一步，在jenkins凭据中增加配置文件内容。在凭据设置界面，类型选择为“Secret text”，ID设置为“jenkins-kubeconfig”（此处的ID必须与Jenkinsfile中的保持一致），Secret设置为上面经过base64编码后的配置文件内容。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200802204912224.png" alt="image-20200802204912224"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200802205107574.png" alt="image-20200802205107574"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200802204224110.png" alt="image-20200802204224110"></p>
+<h3 id="开始构建"><a href="#开始构建" class="headerlink" title="开始构建"></a>开始构建</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810234404325.png" alt="image-20200810234404325"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810234326243.png" alt="image-20200810234326243"></p>
+<h3 id="在k8s中查看"><a href="#在k8s中查看" class="headerlink" title="在k8s中查看"></a>在k8s中查看</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810234516285.png" alt="image-20200810234516285"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs -f pod/nacos-grpc-srv-deployment-66fbb6c749-vmm8s</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200810234702488.png" alt="image-20200810234702488"></p>
+<h1 id="8、暴露nacos"><a href="#8、暴露nacos" class="headerlink" title="8、暴露nacos"></a>8、暴露nacos</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[root@k8s-dn1</span> <span class="string">nacos]#</span> <span class="string">vi</span> <span class="string">nacos-ingress.yaml</span></span><br><span class="line"></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nacos</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">nacos</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">  annotations:</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/ssl-redirect:</span> <span class="string">"true"</span></span><br><span class="line">    <span class="string">kubernetes.io/tls-acme:</span> <span class="string">"true"</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/proxy-body-size:</span> <span class="number">50</span><span class="string">m</span></span><br><span class="line">    <span class="string">nginx.ingress.kubernetes.io/proxy-request-buffering:</span> <span class="string">"off"</span></span><br><span class="line">    <span class="string">ingress.kubernetes.io/ssl-redirect:</span> <span class="string">"true"</span></span><br><span class="line">    <span class="string">ingress.kubernetes.io/proxy-body-size:</span> <span class="number">50</span><span class="string">m</span></span><br><span class="line">    <span class="string">ingress.kubernetes.io/proxy-request-buffering:</span> <span class="string">"off"</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  rules:</span></span><br><span class="line"><span class="attr">  - host:</span> <span class="string">nacos.dev</span></span><br><span class="line"><span class="attr">    http:</span></span><br><span class="line"><span class="attr">      paths:</span></span><br><span class="line"><span class="attr">      - path:</span> <span class="string">/</span></span><br><span class="line"><span class="attr">        backend:</span></span><br><span class="line"><span class="attr">          serviceName:</span> <span class="string">nacos-headless</span></span><br><span class="line"><span class="attr">          servicePort:</span> <span class="number">8848</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">kubectl</span> <span class="string">apply</span> <span class="bullet">-f</span> <span class="string">/data/nacos-grpc/nacos-ingress.yaml</span></span><br><span class="line"></span><br><span class="line"><span class="string">kubectl</span> <span class="string">describe</span> <span class="string">ingress/nacos</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="9、问题总结"><a href="#9、问题总结" class="headerlink" title="9、问题总结"></a>9、问题总结</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Unable to connect to the server: x509: certificate signed by unknown authority</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/lucene/4-lucene-srcode-analysis/" rel="next" title="4、lucene源码阅读">
+                <i class="fa fa-chevron-left"></i> 4、lucene源码阅读
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/java/interview/java-tech-stack/" rel="prev" title="【置顶】Java 成神之路">
+                【置顶】Java 成神之路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">236</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">59</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、准备"><span class="nav-text">1、准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1、安装k8s集群"><span class="nav-text">1.1、安装k8s集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2、harbor-启动"><span class="nav-text">1.2、harbor 启动</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#2-k8s中部署jenkins"><span class="nav-text">2. k8s中部署jenkins</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1、制作jenkins镜像"><span class="nav-text">2.1、制作jenkins镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2、共享存储NFS部署"><span class="nav-text">2.2、共享存储NFS部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1、在-centos7-hub-上设置"><span class="nav-text">2.2.1、在 centos7-hub 上设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2、在-k8s-n1上设置"><span class="nav-text">2.2.2、在 k8s-n1上设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3、部署jenkins到k8s"><span class="nav-text">2.3、部署jenkins到k8s</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jenkins-pv-pvc-yaml"><span class="nav-text">jenkins-pv-pvc.yaml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jenkins-service-account-yaml"><span class="nav-text">jenkins-service-account.yaml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jenkins-statefulset-yaml"><span class="nav-text">jenkins-statefulset.yaml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jenkins-service-yaml"><span class="nav-text">jenkins-service.yaml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jenkins-ingress-yaml"><span class="nav-text">jenkins-ingress.yaml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行部署动作"><span class="nav-text">执行部署动作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#访问"><span class="nav-text">访问</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4、Jenkins初始化"><span class="nav-text">2.4、Jenkins初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5、Jenkins配置"><span class="nav-text">2.5、Jenkins配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、构建Jenkins-Slave镜像"><span class="nav-text">3、构建Jenkins Slave镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-构建Jenkins-Slave镜像环境准备"><span class="nav-text">1. 构建Jenkins Slave镜像环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-jenkins-slave启动脚本"><span class="nav-text">2. jenkins-slave启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、maven源配置文件settings-xml"><span class="nav-text">3、maven源配置文件settings.xml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Dockerfile配置文件"><span class="nav-text">4. Dockerfile配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-构建镜像-并推送至私有镜像仓库"><span class="nav-text">5. 构建镜像, 并推送至私有镜像仓库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、构建maven镜像"><span class="nav-text">4、构建maven镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1、Dockerfile"><span class="nav-text">4.1、Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2、构建运行"><span class="nav-text">4.2、构建运行</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5、构建kubectl镜像"><span class="nav-text">5、构建kubectl镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6、SpringBoot项目准备"><span class="nav-text">6、SpringBoot项目准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#deployment-yaml"><span class="nav-text">deployment.yaml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jenkinsfile"><span class="nav-text">Jenkinsfile</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7、使用jenkins部署项目到k8s"><span class="nav-text">7、使用jenkins部署项目到k8s</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gitee秘钥"><span class="nav-text">gitee秘钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kubeconfig配置"><span class="nav-text">kubeconfig配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开始构建"><span class="nav-text">开始构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在k8s中查看"><span class="nav-text">在k8s中查看</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8、暴露nacos"><span class="nav-text">8、暴露nacos</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9、问题总结"><span class="nav-text">9、问题总结</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

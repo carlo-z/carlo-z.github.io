@@ -314,6 +314,863 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/mysql-tpc-tpcc-tpmc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/mysql/mysql-tpc-tpcc-tpmc/" itemprop="url">TPC,TPCC,TPMC(数据库性能衡量指标)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-20T00:00:00+08:00">
+                2019-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="第一章-什么是TPC和tpmC"><a href="#第一章-什么是TPC和tpmC" class="headerlink" title="第一章 什么是TPC和tpmC?"></a>第一章 什么是TPC和tpmC?</h1><h2 id="1-TPC"><a href="#1-TPC" class="headerlink" title="1 TPC"></a>1 TPC</h2><p>TPC(Transaction Processing Performance Council，事务处理性能委员会)是由数10家会员公司创建的非盈利组织，总部设在美国。该组织对全世界开放，但迄今为止，绝大多数会员都是美、日、西欧的大公司。TPC的成员主要是计算机软硬件厂家，而非计算机用户，它的功 能是制定商务应用基准程序(Benchmark)的标准规范、性能和价格度量，并管理测 试结果的发布。</p>
+<p>TPC的出版物是开放的，可以通过网络获取(<a href="http://www.tpc.org/" target="_blank" rel="noopener">http://www.tpc.org</a>)。TPC不给出基准程序的代码，而只给出基准程序的标准规范(Standard Specification)。任何厂家或其它测试者都可以根据规范，最优地构造出自己的系统(测试平台和测试程序)。为保证测试结果的客观性，被测试者(通常是厂家)必须提交给TPC一套完整的报告(Full Disclosure Report)，包括被测系统的详细配置、分类价格和包含五年维护费用在内的总价 格。该报告必须由TPC授权的审核员核实(TPC本身并不做审计)。现在全球只有几个审核员，全部在美国。</p>
+<p>TPC已经推出了四套基准程序，被称为TPC－A、TPC－B、TPC－C和TPC－D。其中A和B已经过时，不再使用了。TPC－C是在线事务处理(OLTP)的基准程序，TPC－D是决策支持(Decision Support) 的基准程序。TPC即将推TPC－E，作为大型企业(Enterprise)信息服务的基准程序。</p>
+<h2 id="2-tpmC"><a href="#2-tpmC" class="headerlink" title="2 tpmC"></a>2 tpmC</h2><p>tpmC值在国内外被广 泛用于衡量计算机系统的事务处理能力。但究竟什么是tpmC值呢?作者曾向一些 用户、推销人员乃至某些国外大公司的技术人员问过这个问题，但回答的精确度 与tpmC值的流行程度远非相称。tpmC这一度量也常被误写为TPM或TPMC。</p>
+<p>TPC-C模拟一个批发商的货物管理环境。该批发公司有N个仓库，每个仓库供应10个地区，其中每个地区为3000名顾客服务。在每个仓库中有10个终端，每一个终端用于一个地区。在运行时，10×N个终端操作员向公司的数据库发出5类请求。由于一个仓库中不可能存储公司所有的货物，有一些请求必须发往其它仓库，因此，数据库在逻辑上是 分布的。N是一个可变参数，测试者可以随意改变N，以获得最佳测试效果。</p>
+<p>TPC-C使用三种性能和价格度量，其中性能由TPC-C吞吐率衡量，单位是tpmC。tpm是transactions per minute的简称；C指TPC中的C基准程序。它的定义是每分钟内系统处理的新订单个数。要注意的是，在处理新订单的同时，系统还要按表1的要求处理其它4类事务 请求。从表1可以看出，新订单请求不可能超出全部事务请求的45％，因此，当一个 系统的性能为1000tpmC时，它每分钟实际处理的请求数是2000多个。价格是指系 统的总价格，单位是美元，而价格性能比则定义为总价格÷性能，单位是＄/tpmC。</p>
+<p>tpmC定义: TPC-C的吞吐量，按有效TPC-C配置期间每分钟处理的平均交易次数测量，至少要运行12分钟。</p>
+<p>（吞吐量测试结果以比特/秒或字节/秒表示。）</p>
+<h1 id="第二章-TPCC"><a href="#第二章-TPCC" class="headerlink" title="第二章 TPCC"></a>第二章 TPCC</h1><h2 id="1-基准测试"><a href="#1-基准测试" class="headerlink" title="1 基准测试"></a>1 基准测试</h2><p>TPCC值被广泛用于衡量C/S环境下,由服务器和客户端构筑的整体系统的性能,它由事物处理性能委员会（TPC，Transaction Processing Corp）制定,TPC为非赢利性国际组织。</p>
+<p>TPCC值可以反映出系统的性能价格比。TPCC测试系统每分钟处理的任务数,单位为tpm,(transactions per minute)。系统的总体价格(单位为美元)除以TPCC值,就可以衡量出系统的性价比,系统的性价比值越大,系统的性价比越好。</p>
+<p>需要注意的是,TPC-C值描述的是C/S整体系统的性能,它与系统的服务器和客户机的性能都有关系,也就是说,同样的服务器配置不同的客户端将会影响TPCC值,任何厂商和测试者都可以根据TPC提供的测试规范构造出自己最优的系统,当然测试的结果要经过TPC审核。</p>
+<h2 id="2-性能测试指标介绍"><a href="#2-性能测试指标介绍" class="headerlink" title="2 性能测试指标介绍"></a>2 性能测试指标介绍</h2><p>TPC-C</p>
+<p>作为一家非盈利性机构，事务处理性能委员会（TPC）负责定义诸如TPC-C、TPC-H和TPC-W基准测试之类的事务处理与数据库性能基准测试，并依据这些基准测试项目发布客观性能数据。TPC基准测试采用极为严格的运行环境，并且必须在独立审计机构监督下进行。委员会成员包括大多数主要数据库产品厂商以及服务器硬件系统供应商。</p>
+<p>相关企业参与TPC基准测试以期在规定运行环境中获得客观性能验证，并通过应用测试过程中所使用的技术开发出更加强健且更具伸缩性的软件产品及硬件设备。</p>
+<p>TPC-C是一种旨在衡量联机事务处理（OLTP）系统性能与可伸缩性的行业标准基准测试项目。这种基准测试项目将对包括查询、更新及队列式小批量事务在内的广泛数据库功能进行测试。许多IT专业人员将TPC-C视为衡量“真实”OLTP系统性能的有效指示器。</p>
+<p>TPC-C基准测试针对一种模拟订单录入与销售环境测量每分钟商业事务（tpmC）吞吐量。特别值得一提的是，它将专门测量系统在同时执行其它四种事务类型（如支付、订单状态更新、交付及证券级变更）时每分钟所生成的新增订单事务数量。独立审计机构将负责对基准测试结果进行公证，同时，TPC将出据一份全面彻底的测试报告。这份测试报告可以从TPC Web站点(<a href="http://www.tpc.org)上获得。" target="_blank" rel="noopener">http://www.tpc.org)上获得。</a></p>
+<h2 id="3-TPC-C规范概要"><a href="#3-TPC-C规范概要" class="headerlink" title="3 TPC-C规范概要"></a>3 TPC-C规范概要</h2><p>TPC-C是专门针对联机交易处理系统（OLTP系统）的，一般情况下我们也把这类系统称为业务处理系统。</p>
+<p>TPC-C测试规范中模拟了一个比较复杂并具有代表意义的OLTP应用环境:假设有一个大型商品批发商，它拥有若干个分布在不同区域的商品库；每个仓库负责为10个销售点供货；每个销售点为3000个客户提供服务；每个客户平均一个订单有10项产品;所有订单中约1%的产品在其直接所属的仓库中没有存货，需要由其他区域的仓库来供货。同时，每个仓库都要维护公司销售的100000种商品的库存记录。</p>
+<p>该系统需要处理的交易为以下几种：</p>
+<p>New-Order：客户输入一笔新的订货交易；</p>
+<p>Payment:更新客户账户余额以反映其支付状况;</p>
+<p>Delivery:发货(模拟批处理交易);</p>
+<p>Order-Status:查询客户最近交易的状态；</p>
+<p>Stock-Level:查询仓库库存状况，以便能够及时补货。</p>
+<p>对于前四种类型的交易，要求响应时间在5秒以内；对于库存状况查询交易，要求响应时间在20秒以内。</p>
+<h2 id="4评测指标"><a href="#4评测指标" class="headerlink" title="4评测指标"></a>4评测指标</h2><p>TPC-C测试规范经过两年的研制，于1992年7月发布。几乎所有在OLTP市场提供软硬件平台的厂商都发布了相应的TPC-C测试结果，随着计算机技术的不断发展，这些测试结果也在不断刷新。</p>
+<p>TPC-C的测试结果主要有两个指标：</p>
+<h3 id="①流量指标-Throughput，简称tpmC"><a href="#①流量指标-Throughput，简称tpmC" class="headerlink" title="①流量指标(Throughput，简称tpmC)"></a>①流量指标(Throughput，简称tpmC)</h3><p>按照TPC的定义，流量指标描述了系统在执行Payment、Order-status、Delivery、Stock-Level这四种交易的同时，每分钟可以处理多少个New-Order交易。所有交易的响应时间必须满足TPC-C测试规范的要求。</p>
+<p>流量指标值越大越好！</p>
+<h3 id="②性价比-Price-Performance，简称Price-tpmC"><a href="#②性价比-Price-Performance，简称Price-tpmC" class="headerlink" title="②性价比(Price/Performance，简称Price/tpmC)"></a>②性价比(Price/Performance，简称Price/tpmC)</h3><p>即测试系统价格（指在美国的报价）与流量指标的比值。</p>
+<p>性价比越大越好！</p>
+<h1 id="第三章（TPCC）如何衡量计算机系统的性能和价格"><a href="#第三章（TPCC）如何衡量计算机系统的性能和价格" class="headerlink" title="第三章（TPCC）如何衡量计算机系统的性能和价格"></a>第三章（TPCC）如何衡量计算机系统的性能和价格</h1><p>在系统选型时，我们一定不要忘记我们是为特定用户环境中的特定应用选择系统。切忌为了“与国际接轨”而盲目套用“国际通用”的东西。在性能评价领域，越是通用的度量常常越是不准确的。据我所知，美国的一些大用户从不相信任何“国际通用”的度量，而是花相当精力，比如预算的5％，使用自己的应用来测试系统，决定选型。在使用任何一种性能和价格度量时，一定要弄明白该度量的定义，以及它是在什么系统配置和运行环境下得到的，如何解释它的意义等。下面我们由好到差讨论三种方式。</p>
+<h2 id="1在真实环境中运行-实际应用"><a href="#1在真实环境中运行-实际应用" class="headerlink" title="1在真实环境中运行 实际应用"></a>1在真实环境中运行 实际应用</h2><p>最理想的方式是搞一个试点，要求制造商或系统集成商配合将系统(含平台、软件和操作流程)在一个 实际用户点真正试运行一段时间。这样，用户不仅能看到实际性能，也能观察到系统是否稳定可靠、使用是否方便、服务是否周到、配置是否足够、全部价格是否合理。如果一个部门需要购买一批同类的系统，这种方式应列为首选，因为它不仅最精确、稳妥，也常常最有效率，用户还可先租一套系统作为试点。用这种方式得到的度量值常常具有很明确和实际的含义。</p>
+<h2 id="2使用用户定义的基准程序"><a href="#2使用用户定义的基准程序" class="headerlink" title="2使用用户定义的基准程序"></a>2使用用户定义的基准程序</h2><p>如果由于某种原因第一种方式不可行，用户可以定义一组含有自己实际应用环境特征的应用基准程序。 我举两个例子：近年来，由于R/3软件是应用层软件，SAP公司的基准程序获得了越来越多国外企业的认可；中国税务总局最近也开发了自己的基准程序，以帮助税务系统进行计算机选型。这种方式在中国尤其重要，因为中国的信息系统有其特殊性。</p>
+<h2 id="3使用通用基准程序"><a href="#3使用通用基准程序" class="headerlink" title="3使用通用基准程序"></a>3使用通用基准程序</h2><p>如果第1种和第2种方式都不行，则使用如TPC-C之类的通用基准程序，这是不得已的一种近似方法。因 此，tpmC值只能用作参考。我们应当注意以下几点：</p>
+<h3 id="①实际应用是否与基准程序相符"><a href="#①实际应用是否与基准程序相符" class="headerlink" title="①实际应用是否与基准程序相符"></a>①实际应用是否与基准程序相符</h3><p>绝大多数基准程序都是在美国制订的，而中国的企事业单位与美国的运作方式常常不一样(恐怕也不应该或不可能一样)。在使用TPC－C时，我们应该清楚地知道：我的应用是否符合批发商模式?事务请求是否与表1近似?对响应时间的要求是否满足表1?如果都不是，则tpmC值的参考价值就不太大了。</p>
+<h3 id="②TPC度量的解释"><a href="#②TPC度量的解释" class="headerlink" title="②TPC度量的解释"></a>②TPC度量的解释</h3><p>TPC基准程序是用来测系统而不是测主机的，厂家肯定要充分优化他们的被测系统。此处的“系统”包括主机、外设(如硬盘或RAID)、主机端操作系统、数据库软件、客户端计算机及其 操作系统、数据库软件和网络连接等。在很多厂家的TPC测试系统中，主机的价格只是系统总价格的1/4或更小，而硬盘的价格有可能占到总价格的1/3以上，因为TPC－C要求被测系统必须保存180天的事务记录。如果同样的主机被用到用户的环境中，厂家报的tpmC值就意义不大，因为用户的实际系统与厂家原来用于TPC测试的系统大不一样。当同样的主机用在不同的系统中时，tpmC值可能有相当大的变化，现在很多用户还没有意识到这一点。</p>
+<p>我举一个例子。假设用 户希望购买一批同类系统，每一系统至少需要1GB的内存和50GB的硬盘。厂家A、B、C 各报了三个价格相当的系统，tpmC值分别为3000、2800、2600。用户是否应该选厂家A的产品呢?答案是：不一定。厂家用于测试tpmC值的系统与实际提供给用户的系统配置大不一样。tpmC最低的厂家C提供给用户的系统反而有可能性能最好，不 论是以实际系统的tpmC值还是以用户的实际应用性能来衡量。</p>
+<h3 id="③TPC测试的成本"><a href="#③TPC测试的成本" class="headerlink" title="③TPC测试的成本"></a>③TPC测试的成本</h3><p>TPC－C和TPC－D都是很复杂的基准程序，做一个严格的测试是很消耗资源的，厂家当然不会说出他们花费了多少钱和时间。但据国外知情人士透露，一个厂家做第一个TPC－C测试需 要几十万到上百万美元的资金和半年左右的时间投入。因此，很多TPC的度量值都 是估计的。由于计算机系统换代频繁，如果用户一定要用通过审核的度量值，就必 须多等待半年时间，因此而不能用最先进的系统。中国的厂家通过审核的时间则更长。</p>
+<p>综上所述，我们对中国 用户(尤其是大用户)在计算机系统的选型方面有如下建议：</p>
+<p>最好建立一个真实的试点，因为实际应用环境是检验计算机系统的最好标准。</p>
+<p>中国的行业应该建立符合自己实际应用的基准程序和测试标准。中国税务总局的做法值得提倡。国家有关部门应该建立独立的测试中心，制定跨行业、符合中国企事业运作模式的性能测试标准。</p>
+<p>“国际通用”的度量可以作为参考值，而不应作为必要条件。尤其是一定要弄清这些流行度量有什么含义，是在什么样的系统环境中测得的，以及基准程序是否符合企业真实的业务流程和运作模式。</p>
+<p>作为一家非盈利性机构，事务处理性能委员会（TPC）负责定义诸如TPC-C、TPC-H和TPC-W基准测试之类的事务处理与数据库性能基准测试，并依据这些基准测试项目发布客观性能数据。TPC基准测试采用极为严格的运行环境，并且必须在独立审计机构监督下进行。委员会成员包括大多数主要数据库产品厂商以及服务器硬件系统供应商。</p>
+<p>相关企业参与TPC基准测试以期在规定运行环境中获得客观性能验证，并通过应用测试过程中所使用的技术开发出更加强健且更具伸缩性的软件产品及硬件设备。</p>
+<p>TPC-C是一种旨在衡量联机事务处理（OLTP）系统性能与可伸缩性的行业标准基准测试项目。这种基准测试项目将对包括查询、更新及队列式小批量事务在内的广泛数据库功能进行测试。许多IT专业人员将TPC-C视为衡量“真实”OLTP系统性能的有效指示器。</p>
+<p>TPC-C基准测试针对一种模拟订单录入与销售环境测量每分钟商业事务（tpmC）吞吐量。特别值得一提的是，它将专门测量系统在同时执行其它四种事务类型（如支付、订单状态更新、交付及证券级变更）时每分钟所生成的新增订单事务数量。独立审计机构将负责对基准测试结果进行公证，同时，TPC将出据一份全面彻底的测试报告。这份测试报告可以从TPC Web站点(<a href="http://www.tpc.org/" target="_blank" rel="noopener">http://www.tpc.org</a>)上获得。</p>
+<h1 id="第四章-TPCC计算原则"><a href="#第四章-TPCC计算原则" class="headerlink" title="第四章 TPCC计算原则"></a>第四章 TPCC计算原则</h1><h2 id="1建议"><a href="#1建议" class="headerlink" title="1建议"></a>1建议</h2><p>不管是TPC-C还是SPECjbb2000，计算结果都只能作为一个横向比较的参考。在实际应用中，决定系统性能的因素除了硬件、系统软件外，与应用软件的设计也是有很大关系的，此外，基于系统可扩展性的考虑，更多时候也倾向于一次性的采购。<br>从长远考虑，以政府信息化主管部门的角度考虑，建立一套评估机制是非常有用的，这其中包括：<br>1、 通过对各单位业务系统运行情况的调查，进行历史数据的收集分析，按分类建立基准指标库。收集的信息包括：服务器的配置、并发用户数（每天业务量）、CPU负荷等；<br>2、 由厂商定期提供基准值，更新基准指标库；<br>有了基准指标库的信息参照，不仅可以用于评估项目建设方案中服务器选型，也可以对各部门进行系统架构设计的优化提供指导。如以下是一些指导原则：<br>1、 数据库服务器选型：采购两台相同配置的小型机，进行虚拟分区和并行处理，以提高系统资源的利用率；日后扩容时采取垂直扩展的方式进行升级；<br>2、 应用服务器：采用负载均衡的方式提高并发处理能力，一般可配置2台以上，每台的硬件配置完全可以不同，应首先考虑使用旧的数据库服务器（利旧），如需采购新的服务器，应采用水平扩展的方式逐步升级；<br>3、 WEB服务器，可以考虑采用刀片服务器，提高扩展性和可管理性。</p>
+<h2 id="2参考：某项目计算实例"><a href="#2参考：某项目计算实例" class="headerlink" title="2参考：某项目计算实例"></a>2参考：某项目计算实例</h2><h3 id="参考1"><a href="#参考1" class="headerlink" title="参考1"></a>参考1</h3><p>为了方便计算数据库服务器的造型，我们约定：<br>“ 系统同时在线用户数为1500人（U1）；<br>“ 平均每个用户每分钟发出2次业务请求（N1）；<br>“ 系统发出的业务请求中，更新、查询、统计各占1/3；<br>“ 平均每次更新业务产生3个事务（T1）；<br>“ 平均每次查询业务产生8个事务（T2）；<br>“ 平均每次统计业务产生13个事务（T3）；<br>“ 一天内忙时的处理量为平均值的5倍；<br>“ 经验系数为1.6；(实际工程经验)<br>“ 考虑服务器保留30％的冗余；<br>服务器需要的处理能力为：<br>TPC-C=U1<em>N1</em>（T1+T2+T3）/3<em>3</em>经验系数/冗余系数<br>则应用服务器的处理性能估算为：<br>TPC-C= 1500<em>2</em>（3+8+13）/3<em>5</em>1.6/0.7= 274,285 tpmC</p>
+<p>数据库服务器关系到整个系统的稳定运行，考虑到高可靠性和高可用性，并注重设备的可扩展性和性价比，系统将配置两台TPC-C值不小于28万的高性能数据库服务器。</p>
+<h3 id="参考2"><a href="#参考2" class="headerlink" title="参考2"></a>参考2</h3><p>以单台服务器性能进行计算，即确保单台服务器工作的时候可以满足系统正常运行的需要；</p>
+<p>假设每天有1万人次来窗口办理业务，每人次办理一项业务。即以每日1万笔前台交易为例进行<strong><em>\</em>综合系数**</strong>的推导：</p>
+<p>\1. 假设每月前台交易数（未来5年内的设计指标）为220,000 （有些业务在月初、月末的处理量比较高，按月统计可以平衡此项差异）;<br>\2. 每日前台交易数=220000/22=10,000 ，即每日 1万笔；<br>\3. 忙时处理能力：每日交易的80%在4个小时内完成，即10000<em>80%/4=2000（笔/小时）<br>\4. 峰值处理能力：2000</em>2=4000（笔/小时），即峰值处理能力为每小时4000笔，或 67笔/分，假设业务人员同时在线为100人，即每人每分钟处理0.7笔）<br>\5. 假设每笔交易对应数据库事务数=20<strong>（这个是不是有点夸张了，有这么复杂的交易，TPC的标准交易都不算简单了吧，这只能说明数据库设计的有问题，按这样，支付宝咋弄）</strong>，基准TPC指标值对应的比例=8，cpu保留30%的处理能力冗余，计算值与公布值（最优值）的偏差经验值为4 <strong>（这几个参数估算的依据不足，更多的是经验值）</strong></p>
+<p>则 tpmC值为：<br>tpmC= 67<em>20<em>8</em>4/(1-30%)= 61257[颠峰处理能力时（笔/分）<em>每笔交易对应数据库事务数</em>基准TPC指标值对应的比例<em>计算值与公布值（最优值）的偏差经验值/（1- cpu保留30%的处理能力冗余）<br>倒算出 综合系数 = 61257/10000=6.1<br>即数据库服务器tpmC= **</em>*每日前台交易数 \</em> 6.1**** （实际计算值应不高于该值）<br>应用服务器的 tpmC = 数据库服务器 tpmC *50% （一般）</p>
+<p>应用服务器的 tpmC = tpmC *70% </p>
+<p>某单位要建立一个系统，设计容量是 2008 年要达到 1500 万客户的规模，在花费巨资（将近 100 M $）建设起此系统后，运行只有几个月，客户量也只达到几十万，厂商就说此系统容量不够，要花数 M $ 要扩容，并声称不是拍脑袋是，按 TPCC 计算的结果 …</p>
+<p>以前只大致了解 TPCC 指标的一些情况，平常也就看看 By Performace 和　By Price/Performace 的 Top 10 列表，了解一下各厂商的实力和产品的情况，这次对 TPCC 进行了一下深入了解，发现了一些容易被厂商搞猫腻的地方。</p>
+<p><a href="http://www.tpc.org/tpcc" target="_blank" rel="noopener">TPCC</a> 简单的来说，就是事务处理性能委员会 <a href="http://www.tpc.org/" target="_blank" rel="noopener">TPC</a> 组织针对联机数据库应用系统（OLTP）制定的一个综合性能考评指标，它模拟了一个批发 商的货物管理环境，有标准的数据库结构（Schema），可以很容易的扩展，在此系统中，主要有五类交易：</p>
+<p>\1. 新订单（New-Order） </p>
+<p>\2. 支付（Payment ） 43%（最小比例）</p>
+<p>\3. 订单查询（Order-Status） 4%（最小比例）</p>
+<p>\4. 交付（Delivery） 4%（最小比例）</p>
+<p>\5. 库存查询（Stock-Level） 4%（最小比例）</p>
+<p>因为 TPCC 指标值主要是衡量“新订单”交易的数量，所以厂商都会趋向于增加新订单交易的数量，这样并不满足实际的应用场景，所以 TPCC 的规范中指定了后四种交易数量的最小比例，这样意味着 “新订单” 的数量最多只能占到45%（这个 45% 不知出于什么原因，在很多 TPCC 的指标介绍中并没有提及）。</p>
+<p>这就说明了：如果一台机器有 1000 tpm (Transactions per Minute)，那么它实际上处理的交易（请求）为 1000/45% = 2222 ，而实际上大多数厂商在面对用户估算应用系统需要多少个 TPCC 的服务器的时候，是计算所有交易量的，这样带来的评估结果是用户至少买比实际需要大一倍性能容量的机器，获得利益的谁呢？当然是服务器厂商，越高 TPCC 值的机器，价格越高，性价比也一般要偏小。</p>
+<p>此外，服务器厂商还容易在以下方面愚弄客户：</p>
+<p>１、交易复杂度（用户的一个交易约等于多少个 TPCC 的标准交易），某国际著名的服务器厂商建议此值取 10 - 20 ，这个值也忒大了点， 在 TPCC 的场景，交易也不是很简单的，和实际的应用交易差别并不是很大。</p>
+<p>2、按一些峰值指标来计算性能，实际上，这些峰值只是在极少数情况下出现，所以在计算时，应乘以 80% 的系数。</p>
+<p>​    3、预留容量，很多厂商建议预留容量，甚至达到一半，这有点过份，在实际容量要求增高的时候，可以通过服务器的横向扩展来纵向扩展来满足应用要求，何必为未来五年的要求，要在眼下一下子要做全部的硬件投资呢？ 何况硬件的价格在不断下降呢。</p>
+<p><strong>具体情况具体分析，还得按中国国情来实测，国际标准有时不适合我们。<br>而且这个标准好多年了，现在很少在纵向扩展上花心思了，都注重横向扩展，按成本购置小机，尽量优化小机的数据库性能，得出TPCM值，然后对数据库进行横向扩展（虽然横向扩展有诸多问题，但是还是要扩展），利用集群提高整体的TPS</strong></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/2-mysql-benchmark-test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/mysql/2-mysql-benchmark-test/" itemprop="url">centos7.5下对mysql5.6基准测试</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-18T00:00:00+08:00">
+                2019-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="一、测试环境准备"><a href="#一、测试环境准备" class="headerlink" title="一、测试环境准备"></a>一、测试环境准备</h1><ul>
+<li><p>操作系统：centos7.5</p>
+</li>
+<li><p>处理器：Intel 8核  Current Speed: 2000 MHz， Max Speed: 2000 MHz，三级缓存</p>
+</li>
+<li><p>内存：16G</p>
+</li>
+<li><p>磁盘：100G SSD</p>
+</li>
+<li><p>数据库：mysql 5.6.28</p>
+</li>
+<li><p>sysbench：1.0.18</p>
+</li>
+</ul>
+<br>
+
+<h1 id="二、测试工具"><a href="#二、测试工具" class="headerlink" title="二、测试工具"></a>二、测试工具</h1><h3 id="1、sysbench"><a href="#1、sysbench" class="headerlink" title="1、sysbench"></a>1、sysbench</h3><p>安装文档： <a href="https://github.com/akopytov/sysbench#installing-from-binary-packages" target="_blank" rel="noopener">https://github.com/akopytov/sysbench#installing-from-binary-packages</a> </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> centos7.5使用官方镜像安装</span><br><span class="line">curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash</span><br><span class="line">sudo yum -y install sysbench</span><br></pre></td></tr></table></figure>
+
+<p>帮助：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@10-10-135-172 benchmark]# sysbench --help</span><br><span class="line"></span><br><span class="line">[root@10-10-135-172 benchmark]# sysbench fileio help</span><br><span class="line">sysbench 1.0.18 (using bundled LuaJIT 2.1.0-beta2)</span><br><span class="line"></span><br><span class="line">fileio options:</span><br><span class="line">  --file-num=N                  number of files to create [128]</span><br><span class="line">  --file-block-size=N           block size to use in all IO operations [16384]</span><br><span class="line">  --file-total-size=SIZE        total size of files to create [2G]</span><br><span class="line">  --file-test-mode=STRING       test mode &#123;seqwr, seqrewr, seqrd, rndrd, rndwr, rndrw&#125;</span><br><span class="line">  --file-io-mode=STRING         file operations mode &#123;sync,async,mmap&#125; [sync]</span><br><span class="line">  --file-async-backlog=N        number of asynchronous operatons to queue per thread [128]</span><br><span class="line">  --file-extra-flags=[LIST,...] list of additional flags to use to open files &#123;sync,dsync,direct&#125; []</span><br><span class="line">  --file-fsync-freq=N           do fsync() after this number of requests (0 - don't use fsync()) [100]</span><br><span class="line">  --file-fsync-all[=on|off]     do fsync() after each write operation [off]</span><br><span class="line">  --file-fsync-end[=on|off]     do fsync() at the end of test [on]</span><br><span class="line">  --file-fsync-mode=STRING      which method to use for synchronization &#123;fsync, fdatasync&#125; [fsync]</span><br><span class="line">  --file-merged-requests=N      merge at most this number of IO requests if possible (0 - don't merge) [0]</span><br><span class="line">  --file-rw-ratio=N             reads/writes ratio for combined test [1.5]</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="2、tpcc-mysql"><a href="#2、tpcc-mysql" class="headerlink" title="2、tpcc-mysql"></a>2、tpcc-mysql</h3><p>github： <a href="https://github.com/Percona-Lab/tpcc-mysql" target="_blank" rel="noopener">https://github.com/Percona-Lab/tpcc-mysql</a> </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /var/lib/mysql/benchmark</span><br><span class="line">cd /var/lib/mysql/benchmark</span><br><span class="line">wget https://github.com/Percona-Lab/tpcc-mysql/archive/master.zip -O tpcc-mysql.zip</span><br><span class="line">unzip -d ./ tpcc-mysql.zip</span><br><span class="line">cd /var/lib/mysql/benchmark/tpcc-mysql-master/src</span><br><span class="line">yum install mysql-devel</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<p>编译完成后，生成 tpcc_load  tpcc_start：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191118181430.png" alt></p>
+<br>
+
+<h1 id="三、测试目标"><a href="#三、测试目标" class="headerlink" title="三、测试目标"></a>三、测试目标</h1><ul>
+<li><p>处理器性能</p>
+</li>
+<li><p>内存性能</p>
+</li>
+<li><p>磁盘顺序读写，随机读写性能</p>
+</li>
+<li><p>mysql 吞吐量，响应时间</p>
+</li>
+</ul>
+<br>
+
+<h1 id="四、测试步骤"><a href="#四、测试步骤" class="headerlink" title="四、测试步骤"></a>四、测试步骤</h1><h3 id="1、准备获取系统性能和状态的脚本"><a href="#1、准备获取系统性能和状态的脚本" class="headerlink" title="1、准备获取系统性能和状态的脚本"></a>1、准备获取系统性能和状态的脚本</h3><p>vi /root/benchmark/1-collect-system-status.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/sh</span><br><span class="line"></span><br><span class="line">mkdir -p status_data</span><br><span class="line"></span><br><span class="line">INTERVAL=5</span><br><span class="line">PREFIX=./status_data/$INTERVAL-sec-status</span><br><span class="line">RUNFILE=/root/benchmark/running</span><br><span class="line"></span><br><span class="line">mysql -uroot -p123456 -e 'SHOW GLOBAL VARIABLES' &gt;&gt; mysql-variables</span><br><span class="line">while test -e $RUNFILE; do</span><br><span class="line">    tfile=$(date +%F_%I)</span><br><span class="line">    sleep=$(date +%s.%N | awk "&#123;print $INTERVAL - (\$1 % $INTERVAL)&#125;")</span><br><span class="line">    sleep $sleep</span><br><span class="line">    ts="$(date +"TS %s.%N %F %T")"</span><br><span class="line">    loadavg="$(uptime)"</span><br><span class="line">    echo "$ts $loadavg" &gt;&gt; $PREFIX-$&#123;tfile&#125;-status</span><br><span class="line">    mysql -uroot -p123456 -e 'SHOW GLOBAL STATUS' &gt;&gt; $PREFIX-$&#123;tfile&#125;-status &amp;</span><br><span class="line">    echo "$ts $loadavg" &gt;&gt; $PREFIX-$&#123;tfile&#125;-innodbstatus</span><br><span class="line">    mysql -uroot -p123456 -e 'SHOW GLOBAL STATUS\G' &gt;&gt; $PREFIX-$&#123;tfile&#125;-innodbstatus &amp;</span><br><span class="line">    echo "$ts $loadavg" &gt;&gt; $PREFIX-$&#123;tfile&#125;-processlist</span><br><span class="line">    mysql -uroot -p123456 -e 'SHOW FULL PROCESSLIST\G' &gt;&gt; $PREFIX-$&#123;tfile&#125;-processlist &amp;</span><br><span class="line">    echo $ts</span><br><span class="line">done</span><br><span class="line">echo Exiting because $RUNFILE does not exist.</span><br></pre></td></tr></table></figure>
+
+<p>分析收集到的数据</p>
+<p>vi /root/benchmark/2-system-status-analyzer.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"></span><br><span class="line">awk '</span><br><span class="line">    BEGIN &#123;</span><br><span class="line">        printf "#ts date time load QPS";</span><br><span class="line">        fmt = " %.2f";</span><br><span class="line">    &#125;</span><br><span class="line">    /^TS/ &#123;</span><br><span class="line">        ts      = substr($2, 1, index($2, ".") - 1);</span><br><span class="line">        load    = NF -2;</span><br><span class="line">        diff    = ts - prev_ts;</span><br><span class="line">        prev_ts = ts;</span><br><span class="line">        printf "\n%s %s %s %s", ts, $3, $4, substr($load, 1, length($load) - 1);</span><br><span class="line">    &#125;</span><br><span class="line">    /Queries/ &#123;</span><br><span class="line">        printf fmt, ($2-Queries)/diff;</span><br><span class="line">        Queries=$2</span><br><span class="line">    &#125;</span><br><span class="line">' "$@"</span><br></pre></td></tr></table></figure>
+
+<p>用法示例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh 2-system-status-analyzer.sh status_data/5-sec-status-2019-11-19_10-status</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="2、使用sysbench服务器性能测试"><a href="#2、使用sysbench服务器性能测试" class="headerlink" title="2、使用sysbench服务器性能测试"></a>2、使用sysbench服务器性能测试</h3><h4 id="1-、cpu测试"><a href="#1-、cpu测试" class="headerlink" title="1)、cpu测试"></a>1)、cpu测试</h4><p> 计算20000个素数。8核cpu，分别测试 1，4，8，12  线程时的 CPU表现</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=cpu --threads=1 --cpu-max-prime=20000 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119112016.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=cpu --threads=4 --cpu-max-prime=20000 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119111943.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=cpu --threads=8 --cpu-max-prime=20000 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119112049.png" alt></p>
+<blockquote>
+<p> 结论：随着线程数增加，计算能力线性增加；</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=cpu --threads=12 --cpu-max-prime=20000 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119112250.png" alt></p>
+<blockquote>
+<p> 结论：当线程数超过cpu核数之后，随着线程数增加，计算能力不再增加，甚至略微下降，这是因为线程上下文切换以后的时间损耗；</p>
+</blockquote>
+<br>
+
+<h4 id="2-、文件I-O测试"><a href="#2-、文件I-O测试" class="headerlink" title="2)、文件I/O测试"></a>2)、文件I/O测试</h4><p><u><strong>① 准备30G的数据</strong></u></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-total-size=30G prepare</span><br></pre></td></tr></table></figure>
+
+<p><u><strong>② 运行阶段</strong></u></p>
+<ul>
+<li>seqwr：顺序写入</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-test-mode=seqwr --file-total-size=30G --time=60 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119143818.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119143929.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119144029.png" alt></p>
+<blockquote>
+<p>结论：可以看到，顺序写的过程中 CPU占用很低，但是 buff、cache、block out、in、cs(上下文切换)都很高，这是因为 linux 写磁盘用了 页缓存  和 DMA。</p>
+</blockquote>
+<ul>
+<li>seqrewr：顺序重写</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-test-mode=seqrewr --file-total-size=30G --time=60 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119144945.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119145023.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119145125.png" alt></p>
+<ul>
+<li>seqrd：顺序读取</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-test-mode=seqrd --file-total-size=30G --time=60 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119143529.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119143630.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119143651.png" alt></p>
+<ul>
+<li>rndrd：随机读取</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-test-mode=rndrd --file-total-size=30G --time=60 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119143319.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119143406.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119150157.png" alt></p>
+<blockquote>
+<p>结论： SSD是没有寻道时间的，但是 随机读（46.95MiB/s） 仍然比顺序读（184.46MiB/s）要慢很多</p>
+</blockquote>
+<ul>
+<li>rndwr：随机写入</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-test-mode=rndwr --file-total-size=30G --time=60 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119142856.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119142944.png" alt></p>
+<blockquote>
+<p>随机写（26.25MiB/s）更慢了，顺序写的速度有138.38MiB/s</p>
+</blockquote>
+<ul>
+<li>rndrw：混合随机读/写</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-test-mode=rndrw --file-total-size=30G --time=60 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119140202.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119141529.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119141833.png" alt></p>
+<blockquote>
+<p>混合随机读写的速度更是龟速，然而我们平时业务场景中使用最多的就是这种情况，所以一定要注意，能顺序写的，一定不随机写</p>
+</blockquote>
+<p><u><strong>③ 清除数据</strong></u></p>
+<p>sysbench –test=fileio –file-total-size=30G cleanup</p>
+<br>
+
+<h4 id="3-、内存测试"><a href="#3-、内存测试" class="headerlink" title="3)、内存测试"></a>3)、内存测试</h4><p>测试8K顺序分配</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=memory --memory-access-mode=seq --memory-block-size=8K --memory-total-size=100G --threads=12 --events=10000 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119151942.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119151311.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119151447.png" alt></p>
+<blockquote>
+<p>结论：可以看到 CPU 占用极高，内存写入速度为 10138.32 MiB / sec</p>
+</blockquote>
+<p><u><strong>测试8K随机分配</strong></u></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=memory --memory-access-mode=rnd --memory-block-size=8K --memory-total-size=100G --threads=12 --events=10000 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119151857.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119151718.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119151756.png" alt></p>
+<blockquote>
+<p>结论：cpu占用极高，随机分配速度为 1381.41 MiB / sec，只有顺序分配的 1/7 左右，内存都有顺序写都有差距。</p>
+</blockquote>
+<br>
+
+<h3 id="3、sysbench对mysql进行OLTP测试"><a href="#3、sysbench对mysql进行OLTP测试" class="headerlink" title="3、sysbench对mysql进行OLTP测试"></a>3、sysbench对mysql进行OLTP测试</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench /usr/share/sysbench/oltp_read_write.lua help</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-、新建数据库-sbtest"><a href="#1-、新建数据库-sbtest" class="headerlink" title="1) 、新建数据库 sbtest"></a>1) 、新建数据库 sbtest</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqladmin create sbtest -uroot -p</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-、运行状态收集脚本"><a href="#2-、运行状态收集脚本" class="headerlink" title="2) 、运行状态收集脚本"></a>2) 、运行状态收集脚本</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /root/benchmark/1-collect-system-status.sh</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-、-准备1百万条数据"><a href="#3-、-准备1百万条数据" class="headerlink" title="3)、 准备1百万条数据"></a>3)、 准备1百万条数据</h4><p> 可以在/usr/share/sysbench/中找到需要使用的lua脚本：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119171723.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 开始插入数据</span><br><span class="line">sysbench /usr/share/sysbench/oltp_read_write.lua --threads=64 --time=600 --histogram=on --mysql-host=10.10.135.172 --mysql-port=3306 --mysql-db=sbtest --mysql-user=root --mysql-password=123456 --table-size=10000000 prepare</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 关键参数说明：</span><br><span class="line">--threads=64           测试时使用的线程数</span><br><span class="line">--time=600             测试时间</span><br><span class="line">--histogram=on         在报告中是否输出关于延迟的直方图，建议开启</span><br><span class="line">--table_size=10000000  数据表的大小</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119183230.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119183337.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119183835.png" alt></p>
+<br>
+
+<h4 id="4-、-运行压测程序"><a href="#4-、-运行压测程序" class="headerlink" title="4)、 运行压测程序"></a>4)、 运行压测程序</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench /usr/share/sysbench/oltp_read_write.lua --threads=64 --time=600 --histogram=on --mysql-host=10.10.135.172 --mysql-port=3306 --mysql-db=sbtest --mysql-user=root --table-size=10000000 run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119184201.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119185243.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119185550.png" alt></p>
+<ul>
+<li><p>总事务数：820388</p>
+</li>
+<li><p>每秒事务数：1367.22 per sec</p>
+</li>
+<li><p>总查询数：16407760</p>
+</li>
+<li><p>每秒查询数：27344.47 per sec</p>
+</li>
+</ul>
+<p>请求分布直方图</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br></pre></td><td class="code"><pre><span class="line">[root@10-10-135-172 benchmark]#  sysbench /usr/share/sysbench/oltp_read_write.lua --threads=64 --time=600 --histogram=on --mysql-host=10.10.135.172 --mysql-port=3306 --mysql-db=sbtest --mysql-user=root --table-size=10000000 run</span><br><span class="line">sysbench 1.0.18 (using bundled LuaJIT 2.1.0-beta2)</span><br><span class="line"></span><br><span class="line">Running the test with following options:</span><br><span class="line">Number of threads: 64</span><br><span class="line">Initializing random number generator from current time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Initializing worker threads...</span><br><span class="line"></span><br><span class="line">Threads started!</span><br><span class="line"></span><br><span class="line"> Latency histogram (values are in milliseconds)</span><br><span class="line">       value  ------------- distribution ------------- count</span><br><span class="line">       4.329 |                                         64</span><br><span class="line">       4.407 |*****                                    1030</span><br><span class="line">       4.487 |****************                         3445</span><br><span class="line">       4.569 |**************************               5587</span><br><span class="line">       4.652 |****************************             5867</span><br><span class="line">       4.737 |*************************                5250</span><br><span class="line">       4.823 |********************                     4190</span><br><span class="line">       4.910 |****************                         3476</span><br><span class="line">       4.999 |**************                           2922</span><br><span class="line">       5.090 |************                             2605</span><br><span class="line">       5.183 |***********                              2329</span><br><span class="line">       5.277 |*********                                1991</span><br><span class="line">       5.373 |*********                                1813</span><br><span class="line">       5.470 |********                                 1600</span><br><span class="line">       5.570 |*******                                  1476</span><br><span class="line">       5.671 |******                                   1279</span><br><span class="line">       5.774 |******                                   1178</span><br><span class="line">       5.879 |*****                                    1043</span><br><span class="line">       5.986 |*****                                    974</span><br><span class="line">       6.095 |****                                     924</span><br><span class="line">       6.205 |****                                     843</span><br><span class="line">       6.318 |****                                     768</span><br><span class="line">       6.433 |****                                     786</span><br><span class="line">       6.550 |****                                     839</span><br><span class="line">       6.669 |****                                     943</span><br><span class="line">       6.790 |*****                                    1012</span><br><span class="line">       6.913 |*****                                    1126</span><br><span class="line">       7.039 |******                                   1171</span><br><span class="line">       7.167 |******                                   1310</span><br><span class="line">       7.297 |******                                   1305</span><br><span class="line">       7.430 |******                                   1291</span><br><span class="line">       7.565 |*****                                    1167</span><br><span class="line">       7.702 |*****                                    1072</span><br><span class="line">       7.842 |*****                                    1066</span><br><span class="line">       7.985 |*****                                    1051</span><br><span class="line">       8.130 |*****                                    1102</span><br><span class="line">       8.277 |*****                                    1081</span><br><span class="line">       8.428 |*****                                    1120</span><br><span class="line">       8.581 |*****                                    1129</span><br><span class="line">       8.737 |******                                   1244</span><br><span class="line">       8.895 |*******                                  1444</span><br><span class="line">       9.057 |********                                 1692</span><br><span class="line">       9.222 |*********                                1984</span><br><span class="line">       9.389 |**********                               2161</span><br><span class="line">       9.560 |**********                               2057</span><br><span class="line">       9.734 |*********                                1944</span><br><span class="line">       9.910 |*********                                1930</span><br><span class="line">      10.090 |********                                 1773</span><br><span class="line">      10.274 |********                                 1753</span><br><span class="line">      10.460 |********                                 1698</span><br><span class="line">      10.651 |********                                 1605</span><br><span class="line">      10.844 |*******                                  1553</span><br><span class="line">      11.041 |********                                 1601</span><br><span class="line">      11.242 |********                                 1636</span><br><span class="line">      11.446 |********                                 1649</span><br><span class="line">      11.654 |********                                 1667</span><br><span class="line">      11.866 |********                                 1673</span><br><span class="line">      12.081 |********                                 1733</span><br><span class="line">      12.301 |*********                                1821</span><br><span class="line">      12.524 |*********                                1838</span><br><span class="line">      12.752 |*********                                1844</span><br><span class="line">      12.984 |**********                               2031</span><br><span class="line">      13.219 |*********                                1978</span><br><span class="line">      13.460 |**********                               2206</span><br><span class="line">      13.704 |************                             2449</span><br><span class="line">      13.953 |*************                            2681</span><br><span class="line">      14.207 |*************                            2675</span><br><span class="line">      14.465 |*************                            2744</span><br><span class="line">      14.728 |*************                            2694</span><br><span class="line">      14.995 |*************                            2667</span><br><span class="line">      15.268 |************                             2652</span><br><span class="line">      15.545 |************                             2650</span><br><span class="line">      15.828 |*************                            2671</span><br><span class="line">      16.115 |************                             2644</span><br><span class="line">      16.408 |*************                            2757</span><br><span class="line">      16.706 |*************                            2760</span><br><span class="line">      17.010 |*************                            2845</span><br><span class="line">      17.319 |**************                           2933</span><br><span class="line">      17.633 |***************                          3217</span><br><span class="line">      17.954 |***************                          3105</span><br><span class="line">      18.280 |****************                         3294</span><br><span class="line">      18.612 |*****************                        3587</span><br><span class="line">      18.950 |*****************                        3704</span><br><span class="line">      19.295 |******************                       3845</span><br><span class="line">      19.645 |******************                       3763</span><br><span class="line">      20.002 |******************                       3743</span><br><span class="line">      20.366 |******************                       3852</span><br><span class="line">      20.736 |******************                       3763</span><br><span class="line">      21.112 |******************                       3891</span><br><span class="line">      21.496 |*******************                      4076</span><br><span class="line">      21.886 |*******************                      4108</span><br><span class="line">      22.284 |********************                     4191</span><br><span class="line">      22.689 |*********************                    4400</span><br><span class="line">      23.101 |**********************                   4702</span><br><span class="line">      23.521 |***********************                  4863</span><br><span class="line">      23.948 |************************                 5072</span><br><span class="line">      24.384 |************************                 5043</span><br><span class="line">      24.827 |*************************                5224</span><br><span class="line">      25.278 |************************                 5196</span><br><span class="line">      25.737 |*************************                5285</span><br><span class="line">      26.205 |**************************               5442</span><br><span class="line">      26.681 |**************************               5452</span><br><span class="line">      27.165 |***************************              5727</span><br><span class="line">      27.659 |****************************             5867</span><br><span class="line">      28.162 |*****************************            6097</span><br><span class="line">      28.673 |******************************           6367</span><br><span class="line">      29.194 |******************************           6414</span><br><span class="line">      29.725 |******************************           6441</span><br><span class="line">      30.265 |*******************************          6512</span><br><span class="line">      30.815 |*******************************          6479</span><br><span class="line">      31.375 |********************************         6828</span><br><span class="line">      31.945 |********************************         6876</span><br><span class="line">      32.525 |**********************************       7128</span><br><span class="line">      33.116 |**********************************       7241</span><br><span class="line">      33.718 |***********************************      7372</span><br><span class="line">      34.330 |************************************     7548</span><br><span class="line">      34.954 |************************************     7653</span><br><span class="line">      35.589 |*************************************    7788</span><br><span class="line">      36.236 |*************************************    7808</span><br><span class="line">      36.894 |*************************************    7910</span><br><span class="line">      37.565 |**************************************   8106</span><br><span class="line">      38.247 |***************************************  8177</span><br><span class="line">      38.942 |***************************************  8311</span><br><span class="line">      39.650 |**************************************** 8451</span><br><span class="line">      40.370 |**************************************   8058</span><br><span class="line">      41.104 |***************************************  8309</span><br><span class="line">      41.851 |***************************************  8260</span><br><span class="line">      42.611 |**************************************** 8481</span><br><span class="line">      43.385 |**************************************** 8493</span><br><span class="line">      44.173 |**************************************** 8478</span><br><span class="line">      44.976 |**************************************** 8394</span><br><span class="line">      45.793 |***************************************  8369</span><br><span class="line">      46.625 |**************************************** 8398</span><br><span class="line">      47.472 |**************************************** 8459</span><br><span class="line">      48.335 |**************************************** 8455</span><br><span class="line">      49.213 |**************************************** 8446</span><br><span class="line">      50.107 |***************************************  8245</span><br><span class="line">      51.018 |***************************************  8215</span><br><span class="line">      51.945 |***************************************  8215</span><br><span class="line">      52.889 |**************************************   8087</span><br><span class="line">      53.850 |**************************************   8119</span><br><span class="line">      54.828 |**************************************   8043</span><br><span class="line">      55.824 |*************************************    7959</span><br><span class="line">      56.839 |**************************************   8043</span><br><span class="line">      57.871 |************************************     7746</span><br><span class="line">      58.923 |************************************     7650</span><br><span class="line">      59.993 |***********************************      7522</span><br><span class="line">      61.083 |***********************************      7535</span><br><span class="line">      62.193 |**********************************       7250</span><br><span class="line">      63.323 |**********************************       7254</span><br><span class="line">      64.474 |**********************************       7118</span><br><span class="line">      65.645 |*********************************        6983</span><br><span class="line">      66.838 |********************************         6868</span><br><span class="line">      68.053 |********************************         6890</span><br><span class="line">      69.289 |*******************************          6688</span><br><span class="line">      70.548 |*******************************          6530</span><br><span class="line">      71.830 |******************************           6437</span><br><span class="line">      73.135 |*****************************            6127</span><br><span class="line">      74.464 |******************************           6278</span><br><span class="line">      75.817 |****************************             5952</span><br><span class="line">      77.194 |***************************              5767</span><br><span class="line">      78.597 |**************************               5581</span><br><span class="line">      80.025 |**************************               5522</span><br><span class="line">      81.479 |*************************                5374</span><br><span class="line">      82.959 |*************************                5217</span><br><span class="line">      84.467 |***********************                  4957</span><br><span class="line">      86.002 |***********************                  4947</span><br><span class="line">      87.564 |**********************                   4767</span><br><span class="line">      89.155 |**********************                   4673</span><br><span class="line">      90.775 |*********************                    4499</span><br><span class="line">      92.424 |*********************                    4358</span><br><span class="line">      94.104 |********************                     4230</span><br><span class="line">      95.814 |*******************                      4021</span><br><span class="line">      97.555 |******************                       3871</span><br><span class="line">      99.327 |******************                       3750</span><br><span class="line">     101.132 |*****************                        3665</span><br><span class="line">     102.969 |****************                         3465</span><br><span class="line">     104.840 |****************                         3322</span><br><span class="line">     106.745 |***************                          3286</span><br><span class="line">     108.685 |**************                           3019</span><br><span class="line">     110.659 |**************                           2963</span><br><span class="line">     112.670 |*************                            2707</span><br><span class="line">     114.717 |*************                            2712</span><br><span class="line">     116.802 |************                             2528</span><br><span class="line">     118.924 |***********                              2379</span><br><span class="line">     121.085 |***********                              2269</span><br><span class="line">     123.285 |**********                               2138</span><br><span class="line">     125.525 |**********                               2105</span><br><span class="line">     127.805 |*********                                1861</span><br><span class="line">     130.128 |*********                                1820</span><br><span class="line">     132.492 |********                                 1735</span><br><span class="line">     134.899 |*******                                  1575</span><br><span class="line">     137.350 |*******                                  1502</span><br><span class="line">     139.846 |*******                                  1412</span><br><span class="line">     142.387 |******                                   1302</span><br><span class="line">     144.974 |******                                   1231</span><br><span class="line">     147.608 |*****                                    1056</span><br><span class="line">     150.290 |*****                                    1015</span><br><span class="line">     153.021 |****                                     927</span><br><span class="line">     155.801 |****                                     879</span><br><span class="line">     158.632 |****                                     815</span><br><span class="line">     161.514 |***                                      685</span><br><span class="line">     164.449 |***                                      696</span><br><span class="line">     167.437 |***                                      613</span><br><span class="line">     170.479 |***                                      591</span><br><span class="line">     173.577 |**                                       499</span><br><span class="line">     176.731 |**                                       457</span><br><span class="line">     179.942 |**                                       447</span><br><span class="line">     183.211 |**                                       360</span><br><span class="line">     186.540 |**                                       352</span><br><span class="line">     189.929 |*                                        298</span><br><span class="line">     193.380 |*                                        304</span><br><span class="line">     196.894 |*                                        224</span><br><span class="line">     200.472 |*                                        208</span><br><span class="line">     204.114 |*                                        204</span><br><span class="line">     207.823 |*                                        173</span><br><span class="line">     211.599 |*                                        155</span><br><span class="line">     215.443 |*                                        113</span><br><span class="line">     219.358 |*                                        129</span><br><span class="line">     223.344 |                                         106</span><br><span class="line">     227.402 |                                         82</span><br><span class="line">     231.534 |                                         67</span><br><span class="line">     235.740 |                                         66</span><br><span class="line">     240.024 |                                         43</span><br><span class="line">     244.385 |                                         53</span><br><span class="line">     248.825 |                                         30</span><br><span class="line">     253.346 |                                         31</span><br><span class="line">     257.950 |                                         26</span><br><span class="line">     262.636 |                                         19</span><br><span class="line">     267.408 |                                         25</span><br><span class="line">     272.267 |                                         12</span><br><span class="line">     277.214 |                                         11</span><br><span class="line">     282.251 |                                         11</span><br><span class="line">     287.379 |                                         11</span><br><span class="line">     292.601 |                                         5</span><br><span class="line">     297.917 |                                         11</span><br><span class="line">     303.330 |                                         5</span><br><span class="line">     308.842 |                                         6</span><br><span class="line">     314.453 |                                         14</span><br><span class="line">     320.167 |                                         10</span><br><span class="line">     325.984 |                                         16</span><br><span class="line">     331.907 |                                         11</span><br><span class="line">     337.938 |                                         2</span><br><span class="line">     344.078 |                                         8</span><br><span class="line">     350.330 |                                         10</span><br><span class="line">     356.695 |                                         11</span><br><span class="line">     363.176 |                                         10</span><br><span class="line">     369.775 |                                         15</span><br><span class="line">     376.494 |                                         12</span><br><span class="line">     383.334 |                                         14</span><br><span class="line">     390.299 |                                         10</span><br><span class="line">     397.391 |                                         5</span><br><span class="line">     404.611 |                                         11</span><br><span class="line">     411.963 |                                         2</span><br><span class="line">     419.448 |                                         11</span><br><span class="line">     427.069 |                                         7</span><br><span class="line">     434.829 |                                         6</span><br><span class="line">     442.730 |                                         6</span><br><span class="line">     450.774 |                                         5</span><br><span class="line">     458.964 |                                         2</span><br><span class="line">     475.794 |                                         1</span><br><span class="line">     484.439 |                                         2</span><br><span class="line">     493.242 |                                         1</span><br><span class="line">     559.501 |                                         1</span><br><span class="line"> </span><br><span class="line">SQL statistics:</span><br><span class="line">    queries performed:</span><br><span class="line">        read:                            11485432</span><br><span class="line">        write:                           3281552</span><br><span class="line">        other:                           1640776</span><br><span class="line">        total:                           16407760</span><br><span class="line">    transactions:                        820388 (1367.22 per sec.)</span><br><span class="line">    queries:                             16407760 (27344.47 per sec.)</span><br><span class="line">    ignored errors:                      0      (0.00 per sec.)</span><br><span class="line">    reconnects:                          0      (0.00 per sec.)</span><br><span class="line"></span><br><span class="line">General statistics:</span><br><span class="line">    total time:                          600.0372s</span><br><span class="line">    total number of events:              820388</span><br><span class="line"></span><br><span class="line">Latency (ms):</span><br><span class="line">         min:                                    4.30</span><br><span class="line">         avg:                                   46.80</span><br><span class="line">         max:                                  556.16</span><br><span class="line">         95th percentile:                      112.67</span><br><span class="line">         sum:                             38398062.70</span><br><span class="line"></span><br><span class="line">Threads fairness:</span><br><span class="line">    events (avg/stddev):           12818.5625/107.50</span><br><span class="line">    execution time (avg/stddev):   599.9697/0.01</span><br><span class="line"></span><br><span class="line">[root@10-10-135-172 benchmark]#</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="5-、清理数据"><a href="#5-、清理数据" class="headerlink" title="5)、清理数据"></a>5)、清理数据</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench /usr/share/sysbench/oltp_read_write.lua --threads=64 --time=600 --histogram=on --mysql-host=10.10.135.172 --mysql-port=3306 --mysql-db=sbtest --mysql-user=root --table-size=10000000 cleanup</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119190316.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119190336.png" alt></p>
+<br>
+
+<h4 id="6-、分析收集到的状态"><a href="#6-、分析收集到的状态" class="headerlink" title="6)、分析收集到的状态"></a>6)、分析收集到的状态</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sh 2-system-status-analyzer.sh status_data/5-sec-status-2019-11-19_06-status &gt; status.txt</span><br><span class="line"><span class="meta">$</span> vi status.txt</span><br><span class="line">unix时间戳    时间            系统负载 QPS(数据库)</span><br><span class="line">1574160560 18:49:20 18:49:20 51.53 28179.80</span><br><span class="line">1574160565 18:49:25 18:49:25 51.80 26713.20</span><br><span class="line">1574160570 18:49:30 18:49:30 50.86 27784.60</span><br><span class="line">1574160575 18:49:35 18:49:35 51.19 26912.40</span><br><span class="line">1574160580 18:49:40 18:49:40 52.30 27048.20</span><br><span class="line">1574160585 18:49:45 18:49:45 52.99 26843.00</span><br><span class="line">1574160590 18:49:50 18:49:50 53.87 27478.80</span><br><span class="line">1574160595 18:49:55 18:49:55 54.61 28724.60</span><br><span class="line">1574160600 18:50:00 18:50:00 55.68 27960.00</span><br><span class="line">1574160605 18:50:05 18:50:05 55.46 25874.40</span><br><span class="line">1574160610 18:50:10 18:50:10 56.07 25936.40</span><br><span class="line">1574160615 18:50:15 18:50:15 52.54 25914.20</span><br><span class="line">1574160620 18:50:20 18:50:20 52.66 27237.60</span><br><span class="line">1574160625 18:50:25 18:50:25 52.92 27507.20</span><br><span class="line">1574160630 18:50:30 18:50:30 53.89 26005.40</span><br><span class="line">1574160635 18:50:35 18:50:35 55.02 26745.00</span><br><span class="line">1574160640 18:50:40 18:50:40 54.86 25643.80</span><br><span class="line">1574160645 18:50:45 18:50:45 55.75 24751.20</span><br><span class="line">1574160650 18:50:50 18:50:50 53.69 27608.80</span><br><span class="line">1574160655 18:50:55 18:50:55 52.51 26590.20</span><br><span class="line">1574160660 18:51:00 18:51:00 51.83 27411.60</span><br><span class="line">1574160665 18:51:05 18:51:05 49.68 28504.20</span><br><span class="line">1574160670 18:51:10 18:51:10 50.27 20451.00</span><br><span class="line">1574160675 18:51:15 18:51:15 46.24 1.40</span><br><span class="line">1574160680 18:51:20 18:51:20 42.62 2.20</span><br><span class="line">1574160685 18:51:25 18:51:25 39.21 1.40</span><br><span class="line">1574160690 18:51:30 18:51:30 36.07 1.80</span><br><span class="line">1574160695 18:51:35 18:51:35 33.18 2.40</span><br><span class="line">1574160700 18:51:40 18:51:40 30.52 1.00</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> cat status_data/5-sec-status-2019-11-19_06-status | grep 'TS ' &gt; load_status.txt</span><br><span class="line"><span class="meta">$</span> vi load_status.txt</span><br><span class="line"></span><br><span class="line">TS 1574160295.047916883 18:44:55  18:44:55 up 1 day,  2:22,  5 users,  load average: 52.13, 24.94, 9.96</span><br><span class="line">TS 1574160300.059352736 18:45:00  18:45:00 up 1 day,  2:22,  5 users,  load average: 53.08, 25.59, 10.25</span><br><span class="line">TS 1574160305.042101201 18:45:05  18:45:05 up 1 day,  2:22,  5 users,  load average: 50.91, 25.60, 10.33</span><br><span class="line">TS 1574160310.052530257 18:45:10  18:45:10 up 1 day,  2:22,  5 users,  load average: 51.72, 26.19, 10.60</span><br><span class="line">TS 1574160315.046490819 18:45:15  18:45:15 up 1 day,  2:22,  5 users,  load average: 52.78, 26.83, 10.89</span><br><span class="line">TS 1574160320.008893450 18:45:20  18:45:20 up 1 day,  2:22,  5 users,  load average: 53.68, 27.45, 11.18</span><br><span class="line">TS 1574160325.203247981 18:45:25  18:45:25 up 1 day,  2:22,  5 users,  load average: 54.67, 28.09, 11.47</span><br><span class="line">TS 1574160330.118228229 18:45:30  18:45:30 up 1 day,  2:22,  5 users,  load average: 55.57, 28.72, 11.77</span><br><span class="line">TS 1574160335.016869072 18:45:35  18:45:35 up 1 day,  2:22,  5 users,  load average: 55.61, 29.17, 12.00</span><br><span class="line">TS 1574160340.042057908 18:45:40  18:45:40 up 1 day,  2:22,  5 users,  load average: 54.84, 29.45, 12.19</span><br><span class="line">TS 1574160345.056853963 18:45:45  18:45:45 up 1 day,  2:23,  5 users,  load average: 55.65, 30.04, 12.47</span><br><span class="line">TS 1574160350.059495691 18:45:50  18:45:50 up 1 day,  2:23,  5 users,  load average: 55.84, 30.50, 12.72</span><br><span class="line">TS 1574160355.238934528 18:45:55  18:45:55 up 1 day,  2:23,  5 users,  load average: 56.65, 31.09, 13.00</span><br><span class="line">TS 1574160360.115909774 18:46:00  18:46:00 up 1 day,  2:23,  5 users,  load average: 56.76, 31.54, 13.24</span><br><span class="line">TS 1574160365.067470620 18:46:05  18:46:05 up 1 day,  2:23,  5 users,  load average: 57.34, 32.08, 13.52</span><br><span class="line">TS 1574160370.111400548 18:46:10  18:46:10 up 1 day,  2:23,  5 users,  load average: 55.39, 32.09, 13.62</span><br><span class="line">TS 1574160375.074730081 18:46:15  18:46:15 up 1 day,  2:23,  5 users,  load average: 53.76, 32.14, 13.74</span><br><span class="line">TS 1574160380.210612654 18:46:20  18:46:20 up 1 day,  2:23,  5 users,  load average: 54.34, 32.62, 13.99</span><br><span class="line">TS 1574160385.102457806 18:46:25  18:46:25 up 1 day,  2:23,  5 users,  load average: 50.87, 32.26, 13.97</span><br><span class="line">TS 1574160390.117591568 18:46:30  18:46:30 up 1 day,  2:23,  5 users,  load average: 50.48, 32.49, 14.14</span><br><span class="line">TS 1574160395.076076309 18:46:35  18:46:35 up 1 day,  2:23,  5 users,  load average: 51.40, 32.98, 14.40</span><br><span class="line">TS 1574160400.191211227 18:46:40  18:46:40 up 1 day,  2:23,  5 users,  load average: 52.09, 33.43, 14.65</span><br><span class="line">TS 1574160405.153420741 18:46:45  18:46:45 up 1 day,  2:24,  5 users,  load average: 49.20, 33.14, 14.65</span><br><span class="line">TS 1574160410.013108072 18:46:50  18:46:50 up 1 day,  2:24,  5 users,  load average: 49.58, 33.49, 14.87</span><br><span class="line">TS 1574160415.084485731 18:46:55  18:46:55 up 1 day,  2:24,  5 users,  load average: 48.82, 33.59, 15.00</span><br><span class="line">TS 1574160420.011562959 18:47:00  18:47:00 up 1 day,  2:24,  5 users,  load average: 47.55, 33.58, 15.10</span><br><span class="line">TS 1574160425.018923271 18:47:05  18:47:05 up 1 day,  2:24,  5 users,  load average: 48.95, 34.11, 15.37</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h3 id="4、tpcc-mysql对mysql进行测试"><a href="#4、tpcc-mysql对mysql进行测试" class="headerlink" title="4、tpcc-mysql对mysql进行测试"></a>4、tpcc-mysql对mysql进行测试</h3><blockquote>
+<ol>
+<li>Build binaries<ul>
+<li><code>cd src ; make</code> ( you should have mysql_config available in $PATH)</li>
+</ul>
+</li>
+<li>Load data<ul>
+<li>create database <code>mysqladmin create tpcc1000</code></li>
+<li>create tables <code>mysql tpcc1000 &lt; create_table.sql</code></li>
+<li>create indexes and FK ( this step can be done after loading data) <code>mysql tpcc1000 &lt; add_fkey_idx.sql</code></li>
+<li>populate data<ul>
+<li>simple step <code>tpcc_load -h127.0.0.1 -d tpcc1000 -u root -p &quot;&quot; -w 1000</code> |hostname:port| |dbname| |user| |password| |WAREHOUSES| ref. tpcc_load –help for all options</li>
+<li>load data in parallel check load.sh script</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Start benchmark<ul>
+<li><code>./tpcc_start -h127.0.0.1 -P3306 -dtpcc1000 -uroot -w1000 -c32 -r10 -l10800</code></li>
+<li>|hostname| |port| |dbname| |user| |WAREHOUSES| |CONNECTIONS| |WARMUP TIME| |BENCHMARK TIME|</li>
+<li>ref. tpcc_start –help for all options</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<h4 id="1-、-创建数据库和表结构"><a href="#1-、-创建数据库和表结构" class="headerlink" title="1)、 创建数据库和表结构"></a>1)、 创建数据库和表结构</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd tpcc-mysql-master</span><br><span class="line"></span><br><span class="line">mysqladmin create tpcc1000 -uroot -p123456</span><br><span class="line">mysql -uroot -p123456 tpcc1000 &lt; create_table.sql</span><br><span class="line">mysql -uroot -p123456 tpcc1000 &lt; add_fkey_idx.sql</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-、加载数据"><a href="#2-、加载数据" class="headerlink" title="2)、加载数据"></a>2)、加载数据</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./tpcc_load -h10.10.135.172 -P3306 -d tpcc1000 -u root -p 123456 -w 10</span><br><span class="line"><span class="meta">#</span> 1 代表1个仓库大小，10代表 10个仓库大小</span><br><span class="line"><span class="meta">#</span> sh load.sh tpcc1000 1000</span><br></pre></td></tr></table></figure>
+
+<p>加载完后查看数据量</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.customer;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.district;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.history;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.item;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.new_orders;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.order_line;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.orders;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.stock;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> tpcc1000.warehouse;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119201805.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119195506.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119202942.png" alt></p>
+<br>
+
+<h4 id="3-、运行状态收集脚本"><a href="#3-、运行状态收集脚本" class="headerlink" title="3)、运行状态收集脚本"></a>3)、运行状态收集脚本</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /root/benchmark/1-collect-system-status.sh</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-、执行测试"><a href="#4-、执行测试" class="headerlink" title="4)、执行测试"></a>4)、执行测试</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> -w 指定仓库数量</span><br><span class="line"><span class="meta">#</span> -c 指定并发连接数</span><br><span class="line"><span class="meta">#</span> -r 指定开始测试前进行warmup的时间，进行预热后，测试效果更好</span><br><span class="line"><span class="meta">#</span> -l 指定测试持续时间</span><br><span class="line"><span class="meta">#</span> -i 指定生成报告间隔时长</span><br><span class="line"><span class="meta">#</span> -f 指定生成的报告文件名</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 真实测试场景中，建议预热时间不小于5分钟，持续压测时长不小于30分钟，否则测试数据可能不具参考意义</span><br><span class="line"><span class="meta">#</span> 耗时：1800, 即 30分钟</span><br><span class="line">./tpcc_start -h10.10.135.172 -P3306 -dtpcc1000 -uroot -p123456 -w10 -c32 -r300 -l1800 &gt; tpcc_output.txt</span><br></pre></td></tr></table></figure>
+
+<p>top</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119203105.png" alt></p>
+<p>vmstat 1</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191119203144.png" alt></p>
+<p>执行结果</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191120101926.png" alt></p>
+<br>
+
+<h4 id="5-、分析收集到的状态数据"><a href="#5-、分析收集到的状态数据" class="headerlink" title="5)、分析收集到的状态数据"></a>5)、分析收集到的状态数据</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sh 2-system-status-analyzer.sh status_data/5-sec-status-2019-11-19_06-status &gt; status.txt</span><br><span class="line"><span class="meta">$</span> vi status.txt</span><br><span class="line">unix时间戳    时间              系统负载 QPS(数据库)</span><br><span class="line">1574177360 2019-11-19 23:29:20 22.00 37156.60</span><br><span class="line">1574177365 2019-11-19 23:29:25 20.24 36821.80</span><br><span class="line">1574177370 2019-11-19 23:29:30 21.26 36879.80</span><br><span class="line">1574177375 2019-11-19 23:29:35 19.56 37217.60</span><br><span class="line">1574177380 2019-11-19 23:29:40 20.63 37646.80</span><br><span class="line">1574177385 2019-11-19 23:29:45 21.62 35293.20</span><br><span class="line">1574177390 2019-11-19 23:29:50 19.89 36457.80</span><br><span class="line">1574177395 2019-11-19 23:29:55 18.30 37464.00</span><br><span class="line">1574177400 2019-11-19 23:30:00 19.72 36722.60</span><br><span class="line">1574177405 2019-11-19 23:30:05 20.78 37913.60</span><br><span class="line">1574177410 2019-11-19 23:30:10 19.12 36294.00</span><br><span class="line">1574177415 2019-11-19 23:30:15 17.58 35279.20</span><br><span class="line">1574177420 2019-11-19 23:30:20 18.98 39051.20</span><br><span class="line">1574177425 2019-11-19 23:30:25 20.10 37700.20</span><br><span class="line">1574177430 2019-11-19 23:30:30 18.49 37632.20</span><br><span class="line">1574177435 2019-11-19 23:30:35 17.01 38068.00</span><br><span class="line">1574177440 2019-11-19 23:30:40 15.65 38218.40</span><br><span class="line">1574177445 2019-11-19 23:30:45 14.48 34143.40</span><br><span class="line">1574177450 2019-11-19 23:30:50 13.40 7794.60</span><br><span class="line">1574177455 2019-11-19 23:30:55 12.40 7744.80</span><br><span class="line">1574177460 2019-11-19 23:31:00 11.41 613.40</span><br><span class="line">1574177465 2019-11-19 23:31:05 10.50 2.20</span><br><span class="line">1574177470 2019-11-19 23:31:10 9.66 1.40</span><br><span class="line">1574177475 2019-11-19 23:31:15 8.88 1.80</span><br><span class="line">1574177480 2019-11-19 23:31:20 8.17 1.80</span><br><span class="line">1574177485 2019-11-19 23:31:25 7.52 1.80</span><br><span class="line">1574177490 2019-11-19 23:31:30 6.92 2.00</span><br><span class="line">1574177495 2019-11-19 23:31:35 6.36 2.00</span><br><span class="line">1574177500 2019-11-19 23:31:40 5.85 1.60</span><br></pre></td></tr></table></figure>
+
+<p>vi tpcc_output.txt</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">***************************************</span><br><span class="line">*** ###easy### TPC-C Load Generator ***</span><br><span class="line">***************************************</span><br><span class="line">option h with value '10.10.135.172'</span><br><span class="line">option P with value '3306'</span><br><span class="line">option d with value 'tpcc1000'</span><br><span class="line">option u with value 'root'</span><br><span class="line">option p with value '123456'</span><br><span class="line">option w with value '10'</span><br><span class="line">option c with value '32'</span><br><span class="line">option r with value '300'</span><br><span class="line">option l with value '1800'</span><br><span class="line">&lt;Parameters&gt;</span><br><span class="line">     [server]: 10.10.135.172   -- 主机</span><br><span class="line">     [port]: 3306              -- 端口</span><br><span class="line">     [DBname]: tpcc1000        -- 压测的数据库</span><br><span class="line">       [user]: root            -- 账号</span><br><span class="line">       [pass]: 123456          -- 密码</span><br><span class="line">  [warehouse]: 10              -- 仓库数</span><br><span class="line"> [connection]: 32              -- 并发线程数 </span><br><span class="line">     [rampup]: 300 (sec.)      -- 数据预热时长 </span><br><span class="line">    [measure]: 1800 (sec.)     -- 压测时长</span><br><span class="line"></span><br><span class="line">RAMP-UP TIME.(300 sec.)       --预热结束</span><br><span class="line"></span><br><span class="line">MEASURING START.              --开始压测</span><br><span class="line"></span><br><span class="line">-- 每10秒输出一次压测数据</span><br><span class="line">-- 以逗号分隔，共9列</span><br><span class="line">-- 第1列，第N次10秒</span><br><span class="line">-- 第2列，New-Order在本轮取样时间内成功执行事务的次数(即吞吐量)</span><br><span class="line">-- 第3列，New-Order在本轮取样时间内，95%事务 在响应时间内（ms）完成</span><br><span class="line">-- 第4列，New-Order在本轮取样时间内，99%事务 在响应时间内完成</span><br><span class="line">-- 第5列，New-Order在本轮取样时间内，本轮测试最大响应时间（ms）</span><br><span class="line">-- 第6列，Payment 有效事务数（吞吐量） | 最大响应时间（ms）</span><br><span class="line">-- 第7列，Order-Status 有效事务数（吞吐量） | 最大响应时间（ms）</span><br><span class="line">-- 第8列，Delivery 有效事务数（吞吐量） | 最大响应时间（ms）</span><br><span class="line">-- 第9列，Stock-Level 有效事务数（吞吐量） | 最大响应时间（ms）</span><br><span class="line">  10, trx: 6322, 95%: 58.880, 99%: 80.384, max_rt: 465.298, 6319|311.356, 632|147.998, 633|518.363, 632|840.708</span><br><span class="line">  20, trx: 6402, 95%: 57.161, 99%: 74.165, max_rt: 108.881, 6399|102.155, 640|54.569, 640|187.683, 641|125.100</span><br><span class="line">  30, trx: 6215, 95%: 58.616, 99%: 83.674, max_rt: 240.631, 6224|149.658, 623|135.217, 622|332.418, 621|168.763</span><br><span class="line">  40, trx: 6365, 95%: 57.109, 99%: 76.190, max_rt: 136.020, 6362|140.110, 637|35.815, 637|142.510, 636|154.135</span><br><span class="line">  50, trx: 6426, 95%: 56.973, 99%: 76.281, max_rt: 131.508, 6427|171.652, 641|45.733, 640|145.872, 643|156.595</span><br><span class="line">  60, trx: 6198, 95%: 58.476, 99%: 80.384, max_rt: 229.300, 6197|238.621, 620|37.124, 621|269.572, 619|261.585</span><br><span class="line">  70, trx: 6418, 95%: 57.366, 99%: 76.648, max_rt: 116.301, 6421|115.735, 643|42.165, 643|172.855, 643|151.629</span><br><span class="line">  80, trx: 6406, 95%: 57.815, 99%: 76.877, max_rt: 115.657, 6396|99.119, 639|39.815, 640|152.090, 640|159.341</span><br><span class="line">  90, trx: 5841, 95%: 62.047, 99%: 87.229, max_rt: 290.416, 5836|291.379, 584|42.550, 585|301.866, 584|142.273</span><br><span class="line"> 100, trx: 6168, 95%: 56.362, 99%: 76.717, max_rt: 125.903, 6183|115.971, 618|47.143, 619|158.824, 618|162.145</span><br><span class="line"> 110, trx: 6249, 95%: 57.573, 99%: 78.200, max_rt: 138.199, 6232|126.211, 624|40.234, 623|155.532, 624|152.938</span><br><span class="line"> 120, trx: 6107, 95%: 58.511, 99%: 78.694, max_rt: 121.301, 6125|146.152, 611|37.128, 608|156.622, 609|126.521</span><br><span class="line"> 130, trx: 6076, 95%: 58.424, 99%: 84.227, max_rt: 346.854, 6074|266.228, 608|48.112, 608|361.008, 610|140.032</span><br><span class="line"> 140, trx: 6365, 95%: 55.992, 99%: 75.599, max_rt: 115.579, 6367|110.699, 637|47.943, 637|156.809, 634|126.359</span><br><span class="line">....</span><br><span class="line">1760, trx: 6386, 95%: 56.599, 99%: 74.588, max_rt: 115.095, 6386|103.424, 638|44.586, 640|143.890, 637|139.005</span><br><span class="line">1770, trx: 6148, 95%: 59.039, 99%: 76.510, max_rt: 124.202, 6149|99.945, 615|37.548, 612|152.861, 615|157.265</span><br><span class="line">1780, trx: 5831, 95%: 59.786, 99%: 82.061, max_rt: 291.887, 5826|335.447, 583|47.130, 585|365.992, 583|156.420</span><br><span class="line">1790, trx: 6161, 95%: 57.676, 99%: 78.294, max_rt: 130.952, 6162|132.039, 616|46.349, 616|149.911, 615|173.092</span><br><span class="line">1800, trx: 6164, 95%: 56.295, 99%: 74.098, max_rt: 117.632, 6169|131.690, 616|39.105, 616|202.839, 618|126.449</span><br><span class="line"></span><br><span class="line">STOPPING THREADS................................          -- 结束压测</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 成功(success,简写sc)次数，延迟(late,简写lt)次数，重试(retry,简写rt)次数，失败(failure,简写fl)次数</span><br><span class="line">&lt;Raw Results&gt;                                             -- 第一次统计结果</span><br><span class="line">  [0] sc:35421 lt:1093057  rt:0  fl:0 avg_rt: 30.0 (5)    -- New-Order，新订单业务</span><br><span class="line">  [1] sc:457714 lt:670742  rt:0  fl:0 avg_rt: 15.6 (5)    -- Payment，支付业务统计</span><br><span class="line">  [2] sc:96544 lt:16304  rt:0  fl:0 avg_rt: 3.6 (5)       -- Order-Status，订单状态业务统计</span><br><span class="line">  [3] sc:87922 lt:24927  rt:0  fl:0 avg_rt: 72.5 (80)     -- Delivery，发货业务统计</span><br><span class="line">  [4] sc:1565 lt:111282  rt:0  fl:0 avg_rt: 62.8 (20)     -- Stock-Level，库存业务统计</span><br><span class="line"> in 1800 sec.</span><br><span class="line"></span><br><span class="line">&lt;Raw Results2(sum ver.)&gt;                                  -- 第二次统计结果，其他同上</span><br><span class="line">  [0] sc:35421  lt:1093057  rt:0  fl:0</span><br><span class="line">  [1] sc:457717  lt:670764  rt:0  fl:0</span><br><span class="line">  [2] sc:96544  lt:16304  rt:0  fl:0</span><br><span class="line">  [3] sc:87922  lt:24927  rt:0  fl:0</span><br><span class="line">  [4] sc:1565  lt:111283  rt:0  fl:0</span><br><span class="line"></span><br><span class="line">&lt;Constraint Check&gt; (all must be [OK])     -- 下面所有业务逻辑结果都必须为 OK 才行</span><br><span class="line"> [transaction percentage]</span><br><span class="line">        Payment: 43.48% (&gt;=43.0%) [OK]    -- 支付成功次数(上述统计结果中sc + lt)必须大于43.0%，否则结果为NG，而不是OK</span><br><span class="line">   Order-Status: 4.35% (&gt;= 4.0%) [OK]     --订单状态，其他同上</span><br><span class="line">       Delivery: 4.35% (&gt;= 4.0%) [OK]     -- 发货，其他同上</span><br><span class="line">    Stock-Level: 4.35% (&gt;= 4.0%) [OK]     -- 库存，其他同上</span><br><span class="line"> [response time (at least 90% passed)]    -- 响应耗时指标必须超过90%通过才行</span><br><span class="line">      New-Order: 3.14%  [NG] *            -- 标准5ms，只有3.14% 响应时间合格</span><br><span class="line">        Payment: 40.56%  [NG] *           -- 标准5ms，</span><br><span class="line">   Order-Status: 85.55%  [NG] *           -- 标准5ms，</span><br><span class="line">       Delivery: 77.91%  [NG] *           -- 标准80ms，</span><br><span class="line">    Stock-Level: 1.39%  [NG] *            -- 标准20ms，</span><br><span class="line"></span><br><span class="line">&lt;TpmC&gt;</span><br><span class="line">                 37615.934 TpmC          -- TpmC结果值&#123;每分钟事务数，该值是第一次统计结果中的新订单事务数除以总耗时分钟数，例如本例中是：（35421+1093057）/30 ≈ 37615.93..&#125;；1000tpmC相当于2000个事务；</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>tpcc-mysql的业务逻辑及其相关的几个表作用如下：</p>
+<ul>
+<li>New-Order：新订单，一次完整的订单事务，几乎涉及到全部表</li>
+<li>Payment：支付，主要对应 orders、history 表</li>
+<li>Order-Status：订单状态，主要对应 orders、order_line 表</li>
+<li>Delivery：发货，主要对应 order_line 表</li>
+<li>Stock-Level：库存，主要对应 stock 表</li>
+</ul>
+<p>其它表说明:</p>
+<ul>
+<li>客户：主要对应 customer 表</li>
+<li>地区：主要对应 district 表</li>
+<li>商品：主要对应 item 表</li>
+<li>仓库：主要对应 warehouse 表</li>
+</ul>
+</blockquote>
+<br>
+
+<h4 id="6-、清理数据"><a href="#6-、清理数据" class="headerlink" title="6)、清理数据"></a>6)、清理数据</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop database tpcc1000;</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-、使用gunplot绘图"><a href="#7-、使用gunplot绘图" class="headerlink" title="7)、使用gunplot绘图"></a>7)、使用gunplot绘图</h4><p>① 安装 gunplot</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gnuplot</span><br><span class="line"></span><br><span class="line">gnuplot -V</span><br><span class="line"><span class="meta">#</span> gnuplot 4.6 patchlevel 2</span><br></pre></td></tr></table></figure>
+
+<p>帮助文档： <a href="http://gnuplot.info/docs_4.6/gnuplot.pdf" target="_blank" rel="noopener">http://gnuplot.info/docs_4.6/gnuplot.pdf</a> </p>
+<p>② 准备分析脚本和绘图脚本</p>
+<p>gunplot-analyze-tpcc.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line">TIMESLOT=1</span><br><span class="line"></span><br><span class="line">if [ -n "$2" ]</span><br><span class="line">then</span><br><span class="line">    TIMESLOT=$2</span><br><span class="line">    echo "Defined $2"</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">cat $1 | grep -v HY000 | grep -v payment | grep -v neword | \</span><br><span class="line">awk -v timeslot=$TIMESLOT '\</span><br><span class="line">BEGIN &#123; FS="[,():|]"; s=0; cntr=0; aggr=0 &#125; \</span><br><span class="line">/MEASURING START/ &#123;s=1&#125; \</span><br><span class="line">/STOPPING THREADS/ &#123;s=0&#125; \</span><br><span class="line">/0/ &#123; \</span><br><span class="line">    if (s==1) &#123; cntr++; aggr+=$2; &#125; \</span><br><span class="line">    if (cntr==timeslot ) &#123; printf ("%d %3f %d\n",$1,$5,$3) ; cntr=0; aggr=0  &#125; \</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解释： 把 <code>140, trx: 6365, 95%: 55.992, 99%: 75.599, max_rt: 115.579, 6367|110.699, 637|47.943, 637|156.809, 634|126.359</code>中的 “[,():|]” 字符去掉以后，就剩下了<code>140 trx 6365 95% 55.992 99% 75.599 max_rt 115.579 6367 110.699 637 47.943 637 156.809 634 126.359</code>。$1就是140， $5就是55.992，打印的语法就跟c语言一样</p>
+<p>帮助文档：man awk</p>
+</blockquote>
+<p>③ 对 tpcc-mysql 测试生成的数据文件进行提取</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh gunplot-analyze-tpcc.sh tpcc_output.txt &gt; tpcc_output_transfer.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191120200034.png" alt></p>
+<p>④  使用tpcc-graph-build.sh脚本生成图表 </p>
+<ul>
+<li>画95%的事务响应时间图：gunplot-graph-build-rt.sh</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span>## goto user homedir and remove previous file</span><br><span class="line">rm -f '$2'</span><br><span class="line">gnuplot &lt;&lt; EOP</span><br><span class="line"><span class="meta">#</span>## set data source file</span><br><span class="line">datafile = '$1'</span><br><span class="line"><span class="meta">#</span>## set graph type and size</span><br><span class="line">set terminal jpeg size 720,640</span><br><span class="line"><span class="meta">#</span>## set titles</span><br><span class="line">set grid x y</span><br><span class="line">set xlabel "Time (sec)"</span><br><span class="line">set ylabel "Response Times(sec)"</span><br><span class="line"><span class="meta">#</span>## set output filename</span><br><span class="line">set output '$2'</span><br><span class="line"><span class="meta">#</span>## build graph</span><br><span class="line"><span class="meta">#</span> plot datafile using 1:2 title "95%-rt" with lines,datafile using 1:3 title "max_rt" with lines axes x1y1</span><br><span class="line">plot datafile using 1:2 title "95%-rt" with lines axes x1y1</span><br><span class="line">EOP</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>画间隔时间内完成的事务数的图：gunplot-graph-build-trx.sh</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span>## goto user homedir and remove previous file</span><br><span class="line">rm -f '$2'</span><br><span class="line">gnuplot &lt;&lt; EOP</span><br><span class="line"><span class="meta">#</span>## set data source file</span><br><span class="line">datafile = '$1'</span><br><span class="line"><span class="meta">#</span>## set graph type and size</span><br><span class="line">set terminal jpeg size 720,640</span><br><span class="line"><span class="meta">#</span>## set titles</span><br><span class="line">set grid x y</span><br><span class="line">set xlabel "Time (sec)"</span><br><span class="line">set ylabel "Transaction Nums"</span><br><span class="line"><span class="meta">#</span>## set output filename</span><br><span class="line">set output '$2'</span><br><span class="line"><span class="meta">#</span>## build graph</span><br><span class="line"><span class="meta">#</span> plot datafile using 1:2 title "95%-rt" with lines,datafile using 1:3 title "max_rt" with lines axes x1y1</span><br><span class="line">plot datafile using 1:3 title "Transaction Nums" with lines axes x1y1</span><br><span class="line">EOP</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh gunplot-graph-build-rt.sh tpcc_output_transfer.txt tpcc_output.jpg</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191120200505.png" alt></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh gunplot-graph-build-trx.sh tpcc_output_transfer.txt tpcc_output.jpg</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191120200955.png" alt></p>
+<br>
+
+<h1 id="五、mysql性能调优"><a href="#五、mysql性能调优" class="headerlink" title="五、mysql性能调优"></a>五、mysql性能调优</h1><p>可以看到tpcc-mysql基准测试中 rt项全部不合格，所以需要对mysql进行性能调优</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191120134255.png" alt></p>
+<br>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-cache-and-buffer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/linux/linux-cache-and-buffer/" itemprop="url">Centos7 管理 buff/cache 方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-17T00:00:00+08:00">
+                2019-11-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>　　Linux服务器运行一段时间后，由于其内存管理机制，会将暂时不用的内存转为buff/cache，这样在程序使用到这一部分数据时，能够很快的取出，从而提高系统的运行效率，所以这也正是linux内存管理中非常出色的一点，所以乍一看内存剩余的非常少，但是在程序真正需要内存空间时，linux会将缓存让出给程序使用，这样达到对内存的最充分利用，所以真正剩余的内存是free+buff/cache</p>
+<p>　　但是有些时候大量的缓存占据空间，这时候应用程序回去使用swap交换空间，从而使系统变慢，这时候需要手动去释放内存，释放内存的时候，首先执行命令 <code>sync 将所有正在内存中的缓冲区写到磁盘中，其中包括已经修改的文件inode、已延迟的块I/O以及读写映射文件，从而确保文件系统的完整性</code></p>
+<br>
+
+<h1 id="linux机制"><a href="#linux机制" class="headerlink" title="linux机制"></a>linux机制</h1><p>　　说到清理内存，那么不得不提到/proc这一个虚拟文件系统，这里面的数据和文件都是内存中的实时数据，很多参数的获取都可以从下面相应的文件中得到，比如查看某一进程占用的内存大小和各项参数，cpu和主板的详细信息，显卡的参数等等；相应的关于内存的管理方式是在/proc/sys/vm/drop_chches文件中，一定要注意这个文件中存放的并不是具体的内存内容，而是0-3这几个数字，通过文件大小只有1B也可以知道，而这些代号分别告诉系统代表不同的含义如下：</p>
+<ul>
+<li>0：0是系统默认值，默认情况下表示不释放内存，由操作系统自动管理</li>
+<li>1：释放页缓存</li>
+<li>2：释放dentries和inodes</li>
+<li>3：释放所有缓存</li>
+</ul>
+<p>　　所以根据上面的说明，分别将1,2,3这3个数字重定向到drop_caches中可以实现内存的释放，一般释放内存都是重定向3到文件中，释放所有的缓存</p>
+<br>
+
+<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><p>那么下面举个例子，比如这里只释放页缓存，首先使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">free -m</span><br></pre></td></tr></table></figure>
+
+<p>查看当前内存剩余</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117173637.png" alt></p>
+<p>当前内存剩余570M左右，另外buff/cache是1.3G，根据上面说的现在真正的剩余内存应该是1.8G左右，首先写缓存到文件系统：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sync</span><br></pre></td></tr></table></figure>
+
+<p>然后执行下面命令释放内存(页缓存buff/cache)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 1 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<p>执行完之后，再次查看内存剩余：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191117173925.png" alt></p>
+<p>会发现内存被释放了，可用内存确实变为1.5G左右</p>
+<p>　　到这里内存就释放完了，现在drop_caches中的值为1，如果现在想让操作系统重新分配内存，那么设置drop_caches的值为0即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 0 &gt; /proc/sys/vm/drop_caches</span><br></pre></td></tr></table></figure>
+
+<p><strong>但是我走到这里报错，从0可以设置为1-3 ，但是不能设置为0了。一直没有找到原因，最后直接重启服务器了，然后开机之后自己恢复成0了。</strong></p>
+<p><strong>所以命令慎用！！！</strong></p>
+<p>另外需要注意的是，在生产环境中的服务器我们不要频繁的去释放内存，只在必要时候清理内存即可，更重要的是我们应该从应用程序层面去优化内存的利用和释放，经常清理内存可能只是暂时屏蔽的应用程序中的一些bug，所以更重要的是程序的调优，其他的交给操作系统来管理</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/computer-network/keepalived-vrrp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2416,685 +3273,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/log-platform/flume-custom-interceptor/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/log-platform/flume-custom-interceptor/" itemprop="url">flume自定义拦截器 + mysql增量同步到kafka</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-25T00:00:00+08:00">
-                2019-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-
-
-<h1 id="一、搭建可运行的flume环境"><a href="#一、搭建可运行的flume环境" class="headerlink" title="一、搭建可运行的flume环境"></a>一、搭建可运行的flume环境</h1><h3 id="0、下载-apache-flume-1-9-0-bin"><a href="#0、下载-apache-flume-1-9-0-bin" class="headerlink" title="0、下载 apache-flume-1.9.0-bin"></a>0、下载 apache-flume-1.9.0-bin</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191029164039.png" alt></p>
-<br>
-
-<h3 id="1、下载-mysql-依赖包"><a href="#1、下载-mysql-依赖包" class="headerlink" title="1、下载 mysql 依赖包"></a>1、下载 mysql 依赖包</h3><p>1、下载 mysql-connector-java-5.1.18.jar 放在 apache-flume-1.9.0-bin\lib 下</p>
-<p>2、下载 flume-ng-sql-source </p>
-<p> <a href="https://github.com/keedio/flume-ng-sql-source/releases" target="_blank" rel="noopener">https://github.com/keedio/flume-ng-sql-source/releases</a> </p>
-<p>mvn package</p>
-<p>把生成的 flume-ng-sql-source-1.5.2.jar 放在 apache-flume-1.9.0-bin\lib 下</p>
-<br>
-
-<h3 id="2、创建kafka-topic"><a href="#2、创建kafka-topic" class="headerlink" title="2、创建kafka topic"></a>2、创建kafka topic</h3> <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic tzds-login</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="3、配置-flume"><a href="#3、配置-flume" class="headerlink" title="3、配置 flume"></a>3、配置 flume</h3><p>新建 conf/mysql2kafka.conf</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">a1.channels=ch-1</span><br><span class="line">a1.sources=src-1</span><br><span class="line">a1.sinks=k1</span><br><span class="line">###########sql source#################</span><br><span class="line"># For each one of the sources, the type is defined</span><br><span class="line">a1.sources.src-1.type=org.keedio.flume.source.SQLSource</span><br><span class="line">a1.sources.src-1.hibernate.connection.url=jdbc:mysql://10.10.209.27:3306/crm</span><br><span class="line"></span><br><span class="line"># Hibernate Database connection properties</span><br><span class="line">a1.sources.src-1.hibernate.connection.user=crm</span><br><span class="line">a1.sources.src-1.hibernate.connection.password=crm@2015</span><br><span class="line">a1.sources.src-1.hibernate.connection.autocommit=true</span><br><span class="line">a1.sources.src-1.hibernate.dialect=org.hibernate.dialect.MySQL5Dialect</span><br><span class="line">a1.sources.src-1.hibernate.connection.driver_class=com.mysql.jdbc.Driver</span><br><span class="line">a1.sources.src-1.run.query.delay=10000</span><br><span class="line">a1.sources.src-1.status.file.path=./</span><br><span class="line">a1.sources.src-1.status.file.name=sqlsource.status</span><br><span class="line">#sqlsource.status文件中记录了增量字段的值 $@$</span><br><span class="line"></span><br><span class="line"># Custom query=&quot;你的SQL语句&quot;</span><br><span class="line">a1.sources.src-1.start.from=0</span><br><span class="line">a1.sources.src-1.custom.query=select * from crm.c_cust_login_his_2019 where id &gt; $@$ order by id asc</span><br><span class="line">a1.sources.src-1.batch.size=1000</span><br><span class="line">a1.sources.src-1.max.rows=1000</span><br><span class="line"></span><br><span class="line">a1.sources.src-1.hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvider</span><br><span class="line">a1.sources.src-1.hibernate.c3p0.min_size=1</span><br><span class="line">a1.sources.src-1.hibernate.c3p0.max_size=10</span><br><span class="line"></span><br><span class="line">a1.sources.src-1.interceptors=i1</span><br><span class="line">a1.sources.src-1.interceptors.i1.type=com.jzsec.flume.interceptor.TzdsLoginBuilder</span><br><span class="line"></span><br><span class="line">##############################</span><br><span class="line">a1.channels.ch-1.type=memory</span><br><span class="line">a1.channels.ch-1.capacity=10000</span><br><span class="line">a1.channels.ch-1.transactionCapacity=10000</span><br><span class="line">a1.channels.ch-1.byteCapacityBufferPercentage=20</span><br><span class="line">a1.channels.ch-1.byteCapacity=800000</span><br><span class="line"></span><br><span class="line">#Kafka sink配置 a1.sinks.k1.topic=你的topic名字</span><br><span class="line">a1.sinks.k1.type=org.apache.flume.sink.kafka.KafkaSink</span><br><span class="line">a1.sinks.k1.topic=tzds-login</span><br><span class="line">a1.sinks.k1.brokerList=172.18.1.51:9092</span><br><span class="line">a1.sinks.k1.requiredAcks=1</span><br><span class="line">a1.sinks.k1.batchSize=20</span><br><span class="line"></span><br><span class="line"># combination  a1.sources.src-1.channels不要漏掉s</span><br><span class="line">a1.sinks.k1.channel=ch-1</span><br><span class="line">a1.sources.src-1.channels=ch-1</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="4、启动flume-agent"><a href="#4、启动flume-agent" class="headerlink" title="4、启动flume agent"></a>4、启动flume agent</h3><p>linux:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/flume-ng agent -n a1 -c conf -f conf/mysql2kafka.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
-
-<p>windows：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin\flume-ng agent -n a1 -c conf -f conf\mysql2kafka.conf</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="5、查看-kafka-topic"><a href="#5、查看-kafka-topic" class="headerlink" title="5、查看 kafka topic"></a>5、查看 kafka topic</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it b6276c6648c2 /bin/bash</span><br><span class="line">cd /opt/kafka/bin/</span><br><span class="line">./kafka-console-consumer.sh --bootstrap-server 172.18.1.51:9092  --topic tzds-login --from-beginning</span><br><span class="line">./kafka-console-consumer.sh --bootstrap-server 172.18.1.51:9092  --topic tzds-login</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h1 id="二、自定义Interceptor流程"><a href="#二、自定义Interceptor流程" class="headerlink" title="二、自定义Interceptor流程"></a>二、自定义Interceptor流程</h1><ol>
-<li>搭建flume开发环境（巧妇难为无米之炊，你没开发环境怎么玩，程序都不知道你写的类是个啥）</li>
-<li>新建一个类，实现Interceptor接口，重写intercept(Event event)方法</li>
-<li>新建一个类，实现Interceptor.Builder接口，重写configure(Context context)和build()方法</li>
-<li>打成jar包放到flume的lib目录下</li>
-<li>编写相应的flume.conf文件，将type值使用类的全限定名指定我们的拦截器。如果有自定义属性，需要配置该自定义属性。</li>
-</ol>
-<br>
-
-<h1 id="三、搭建开发环境"><a href="#三、搭建开发环境" class="headerlink" title="三、搭建开发环境"></a>三、搭建开发环境</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191029164140.png" alt></p>
-<br>
-
-<h3 id="1、新建一个maven工程，在-pom-xml-中引入如下依赖："><a href="#1、新建一个maven工程，在-pom-xml-中引入如下依赖：" class="headerlink" title="1、新建一个maven工程，在 pom.xml 中引入如下依赖："></a>1、新建一个maven工程，在 pom.xml 中引入如下依赖：</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.jzsec<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flume-custom-interceptor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flume<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flume-ng-sdk<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flume<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flume-ng-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.58<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-shade-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>shade<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-surefire-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.18.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="2、自定义-Interceptor-和-Builder"><a href="#2、自定义-Interceptor-和-Builder" class="headerlink" title="2、自定义 Interceptor 和 Builder"></a>2、自定义 Interceptor 和 Builder</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TzdsLoginInterceptor</span> <span class="keyword">implements</span> <span class="title">Interceptor</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Event <span class="title">intercept</span><span class="params">(Event event)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//获得body的内容</span></span><br><span class="line">		Map&lt;String, String&gt; eventHeader = event.getHeaders();</span><br><span class="line">		String eventBody = <span class="keyword">new</span> String(event.getBody(), Charsets.UTF_8);</span><br><span class="line">		String fmt = <span class="string">"%s, %s"</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			eventBody = procLog(eventBody);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (ParseException e) &#123;</span><br><span class="line">			eventBody = <span class="string">""</span>;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		event.setBody(String.format(fmt, JSONObject.toJSONString(eventHeader), eventBody).getBytes());</span><br><span class="line">		<span class="keyword">return</span> event;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;Event&gt; <span class="title">intercept</span><span class="params">(List&lt;Event&gt; list)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (Event event : list) &#123;</span><br><span class="line">			intercept(event);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> list;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.flume.Context;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.interceptor.Interceptor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TzdsLoginBuilder</span> <span class="keyword">implements</span> <span class="title">Interceptor</span>.<span class="title">Builder</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">configure</span><span class="params">(Context context)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Interceptor <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> TzdsLoginInterceptor();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="3、打包部署"><a href="#3、打包部署" class="headerlink" title="3、打包部署"></a>3、打包部署</h3><p>mvn clean package</p>
-<p>将 flume-custom-interceptor-1.0.jar 部署到 apache-flume-1.9.0-bin\lib 下</p>
-<br>
-
-<h3 id="4、在-mysql2kafka-conf-中配置-interceptors"><a href="#4、在-mysql2kafka-conf-中配置-interceptors" class="headerlink" title="4、在 mysql2kafka.conf 中配置 interceptors"></a>4、在 mysql2kafka.conf 中配置 interceptors</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a1.sources.src-1.interceptors=i1</span><br><span class="line">a1.sources.src-1.interceptors.i1.type=com.jzsec.flume.interceptor.TzdsLoginInterceptor</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="5、启动flume-agent"><a href="#5、启动flume-agent" class="headerlink" title="5、启动flume agent"></a>5、启动flume agent</h3><p>linux:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/flume-ng agent -n a1 -c conf -f conf/mysql2kafka.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
-
-<p>windows：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin\flume-ng agent -n a1 -c conf -f conf\mysql2kafka.conf</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h3 id="6、查看-kafka-topic"><a href="#6、查看-kafka-topic" class="headerlink" title="6、查看 kafka topic"></a>6、查看 kafka topic</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20191029163529.png" alt></p>
-<br>
-
-
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/micro-service/soa-springcloud-k8s-istio/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/micro-service/soa-springcloud-k8s-istio/" itemprop="url">微服务、SpringCloud、k8s、Istio杂谈</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-24T00:00:00+08:00">
-                2019-10-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/micro-service/" itemprop="url" rel="index">
-                    <span itemprop="name">micro-service</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <br>
-
-<h1 id="一、微服务与SOA"><a href="#一、微服务与SOA" class="headerlink" title="一、微服务与SOA"></a>一、微服务与SOA</h1><p>​    “微服务”是一个名词，没有这个名词之前也有“微服务”，一个朗朗上口的名词能让大家产生一个认知共识，这对推动一个事务的发展挺重要的，不然你叫微服务他叫小服务的大家很难集中到一个点上。</p>
-<p>​    业界对微服务与SOA的区别争论比较多大多都是在微观上对比他们的区别什么微服务粒度更细啊、微服务没有ESB啊、微服务通讯相比SOA采用更轻量级的协议啊等等，但是从微观谈区别本身就有悖论，</p>
-<p>这些区别只是微服务的一种”最佳实践“而已。我个人理解微服务与SOA灵魂上的不同是</p>
-<p>​    <strong>微服务是互联网时代的产物而SOA是系统集成的产物</strong>，<strong>微服务是对系统的打散而SOA是对系统的整合。</strong></p>
-<h1 id="二、-微服务与SpringCloud"><a href="#二、-微服务与SpringCloud" class="headerlink" title="二、 微服务与SpringCloud"></a>二、 微服务与SpringCloud</h1><p>​    因为SpringCloud的流行很多人就把SpringCloud等同于微服务，这也没有错共识的人多了就是对的。准确点说SpringCloud是适合实现微服务的一套基础框架，SpringCloud有助于讯速的落地微服务架构。SpringCloud是以Java库的形式工作所以它的工作层面是在应用层（研发层）。</p>
-<p>​    SpringCloud通过提供一篮子解决方案来应对微服务中的各种需求和通点，通过Eureka提供服务注册与发现，Ribbon实现客户端的负载均衡，Feign牛逼的将REST变成强类型的接口调用，Config提供方便但不灵活的配置中心，Hystrix提供熔断方案，Zuul提供网关方案等。</p>
-<p>​    <strong>优点：</strong></p>
-<p>​    1、提供较全的微服务治理全套解决方案</p>
-<p>​    2、对开发人员友好（对代码侵入强）</p>
-<p>​    <strong>缺点：</strong></p>
-<p>​    1、只能java平台技术栈使用，当然提供了SideCar用于集成异构技术但是限制比较大</p>
-<p>​    2、对开发人员友好（对代码侵入强）</p>
-<h1 id="三、Kubernetes-k8s"><a href="#三、Kubernetes-k8s" class="headerlink" title="三、Kubernetes(k8s)"></a>三、Kubernetes(k8s)</h1><p>​    k8s并不是因为微服务而生而是因为docker而生只是天时地利人和正好赶上了微服务流行的时代，docker的特性正好特别适用于微服务，而k8s进一步对docker方便的编排。</p>
-<p>​    从基础设施方向来讲k8s可以比作是IDC机房和机房工作人员，对物理服务器（docker）的存放与管理，上机架、装系统、接网络等等。</p>
-<p>​    从微服务的角度来讲，k8s通过基础设施的方式通过逻辑抽象出service等概念提供了对微服务的另一种实现，就好比用N台电脑联网提供了FTP服务。</p>
-<p>​    <strong>优点：</strong></p>
-<p>​    1、在基础层提供了抽象，对代码无侵入</p>
-<p>​    <strong>缺点：</strong></p>
-<p>​    1、对微服务治理比较弱，如熔断限流等，当然这也不应该是k8s做的。</p>
-<h1 id="四、Istio"><a href="#四、Istio" class="headerlink" title="四、Istio"></a>四、Istio</h1><p>​    Istio的理论概念是Service Mesh（服务网络），我们不必纠结于概念实际也是微服务的一种落地形式有点类似上面的SideCar模式，它的主要思想是<strong>关注点分离</strong>，即不像SpringCloud一样交给研发来做，也不集成到k8s中产生职责混乱，Istio是通过为服务配 Agent代理来提供服务发现、负截均衡、限流、链路跟踪、鉴权等微服务治理手段。</p>
-<p>​    Istio开始就是与k8s结合设计的，Istio结合k8s可以牛逼的落地微服务架构。 </p>
-<p>​    优点：</p>
-<p>​    1、关注点分离，对代码无侵入</p>
-<p>​    2、服务治理相关较全面</p>
-<p>​    缺点：</p>
-<p>​    1、老子学不动了</p>
-<h1 id="五、我理想中的微服务架构"><a href="#五、我理想中的微服务架构" class="headerlink" title="五、我理想中的微服务架构"></a>五、我理想中的微服务架构</h1><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200605102115.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/interview/java-interview/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/java/interview/java-interview/" itemprop="url">Java灵魂拷问</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-24T00:00:00+08:00">
-                2019-10-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<br>
-
-<h1 id="Java集合"><a href="#Java集合" class="headerlink" title="Java集合"></a>Java集合</h1><ol>
-<li>ArrayList 和 Vector 的区别。</li>
-<li>说说 ArrayList,Vector, LinkedList 的存储性能和特性。</li>
-<li>快速失败 (fail-fast) 和安全失败 (fail-safe) 的区别是什么？</li>
-<li>hashmap 的数据结构。</li>
-<li>HashMap 的工作原理是什么?</li>
-<li>Hashmap 什么时候进行扩容呢？</li>
-<li>List、Map、Set 三个接口，存取元素时，各有什么特点？</li>
-<li>Set 里的元素是不能重复的，那么用什么方法来区分重复与否呢? 是用 == 还是 equals()? 它们有何区别?</li>
-<li>两个对象值相同 (x.equals(y) == true)，但却可有不同的 hash code，这句话对不对?</li>
-<li>heap 和 stack 有什么区别。</li>
-<li>Java 集合类框架的基本接口有哪些？</li>
-<li>HashSet 和 TreeSet 有什么区别？</li>
-<li>HashSet 的底层实现是什么?</li>
-<li>LinkedHashMap 的实现原理?</li>
-<li>为什么集合类没有实现 Cloneable 和 Serializable 接口？</li>
-<li>什么是迭代器 (Iterator)？</li>
-<li>Iterator 和 ListIterator 的区别是什么？</li>
-<li>数组 (Array) 和列表 (ArrayList) 有什么区别？什么时候应该使用 Array 而不是 ArrayList？</li>
-<li>Java 集合类框架的最佳实践有哪些？</li>
-<li>Set 里的元素是不能重复的，那么用什么方法来区分重复与否呢？是用 == 还是 equals()？它们有何区别？</li>
-<li>Comparable 和 Comparator 接口是干什么的？列出它们的区别</li>
-<li>Collection 和 Collections 的区别。</li>
-</ol>
-<br>
-
-<h1 id="JVM与调优"><a href="#JVM与调优" class="headerlink" title="JVM与调优"></a>JVM与调优</h1><ol>
-<li>Java 类加载过程？</li>
-<li>描述一下 JVM 加载 Class 文件的原理机制?</li>
-<li>Java 内存分配。</li>
-<li>GC 是什么? 为什么要有 GC？</li>
-<li>简述 Java 垃圾回收机制</li>
-<li>如何判断一个对象是否存活？（或者 GC 对象的判定方法）</li>
-<li>垃圾回收的优点和原理。并考虑 2 种回收机制</li>
-<li>垃圾回收器的基本原理是什么？垃圾回收器可以马上回收内存吗？有什么办法主动通知虚拟机进行垃圾回收？</li>
-<li>Java 中会存在内存泄漏吗，请简单描述</li>
-<li>深拷贝和浅拷贝。</li>
-<li>System.gc() 和 Runtime.gc() 会做什么事情？</li>
-<li>finalize() 方法什么时候被调用？析构函数 (finalization) 的目的是什么？</li>
-<li>如果对象的引用被置为 null，垃圾收集器是否会立即释放对象占用的内存？</li>
-<li>什么是分布式垃圾回收（DGC）？它是如何工作的？</li>
-<li>串行（serial）收集器和吞吐量（throughput）收集器的区别是什么？</li>
-<li>在 Java 中，对象什么时候可以被垃圾回收？</li>
-<li>简述 Java 内存分配与回收策率以及 Minor GC 和 Major GC。</li>
-<li>JVM 的永久代中会发生垃圾回收么？</li>
-<li>Java 中垃圾收集的方法有哪些？</li>
-<li>什么是类加载器，类加载器有哪些？</li>
-<li>类加载器双亲委派模型机制？</li>
-</ol>
-<br>
-
-<h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><ol>
-<li>Synchronized 用过吗，其原理是什么？</li>
-<li>你刚才提到获取对象的锁，这个“锁”到底是什么？如何确定对象的锁？</li>
-<li>什么是可重入性，为什么说 Synchronized 是可重入锁？</li>
-<li>JVM 对 Java 的原生锁做了哪些优化？48</li>
-<li>为什么说 Synchronized 是非公平锁？49</li>
-<li>什么是锁消除和锁粗化？49</li>
-<li>为什么说 Synchronized 是一个悲观锁？乐观锁的实现原理又是什么？什么是 CAS，它有什么特性？</li>
-<li>乐观锁一定就是好的吗？</li>
-<li>跟 Synchronized 相比，可重入锁 ReentrantLock 其实现原理有什么不同？</li>
-<li>那么请谈谈 AQS 框架是怎么回事儿？</li>
-<li>请尽可能详尽地对比下 Synchronized 和 ReentrantLock 的异同。</li>
-<li>ReentrantLock 是如何实现可重入性的？</li>
-<li>除了 ReetrantLock，你还接触过 JUC 中的哪些并发工具？</li>
-<li>请谈谈 ReadWriteLock 和 StampedLock。</li>
-<li>如何让 Java 的线程彼此同步？你了解过哪些同步器？请分别介绍下。</li>
-<li>CyclicBarrier 和 CountDownLatch 看起来很相似，请对比下呢？</li>
-<li>Java 线程池相关问题</li>
-<li>Java 中的线程池是如何实现的？</li>
-<li>创建线程池的几个核心构造参数？</li>
-<li>线程池中的线程是怎么创建的？是一开始就随着线程池的启动创建好的吗？</li>
-<li>既然提到可以通过配置不同参数创建出不同的线程池，那么 Java 中默认实现好的线程池又有哪些呢？请比较它们的异同</li>
-<li>如何在 Java 线程池中提交线程？</li>
-<li>什么是 Java 的内存模型，Java 中各个线程是怎么彼此看到对方的变量的？</li>
-<li>请谈谈 volatile 有什么特点，为什么它能保证变量对所有线程的可见性？</li>
-<li>既然 volatile 能够保证线程间的变量可见性，是不是就意味着基于 volatile 变量的运算就是并发安全的？</li>
-<li>请对比下 volatile 对比 Synchronized 的异同。</li>
-<li>请谈谈 ThreadLocal 是怎么解决并发安全的？</li>
-<li>很多人都说要慎用 ThreadLocal，谈谈你的理解，使用 ThreadLocal 需要注意些什么？</li>
-</ol>
-<br>
-
-<h1 id="spring"><a href="#spring" class="headerlink" title="spring"></a>spring</h1><ol>
-<li>什么是 Spring 框架？Spring 框架有哪些主要模块？</li>
-<li>使用 Spring 框架能带来哪些好处？</li>
-<li>什么是控制反转(IOC)？什么是依赖注入？</li>
-<li>请解释下 Spring 框架中的 IoC？</li>
-<li>BeanFactory 和 ApplicationContext 有什么区别？</li>
-<li>Spring 有几种配置方式？</li>
-<li>如何用基于 XML 配置的方式配置 Spring？</li>
-<li>如何用基于 Java 配置的方式配置 Spring？</li>
-<li>怎样用注解的方式配置 Spring？</li>
-<li>请解释 Spring Bean 的生命周期？</li>
-<li>Spring Bean 的作用域之间有什么区别？</li>
-<li>什么是 Spring inner beans？</li>
-<li>Spring 框架中的单例 Beans 是线程安全的么？</li>
-<li>请举例说明如何在 Spring 中注入一个 Java Collection？</li>
-<li>如何向 Spring Bean 中注入一个 Java.util.Properties？</li>
-<li>请解释 Spring Bean 的自动装配？</li>
-<li>请解释自动装配模式的区别？</li>
-<li>如何开启基于注解的自动装配？</li>
-<li>请举例解释@Required 注解？</li>
-<li>请举例解释@Autowired 注解？</li>
-<li>请举例说明@Qualifier 注解？</li>
-<li>构造方法注入和设值注入有什么区别？</li>
-<li>Spring 框架中有哪些不同类型的事件？</li>
-<li>FileSystemResource 和 ClassPathResource 有何区别？</li>
-<li>Spring 框架中都用到了哪些设计模式？</li>
-</ol>
-<br>
-
-<h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><ol>
-<li>请列举出在 JDK 中几个常用的设计模式？</li>
-<li>什么是设计模式？你是否在你的代码里面使用过任何设计模式？</li>
-<li>Java 中什么叫单例设计模式？请用 Java 写出线程安全的单例模式</li>
-<li>在 Java 中，什么叫观察者设计模式（observer design pattern）？</li>
-<li>使用工厂模式最主要的好处是什么？在哪里使用？</li>
-<li>举一个用 Java 实现的装饰模式(decorator design pattern)？它是作用于对象层次还是类层次？</li>
-<li>在 Java 中，为什么不允许从静态方法中访问非静态变量？</li>
-<li>设计一个 ATM 机，请说出你的设计思路？</li>
-<li>在 Java 中，什么时候用重载，什么时候用重写？</li>
-<li>举例说明什么情况下会更倾向于使用抽象类而不是接口</li>
-</ol>
-<br>
-
-<h1 id="springboot"><a href="#springboot" class="headerlink" title="springboot"></a>springboot</h1><ol>
-<li>什么是 Spring Boot？</li>
-<li>Spring Boot 有哪些优点？</li>
-<li>什么是 JavaConfig？</li>
-<li>如何重新加载 Spring Boot 上的更改，而无需重新启动服务器？</li>
-<li>Spring Boot 中的监视器是什么？</li>
-<li>如何在 Spring Boot 中禁用 Actuator 端点安全性？</li>
-<li>如何在自定义端口上运行 Spring Boot 应用程序？</li>
-<li>什么是 YAML？</li>
-<li>如何实现 Spring Boot 应用程序的安全性？</li>
-<li>如何集成 Spring Boot 和 ActiveMQ？</li>
-<li>如何使用 Spring Boot 实现分页和排序？</li>
-<li>什么是 Swagger？你用 Spring Boot 实现了它吗？</li>
-<li>什么是 Spring Profiles？</li>
-<li>什么是 Spring Batch？</li>
-<li>什么是 FreeMarker 模板？</li>
-<li>如何使用 Spring Boot 实现异常处理？</li>
-<li>您使用了哪些 starter maven 依赖项？</li>
-<li>什么是 CSRF 攻击？</li>
-<li>什么是 WebSockets？</li>
-<li>什么是 AOP？</li>
-<li>什么是 Apache Kafka？</li>
-<li>我们如何监视所有 Spring Boot 微服务？</li>
-</ol>
-<br>
-
-<h1 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h1><ol>
-<li>BIO、NIO和AIO的区别？</li>
-<li>NIO的组成？</li>
-<li>Netty的特点？</li>
-<li>Netty的线程模型？</li>
-<li>TCP 粘包/拆包的原因及解决方法？</li>
-<li>了解哪几种序列化协议？</li>
-<li>如何选择序列化协议？</li>
-<li>Netty的零拷贝实现？</li>
-<li>Netty的高性能表现在哪些方面？</li>
-<li>NIOEventLoopGroup源码？</li>
-</ol>
-<br>
-
-<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><ol>
-<li>什么是redis?</li>
-<li>Reids的特点</li>
-<li>Redis支持的数据类型</li>
-<li>Redis是单进程单线程的</li>
-<li>虚拟内存</li>
-<li>Redis锁</li>
-<li>读写分离模型</li>
-<li>数据分片模型</li>
-<li>Redis的回收策略</li>
-<li>使用Redis有哪些好处？</li>
-<li>redis相比memcached有哪些优势？4</li>
-<li>redis常见性能问题和解决方案</li>
-<li>MySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据245</li>
-<li>Memcache与Redis的区别都有哪些？</li>
-<li>Redis 常见的性能问题都有哪些？如何解决？</li>
-<li>Redis 最适合的场景</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -3140,7 +3323,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-count">236</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3151,7 +3334,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -3162,7 +3345,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

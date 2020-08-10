@@ -314,6 +314,1458 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/gradle/gradle-bug-so-md5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/gradle/gradle-bug-so-md5/" itemprop="url">gradle编译springboot的jar包中，so库被修改</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-04T00:00:00+08:00">
+                2019-06-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/gradle/" itemprop="url" rel="index">
+                    <span itemprop="name">gradle</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <br>
+
+<p>最近将maven工程修改为gradle工程</p>
+<p>打包后jni调用直接crash。通过和maven打出的jar包对比，发现<code>.so</code>库发生了签名发生了变更</p>
+<p>解决方案：</p>
+<p>将so库放在resources之外的文件夹中</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200624142145.png" alt></p>
+<p>修改 <code>build.gradle</code> ，添加如下指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bootJar &#123;</span><br><span class="line">    from(&quot;src/main/assets&quot;) &#123;</span><br><span class="line">        into &quot;BOOT-INF/classes&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/elasticsearch-performance-optimizing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/elasticsearch-performance-optimizing/" itemprop="url">Elasticsearch性能优化专题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-27T00:00:00+08:00">
+                2019-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+
+
+<h1 id="写入性能优化"><a href="#写入性能优化" class="headerlink" title="写入性能优化"></a>写入性能优化</h1><h3 id="1、用bulk批量写入"><a href="#1、用bulk批量写入" class="headerlink" title="1、用bulk批量写入"></a>1、用bulk批量写入</h3><p>你如果要往es里面灌入数据的话，那么根据你的业务场景来，如果你的业务场景可以支持让你将一批数据聚合起来，一次性写入es，那么就尽量采用bulk的方式，每次批量写个几百条这样子。</p>
+<p>bulk批量写入的性能比你一条一条写入大量的document的性能要好很多。但是如果要知道一个bulk请求最佳的大小，需要对单个es node的单个shard做压测。先bulk写入100个document，然后200个，400个，以此类推，每次都将bulk size加倍一次。如果bulk写入性能开始变平缓的时候，那么这个就是最佳的bulk大小。并不是bulk size越大越好，而是根据你的集群等环境具体要测试出来的，因为越大的bulk size会导致内存压力过大，因此最好一个请求不要发送超过10mb的数据量。</p>
+<p>先确定一个是bulk size，此时就尽量是单线程，一个es node，一个shard，进行测试。看看单线程最多一次性写多少条数据，性能是比较好的。</p>
+<h3 id="2、使用多线程将数据写入es"><a href="#2、使用多线程将数据写入es" class="headerlink" title="2、使用多线程将数据写入es"></a>2、使用多线程将数据写入es</h3><p>单线程发送bulk请求是无法最大化es集群写入的吞吐量的。如果要利用集群的所有资源，就需要使用多线程并发将数据bulk写入集群中。为了更好的利用集群的资源，这样多线程并发写入，可以减少每次底层磁盘fsync的次数和开销。首先对单个es节点的单个shard做压测，比如说，先是2个线程，然后是4个线程，然后是8个线程，16个，每次线程数量倍增。一旦发现es返回了TOO_MANY_REQUESTS的错误，JavaClient也就是EsRejectedExecutionException。此时那么就说明es是说已经到了一个并发写入的最大瓶颈了，此时我们就知道最多只能支撑这么高的并发写入了。</p>
+<h3 id="3、增加refresh间隔"><a href="#3、增加refresh间隔" class="headerlink" title="3、增加refresh间隔"></a>3、增加refresh间隔</h3><p>默认的refresh间隔是1s，用index.refresh_interval参数可以设置，这样会其强迫es每秒中都将内存中的数据写入磁盘中，创建一个新的segment file。正是这个间隔，让我们每次写入数据后，1s以后才能看到。但是如果我们将这个间隔调大，比如30s，可以接受写入的数据30s后才看到，那么我们就可以获取更大的写入吞吐量，因为30s内都是写内存的，每隔30s才会创建一个segment file。</p>
+<h3 id="4、禁止refresh和replia"><a href="#4、禁止refresh和replia" class="headerlink" title="4、禁止refresh和replia"></a>4、禁止refresh和replia</h3><p>如果我们要一次性加载大批量的数据进es，可以先禁止refresh和replia复制，将index.refresh_interval设置为-1，将index.number_of_replicas设置为0即可。这可能会导致我们的数据丢失，因为没有refresh和replica机制了。但是不需要创建segment file，也不需要将数据replica复制到其他的replica shasrd上面去。此时写入的速度会非常快，一旦写完之后，可以将refresh和replica修改回正常的状态。</p>
+<h3 id="5、禁止swapping交换内存"><a href="#5、禁止swapping交换内存" class="headerlink" title="5、禁止swapping交换内存"></a>5、禁止swapping交换内存</h3><p>如果要将es jvm内存交换到磁盘，再交换回内存，大量磁盘IO，性能很差</p>
+<h3 id="6、给filesystem-cache更多的内存"><a href="#6、给filesystem-cache更多的内存" class="headerlink" title="6、给filesystem cache更多的内存"></a>6、给filesystem cache更多的内存</h3><p>filesystem cache被用来执行更多的IO操作，如果我们能给filesystemcache更多的内存资源，那么es的写入性能会好很多。</p>
+<h3 id="7、使用自动生成的id"><a href="#7、使用自动生成的id" class="headerlink" title="7、使用自动生成的id"></a>7、使用自动生成的id</h3><p>如果我们要手动给es document设置一个id，那么es需要每次都去确认一下那个id是否存在，这个过程是比较耗费时间的。如果我们使用自动生成的id，那么es就可以跳过这个步骤，写入性能会更好。对于你的业务中的表id，可以作为es document的一个field。</p>
+<h3 id="8、用性能更好的硬件"><a href="#8、用性能更好的硬件" class="headerlink" title="8、用性能更好的硬件"></a>8、用性能更好的硬件</h3><p>我们可以给filesystem cache更多的内存，也可以使用SSD替代机械硬盘，避免使用NAS等网络存储，考虑使用RAID 0来条带化存储提升磁盘并行读写效率，等等。</p>
+<h3 id="9、index-buffer"><a href="#9、index-buffer" class="headerlink" title="9、index buffer"></a>9、index buffer</h3><p>如果我们要进行非常重的高并发写入操作，那么最好将index buffer调大一些，indices.memory.index_buffer_size，这个可以调节大一些，设置的这个index buffer大小，是所有的shard公用的，但是如果除以shard数量以后，算出来平均每个shard可以使用的内存大小，一般建议，但是对于每个shard来说，最多给512mb，因为再大性能就没什么提升了。es会将这个设置作为每个shard共享的index buffer，那些特别活跃的shard会更多的使用这个buffer。默认这个参数的值是10%，也就是jvm heap的10%，如果我们给jvmheap分配10gb内存，那么这个index buffer就有1gb，对于两个shard共享来说，是足够的了。</p>
+<br>
+
+<h1 id="查询性能优化"><a href="#查询性能优化" class="headerlink" title="查询性能优化"></a>查询性能优化</h1><br>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/jenkins/jenkins-pipeline-rancher2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/jenkins/jenkins-pipeline-rancher2/" itemprop="url">jenkins 使用 jenkinsfile 集成 rancher2</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-21T00:00:00+08:00">
+                2019-05-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/jenkins/" itemprop="url" rel="index">
+                    <span itemprop="name">jenkins</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <br>
+
+<blockquote>
+</blockquote>
+<p>环境</p>
+<blockquote>
+<ul>
+<li>rancher v2.4.5</li>
+<li></li>
+</ul>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/elk-single-node-cluster/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/elasticsearch/elk-single-node-cluster/" itemprop="url">ELK单节点集群搭建</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-02T21:09:13+08:00">
+                2019-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/" itemprop="url" rel="index">
+                    <span itemprop="name">elastic</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
+                    <span itemprop="name">elasticsearch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="安装-jdk（jdk7-）"><a href="#安装-jdk（jdk7-）" class="headerlink" title="安装 jdk（jdk7+）"></a>安装 jdk（jdk7+）</h1><p>tar -zxf jdk-8u65-linux-x64.tar.gz -C /data/carloz/tools/<br>设置java环境变量<br>vim /etc/profile</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/carloz/tools/jdk1.8.0_65</span><br><span class="line">export JRE_HOME=$JAVA_HOME/jre</span><br><span class="line">export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH</span><br><span class="line">export CLASSPATH=$CLASSPATH:.:/JAVA_HOME/lib:$JAVA_HOME/jre/lib</span><br></pre></td></tr></table></figure>
+
+<p>source /etc/profile<br>java -version</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172213.png" alt></p>
+<h1 id="安装-Elasticsearch"><a href="#安装-Elasticsearch" class="headerlink" title="安装 Elasticsearch"></a>安装 Elasticsearch</h1><p>tar -zxf elasticsearch-7.0.0-linux-x86_64.tar.gz -C /data/carloz/tools/<br>cd elasticsearch-7.0.0/</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172242.png" alt></p>
+<p>./bin/elasticsearch</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172339.png" alt></p>
+<p>这是出于系统安全考虑设置的条件。由于ElasticSearch可以接收用户输入的脚本并且执行，为了系统安全考虑。<br>创建elsearch用户组及elsearch用户<br>groupadd elsearch<br>useradd elsearch -g elsearch -p elasticsearch<br>cd /data/carloz/tools/<br>chown -R elsearch:elsearch elasticsearch-7.0.0/<br>su elsearch<br>cd elasticsearch-7.0.0/<br>./bin/elasticsearch -d</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172438.png" alt></p>
+<p>一个警告，操作系统内核版本太低，忽略即可</p>
+<p>netstat -nltp | grep 9200 <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172458.png" alt></p>
+<p>ps aux | grep elastic* <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172513.png" alt></p>
+<p>curl ‘<a href="http://127.0.0.1:9200&#39;" target="_blank" rel="noopener">http://127.0.0.1:9200&#39;</a><br>如下代表启动成功：</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172527.png" alt></p>
+<h1 id="配置Elasticsearch"><a href="#配置Elasticsearch" class="headerlink" title="配置Elasticsearch"></a>配置Elasticsearch</h1><p>su elsearch<br>cd /data/carloz/tools/elasticsearch-7.0.0<br>vi config/elasticsearch.yml<br>grep -v ^# config/elasticsearch.yml </p>
+<p>集群监控<br>curl -XGET ‘<a href="http://localhost:9200/_cluster/health?pretty=true&#39;" target="_blank" rel="noopener">http://localhost:9200/_cluster/health?pretty=true&#39;</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172557.png" alt></p>
+<h1 id="安装-Logstash"><a href="#安装-Logstash" class="headerlink" title="安装 Logstash"></a>安装 Logstash</h1><p>su root<br>cd /carloz/download<br>tar -zxf logstash-7.0.0.tar.gz -C /data/carloz/tools/<br>cd /data/carloz/tools/logstash-7.0.0/</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172615.png" alt></p>
+<p>定义 一个叫 stdin 的数据源，和一个叫stdout的输出目标，无论我们输入什么，都会输出到标准命令行：<br>./bin/logstash -e ‘input { stdin { } } output { stdout {} }’<br>等待启动成功之后，输入 hello logastsh</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172638.png" alt></p>
+<p>1、Logstash 输入源<br>2、Logstash 输出目标<br>3、Logstash 过滤器</p>
+<p>定义输入源，输出目标：</p>
+<p>mkdir -p myconf<br>vi myconf/jyweb-nginx.conf</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">input&#123;</span><br><span class="line">    file&#123;</span><br><span class="line">      path =&gt; [<span class="string">"/opt/software/nginx/logs/*.log"</span>]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">output&#123;</span><br><span class="line">   elasticsearch&#123;</span><br><span class="line">       hosts =&gt; [<span class="string">"localhost:9200"</span>]</span><br><span class="line">       index =&gt; <span class="string">"jyweb_nginx_log"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动logstash<br>./bin/logstash -f myconf/jyweb-nginx.conf &amp;</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172651.png" alt></p>
+<h1 id="安装-Kibana"><a href="#安装-Kibana" class="headerlink" title="安装 Kibana"></a>安装 Kibana</h1><p>tar -zxf /carloz/download/kibana-7.0.0-linux-x86_64.tar.gz -C /data/carloz/tools/<br>cd /data/carloz/tools/kibana-7.0.0-linux-x86_64</p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172703.png" alt></p>
+<p>修改配置文件，指向Elasticsearch服务器<br>vi config/kibana.yml</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server.port: 5601</span><br><span class="line">server.host: "0.0.0.0"</span><br><span class="line">server.name: "logs-server"</span><br><span class="line">elasticsearch.hosts: ["http://localhost:9200"]</span><br></pre></td></tr></table></figure>
+
+<p>启动<br>./bin/kibana <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172716.png" alt></p>
+<p>访问：<a href="http://10.10.139.42:5601/" target="_blank" rel="noopener">http://10.10.139.42:5601</a></p>
+<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824172731.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/docker/portainer-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/docker/portainer-setup/" itemprop="url">centos7 下 Portainer安装配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-22T00:00:00+08:00">
+                2019-04-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="Portainer-安装"><a href="#Portainer-安装" class="headerlink" title="Portainer 安装"></a>Portainer 安装</h1><blockquote>
+<p>Portainer 是一款轻量级的应用，它提供了图形化界面，用于方便的管理Docker环境，包括单机环境和集群环境，下面我们将用Portainer来管理Docker容器中的应用。</p>
+</blockquote>
+<ul>
+<li>官网地址：<a href="https://github.com/portainer/portainer" target="_blank" rel="noopener">https://github.com/portainer/portainer</a></li>
+<li>获取Docker镜像文件：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用docker容器运行Portainer：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 9000:9000 -p 8000:8000 --name portainer \</span><br><span class="line">--restart=always \</span><br><span class="line">-v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">-v /data/docker/portainer/data:/data \</span><br><span class="line">-d portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>开放端口</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=9000/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=8000/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改客户端host</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\System32\drivers\etc\hosts</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件改为读写</span></span><br><span class="line">192.168.145.137     czportainer.com</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件改为只读</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>查看Portainer的DashBoard信息：</p>
+<blockquote>
+<p><a href="http://czportainer.com:9000/" target="_blank" rel="noopener">http://czportainer.com:9000</a></p>
+<p>admin/admin123</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420102430.png" alt></p>
+<br>
+
+<h1 id="Endpoints-配置"><a href="#Endpoints-配置" class="headerlink" title="Endpoints 配置"></a>Endpoints 配置</h1><h3 id="local"><a href="#local" class="headerlink" title="local"></a>local</h3><p>连接到本机</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200422135246.png" alt></p>
+<h3 id="docker-API"><a href="#docker-API" class="headerlink" title="docker API"></a>docker API</h3><p>通过 docker 的 2375 端口，控制其他docker主机</p>
+<ol>
+<li>配置docker远程api</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> vi /lib/systemd/system/docker.service</span></span><br><span class="line">ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2375</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br><span class="line">firewall-cmd --permanent --add-port=2375/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在portainer上配置</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200422142643.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200422135351.png" alt></p>
+<ol start="3">
+<li>在home中查看</li>
+</ol>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200422143121.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/docker/harbor-setup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/docker/harbor-setup/" itemprop="url">docker仓库Harbor安装配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-20T00:00:00+08:00">
+                2019-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<h1 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h1><h3 id="开源Docker-Registry的不足"><a href="#开源Docker-Registry的不足" class="headerlink" title="开源Docker Registry的不足"></a>开源Docker Registry的不足</h3><p>同很多团队进行容器云构建的初始阶段一样，一开始我们并不太注重安全，容器仓库一般都是配置成insecure-registry直接使用。这次，我们决定加强安全方面的控制。我们发现了它的一些不足如下：</p>
+<ul>
+<li><p><u><strong>用户与鉴权</strong></u>：Docker Registry V2可以基于htpasswd文件进行简单的用户管理，但是维护不便，也没有对外的API可供集成。</p>
+</li>
+<li><p><u><strong>缺少日志与审记</strong></u>：Docker Registry没有日志收集能力，也缺少审记。</p>
+</li>
+<li><p><u><strong>复制与同步</strong></u>：在不同的Registry实例之间复制镜像是十分普遍的需求，但Docker Registry只支持将公有Registry的镜像同步至私有仓库 。</p>
+</li>
+<li><p><u><strong>镜像删除不便</strong></u>：Docker客户端没有提供删除仓库镜像的命令，删除仓库中的镜像，只能通过其它工具调用rest api 。</p>
+</li>
+<li><p><u><strong>缺少图形化的管理界面</strong></u>：要想补上这些缺点，需要在自已的容器云中做一些加强，需要工作量。除了Docker Registry，还有没有其它的选择，已经补齐了这些能力，或部分补齐了呢？于是，我们做了一点小了解。</p>
+</li>
+</ul>
+<h3 id="业界可选的Registry"><a href="#业界可选的Registry" class="headerlink" title="业界可选的Registry"></a>业界可选的Registry</h3><ul>
+<li><p>Docker Hub 提供了直观的界面、自动化构建、私有仓库以及众多官方镜像。这是官方的公有库，下载镜像必须联接外网。</p>
+</li>
+<li><p>Docker Registry 最流行的开源registry。你可以在自己的设施上运行或者使用Docker Hub。</p>
+</li>
+<li><p>Quay.io 最初由一个两人工作室开发的产品，专注于Docker私有库。目前已被Coreos收购。</p>
+</li>
+<li><p>CoreOS Enterprise Registry Coreos收购Quay.io之后推出的企业级Containger Registry，提供细化权限和审计跟踪。</p>
+</li>
+<li><p>Nexus 3.0 nexus原来只是一个maven的仓库服务器，升级到3.0之后，也可以使用它对docker的镜像进行管理。</p>
+</li>
+<li><p>Harbor vmware开源的企业级容器registry，基于开源的Docker Registry进行增强。</p>
+</li>
+</ul>
+<p>Docker Hub相信大家都不陌生，用来做私库的源库是可以的，可以将一些基础镜像从这个云库拉到私库中。它并不适合在容器云中直接使用，下载镜像时需要连外网，速度也是个大问题。</p>
+<p>Docker Registry就不说了，接下来的Quay.io，CoreOS Enterprise Registry是付费的，或者是商业付费的，不考虑。Nexus 3有图形化的管理页面可以操作镜像，但其它的能力与Docker Registry差不多。最后看到的harbor，则令我们眼前一亮。</p>
+<h1 id="新的选择–Harbor"><a href="#新的选择–Harbor" class="headerlink" title="新的选择–Harbor"></a>新的选择–Harbor</h1><p>Harbor是VMware公司于2016年开源的企业级Docker Registry项目。它是一个用于存储和分发Docker镜像的企业级Registry服务器，通过添加一些企业必需的功能特性，例如安全、标识和管理等，扩展了开源Docker Distribution。</p>
+<p>作为一个企业级私有Registry服务器，Harbor提供了更好的性能和安全。提升用户使用Registry构建和运行环境传输镜像的效率。Harbor支持安装在多个Registry节点的镜像资源复制，镜像全部保存在私有Registry中， 确保数据和知识产权在公司内部网络中管控。另外，Harbor也提供了高级的安全特性，诸如用户管理，访问控制和活动审计等。</p>
+<h3 id="Harbor的特点"><a href="#Harbor的特点" class="headerlink" title="Harbor的特点"></a>Harbor的特点</h3><ul>
+<li><p>基于角色的访问控制：用户与Docker镜像仓库通过“项目”进行组织管理，一个用户可以对多个镜像仓库在同一命名空间（project）里有不同的权限。</p>
+</li>
+<li><p>镜像复制：镜像可以在多个Registry实例中复制（同步）。尤其适合于负载均衡，高可用，混合云和多云的场景。</p>
+</li>
+<li><p>图形化用户界面：用户可以通过浏览器来浏览，检索当前Docker镜像仓库，管理项目和命名空间。</p>
+</li>
+<li><p>AD/LDAP 支持：Harbor可以集成企业内部已有的AD/LDAP，用于鉴权认证管理。</p>
+</li>
+<li><p>审计管理：所有针对镜像仓库的操作都可以被记录追溯，用于审计管理。</p>
+</li>
+<li><p>国际化：已拥有英文、中文、德文、日文和俄文的本地化版本。更多的语言将会添加进来。</p>
+</li>
+<li><p>RESTful API：RESTful API 提供给管理员对于Harbor更多的操控, 使得与其它管理软件集成变得更容易。</p>
+</li>
+<li><p>部署简单：提供在线和离线两种安装工具，也可以安装到vSphere平台(OVA方式)虚拟设备。</p>
+</li>
+</ul>
+<h3 id="Harbor的整体架构"><a href="#Harbor的整体架构" class="headerlink" title="Harbor的整体架构"></a>Harbor的整体架构</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135610.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421171733.png" alt></p>
+<p>Harbor在架构上主要由五个组件构成：</p>
+<ul>
+<li><p>Proxy：Harbor的registry, UI, token等服务，通过一个前置的反向代理统一接收浏览器、Docker客户端的请求，并将请求转发给后端不同的服务。</p>
+</li>
+<li><p>Registry：负责储存Docker镜像，并处理dockerpush/pull 命令。由于我们要对用户进行访问控制，即不同用户对Docker image有不同的读写权限，Registry会指向一个token服务，强制用户的每次docker pull/push请求都要携带一个合法的token,Registry会通过公钥对token 进行解密验证。</p>
+</li>
+<li><p>Core services：这是Harbor的核心功能，主要提供以下服务：UI：提供图形化界面，帮助用户管理registry上的镜像（image）, 并对用户进行授权。 webhook：为了及时获取registry上image状态变化的情况， 在Registry上配置webhook，把状态变化传递给UI模块。token服务：负责根据用户权限给每个docker push/pull命令签发token.Docker客户端向Regiøstry服务发起的请求,如果不包含token，会被重定向到这里，获得token后再重新向Registry进行请求。</p>
+</li>
+<li><p>Database：为core-services提供数据库服务，负责储存用户权限、审计日志、Docker image分组信息等数据。</p>
+</li>
+<li><p>Log collector：为了帮助监控Harbor运行，负责收集其他组件的log，供日后进行分析。</p>
+</li>
+</ul>
+<h3 id="harbor的核心概念"><a href="#harbor的核心概念" class="headerlink" title="harbor的核心概念"></a>harbor的核心概念</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420135701.png" alt></p>
+<p>以上是Harbor的核心概念。一个项目可以看成一个用户的小私库，项目成员按照其角色，可以上传，下载，删除镜像，或添加删除成员等。系统管理员可以创建镜像库复制目标，为项目设置复制策略，可以从其它的镜像库复制镜像过来。复制策略会产生复制任务。项目下面可拥有多个镜像，而每个镜像则可以有多个镜像标签。项目包含日志。</p>
+<h1 id="Harbor安装"><a href="#Harbor安装" class="headerlink" title="Harbor安装"></a>Harbor安装</h1><h3 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h3><p>docker 和 docker-compose 安装完成</p>
+<h3 id="创建-https-证书"><a href="#创建-https-证书" class="headerlink" title="创建 https 证书"></a>创建 https 证书</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 创建证书目录，并赋予权限</span></span><br><span class="line">mkdir -p /data/cert &amp;&amp; chmod -R 777 /data/cert &amp;&amp; cd /data/cert</span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成私钥，需要设置密码</span></span><br><span class="line">openssl genrsa -des3 -out harbor.key 2048</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 生成CA证书，需要输入密码</span></span><br><span class="line">openssl req -sha512 -new \</span><br><span class="line">    -subj "/C=CN/ST=JS/L=WX/O=zwx/OU=jhmy/CN=hub.jhmy.com" \</span><br><span class="line">    -key harbor.key \</span><br><span class="line">    -out harbor.csr</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 备份证书</span></span><br><span class="line">cp harbor.key harbor.key.org</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 退掉私钥密码，以便docker访问（也可以参考官方进行双向认证）</span></span><br><span class="line">openssl rsa -in harbor.key.org -out harbor.key</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用证书进行签名</span></span><br><span class="line">openssl x509 -req -days 365 -in harbor.csr -signkey harbor.key -out harbor.crt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420152329.png" alt></p>
+<ul>
+<li>安装文档</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://goharbor.io/docs/1.10/install-config/</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载解压"><a href="#下载解压" class="headerlink" title="下载解压"></a>下载解压</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/goharbor/harbor/releases</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /data/tools</span><br><span class="line">tar -zxf harbor-offline-installer-v1.10.1.tgz</span><br><span class="line">cd /data/tools/harbor</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420151637.png" alt></p>
+<ul>
+<li>配置harbor.yml</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hostname: 192.168.145.130</span><br><span class="line"></span><br><span class="line">http:</span><br><span class="line">  port: 80</span><br><span class="line"></span><br><span class="line">https:</span><br><span class="line">  port: 443</span><br><span class="line">  certificate: /data/cert/harbor.crt</span><br><span class="line">  private_key: /data/cert/harbor.key</span><br><span class="line"></span><br><span class="line">harbor_admin_password: 123456</span><br><span class="line"></span><br><span class="line">database:</span><br><span class="line">  password: 123456</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420154307.png" alt></p>
+<ul>
+<li>安装</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./install.sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420173201.png" alt></p>
+<ul>
+<li>卸载</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> docker-compose -f /data/tools/harbor/docker-compose.yml down</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  "insecure-registries": ["192.168.145.130"]</span><br><span class="line">&#125;</span><br><span class="line">service docker restart</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>端口开放</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=80/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=443/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=5000/tcp</span><br><span class="line">firewall-cmd --reload</span><br><span class="line">firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动-amp-停止"><a href="#启动-amp-停止" class="headerlink" title="启动&amp;停止"></a>启动&amp;停止</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml stop</span><br><span class="line">docker-compose -f /data/tools/harbor/docker-compose.yml start</span><br></pre></td></tr></table></figure>
+
+<h1 id="设置host解析"><a href="#设置host解析" class="headerlink" title="设置host解析"></a>设置host解析</h1><h3 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hosts</span><br><span class="line">192.168.145.130 czharbor.com</span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+
+<h3 id="win7"><a href="#win7" class="headerlink" title="win7"></a>win7</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\System32\drivers\etc\hosts</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件改为读写</span></span><br><span class="line">192.168.145.130 czharbor.com</span><br><span class="line"><span class="meta">#</span><span class="bash"> 文件改为只读</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="访问验证"><a href="#访问验证" class="headerlink" title="访问验证"></a>访问验证</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://czharbor.com/harbor/registries</span><br><span class="line">admin/123456</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420204651.png" alt></p>
+<h3 id="自定义仓库"><a href="#自定义仓库" class="headerlink" title="自定义仓库"></a>自定义仓库</h3><p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420214517.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420215346.png" alt></p>
+<h3 id="上传测试镜像"><a href="#上传测试镜像" class="headerlink" title="上传测试镜像"></a>上传测试镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker login -u admin -p 123456 czharbor.com</span><br><span class="line">docker tag redis:3.2 czharbor.com/dev/redis:3.2</span><br><span class="line">docker push czharbor.com/dev/redis:3.2</span><br><span class="line"><span class="meta">#</span><span class="bash"> docker <span class="built_in">logout</span> czharbor.com</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200420215536.png" alt></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/jenkins/jenkins-deploy-springcloud-to-centos7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/devops/jenkins/jenkins-deploy-springcloud-to-centos7/" itemprop="url">jenkins+harbor+gitee</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T00:00:00+08:00">
+                2019-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<br>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421202616.png" alt></p>
+<h1 id="宿主机软件安装"><a href="#宿主机软件安装" class="headerlink" title="宿主机软件安装"></a>宿主机软件安装</h1><h3 id="jdk"><a href="#jdk" class="headerlink" title="jdk"></a>jdk</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz tools]# whereis java</span><br><span class="line">java: /usr/bin/java /carloz/tools/jdk1.8.0_231/bin/java</span><br></pre></td></tr></table></figure>
+
+<h3 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h3><ol>
+<li>下载解压</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /carloz/tools/</span><br><span class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">tar -zxf apache-maven-3.6.3-bin.tar.gz</span><br><span class="line">mv apache-maven-3.6.3 maven-3.6.3</span><br><span class="line">cd maven-3.6.3/</span><br><span class="line">pwd</span><br><span class="line">/carloz/tools/maven-3.6.3</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置环境变量</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/profile</span><br><span class="line">MAVEN_HOME=/carloz/tools/maven-3.6.3</span><br><span class="line">export PATH=$&#123;MAVEN_HOME&#125;/bin:$&#123;PATH&#125;</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>查看结果</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn -v</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>替换阿里源</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br></pre></td></tr></table></figure>
+
+<p>找到<code>&lt;mirrors&gt;&lt;/mirrors&gt;</code>标签对，添加一下代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mirror&gt;</span><br><span class="line">     &lt;id&gt;alimaven&lt;/id&gt;</span><br><span class="line">     &lt;name&gt;aliyun maven&lt;/name&gt;</span><br><span class="line">     &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;</span><br><span class="line">     &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;</span><br><span class="line">&lt;/mirror&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>指定下载资源位置</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/maven-repo</span><br><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br><span class="line">&lt;localRepository&gt;/data/maven-repo&lt;/localRepository&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>指定jdk版本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">vi /carloz/tools/maven-3.6.3/conf/settings.xml</span><br><span class="line"></span><br><span class="line">&lt;profile&gt;</span><br><span class="line">	 &lt;id&gt;jdk-1.8&lt;/id&gt;</span><br><span class="line">	 &lt;activation&gt;</span><br><span class="line">		 &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;</span><br><span class="line">		 &lt;jdk&gt;1.8&lt;/jdk&gt;</span><br><span class="line">	 &lt;/activation&gt;</span><br><span class="line">	 &lt;properties&gt;</span><br><span class="line">		 &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;</span><br><span class="line">		 &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;</span><br><span class="line">		 &lt;maven.compiler.compilerVersion&gt;1.8&lt;/maven.compiler.compilerVersion&gt;</span><br><span class="line">	 &lt;/properties&gt;</span><br><span class="line">&lt;/profile&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="git"><a href="#git" class="headerlink" title="git"></a>git</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz ~]# yum install -y git</span><br><span class="line">[root@centos7cz ~]# whereis git</span><br><span class="line">git: /usr/bin/git /usr/share/man/man1/git.1.gz</span><br><span class="line">[root@centos7cz ~]# git --version</span><br><span class="line">git version 1.8.3.1</span><br><span class="line">[root@centos7cz ~]#</span><br></pre></td></tr></table></figure>
+
+<h1 id="jenkins做常规配置"><a href="#jenkins做常规配置" class="headerlink" title="jenkins做常规配置"></a>jenkins做常规配置</h1><p>点击系统管理-&gt;插件管理，进行一些自定义的插件安装：</p>
+<h3 id="角色管理权限插件"><a href="#角色管理权限插件" class="headerlink" title="角色管理权限插件"></a>角色管理权限插件</h3><p>Role-based Authorization Strategy</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415200830.png" alt></p>
+<h3 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h3><p>安装ssh插件</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415201901.png" alt></p>
+<p>配置公钥凭证</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415204838.png" alt></p>
+<p>在系统管理-&gt;系统配置中添加全局ssh的配置，这样Jenkins使用ssh就可以执行远程的linux脚本了：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415205131.png" alt></p>
+<h3 id="jdk-1"><a href="#jdk-1" class="headerlink" title="jdk"></a>jdk</h3><p>路径： 系统管理 -&gt; 全局工具配置 -&gt; JDK</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415232314.png" alt></p>
+<h3 id="maven-1"><a href="#maven-1" class="headerlink" title="maven"></a>maven</h3><p>通过系统管理-&gt;全局工具配置来进行全局工具的配置，比如maven的配置</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000630.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200416000547.png" alt></p>
+<h3 id="git-1"><a href="#git-1" class="headerlink" title="git"></a>git</h3><p>安装插件：</p>
+<ul>
+<li><p>Build With Parameters</p>
+</li>
+<li><p>Git Parameter</p>
+</li>
+</ul>
+<p>git可执行文件配置</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233807.png" alt></p>
+<h3 id="gitee"><a href="#gitee" class="headerlink" title="gitee"></a>gitee</h3><p>在线安装</p>
+<ul>
+<li>前往 Manage Jenkins -&gt; Manage Plugins -&gt; Available</li>
+<li>右侧 Filter 输入： Gitee</li>
+<li>下方可选列表中勾选 Gitee（如列表中不存在 Gitee，则点击 Check now 更新插件列表）</li>
+<li>点击 Download now and install after restart</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421174729.png" alt></p>
+<p>添加码云链接配置</p>
+<ol>
+<li><p>前往 Jenkins -&gt; Manage Jenkins -&gt; Configure System -&gt; Gitee Configuration -&gt; Gitee connections</p>
+</li>
+<li><p>在 <code>Connection name</code> 中输入 <code>Gitee</code> 或者你想要的名字</p>
+</li>
+<li><p><code>Gitee host URL</code> 中输入码云完整 URL地址： <code>https://gitee.com</code> （码云私有化客户输入部署的域名）</p>
+</li>
+<li><p><code>Credentials</code>  中如还未配置码云 APIV5 私人令牌，点击<code>Add- &gt; Jenkins</code></p>
+<ol>
+<li><code>Domain</code> 选择 <code>Global credentials</code></li>
+<li><code>Kind</code> 选择 <code>Gitee API Token</code></li>
+<li><code>Scope</code> 选择你需要的范围</li>
+<li><code>Gitee API Token</code> 输入你的码云私人令牌，获取地址：<a href="https://gitee.com/profile/personal_access_tokens" target="_blank" rel="noopener">https://gitee.com/profile/personal_access_tokens</a></li>
+<li><code>ID</code>, <code>Descripiton</code> 中输入你想要的 ID 和描述即可。</li>
+</ol>
+</li>
+<li><p><code>Credentials</code> 选择配置好的 Gitee APIV5 Token</p>
+</li>
+<li><p>点击 <code>Advanced</code> ，可配置是否忽略 SSL 错误（适您的Jenkins环境是否支持），并可设置链接测超时时间（适您的网络环境而定）</p>
+</li>
+<li><p>点击 <code>Test Connection</code> 测试链接是否成功，如失败请检查以上 3，5，6 步骤。</p>
+</li>
+</ol>
+<p>配置成功后如图所示：</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200421175307.png" alt></p>
+<h1 id="执行脚本准备"><a href="#执行脚本准备" class="headerlink" title="执行脚本准备"></a>执行脚本准备</h1><blockquote>
+<p>首先我们先把需要远程执行的脚本准备好。</p>
+</blockquote>
+<p>脚本文件都存放在了<code>mall-swarm</code>项目的<code>/document/sh</code>目录下</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415221745.png" alt></p>
+<p>上传脚本前在IDEA中修改所有脚本文件的换行符格式为<code>LF</code>，否则脚本会无法执行；</p>
+<p>将所有脚本文件上传到指定目录，这里我们上传到<code>/data/carloz/mall-swarm</code>目录下；</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/carloz/mall-swarm-sh</span><br><span class="line">cd /data/carloz/mall-swarm-sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将所有脚本文件都修改为可执行文件:</span></span><br><span class="line">chmod +x ./mall-*</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415231246.png" alt></p>
+<h1 id="Jenkins中创建任务"><a href="#Jenkins中创建任务" class="headerlink" title="Jenkins中创建任务"></a>Jenkins中创建任务</h1><blockquote>
+<p>接下来我们将通过在Jenkins中创建任务来实现自动化部署。由于我们的<code>mall-swarm</code>是个多模块的项目，部署上面和曾经的单模块项目还是有所区别的</p>
+</blockquote>
+<p>创建gitee登录凭据</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222743.png" alt></p>
+<h3 id="mall-admin"><a href="#mall-admin" class="headerlink" title="mall-admin"></a>mall-admin</h3><blockquote>
+<p>由于各个模块的执行任务的创建都大同小异，下面将详细讲解mall-admin模块任务的创建，其他模块将简略讲解。</p>
+</blockquote>
+<ul>
+<li>首先我们选择<code>构建一个自由风格的软件项目</code>，然后输入任务名称为mall-admin，配置其Git仓库地址，这里我直接使用了Gitee上面的地址：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415222412.png" alt></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415225732.png" alt></p>
+<ul>
+<li>之后我们创建一个构建，构建<code>mall-swarm</code>项目中的依赖模块，否则当构建可运行的服务模块时会因为无法找到这些模块而构建失败；</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只install mall-common,mall-mbg,mall-security三个模块</span></span><br><span class="line">clean install -pl mall-common,mall-mbg,mall-security -am</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>依赖项目构建示意图：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415225935.png" alt></p>
+<ul>
+<li>再创建一个构建，单独构建并打包mall-admin模块：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415230007.png" alt></p>
+<ul>
+<li>添加一个构建来通过SSH去执行远程任务，用于执行mall-admin的运行脚本：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233528.png" alt></p>
+<ul>
+<li>点击保存，完成mall-admin的执行任务创建</li>
+</ul>
+<h3 id="mall-registry"><a href="#mall-registry" class="headerlink" title="mall-registry"></a>mall-registry</h3><blockquote>
+<p>mall-registry和其他模块与mall-admin创建任务方式基本一致，只需修改构建模块时的<code>pom.xml</code>文件位置和<code>执行脚本</code>位置即可。</p>
+</blockquote>
+<ul>
+<li>我们可以直接从mall-admin模块的任务复制一个过来创建：</li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415233948.png" alt></p>
+<ul>
+<li>修改第二个构建中的pom.xml文件位置，改为：<code>${WORKSPACE}/mall-registry/pom.xml</code></li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234106.png" alt></p>
+<ul>
+<li>修改第三个构建中的SSH执行脚本文件位置，改为：<code>/data/carloz/mall-swarm-sh/mall-registry.sh</code></li>
+</ul>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20200415234321.png" alt></p>
+<ul>
+<li>点击保存，完成mall-registry的执行任务创建。</li>
+<li>尝试构建 mall-registry 模块，如果构建成功，再创建其他模块的构建任务</li>
+</ul>
+<h3 id="其他模块"><a href="#其他模块" class="headerlink" title="其他模块"></a>其他模块</h3><p>其他模块的执行任务创建，参考mall-admin和mall-registry的创建即可。</p>
+<h3 id="模块启动顺序问题"><a href="#模块启动顺序问题" class="headerlink" title="模块启动顺序问题"></a>模块启动顺序问题</h3><blockquote>
+<p>关于各个模块的启动顺序问题，<code>mall-registry</code>模块必须第一个启动，<code>mall-config</code>模块必须第二个启动，其他模块没有启动顺序限制。</p>
+</blockquote>
+<p>推荐启动顺序：</p>
+<ul>
+<li>mall-registry</li>
+<li>mall-config</li>
+<li>mall-monitor</li>
+<li>mall-gateway</li>
+<li>mall-admin</li>
+<li>mall-portal</li>
+<li>mall-search</li>
+<li>mall-demo</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我们通过在Jenkins中创建任务，完成了微服务架构中服务的打包部署工作，这样当我们每次修改完代码后，只需点击启动任务，就可以实现一键打包部署，省去了频繁打包部署的麻烦。</p>
+<h1 id="项目地址"><a href="#项目地址" class="headerlink" title="项目地址"></a>项目地址</h1><p><a href="https://github.com/macrozheng/mall-swarm" target="_blank" rel="noopener">https://github.com/macrozheng/mall-swarm</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/10-Elasticsearch新闻搜索实战/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -979,1642 +2431,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/5-3-Elasticsearch集群入门-映射详解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/5-3-Elasticsearch集群入门-映射详解/" itemprop="url">5.3、Elasticsearch集群入门 —— 映射详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T00:03:00+08:00">
-                2019-03-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>5.3.1、映射分类</p>
-<p>5.3.2、动态映射</p>
-<p>5.3.3、日期检测</p>
-<p>5.3.4、静态映射</p>
-<p>5.3.5、字段类型</p>
-<p>5.3.6、元字段</p>
-<p>5.3.7、映射参数</p>
-<p>5.3.8、映射模板</p>
-<p>-—————————————</p>
-<p>​    映射 即 Mapping， 定义 一个文档及其所包含的字段 如何被存储和索引。</p>
-<p>​    映射中   事先定义 数据类型、分词器</p>
-<h1 id="5-3-1、映射分类"><a href="#5-3-1、映射分类" class="headerlink" title="5.3.1、映射分类"></a>5.3.1、映射分类</h1><p>动态映射：ES 根据 字段类型 自动识别； —— 偷懒方式</p>
-<p>静态映射：写入数据之前 对字段的属性 手工设置；</p>
-<h1 id="5-3-2、动态映射"><a href="#5-3-2、动态映射" class="headerlink" title="5.3.2、动态映射"></a>5.3.2、动态映射</h1><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT sinablog/user/1?routing=user123</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"hahaha ni mei"</span>,</span><br><span class="line">  <span class="attr">"text"</span>: <span class="string">"asd adsf fds vs rew"</span></span><br><span class="line">&#125;</span><br><span class="line">GET sinablog/_mapping</span><br><span class="line">GET blog/_mapping</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154043.png" alt></p>
-<p>  <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154102.png" alt></p>
-<p>id 被推测为 long 类型</p>
-<p>posttime被推测为 date 类型</p>
-<p>title 和 content 被推测为 text 类型</p>
-<p>如果 要把Elasticsearch当做 主要的数据存储 使用，动态Mapping 并不适用；</p>
-<p>在 Mapping 中通过 dynamic 设置 是否自动新增字段，接收以下参数：</p>
-<ul>
-<li>true —— 自动新增；</li>
-<li>false —— 忽略新字段；</li>
-<li>strict —— 严格模式，发现新字段 抛出异常；</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">PUT sinablog/user/1?routing=user123</span><br><span class="line">&#123;</span><br><span class="line">  "title": "hahaha ni mei",</span><br><span class="line">  "<span class="selector-tag">text</span>": "<span class="selector-tag">asd</span> <span class="selector-tag">adsf</span> <span class="selector-tag">fds</span> <span class="selector-tag">vs</span> <span class="selector-tag">rew</span>"</span><br><span class="line">&#125;</span><br><span class="line">PUT sinablog/user/2?routing=user123</span><br><span class="line">&#123;</span><br><span class="line">  "create_time": "2019-01-09",</span><br><span class="line">  "<span class="selector-tag">title</span>": "<span class="selector-tag">hahaha</span> <span class="selector-tag">ni</span> <span class="selector-tag">mei</span>",</span><br><span class="line">  "<span class="selector-tag">text</span>": "<span class="selector-tag">asd</span> <span class="selector-tag">adsf</span> <span class="selector-tag">fds</span> <span class="selector-tag">vs</span> <span class="selector-tag">rew</span>"</span><br><span class="line">&#125;</span><br><span class="line">GET sinablog/_search?routing=user123</span><br></pre></td></tr></table></figure>
-
-<p>自定义Mapping：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">PUT tblog</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"mappings"</span>: &#123;</span><br><span class="line">    <span class="attr">"dynamic"</span>: <span class="string">"strict"</span>,</span><br><span class="line">    <span class="attr">"properties"</span>: &#123;</span><br><span class="line">      <span class="attr">"posttime"</span>: &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"date"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"id"</span>: &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"long"</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">"title"</span>: &#123;</span><br><span class="line">        <span class="attr">"type"</span>: <span class="string">"text"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>写数据：</p>
-<p>Elasticsearch 6.0的时候默认一个 index 只能有一个type，7.0的时候已经有移除type的趋势，默认用_doc代替表示默认type；</p>
-<p>参考文档：《<a href="https://elasticsearch.cn/article/601" target="_blank" rel="noopener">Elasticsearch 移除 type 之后的新姿势</a>》</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154206.png" alt></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST tblog/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"id"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"Git是一款免费、开源的分布式版本控制系统"</span>,</span><br><span class="line">  <span class="attr">"posttime"</span>: <span class="string">"2018-01-09"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154221.png" alt></p>
-<p>查询 Mapping：GET tblog/_mapping</p>
-<p>查询：GET tblog/_search</p>
-<p>删除：DELETE tblog</p>
-<p>​    </p>
-<h1 id="5-3-3、日期检测"><a href="#5-3-3、日期检测" class="headerlink" title="5.3.3、日期检测"></a>5.3.3、日期检测</h1><p>Elasticsearch碰到一个新的字符串类型的字段时，会检查是否是一个日期；</p>
-<p>一旦检测为是，以后，如果写入的字段不是type，就会报错；</p>
-<p>预先设置不自动检测日期，可避免：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">blog</span></span><br><span class="line">&#123;</span><br><span class="line">  "mappings": &#123;</span><br><span class="line">    "<span class="selector-tag">date_detection</span>": <span class="selector-tag">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">POST blog/_doc/2</span><br><span class="line">&#123;</span><br><span class="line">  "id": 2,</span><br><span class="line">  "<span class="selector-tag">title</span>": "<span class="selector-tag">Git</span>简介",</span><br><span class="line">  "<span class="selector-tag">posttime</span>": "2018<span class="selector-tag">-01-09</span>",</span><br><span class="line">  "<span class="selector-tag">content</span>": "<span class="selector-tag">Git</span>是一款免费、开源的分布式版本控制系统"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154301.png" alt></p>
-<p>GET blog/article/2</p>
-<p>GET blog/_mapping</p>
-<p>GET blog/_search</p>
-<p>DELETE blog</p>
-<p>​     </p>
-<h1 id="5-3-4、静态映射"><a href="#5-3-4、静态映射" class="headerlink" title="5.3.4、静态映射"></a>5.3.4、静态映射</h1><p>定义：创建索引时，手动指定索引映射；</p>
-<p>​     </p>
-<h1 id="5-3-5、字段类型"><a href="#5-3-5、字段类型" class="headerlink" title="5.3.5、字段类型"></a>5.3.5、字段类型</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154326.png" alt></p>
-<p>文本：</p>
-<p><strong>string</strong>：在 5.X 之后不再支持；</p>
-<p><strong>text:</strong> 可以被全文检索的的，字段会被分拆，分词、生成倒排索引，不会用于 排序，基本不用于聚合；</p>
-<p><strong>keyword:</strong> 只能用于精确搜索，用于排序、聚合</p>
-<p><strong>数字</strong>：</p>
-<p>对于 float、half_float、scaled_float，-0.0 和 +0.0 是不同的值；</p>
-<p>es 底层会把 scaled_float 作为整形存储，节省空间，可以优先使用；</p>
-<p><strong>日期 date</strong>：</p>
-<p>格式化的字符串，如 ‘2015-01-02’， ‘2015/01/02 12:10:31’；</p>
-<p>代表epoch到今天的秒数的一个长整数，epoch 指 1970-01-01 00:00:00 UTC</p>
-<p><strong>二进制binary</strong>：接收base64编码的字符串，默认不存储（store=false），也不可搜索</p>
-<p><strong>数组**</strong>array**：es默认任何字段都可以包含一个或多个值，array的值 默认一个数组的值必须是统一类型；</p>
-<p>object：</p>
-<p><strong>nested</strong>：object的一个特例，可以让数组独立索引和哈希</p>
-<p><strong>地理坐标</strong> <strong>geo_point</strong>：存储 经纬度坐标点， 或 地理坐标的hash值；</p>
-<ul>
-<li>可用来查找点周围的区域；</li>
-<li>根据到点的距离排序；</li>
-</ul>
-<p><strong>地理图形 geo_shape</strong>：存储一块区域，矩形，三角形，或者 其他多边形，GeoJson；</p>
-<p><strong>ip</strong>：存储 ipv4 或者 ipv6;</p>
-<p><strong>range</strong>：常用于 时间选择表单 和 年龄范围选择表单：</p>
-<p>integer_range</p>
-<p>float_range</p>
-<p>long_range</p>
-<p>double_range：</p>
-<p>date_range：64bit整数，毫秒计时；</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">range_inde</span></span><br><span class="line">&#123;</span><br><span class="line">  "mappings": &#123;</span><br><span class="line">    "<span class="selector-tag">properties</span>": &#123;</span><br><span class="line">      "age_range": &#123;</span><br><span class="line">        "<span class="selector-tag">type</span>": "<span class="selector-tag">integer_range</span>"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">time_range</span>": &#123;</span><br><span class="line">        "type": "date_range",</span><br><span class="line">        "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">PUT range_inde/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  "age_range": &#123;</span><br><span class="line">    "<span class="selector-tag">gte</span>": 18,</span><br><span class="line">    "<span class="selector-tag">lte</span>": 70</span><br><span class="line">  &#125;,</span><br><span class="line">  "<span class="selector-tag">time_range</span>": &#123;</span><br><span class="line">    "gte": "2015-10-31 01:00:00",</span><br><span class="line">    "<span class="selector-tag">lte</span>": "2019<span class="selector-tag">-05-21</span>"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">GET range_inde/_mapping</span><br><span class="line">GET range_inde/_search</span><br></pre></td></tr></table></figure>
-
-<p><strong>令牌计数类型 token_count</strong>：用于统计字符串分词后的 词项个数。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">my_index</span></span><br><span class="line">&#123;</span><br><span class="line">  "mappings": &#123;</span><br><span class="line">    "<span class="selector-tag">properties</span>": &#123;</span><br><span class="line">      "name": &#123;</span><br><span class="line">        "<span class="selector-tag">type</span>": "<span class="selector-tag">text</span>",</span><br><span class="line">        "<span class="selector-tag">fields</span>": &#123;</span><br><span class="line">          "length": &#123;</span><br><span class="line">            "<span class="selector-tag">type</span>": "<span class="selector-tag">token_count</span>",</span><br><span class="line">            "<span class="selector-tag">analyzer</span>": "<span class="selector-tag">standard</span>"</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">PUT my_index/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  "name": "My name is xiaozhang"</span><br><span class="line">&#125;</span><br><span class="line">GET my_index/_search</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "<span class="selector-tag">term</span>": &#123;</span><br><span class="line">      "name.length": 4</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​      </p>
-<h1 id="5-3-6、元字段"><a href="#5-3-6、元字段" class="headerlink" title="5.3.6、元字段"></a>5.3.6、元字段</h1><p>定义：映射中，描述文档本身的字段</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154423.png" alt></p>
-<p>分类：</p>
-<p>描述文档属性；</p>
-<p>源文档的元字段；</p>
-<p>索引的元字段；</p>
-<p>路由的元字段；</p>
-<p>​      </p>
-<h1 id="5-3-7、映射参数"><a href="#5-3-7、映射参数" class="headerlink" title="5.3.7、映射参数"></a>5.3.7、映射参数</h1><p><strong>analyzer</strong>：指定文本字段的分词器，对索引和查询都有效；</p>
-<p><strong>search_analyzer</strong>：索引 和 搜索 都应该指定相同的分词器；但有时候就 需要指定不一样的，</p>
-<p>​        默认 查询 会使用 analyzer指定的分词器，但也可以被 search_analyzer 指定 搜索分词器；</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">analyzer_index</span></span><br><span class="line">&#123;</span><br><span class="line">  "settings": &#123;</span><br><span class="line">    "<span class="selector-tag">analysis</span>": &#123;</span><br><span class="line">      "filter": &#123;</span><br><span class="line">        "<span class="selector-tag">autocomplete_filter</span>": &#123;</span><br><span class="line">          "type": "edge_ngram",</span><br><span class="line">          "<span class="selector-tag">min_gram</span>": 1,</span><br><span class="line">          "<span class="selector-tag">max_gram</span>": 20</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">analyzer</span>": &#123;</span><br><span class="line">        "autocomplete": &#123;</span><br><span class="line">          "<span class="selector-tag">type</span>": "<span class="selector-tag">custom</span>",</span><br><span class="line">          "<span class="selector-tag">tokenizer</span>": "<span class="selector-tag">standard</span>",</span><br><span class="line">          "<span class="selector-tag">filter</span>": <span class="selector-attr">["lowercase","autocomplete_filter"]</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  "<span class="selector-tag">mappings</span>": &#123;</span><br><span class="line">    "properties": &#123;</span><br><span class="line">      "<span class="selector-tag">text</span>": &#123;</span><br><span class="line">        "type": "text",</span><br><span class="line">        "<span class="selector-tag">analyzer</span>": "<span class="selector-tag">autocomplete</span>",</span><br><span class="line">        "<span class="selector-tag">search_analyzer</span>": "<span class="selector-tag">standard</span>"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">PUT analyzer_index/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  "text": "Quick Brown Fox"</span><br><span class="line">&#125;</span><br><span class="line">GET analyzer_index/_search</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154501.png" alt></p>
-<p><strong>normalizer</strong>：用于解析前的标准配置， 比如把所有字符串转化为小写</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">DELETE</span> <span class="selector-tag">my_index</span></span><br><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">my_index</span></span><br><span class="line">&#123;</span><br><span class="line">  "settings": &#123;</span><br><span class="line">    "<span class="selector-tag">analysis</span>": &#123;</span><br><span class="line">      "normalizer": &#123;</span><br><span class="line">        "<span class="selector-tag">my_normalizer</span>": &#123;</span><br><span class="line">          "type": "custom",</span><br><span class="line">          "<span class="selector-tag">char_filter</span>": <span class="selector-attr">[]</span>,</span><br><span class="line">          "<span class="selector-tag">filter</span>": <span class="selector-attr">["lowercase", "asciifolding"]</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  "<span class="selector-tag">mappings</span>": &#123;</span><br><span class="line">    "properties": &#123;</span><br><span class="line">      "<span class="selector-tag">foo</span>": &#123;</span><br><span class="line">        "type": "keyword",</span><br><span class="line">        "<span class="selector-tag">normalizer</span>": "<span class="selector-tag">my_normalizer</span>"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">PUT my_index/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  "foo": "BAR"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT my_index/_doc/2</span><br><span class="line">&#123;</span><br><span class="line">  "foo": "bar"</span><br><span class="line">&#125;</span><br><span class="line">PUT my_index/_doc/3</span><br><span class="line">&#123;</span><br><span class="line">  "foo": "bazz"</span><br><span class="line">&#125;</span><br><span class="line">POST my_index/_refresh</span><br><span class="line">GET my_index/_search</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "<span class="selector-tag">match</span>": &#123;</span><br><span class="line">      "foo": "BAR"</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>boost</strong>：设置字段的权重，比如 设置关键字 在 title的权重是 content的2倍；</p>
-<p>DELETE my_index</p>
-<p>mapping指定(不重新索引文档，权重无法更改)：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">my_index</span></span><br><span class="line">&#123;</span><br><span class="line">  "mappings": &#123;</span><br><span class="line">    "<span class="selector-tag">properties</span>": &#123;</span><br><span class="line">      "title": &#123;</span><br><span class="line">        "<span class="selector-tag">type</span>": "<span class="selector-tag">text</span>",</span><br><span class="line">        "<span class="selector-tag">boost</span>": 2</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">content</span>": &#123;</span><br><span class="line">        "type": "text"</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>查询时指定（推荐）：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PUT my_index/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  "title": "Quick Brown Fox"</span><br><span class="line">&#125;</span><br><span class="line">POST my_index/_search</span><br><span class="line">&#123;</span><br><span class="line">  "query": &#123;</span><br><span class="line">    "<span class="selector-tag">match</span>": &#123;</span><br><span class="line">      "title": &#123;</span><br><span class="line">        "<span class="selector-tag">query</span>": "<span class="selector-tag">Quick</span>",</span><br><span class="line">        "<span class="selector-tag">boost</span>": 2</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>corece</strong>：用于清除脏数据，默认值 true；</p>
-<p><strong>copy_to</strong>：用于自定义 _all 字段，可以把 多个字段 复制合并成一个超级字段；</p>
-<p><strong>doc_values</strong>：为了加快排序、聚合操作，建立 倒排索引的时候，额外增加一个列式存储映射，是一种空间换时间的做法</p>
-<ul>
-<li>默认是开启的，如果确定不需要聚合或排序，可以关闭 以节省空间；</li>
-<li>注：text 类型 不支持 doc_values;</li>
-</ul>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">DELETE</span> <span class="selector-tag">my_index</span></span><br><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">my_index</span></span><br><span class="line">&#123;</span><br><span class="line">  "mappings": &#123;</span><br><span class="line">    "<span class="selector-tag">properties</span>": &#123;</span><br><span class="line">      "status_code": &#123;</span><br><span class="line">        "<span class="selector-tag">type</span>": "<span class="selector-tag">keyword</span>"</span><br><span class="line">      &#125;,</span><br><span class="line">      "<span class="selector-tag">session_id</span>": &#123;</span><br><span class="line">        "type": "keyword",</span><br><span class="line">        "<span class="selector-tag">doc_values</span>": <span class="selector-tag">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>enabled</strong>：es会默认索引搜有字段，而有些字段只需存储，不需要查询、聚合，设置mapping时，enabled设置为false的字段，es就会跳过字段内容，只能从_source中获取，不能被搜索；也能禁用映射；</p>
-<p><strong>fielddata</strong>：</p>
-<p>搜索解决的问题：包含查询关键词的文档哪些；</p>
-<p>聚合要解决的：文档包含哪些词项；</p>
-<p>fielddata 默认是关闭的，开启非常耗内存；</p>
-<p><strong>format</strong>：用于指定 date的格式；</p>
-<p><strong>ignore_above</strong>：用于指定字段分词和索引的字符串最大长度；超多最大值会被忽略，只能用于keyword 类型；</p>
-<p><strong>ignore_malformed</strong>：忽略不规则数据，设为true，异常会被忽略，出异常的字段不会被索引，其他字段正常索引；</p>
-<p><strong>index_options</strong>：控制哪些信息存储到 倒排索引中；</p>
-<p><strong>fields</strong>：让同一字段有多种不同的索引方式；</p>
-<p><strong>position_increment_gap</strong>：支持近似 或者 短语查询；</p>
-<p><strong>properties</strong>：</p>
-<p><strong>similarty</strong>：用于指定 文档评分模型；参数：BM25，classic（TF/IDF评分），boolean 布尔评分模型；</p>
-<p><strong>store</strong>：字段默认是被索引的，也可以搜索，但不存储。store可以指定 存储某个字段；</p>
-<p><strong>term_vector</strong>：词向量，包含文本别解析以后的信息：词项集合、词项位置、词项起始字符映射到原始文档的位置；</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154635.png" alt></p>
-<p>​       </p>
-<h1 id="5-3-8、映射模板"><a href="#5-3-8、映射模板" class="headerlink" title="5.3.8、映射模板"></a>5.3.8、映射模板</h1><p>举例：如果字段已 long_ 开头，则将字符串转化为 long 类型；</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">DELETE</span> <span class="selector-tag">my_index</span></span><br><span class="line"><span class="selector-tag">PUT</span> <span class="selector-tag">my_index</span></span><br><span class="line">&#123;</span><br><span class="line">  "mappings": &#123;</span><br><span class="line">    "dynamic_templates": [</span><br><span class="line">      &#123;</span><br><span class="line">        "longs_as_strings": &#123;</span><br><span class="line">          "<span class="selector-tag">match_mapping_type</span>": "<span class="selector-tag">string</span>",</span><br><span class="line">          "<span class="selector-tag">match</span>": "<span class="selector-tag">long_</span>*",</span><br><span class="line">          "<span class="selector-tag">unmatch</span>": "*_<span class="selector-tag">text</span>",</span><br><span class="line">          "<span class="selector-tag">mapping</span>": &#123;</span><br><span class="line">            "type": "long"</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT my_index/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  "long_num": "5",</span><br><span class="line">  "<span class="selector-tag">long_text</span>": "<span class="selector-tag">foo</span>"</span><br><span class="line">&#125;</span><br><span class="line">GET my_index/_mapping</span><br><span class="line">GET my_index/_search</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825154701.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/5-2-Elasticsearch集群入门-文档管理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/5-2-Elasticsearch集群入门-文档管理/" itemprop="url">5.2、Elasticsearch集群入门 —— 文档管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T00:02:00+08:00">
-                2019-03-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>5.2.1、新建文档</p>
-<p>5.2.2、获取文档</p>
-<p>5.2.3、更新文档</p>
-<p>5.2.4、查询更新</p>
-<p>5.2.5、删除文档</p>
-<p>5.2.6、查询删除</p>
-<p>5.2.7、批量操作</p>
-<p>5.2.8、版本控制</p>
-<p>5.2.9、路由机制</p>
-<p>-—————————————</p>
-<h1 id="5-2-1、新建文档"><a href="#5-2-1、新建文档" class="headerlink" title="5.2.1、新建文档"></a>5.2.1、新建文档</h1><p>格式： index/type/id，如果不设置id，es会自动生成它</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT blog/article/1</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"id"</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"Git简介"</span>,</span><br><span class="line">  <span class="attr">"posttime"</span>: <span class="string">"2018-01-09"</span>,</span><br><span class="line">  <span class="attr">"content"</span>: <span class="string">"Git是一款免费、开源的分布式版本控制系统"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153311.png" alt></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST blog/article</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"id"</span>: <span class="number">2</span>,</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"Git简介"</span>,</span><br><span class="line">  <span class="attr">"posttime"</span>: <span class="string">"2018-01-09"</span>,</span><br><span class="line">  <span class="attr">"content"</span>: <span class="string">"Git是一款免费、开源的分布式版本控制系统"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153334.png" alt></p>
-<p>​     </p>
-<h1 id="5-2-2、获取文档"><a href="#5-2-2、获取文档" class="headerlink" title="5.2.2、获取文档"></a>5.2.2、获取文档</h1><p>GET blog/article/1</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153352.png" alt></p>
-<p>如果找不到</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153403.png" alt></p>
-<p>可以通过HEAD命令查看一个文档是否存在</p>
-<p>HEAD blog/article/2</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153418.png" alt></p>
-<p>获取多个，根据index和 type：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">GET blog/_mget</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"docs"</span> : [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"_type"</span>: <span class="string">"article"</span>,</span><br><span class="line">      <span class="attr">"_id"</span>: <span class="string">"1"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"_type"</span>: <span class="string">"article"</span>,</span><br><span class="line">      <span class="attr">"_id"</span>: <span class="string">"2"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">GET _mget</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"docs"</span> : [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"_index"</span>: <span class="string">"blog"</span>,</span><br><span class="line">      <span class="attr">"_type"</span>: <span class="string">"article"</span>,</span><br><span class="line">      <span class="attr">"_id"</span>: <span class="string">"1"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"_index"</span>: <span class="string">"blog"</span>,</span><br><span class="line">      <span class="attr">"_type"</span>: <span class="string">"article"</span>,</span><br><span class="line">      <span class="attr">"_id"</span>: <span class="string">"2"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153444.png" alt></p>
-<p>​     </p>
-<h1 id="5-2-3、更新文档"><a href="#5-2-3、更新文档" class="headerlink" title="5.2.3、更新文档"></a>5.2.3、更新文档</h1><p>文档被索引以后要修改，</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PUT index1/type1/1</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"counter"</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="attr">"tags"</span>: [<span class="string">"red"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153511.png" alt></p>
-<p>使用脚本更新：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST index1/type1/1/_update</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"script"</span>: &#123;</span><br><span class="line">    <span class="attr">"inline"</span>: <span class="string">"ctx._source.counter += params.count"</span>,</span><br><span class="line">    <span class="attr">"lang"</span>: <span class="string">"painless"</span>,</span><br><span class="line">    <span class="attr">"params"</span>: &#123;</span><br><span class="line">      <span class="attr">"count"</span> : <span class="number">4</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153543.png" alt></p>
-<p>​    </p>
-<h1 id="5-2-4、条件查询更新"><a href="#5-2-4、条件查询更新" class="headerlink" title="5.2.4、条件查询更新"></a>5.2.4、条件查询更新</h1><p>如果满足条件则更新</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">POST index1/_update_by_query</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"script"</span>: &#123;</span><br><span class="line">    <span class="attr">"inline"</span>: <span class="string">"ctx._source.category = params.category"</span>,</span><br><span class="line">    <span class="attr">"lang"</span>: <span class="string">"painless"</span>,</span><br><span class="line">    <span class="attr">"params"</span>: &#123;</span><br><span class="line">      <span class="attr">"category"</span>: <span class="string">"git"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"term"</span>: &#123;</span><br><span class="line">      <span class="attr">"title"</span>: <span class="string">"git"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果title中包含git关键字，则增加一个 category </p>
-<p>​      </p>
-<h1 id="5-2-5、删除文档"><a href="#5-2-5、删除文档" class="headerlink" title="5.2.5、删除文档"></a>5.2.5、删除文档</h1><p>基于指定id从 索引库 中删除一个文档</p>
-<p>DELETE blog/article/osGC1WoB4sRau0FmmUYE</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153626.png" alt></p>
-<p>再去查询：</p>
-<p>GET blog/article/osGC1WoB4sRau0FmmUYE</p>
-<p>HEAD blog/article/osGC1WoB4sRau0FmmUYE</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153643.png" alt></p>
-<p>如果 索引文档时指定了路由，那么也可以根据路由参数删除</p>
-<p>DELETE blog/article/2?routing=user123</p>
-<p>如果参数不正确，会删除失败</p>
-<p>​     </p>
-<h1 id="5-2-6、根据条件查询删除"><a href="#5-2-6、根据条件查询删除" class="headerlink" title="5.2.6、根据条件查询删除"></a>5.2.6、根据条件查询删除</h1><p>删除 title中包含关键字 hibernate的文档</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST blog/_delete_by_query</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"title"</span>: <span class="string">"hibernate"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>删除一个type（csdn）下所有的文档</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST blog/csdn/_delete_by_query</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"query"</span>: &#123;</span><br><span class="line">    <span class="attr">"match_all"</span>: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    </p>
-<h1 id="5-2-7、批量操作"><a href="#5-2-7、批量操作" class="headerlink" title="5.2.7、批量操作"></a>5.2.7、批量操作</h1><p>执行 Bulk API 可以 执行 批量索引、批量删除、批量更新等操作</p>
-<p>一个 Bulk API 允许 单一请求 实现多个文档的 create、index、update、delete</p>
-<p>​     </p>
-<h1 id="5-2-8、版本控制"><a href="#5-2-8、版本控制" class="headerlink" title="5.2.8、版本控制"></a>5.2.8、版本控制</h1><p>Elasticsearch API进行文档更新 过程：</p>
-<p>读取源文档 -&gt; 对原文档更新 -&gt; 重新索引整个文档</p>
-<p>使用同个线程同时修改一个文档， 会发生冲突；</p>
-<h4 id="1、-悲观锁控制"><a href="#1、-悲观锁控制" class="headerlink" title="1、 悲观锁控制"></a>1、 悲观锁控制</h4><p>同一时刻只有一个线程访问数据</p>
-<h4 id="2、-乐观锁控制"><a href="#2、-乐观锁控制" class="headerlink" title="2、 乐观锁控制"></a>2、 乐观锁控制</h4><p>Elasticsearch是分布式系统，</p>
-<p>需要确保旧版本不会覆盖新版本</p>
-<p>Elasticsearch 使用 _version 自增， 确保所有更新有序进行</p>
-<ul>
-<li>内部版本控制： 每次版本号，相等 才能操作成功；</li>
-<li>外部版本控制：外部文档 比 内部文档 版本高 时才能更新成功；</li>
-</ul>
-<h1 id="5-2-9、路由机制"><a href="#5-2-9、路由机制" class="headerlink" title="5.2.9、路由机制"></a>5.2.9、路由机制</h1><p>分片的路由机制：</p>
-<p>shard = hash（routing）% number_of_primary_shards</p>
-<p>routing 是一个任意字符串，取它的hash值，取模后 放在对应的 分片上；</p>
-<p>hash值相同的 文档 放在 同一个主分片中；</p>
-<p>默认路由模式可以保障 文档id数据平均分布，ES无法根据 id 确定 文档的位置，需要广播到所有分片上查找；</p>
-<p>自定义路由模式，可以使查询具有目的性，不用盲目广播</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PUT sinablog/user/1?routing=user123</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"hahaha ni mei"</span>,</span><br><span class="line">  <span class="attr">"text"</span>: <span class="string">"asd adsf fds vs rew"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153850.png" alt></p>
-<p>GET sinablog/_search?routing=user123</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153904.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/5-1-Elasticsearch集群入门-索引管理/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/5-1-Elasticsearch集群入门-索引管理/" itemprop="url">5.1、Elasticsearch集群入门 —— 索引管理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-13T00:01:00+08:00">
-                2019-03-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>5.1.1、新建索引</p>
-<p>5.1.2、更新副本数</p>
-<p>5.1.3、设置索引的读写权限</p>
-<p>5.1.4、查看索引</p>
-<p>5.1.5、删除索引</p>
-<p>5.1.6、索引的打开和关闭</p>
-<p>5.1.7、复制索引</p>
-<p>5.1.8、收缩索引</p>
-<p>5.1.9、索引别名</p>
-<p>-—————————————-</p>
-<p><strong>5.1.1、新建索引</strong></p>
-<p>索引名称 不能有大写字母</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152505.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152512.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152520.png" alt></p>
-<p>使用Kibana的DevTools工具进行</p>
-<p>创建索引：</p>
-<p>PUT test</p>
-<p>响应：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"acknowledged"</span> : <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"shards_acknowledged"</span> : <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">"index"</span> : <span class="string">"test"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>并且不能重复创建</p>
-<p>-————————————</p>
-<p>创建 5个分片，3个副本的索引：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT test</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"settings"</span>: &#123;</span><br><span class="line">​    "number_of_shards": 5,</span><br><span class="line">​    "number_of_replicas": 2</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​     </p>
-<h1 id="5-1-2、更新副本数"><a href="#5-1-2、更新副本数" class="headerlink" title="5.1.2、更新副本数"></a>5.1.2、更新副本数</h1><p>ES 支持修改已存在索引的副本数，如下：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT test/_settings</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"number_of_replicas"</span>: <span class="number">3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>响应：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"acknowledged"</span> : <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​         </p>
-<h1 id="5-1-3、设置索引的读写权限"><a href="#5-1-3、设置索引的读写权限" class="headerlink" title="5.1.3、设置索引的读写权限"></a>5.1.3、设置索引的读写权限</h1><p>“blocks.read_only”: false ———— 当前索引只读，不允许写和更新</p>
-<p>“blocks.read”: true ———— 禁止读</p>
-<p>“blocks.write”: true ———— 禁止写</p>
-<p>示例</p>
-<p>设置禁止写</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT test/_settings</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"blocks.write"</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>尝试写入</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT test/article/1</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"tile"</span>: <span class="string">"Java 虚拟机"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>返回错误</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152745.png" alt></p>
-<p>重新设置允许写</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PUT test/_settings</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"blocks.write"</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>再试尝试写入， 写入成功：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152823.png" alt></p>
-<p>​     </p>
-<h1 id="5-1-4、查看索引"><a href="#5-1-4、查看索引" class="headerlink" title="5.1.4、查看索引"></a>5.1.4、查看索引</h1><p>GET test/_settings</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825152838.png" alt></p>
-<p>查看多个索引：GET test,girl/_settings</p>
-<p>查看所有索引：GET _all/_settings</p>
-<p>​       </p>
-<h1 id="5-1-5、删除索引"><a href="#5-1-5、删除索引" class="headerlink" title="5.1.5、删除索引"></a>5.1.5、删除索引</h1><p>DELETE test2</p>
-<p>响应表示成功：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"acknowledged"</span> : <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>删除不存在的索引会报错：404</p>
-<p>​     </p>
-<h1 id="5-1-6、索引的打开和关闭"><a href="#5-1-6、索引的打开和关闭" class="headerlink" title="5.1.6、索引的打开和关闭"></a>5.1.6、索引的打开和关闭</h1><p>一个关闭了的索引，基本不占用系统资源；</p>
-<ul>
-<li>POST test/<em>close ———— 关闭 test 索引</em></li>
-<li>_POST test,girl/_close ———— 关闭 多个索引</li>
-<li>POST _all/_close ———— 关闭所有索引</li>
-<li>POST test*/_close ———— 关闭test开头的索引</li>
-</ul>
-<p>​     </p>
-<h1 id="5-1-7、复制索引"><a href="#5-1-7、复制索引" class="headerlink" title="5.1.7、复制索引"></a>5.1.7、复制索引</h1><p>_redinx操作， 把文档 从 源索引 复制到 目标索引，但目标索引的分片数、副本数需要单独设置。</p>
-<p>全量复制：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">POST _reindex</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"source"</span>: &#123;<span class="attr">"index"</span>: <span class="string">"test"</span>&#125;,</span><br><span class="line">  <span class="attr">"dest"</span>: &#123;<span class="attr">"index"</span>: <span class="string">"girl"</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>把 test 索引下，type为article下，title中含有关键字 java的文档，复制到 girl 索引中：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">POST _reindex</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"source"</span>: &#123;</span><br><span class="line">    <span class="attr">"index"</span>: <span class="string">"test"</span>,</span><br><span class="line">    <span class="attr">"type"</span>: <span class="string">"article"</span>,</span><br><span class="line">    <span class="attr">"query"</span>: &#123;</span><br><span class="line">      <span class="attr">"term"</span>: &#123;</span><br><span class="line">        <span class="attr">"FIELD"</span>: &#123;</span><br><span class="line">          <span class="attr">"title"</span>: <span class="string">"java"</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"dest"</span>: &#123;<span class="attr">"index"</span>: <span class="string">"girl"</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​     </p>
-<h1 id="5-1-8、收缩索引"><a href="#5-1-8、收缩索引" class="headerlink" title="5.1.8、收缩索引"></a>5.1.8、收缩索引</h1><p>一个索引分片初始化以后无法再做修改，但可以使用shrink index AP提供的分片数机制，把一个索引变成更少的索引。</p>
-<p>收缩以后的分片数 是 原始分片数的因子；比如 8个 可以收缩成 4,2,1；7,11只能收缩成1个；</p>
-<p>​       </p>
-<h1 id="5-1-9、索引别名"><a href="#5-1-9、索引别名" class="headerlink" title="5.1.9、索引别名"></a>5.1.9、索引别名</h1><p>给一个索引 起另一个名字</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /_aliases</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"actions"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"add"</span>: &#123;</span><br><span class="line">        <span class="attr">"index"</span>: <span class="string">"test"</span>,</span><br><span class="line">        <span class="attr">"alias"</span>: <span class="string">"alias_test"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153059.png" alt></p>
-<p>移除别名</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">POST /_aliases</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"actions"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"remove"</span>: &#123;</span><br><span class="line">        <span class="attr">"index"</span>: <span class="string">"test"</span>,</span><br><span class="line">        <span class="attr">"alias"</span>: <span class="string">"alias_test"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>查看索引的别名</p>
-<p>GET /test/_alias</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825153128.png" alt></p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET /test/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"analyzer"</span>:<span class="string">"ik_smart"</span>,</span><br><span class="line">  <span class="attr">"text"</span>:<span class="string">"洪荒之力"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/4-5-Elasticsearch-Head集群操作管理工具/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/4-5-Elasticsearch-Head集群操作管理工具/" itemprop="url">4.5、Elasticsearch-Head集群操作管理工具</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-12T00:05:00+08:00">
-                2019-03-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>4.5.1、Head插件的安装</p>
-<blockquote>
-<p>1、配置Node环境</p>
-<p>2、下载Head插件源码</p>
-<p>3、修改 Elasticsearch 配置文件</p>
-<p>4、修改 Head 插件配置文件</p>
-<p>5、启动 Head 插件</p>
-</blockquote>
-<p>4.5.2、Head插件的使用</p>
-<blockquote>
-<p>1、概览界面</p>
-<p>2、索引查看界面</p>
-<p>3、数据浏览界面</p>
-<p>4、基本查询选项卡</p>
-<p>5、复合查询</p>
-</blockquote>
-<p>-——————————————–</p>
-<h1 id="4-5-1、Head插件的安装"><a href="#4-5-1、Head插件的安装" class="headerlink" title="4.5.1、Head插件的安装"></a>4.5.1、Head插件的安装</h1><h3 id="1、配置Node环境"><a href="#1、配置Node环境" class="headerlink" title="1、配置Node环境"></a>1、配置Node环境</h3><p>官网：<a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">https://nodejs.org/en/download/</a></p>
-<p>wget <a href="https://nodejs.org/dist/v10.15.3/node-v10.15.3-linux-x64.tar.xz" target="_blank" rel="noopener">https://nodejs.org/dist/v10.15.3/node-v10.15.3-linux-x64.tar.xz</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151404.png" alt></p>
-<p>xz -d node-v10.15.3-linux-x64.tar.xz</p>
-<p>tar -xf node-v10.15.3-linux-x64.tar</p>
-<p>设置环境变量</p>
-<p>vi /etc/profile</p>
-<p>添加：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export NODE_HOME=/data/carloz/tools/node-v10.15.3-linux-x64/</span><br><span class="line">export PATH=$NODE_HOME/bin:$PATH</span><br></pre></td></tr></table></figure>
-
-<p>source /etc/profile</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151446.png" alt></p>
-<p>使用npm安装 Grunt：</p>
-<p>npm install -g grunt-cli</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151459.png" alt></p>
-<p>​    </p>
-<h3 id="2、下载Head插件源码"><a href="#2、下载Head插件源码" class="headerlink" title="2、下载Head插件源码"></a>2、下载Head插件源码</h3><p><a href="https://github.com/mobz/elasticsearch-head/releases" target="_blank" rel="noopener">https://github.com/mobz/elasticsearch-head/releases</a></p>
-<p>wget <a href="https://github.com/mobz/elasticsearch-head/archive/v5.0.0.tar.gz" target="_blank" rel="noopener">https://github.com/mobz/elasticsearch-head/archive/v5.0.0.tar.gz</a></p>
-<p>mv v5.0.0.tar.gz elasticsearch-head-v5.0.0.tar.gz</p>
-<p>tar -zxf elasticsearch-head-v5.0.0.tar.gz</p>
-<p>cd elasticsearch-head-5.0.0/</p>
-<p>npm install -g cnpm –registry=<a href="https://registry.npm.taobao.org" target="_blank" rel="noopener">https://registry.npm.taobao.org</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151514.png" alt></p>
-<p>​     </p>
-<h3 id="3、修改-Elasticsearch-配置文件"><a href="#3、修改-Elasticsearch-配置文件" class="headerlink" title="3、修改 Elasticsearch 配置文件"></a>3、修改 Elasticsearch 配置文件</h3><p>su elsearch</p>
-<p>vi elasticsearch-7.0.0/config/elasticsearch.yml</p>
-<p>添加：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http.cors.enabled: true</span><br><span class="line">http.cors.allow-origin: &quot;*&quot;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151532.png" alt></p>
-<p>重启 elasticsearch</p>
-<p>exit  —— 切换到 root</p>
-<p>​     </p>
-<h3 id="4、修改-Head-插件配置文件"><a href="#4、修改-Head-插件配置文件" class="headerlink" title="4、修改 Head 插件配置文件"></a>4、修改 Head 插件配置文件</h3><p>vi elasticsearch-head-5.0.0/Gruntfile.js</p>
-<p>修改connect， 指定 Elasticsearch-head 的访问ip：</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151615.png" alt></p>
-<p>不指定的话，所有ip都能访问他</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151628.png" alt></p>
-<p>​      </p>
-<h3 id="5、启动-Head-插件"><a href="#5、启动-Head-插件" class="headerlink" title="5、启动 Head 插件"></a>5、启动 Head 插件</h3><p>cd elasticsearch-head-5.0.0/</p>
-<p>grunt server</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151648.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151656.png" alt></p>
-<p>​     </p>
-<h1 id="4-5-2、Head插件的使用"><a href="#4-5-2、Head插件的使用" class="headerlink" title="4.5.2、Head插件的使用"></a>4.5.2、Head插件的使用</h1><p>1、概览界面</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151711.png" alt></p>
-<p>试着去连接 Elasticsearch服务器，但是，我们的 Elasticsearch 服务器只允许本机连，要修改配置</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151729.png" alt></p>
-<p>su elsearch</p>
-<p>vi /data/carloz/tools/elasticsearch-7.0.0/config/elasticsearch.yml</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151748.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151756.png" alt></p>
-<p> 错误参考：<a href="https://blog.csdn.net/zhou_p/article/details/80311972" target="_blank" rel="noopener">https://blog.csdn.net/zhou_p/article/details/80311972</a></p>
-<p>“the default discovery settings are unsuitable for production use; at least one of [discovery.seed_hosts, discovery.seed_providers, cluster.initial_master_nodes] must be configured”</p>
-<p>-———————————————-</p>
-<p>vi /data/carloz/tools/elasticsearch-7.0.0/config/elasticsearch.yml</p>
-<p>修改：</p>
-<p>bootstrap.memory_lock: false</p>
-<p>添加：</p>
-<p>bootstrap.system_call_filter: false</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151813.png" alt></p>
-<p>cluster.initial_master_nodes: [“node-1”]</p>
-<p>-———————————————</p>
-<p>vi /etc/sysctl.conf</p>
-<p>vm.max_map_count=655360</p>
-<p>sysctl -p</p>
-<p>-———————————————</p>
-<p>vi /etc/security/limits.d/90-nproc.conf</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151825.png" alt></p>
-<p>-———————————————–</p>
-<p><a href="http://10.10.139.42:9200/" target="_blank" rel="noopener">http://10.10.139.42:9200/</a> 点击连接</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151841.png" alt></p>
-<p>2、索引查看界面</p>
-<p> <img src="C:%5CUsers%5CCarloZ%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1566717537082.png" alt="1566717537082"></p>
-<p>3、数据浏览界面</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151910.png" alt></p>
-<p> 4、基本查询选项卡</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151923.png" alt></p>
-<p>5、复合查询</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151939.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/4-4-Elasticsearch中文分词器配置/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/4-4-Elasticsearch中文分词器配置/" itemprop="url">4.4、Elasticsearch中文分词器配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-11T00:04:00+08:00">
-                2019-03-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>4.4.1、IK分词器安装</p>
-<p>4.4.2、扩展本地词库</p>
-<p>4.4.3、配置远程词库</p>
-<p>-——————————————–</p>
-<h1 id="4-4-1、IK分词器安装"><a href="#4-4-1、IK分词器安装" class="headerlink" title="4.4.1、IK分词器安装"></a>4.4.1、IK分词器安装</h1><p>安装方式一：</p>
-<p>1、打开 <a href="https://github.com/medcl/elasticsearch-analysis-ik/releases，因为我安装的" target="_blank" rel="noopener">https://github.com/medcl/elasticsearch-analysis-ik/releases，因为我安装的</a> Elasticsearch 版本为 elasticsearch-7.0.0，所以下载 相同版本的 ik分词器</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825150855.png" alt></p>
-<p>su elsearch</p>
-<p>wget <a href="https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.0.0/elasticsearch-analysis-ik-7.0.0.zip" target="_blank" rel="noopener">https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.0.0/elasticsearch-analysis-ik-7.0.0.zip</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825150916.png" alt></p>
-<p>mkdir -p elasticsearch-7.0.0/plugins/ik</p>
-<p>unzip -d elasticsearch-7.0.0/plugins/ik elasticsearch-analysis-ik-7.0.0.zip</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825150946.png" alt></p>
-<p>重启Elasticsearch</p>
-<p>ps aux | grep elasticsearch*</p>
-<p>kill 31670</p>
-<p>./bin/elasticsearch -d</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151020.png" alt></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151031.png" alt></p>
-<p>安装方式二：</p>
-<ol>
-<li>下载IK源码文件：<a href="https://github.com/medcl/elasticsearch-analysis-ik.git；" target="_blank" rel="noopener">https://github.com/medcl/elasticsearch-analysis-ik.git；</a></li>
-<li>进入目录，执行mvn package，打包完成以后，生成target；</li>
-<li>target/releases 目录下 即为 IK安装文件；</li>
-</ol>
-<p>​    </p>
-<h1 id="4-4-2、扩展本地词库"><a href="#4-4-2、扩展本地词库" class="headerlink" title="4.4.2、扩展本地词库"></a>4.4.2、扩展本地词库</h1><p>未扩展之前 使用Kibana的DevTools 测试分词器</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT test</span><br><span class="line"></span><br><span class="line">GET /test/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"analyzer"</span>:<span class="string">"ik_smart"</span>,</span><br><span class="line">  <span class="attr">"text"</span>:<span class="string">"洪荒之力"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151118.png" alt></p>
-<p>cd /data/carloz/tools/elasticsearch-7.0.0</p>
-<p>vi plugins/ik/custom/hotwords.dic</p>
-<p>写入 “洪荒之力”</p>
-<p>vi plugins/ik/config/IKAnalyzer.cfg.xml</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151133.png" alt></p>
-<p>重启 Elasticsearch</p>
-<p>tail -f logs/elasticsearch.log -n 100</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151159.png" alt></p>
-<p>扩展之后，再用Kibana测试相同的词汇</p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825151211.png" alt></p>
-<p>​    </p>
-<h1 id="4-4-3、配置远程词库"><a href="#4-4-3、配置远程词库" class="headerlink" title="4.4.3、配置远程词库"></a>4.4.3、配置远程词库</h1><p>配置为相应的网址即可</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/4-2-安装Elasticsearch/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/4-2-安装Elasticsearch/" itemprop="url">4.2、安装Elasticsearch</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-11T00:02:00+08:00">
-                2019-03-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>-——————————————–</p>
-<p>参考：《ELK — 单节点系统构建》</p>
-<p>-——————————————–</p>
-<p>4.2.1、安装Java</p>
-<p>4.2.2、下载Elasticsearch</p>
-<p>4.2.3、启动Elasticsearch</p>
-<p>curl <a href="http://127.0.0.1:9200" target="_blank" rel="noopener">http://127.0.0.1:9200</a></p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825150647.png" alt></p>
-<p>4.2.4、后台运行Elasticsearch</p>
-<p>4.2.5、关闭Elasticsearch</p>
-<p>4.2.6、基本配置</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/elasticsearch/doc/4-1-Elasticsearch概述/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Focus-1">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Focus-1">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/elasticsearch/doc/4-1-Elasticsearch概述/" itemprop="url">4.1、Elasticsearch概述</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-11T00:01:00+08:00">
-                2019-03-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/" itemprop="url" rel="index">
-                    <span itemprop="name">elastic</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/elastic/elasticsearch/" itemprop="url" rel="index">
-                    <span itemprop="name">elasticsearch</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>特点：分布式、基于JSON和HTTP接口</p>
-<p>​    </p>
-<h1 id="4-1-1、Elastic-Stack家族"><a href="#4-1-1、Elastic-Stack家族" class="headerlink" title="4.1.1、Elastic Stack家族"></a>4.1.1、Elastic Stack家族</h1><p>基于 Elasticsearch 衍生出一系列开源软件，统称 <strong>Elastic Stack</strong></p>
-<ul>
-<li><p>分布式搜索引擎：Elasticsearch</p>
-</li>
-<li><p>可视化分析平台：Kibana</p>
-</li>
-<li><p>日志采集、解析工具：Logstash</p>
-</li>
-<li><p>数据采集工具：Beats 家族</p>
-</li>
-<li><ul>
-<li>Filebeat：收集文件数据，轻量级日志采集工具；</li>
-<li>Metricbeat：搜集 系统、进程、文件系统 级别的  CPU和内存使用情况；</li>
-<li>Packetbeat：收集网络流数据；实时监控 系统应用和服务，将延迟时间、错误、响应、SLA性能等发送到 Logstash或Elasticsearch</li>
-<li>Winlogbeat：收集 windows 事件日志数据；</li>
-<li>Heartbeat：监控服务器运行状态；</li>
-</ul>
-</li>
-</ul>
-<p>Elastic家族配合使用时，版本必须一致；</p>
-<p>​    </p>
-<h1 id="4-1-3、架构解读"><a href="#4-1-3、架构解读" class="headerlink" title="4.1.3、架构解读"></a>4.1.3、架构解读</h1><p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825150434.png" alt></p>
-<ul>
-<li><p>Gateway 存储索引的文件系统：</p>
-</li>
-<li><ul>
-<li>Local FileSystem —— 存储在本地文件系统；</li>
-<li>Shared FileSystem —— 共享存储；</li>
-<li>Hadoop HDFS —— 使用 hdfs 分布式存储；</li>
-<li>Amazon S3 —— 存储Amazon S3云服务上；</li>
-</ul>
-</li>
-<li></li>
-<li><p>分布式 Lucene 层，Elasticsearch 的底层 API由 Lucene 提供，每一个ES节点 都有 一个Lucene引擎支持：</p>
-</li>
-<li><ul>
-<li>索引模块</li>
-<li>搜索模块</li>
-<li>映射解析模块</li>
-<li>River模块 —— 用来导入第三方数据源，2.X之后已经废弃</li>
-</ul>
-</li>
-<li></li>
-<li><p>Discovery模块 —— Elasticsearch 节点发现，集群内master选举，节点间通信 </p>
-</li>
-<li><p>Scripting模块 —— 支持 JavaScript、Python 等多种语言</p>
-</li>
-<li><p>第三方插件模块 —— 支持 多种第三方插件；</p>
-</li>
-<li></li>
-<li><p>Transport —— ES传输模块，支持 Thrift，Memcached、HTTP，默认使用 HTTP；</p>
-</li>
-<li><p>JMX——Java管理框架，用来管理 Elasticsearch 应用；</p>
-</li>
-<li></li>
-<li><p>RESTFull API —— ES提供给用户的接口</p>
-</li>
-</ul>
-<p>​    </p>
-<h1 id="4-1-4、优点"><a href="#4-1-4、优点" class="headerlink" title="4.1.4、优点"></a>4.1.4、优点</h1><ul>
-<li>分布式 —— 灵活的横向扩展，自动识别新节点 并 重新平衡分配数据；</li>
-<li>全文检索 —— 多语言支持、强大的查询语言、地理位置支持、上下文感知的建议、自动完成和搜索片段；</li>
-<li>近实时搜索和分析 —— 近实时搜索，也可以 聚合分析；</li>
-<li>高可用 —— 容错机制，自动发现新节点 和失败节点，重新分配数据，确保集群可用；</li>
-<li>模式自由 —— 动态 mapping 机制，自动检测 数据结构和类型，创建索引，使数据可搜索；</li>
-<li>RESTFul API —— 任何语言都能访问；</li>
-</ul>
-<p>​    </p>
-<h1 id="4-1-5、应用场景"><a href="#4-1-5、应用场景" class="headerlink" title="4.1.5、应用场景"></a>4.1.5、应用场景</h1><p>1、站内搜索 —— 全文检索功能；</p>
-<p>2、NoSQL数据库 —— 读写性能优于 MongoDB；</p>
-<p>3、日志分析 —— 经典的ELK日志分析平台；</p>
-<p>​    </p>
-<h1 id="4-1-6、核心概念"><a href="#4-1-6、核心概念" class="headerlink" title="4.1.6、核心概念"></a>4.1.6、核心概念</h1><p>集群 —— 多个节点组成的集群；</p>
-<p>节点 ——  一个服务器</p>
-<p>索引 —— 拥有 几分相似特征 的 文档的集合；</p>
-<p>类型 —— 索引在一个逻辑上的分类 或 分区；</p>
-<p>文档 —— JSON格式，被索引的基础信息单元；</p>
-<p>分片 —— 一个索引大小 可以超出 单节点硬件限制，一个索引 可以分成多个分片；</p>
-<p>​            分片 水平分割和扩容 你的内存容量；</p>
-<p>​            可以在 主副分片 上 并行查询，提高性能和吞吐量；</p>
-<p>副本 —— 分片的 一份或多份拷贝，分为主分片 和 副分片； </p>
-<p> <img src="https://imagehome.oss-cn-beijing.aliyuncs.com/20190825150523.png" alt></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2660,7 +2481,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">228</span>
+                  <span class="site-state-item-count">236</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2671,7 +2492,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">59</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2682,7 +2503,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-count">100</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

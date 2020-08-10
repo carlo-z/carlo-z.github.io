@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1、官方镜像github：https://github.com/jenkinsci/jenkins 官网下载地址：https://www.jenkins.io/download/  docker官方仓库：https://hub.docker.com/r/jenkins/jenkins/tags  2、jenkins访问主机docker1docker pull jenkins/jenkins">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jenkins定制docker镜像">
+<meta property="og:url" content="https://carlo-z.com/devops/jenkins/jenkins-build-diy-docker/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="1、官方镜像github：https://github.com/jenkinsci/jenkins 官网下载地址：https://www.jenkins.io/download/  docker官方仓库：https://hub.docker.com/r/jenkins/jenkins/tags  2、jenkins访问主机docker1docker pull jenkins/jenkins">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805141836889.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805141858372.png">
+<meta property="og:updated_time" content="2020-08-10T15:33:43.418Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jenkins定制docker镜像">
+<meta name="twitter:description" content="1、官方镜像github：https://github.com/jenkinsci/jenkins 官网下载地址：https://www.jenkins.io/download/  docker官方仓库：https://hub.docker.com/r/jenkins/jenkins/tags  2、jenkins访问主机docker1docker pull jenkins/jenkins">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805141836889.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/devops/jenkins/jenkins-build-diy-docker/">
+
+
+
+
+
+  <title>jenkins定制docker镜像 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/devops/jenkins/jenkins-build-diy-docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">jenkins定制docker镜像</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-05T00:00:00+08:00">
+                2019-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/" itemprop="url" rel="index">
+                    <span itemprop="name">devops</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/devops/jenkins/" itemprop="url" rel="index">
+                    <span itemprop="name">jenkins</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+
+
+<h1 id="1、官方镜像"><a href="#1、官方镜像" class="headerlink" title="1、官方镜像"></a>1、官方镜像</h1><p>github：<a href="https://github.com/jenkinsci/jenkins" target="_blank" rel="noopener">https://github.com/jenkinsci/jenkins</a></p>
+<p>官网下载地址：<a href="https://www.jenkins.io/download/" target="_blank" rel="noopener">https://www.jenkins.io/download/</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805141836889.png" alt="image-20200805141836889"></p>
+<p>docker官方仓库：<a href="https://hub.docker.com/r/jenkins/jenkins/tags" target="_blank" rel="noopener">https://hub.docker.com/r/jenkins/jenkins/tags</a></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200805141858372.png" alt="image-20200805141858372"></p>
+<h1 id="2、jenkins访问主机docker"><a href="#2、jenkins访问主机docker" class="headerlink" title="2、jenkins访问主机docker"></a>2、jenkins访问主机docker</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull jenkins/jenkins:lts-alpine</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>alpine镜像仓库：<code>https://pkgs.alpinelinux.org/packages</code></p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/docker</span><br><span class="line">vi /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  "registry-mirrors": ["https://k8spv7nq.mirror.aliyuncs.com"]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br><span class="line"></span><br><span class="line">cat /etc/group | grep docker</span><br><span class="line"><span class="meta">#</span><span class="bash"> docker:x:994:</span></span><br><span class="line"></span><br><span class="line">mkdir -p /data/jenkins &amp;&amp; cd /data/jenkins</span><br><span class="line">vi Dockerfile</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1、Dockerfile"><a href="#2-1、Dockerfile" class="headerlink" title="2.1、Dockerfile"></a>2.1、Dockerfile</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> jenkins/jenkins:lts-alpine</span><br><span class="line"><span class="keyword">USER</span> root</span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> sed -i <span class="string">'s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g'</span> /etc/apk/repositories \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk update \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add -U tzdata \</span></span><br><span class="line"><span class="bash">    &amp;&amp; cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \</span></span><br><span class="line"><span class="bash">    &amp;&amp; <span class="built_in">echo</span> <span class="string">"Asia/Shanghai"</span> &gt; /etc/timezone \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add sshpass \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add git \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add docker</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"jenkins ALL=NOPASSWD: ALL"</span> &gt;&gt; /etc/sudoers</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> mkdir -p /opt/maven/repository</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2、构建镜像"><a href="#2-2、构建镜像" class="headerlink" title="2.2、构建镜像"></a>2.2、构建镜像</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">docker build --build-arg dockerGid=`cat /etc/group | grep docker | cut -d ':' -f3` -t cz-jenkins:lts-alpine .</span><br><span class="line">docker build -t cz-jenkins:lts-alpine .</span><br><span class="line"></span><br><span class="line">docker run -it -d --name jenkins \</span><br><span class="line">  -p 8081:8080 -p 50000:50000 \</span><br><span class="line">  -v /data/jenkins/jenkins_home:/var/jenkins_home \</span><br><span class="line">  -v /var/run/docker.sock:/var/run/docker.sock \</span><br><span class="line">  cz-jenkins:lts-alpine</span><br><span class="line">  </span><br><span class="line">docker logs -f jenkins</span><br><span class="line"></span><br><span class="line">docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword</span><br><span class="line"><span class="meta">#</span><span class="bash"> eeb8ac6da55e4d58b5dec50bc9d093c8</span></span><br><span class="line">  </span><br><span class="line">firewall-cmd --permanent --add-port=8081/tcp</span><br><span class="line"></span><br><span class="line">http://172.18.1.51:8081/pluginManager/advanced</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改为：</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> http://mirror.serverion.com/jenkins/updates/update-center.json</span></span><br><span class="line"></span><br><span class="line">http://172.18.1.51:8081/reload</span><br><span class="line">http://172.18.1.51:8081/</span><br></pre></td></tr></table></figure>
+
+<h1 id="3、jenkins-slave访问主机docker"><a href="#3、jenkins-slave访问主机docker" class="headerlink" title="3、jenkins-slave访问主机docker"></a>3、jenkins-slave访问主机docker</h1><h2 id="3-1、构建Jenkins-Slave镜像环境准备"><a href="#3-1、构建Jenkins-Slave镜像环境准备" class="headerlink" title="3.1、构建Jenkins Slave镜像环境准备"></a>3.1、构建Jenkins Slave镜像环境准备</h2><p><strong>构建Jenkins Slave镜像环境准备：</strong><br> 代码拉取：git，安装git命令<br> 单元测试：忽略，这不是我们擅长的,如果公司有可以写进来<br> 代码编译：maven，安装maven包<br> 构建镜像：Dockerfile文件、docker命令(通过挂载宿主机docker)<br> 推送镜像：docker命令(通过挂载宿主机docker)<br> 镜像启动后支持slave: 下载官方slave.jar包（获取：<a href="https://links.jianshu.com/go?to=http%3A%2F%2F10.40.6.213%3A30006%2FjnlpJars%2Fslave.jar" target="_blank" rel="noopener">http://10.40.6.213:30006/jnlpJars/slave.jar</a>）<br> 启动 slave.ja包：jenkins-slave启动脚步(通过参考文档URL)<br> maven配置文件：settings.xml （这里配置阿里云的仓库源）</p>
+<p><strong>获取相关文件：</strong><br> Dockerfile<br> jenkins-slave 启动脚步<br> settings.xml<br> slave.jar</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/jenkins-slave &amp;&amp; cd /data/jenkins-slave</span><br><span class="line">wget http://172.18.1.51:8081/jnlpJars/slave.jar</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2、jenkins-slave启动脚本"><a href="#3-2、jenkins-slave启动脚本" class="headerlink" title="3.2、jenkins-slave启动脚本"></a>3.2、jenkins-slave启动脚本</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz jenkins-slave]# vi jenkins-slave</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat jenkins-slave</span></span><br><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env sh</span></span><br><span class="line"></span><br><span class="line">if [ $# -eq 1 ]; then</span><br><span class="line"></span><br><span class="line">    # if `docker run` only has one arguments, we assume user is running alternate command like `bash` to inspect the image</span><br><span class="line">    exec "$@"</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line"></span><br><span class="line">    # if -tunnel is not provided try env vars</span><br><span class="line">    case "$@" in</span><br><span class="line">        *"-tunnel "*) ;;</span><br><span class="line">        *)</span><br><span class="line">        if [ ! -z "$JENKINS_TUNNEL" ]; then</span><br><span class="line">            TUNNEL="-tunnel $JENKINS_TUNNEL"</span><br><span class="line">        fi ;;</span><br><span class="line">    esac</span><br><span class="line"></span><br><span class="line">    # if -workDir is not provided try env vars</span><br><span class="line">    if [ ! -z "$JENKINS_AGENT_WORKDIR" ]; then</span><br><span class="line">        case "$@" in</span><br><span class="line">            *"-workDir"*) echo "Warning: Work directory is defined twice in command-line arguments and the environment variable" ;;</span><br><span class="line">            *)</span><br><span class="line">            WORKDIR="-workDir $JENKINS_AGENT_WORKDIR" ;;</span><br><span class="line">        esac</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    if [ -n "$JENKINS_URL" ]; then</span><br><span class="line">        URL="-url $JENKINS_URL"</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    if [ -n "$JENKINS_NAME" ]; then</span><br><span class="line">        JENKINS_AGENT_NAME="$JENKINS_NAME"</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    if [ -z "$JNLP_PROTOCOL_OPTS" ]; then</span><br><span class="line">        echo "Warning: JnlpProtocol3 is disabled by default, use JNLP_PROTOCOL_OPTS to alter the behavior"</span><br><span class="line">        JNLP_PROTOCOL_OPTS="-Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true"</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    # If both required options are defined, do not pass the parameters</span><br><span class="line">    OPT_JENKINS_SECRET=""</span><br><span class="line">    if [ -n "$JENKINS_SECRET" ]; then</span><br><span class="line">        case "$@" in</span><br><span class="line">            *"$&#123;JENKINS_SECRET&#125;"*) echo "Warning: SECRET is defined twice in command-line arguments and the environment variable" ;;</span><br><span class="line">            *)</span><br><span class="line">            OPT_JENKINS_SECRET="$&#123;JENKINS_SECRET&#125;" ;;</span><br><span class="line">        esac</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    OPT_JENKINS_AGENT_NAME=""</span><br><span class="line">    if [ -n "$JENKINS_AGENT_NAME" ]; then</span><br><span class="line">        case "$@" in</span><br><span class="line">            *"$&#123;JENKINS_AGENT_NAME&#125;"*) echo "Warning: AGENT_NAME is defined twice in command-line arguments and the environment variable" ;;</span><br><span class="line">            *)</span><br><span class="line">            OPT_JENKINS_AGENT_NAME="$&#123;JENKINS_AGENT_NAME&#125;" ;;</span><br><span class="line">        esac</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    #TODO: Handle the case when the command-line and Environment variable contain different values.</span><br><span class="line">    #It is fine it blows up for now since it should lead to an error anyway.</span><br><span class="line"></span><br><span class="line">    exec java $JAVA_OPTS $JNLP_PROTOCOL_OPTS -cp /usr/share/jenkins/slave.jar hudson.remoting.jnlp.Main -headless $TUNNEL $URL $WORKDIR $OPT_JENKINS_SECRET $OPT_JENKINS_AGENT_NAME "$@"</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-3、maven源配置文件settings-xml"><a href="#3-3、maven源配置文件settings-xml" class="headerlink" title="3.3、maven源配置文件settings.xml"></a>3.3、maven源配置文件settings.xml</h2><p>maven源配置文件settings.xml，这里配置阿里云的源。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz jenkins-slave]# vi settings.xml</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cat settings.xml</span></span><br><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"></span><br><span class="line">&lt;settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"</span><br><span class="line">          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</span><br><span class="line">          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd"&gt;</span><br><span class="line">  &lt;pluginGroups&gt;</span><br><span class="line">  &lt;/pluginGroups&gt;</span><br><span class="line"></span><br><span class="line">  &lt;proxies&gt;</span><br><span class="line">  &lt;/proxies&gt;</span><br><span class="line"></span><br><span class="line">  &lt;servers&gt;</span><br><span class="line">  &lt;/servers&gt;</span><br><span class="line"></span><br><span class="line">  &lt;mirrors&gt;</span><br><span class="line">    &lt;mirror&gt;</span><br><span class="line">      &lt;id&gt;central&lt;/id&gt;</span><br><span class="line">      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;</span><br><span class="line">      &lt;name&gt;aliyun maven&lt;/name&gt;</span><br><span class="line">      &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;</span><br><span class="line">    &lt;/mirror&gt;</span><br><span class="line">  &lt;/mirrors&gt;</span><br><span class="line"></span><br><span class="line">  &lt;profiles&gt;</span><br><span class="line">  &lt;/profiles&gt;</span><br><span class="line"></span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-4、Dockerfile"><a href="#3-4、Dockerfile" class="headerlink" title="3.4、Dockerfile"></a>3.4、Dockerfile</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@centos7cz jenkins-slave]# vi Dockerfile</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> alpine:latest</span><br><span class="line"><span class="keyword">USER</span> root</span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> sed -i <span class="string">'s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g'</span> /etc/apk/repositories \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk update</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apk add -U tzdata \</span></span><br><span class="line"><span class="bash">    &amp;&amp; cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \</span></span><br><span class="line"><span class="bash">    &amp;&amp; <span class="built_in">echo</span> <span class="string">"Asia/Shanghai"</span> &gt; /etc/timezone</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \</span></span><br><span class="line"><span class="bash">    &amp;&amp; wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add glibc-2.31-r0.apk</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> apk add openjdk8 \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add maven \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add protoc \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add grpc \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add git \</span></span><br><span class="line"><span class="bash">    &amp;&amp; apk add docker</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"jenkins ALL=NOPASSWD: ALL"</span> &gt;&gt; /etc/sudoers</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> slave.jar /usr/share/jenkins/slave.jar</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> jenkins-slave /usr/bin/jenkins-slave</span></span><br><span class="line"><span class="keyword">COPY</span><span class="bash"> settings.xml /etc/maven/settings.xml</span></span><br><span class="line"><span class="keyword">RUN</span><span class="bash"> chmod +x /usr/bin/jenkins-slave</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ENTRYPOINT</span><span class="bash"> [<span class="string">"jenkins-slave"</span>]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-5、构建镜像"><a href="#3-5、构建镜像" class="headerlink" title="3.5、构建镜像"></a>3.5、构建镜像</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build --build-arg dockerGid=`cat /etc/group | grep docker | cut -d ':' -f3` -t cz-jenkins-slave:lts-alpine .</span><br><span class="line"></span><br><span class="line">docker run --net=host -v /var/run/docker.sock:/var/run/docker.sock cz-jenkins-slave:lts-alpine docker ps</span><br></pre></td></tr></table></figure>
+
+<h1 id="4、定制maven镜像"><a href="#4、定制maven镜像" class="headerlink" title="4、定制maven镜像"></a>4、定制maven镜像</h1><h3 id="4-1、Dockerfile"><a href="#4-1、Dockerfile" class="headerlink" title="4.1、Dockerfile"></a>4.1、Dockerfile</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:latest</span><br><span class="line">USER root</span><br><span class="line"></span><br><span class="line">ENV LANG C.UTF-8</span><br><span class="line">ENV TZ Asia/Shanghai</span><br><span class="line"></span><br><span class="line">RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \</span><br><span class="line">    &amp;&amp; apk update</span><br><span class="line"></span><br><span class="line">RUN apk add -U tzdata \</span><br><span class="line">    &amp;&amp; cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \</span><br><span class="line">    &amp;&amp; echo "Asia/Shanghai" &gt; /etc/timezone</span><br><span class="line"></span><br><span class="line">RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \</span><br><span class="line">    &amp;&amp; wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.31-r0/glibc-2.31-r0.apk \</span><br><span class="line">    &amp;&amp; apk add glibc-2.31-r0.apk</span><br><span class="line"></span><br><span class="line">RUN apk add openjdk8 \</span><br><span class="line">    &amp;&amp; apk add maven \</span><br><span class="line">    &amp;&amp; apk add protoc \</span><br><span class="line">    &amp;&amp; apk add grpc \</span><br><span class="line">    &amp;&amp; apk add docker</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>为了调用protoc，一定要安装glibc</p>
+<p><a href="https://github.com/sgerrand/alpine-pkg-glibc" target="_blank" rel="noopener">https://github.com/sgerrand/alpine-pkg-glibc</a></p>
+<p>否则会碰到如下问题：</p>
+<blockquote>
+<p><a href="https://github.com/xolstice/protobuf-maven-plugin/issues/23" target="_blank" rel="noopener">https://github.com/xolstice/protobuf-maven-plugin/issues/23</a></p>
+</blockquote>
+<blockquote>
+<p>用Alpine跑了JDK8的镜像结果发现,JDK还是无法执行.后来翻阅文档才发现<br>Java是基于GUN Standard C library(glibc)<br>Alpine是基于MUSL libc(mini libc)</p>
+<p>所以Alpine需要安装glibc的库,以下是官方给出wiki<br><a href="https://wiki.alpinelinux.org/wiki/Running_glibc_programs" target="_blank" rel="noopener">https://wiki.alpinelinux.org/wiki/Running_glibc_programs</a></p>
+</blockquote>
+<blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> &gt; [ERROR] Failed to execute goal org.xolstice.maven.plugins:protobuf-maven-plugin:0.6.1:compile (default) on project nacos-grpc-iface: An error occurred <span class="keyword">while</span> invoking protoc: Error <span class="keyword">while</span> executing process.: Cannot run program <span class="string">"/var/jenkins_home/workspace/nacos-grpc-k8s@2/nacos-grpc-iface/target/protoc-plugins/protoc-3.12.2-linux-x86_64.exe"</span>: error=2, No such file or directory -&gt; [Help 1]</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> &gt;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker build -t czharbor.com/devops/cz-maven:3.6.3-alpine .</span><br><span class="line"></span><br><span class="line">docker run -it czharbor.com/devops/cz-maven:3.6.3-alpine</span><br><span class="line">java -version</span><br><span class="line">mvn -v</span><br><span class="line"></span><br><span class="line">docker push czharbor.com/devops/cz-maven:3.6.3-alpine</span><br></pre></td></tr></table></figure>
+
+<p>1</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/computer-network/tcpdump-and-wireshark/" rel="next" title="tcpdump抓包后，wireshark分析">
+                <i class="fa fa-chevron-left"></i> tcpdump抓包后，wireshark分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/computer-network/tcpdump-manual-analysis-network-package/" rel="prev" title="tcpdump 捕获中文传输数据包，并手动解析">
+                tcpdump 捕获中文传输数据包，并手动解析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">236</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">59</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、官方镜像"><span class="nav-text">1、官方镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、jenkins访问主机docker"><span class="nav-text">2、jenkins访问主机docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1、Dockerfile"><span class="nav-text">2.1、Dockerfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2、构建镜像"><span class="nav-text">2.2、构建镜像</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#3、jenkins-slave访问主机docker"><span class="nav-text">3、jenkins-slave访问主机docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1、构建Jenkins-Slave镜像环境准备"><span class="nav-text">3.1、构建Jenkins Slave镜像环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2、jenkins-slave启动脚本"><span class="nav-text">3.2、jenkins-slave启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3、maven源配置文件settings-xml"><span class="nav-text">3.3、maven源配置文件settings.xml</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4、Dockerfile"><span class="nav-text">3.4、Dockerfile</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5、构建镜像"><span class="nav-text">3.5、构建镜像</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、定制maven镜像"><span class="nav-text">4、定制maven镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1、Dockerfile"><span class="nav-text">4.1、Dockerfile</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
