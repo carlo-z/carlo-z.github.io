@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="现象通过http访问springboot服务时，时而正常，时而超时  背景springboot webflux 开发 centos7 原因分析1、排除网络问题1tcpdump -n -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and host 172.16.1">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="strace 解决 springboot 服务 时通时不通故障">
+<meta property="og:url" content="https://carlo-z.com/java/spring/springboot-strace/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="现象通过http访问springboot服务时，时而正常，时而超时  背景springboot webflux 开发 centos7 原因分析1、排除网络问题1tcpdump -n -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and host 172.16.1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200902125227774.png">
+<meta property="og:updated_time" content="2020-09-06T12:36:55.933Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="strace 解决 springboot 服务 时通时不通故障">
+<meta name="twitter:description" content="现象通过http访问springboot服务时，时而正常，时而超时  背景springboot webflux 开发 centos7 原因分析1、排除网络问题1tcpdump -n -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and host 172.16.1">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200902125227774.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/java/spring/springboot-strace/">
+
+
+
+
+
+  <title>strace 解决 springboot 服务 时通时不通故障 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/java/spring/springboot-strace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">strace 解决 springboot 服务 时通时不通故障</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-06T20:36:55+08:00">
+                2020-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+
+
+<h1 id="现象"><a href="#现象" class="headerlink" title="现象"></a>现象</h1><p>通过http访问springboot服务时，时而正常，时而超时</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200902125227774.png" alt="image-20200902125227774"></p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>springboot webflux 开发</p>
+<p>centos7</p>
+<h1 id="原因分析"><a href="#原因分析" class="headerlink" title="原因分析"></a>原因分析</h1><h3 id="1、排除网络问题"><a href="#1、排除网络问题" class="headerlink" title="1、排除网络问题"></a>1、排除网络问题</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -n -i eth0 '((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) != 0' and host 172.16.160.12 and host 172.16.247.230 and port 18092  -XX</span><br></pre></td></tr></table></figure>
+
+<p>使用tcpdump抓包，发现 <code>12:18:14.286806</code> 收到请求，直到 <code>12:40:33.668631</code> 才将结果返回。证明网络链路是通的，但在近20分钟的时间里，服务究竟在干嘛？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><span class="line"> 12:18:14.286806 IP 172.16.160.12.50966 &gt; 172.16.247.230.18092: Flags [P.], seq 200172037:200172579, ack 1033672370, win 16652, options [nop,nop,TS val 15683831 ecr 93358138], length 542</span><br><span class="line">        0x0000:  0022 d914 1734 1051 72f1 3f48 0800 4500  ."...4.Qr.?H..E.</span><br><span class="line">        0x0010:  0252 431b 4000 7b06 ca76 ac10 a00c ac10  .RC.@.&#123;..v......</span><br><span class="line">        0x0020:  f7e6 c716 46ac 0bee 6205 3d9c 96b2 8018  ....F...b.=.....</span><br><span class="line">        0x0030:  410c 8422 0000 0101 080a 00ef 50f7 0590  A.."........P...</span><br><span class="line">        0x0040:  883a 504f 5354 202f 5765 6253 6572 7669  .:POST./WebServi</span><br><span class="line">        0x0050:  6365 5072 6f78 792f 5072 6f78 7953 6572  ceProxy/ProxySer</span><br><span class="line">        0x0060:  7669 6365 2048 5454 502f 312e 310d 0a55  vice.HTTP/1.1..U</span><br><span class="line">        0x0070:  7365 722d 4167 656e 743a 2050 6f73 746d  ser-Agent:.Postm</span><br><span class="line">        0x0080:  616e 5275 6e74 696d 652f 372e 3236 2e33  anRuntime/7.26.3</span><br><span class="line">        0x0090:  0d0a 4163 6365 7074 3a20 2a2f 2a0d 0a43  ..Accept:.*/*..C</span><br><span class="line">        0x00a0:  6163 6865 2d43 6f6e 7472 6f6c 3a20 6e6f  ache-Control:.no</span><br><span class="line">        0x00b0:  2d63 6163 6865 0d0a 506f 7374 6d61 6e2d  -cache..Postman-</span><br><span class="line">        0x00c0:  546f 6b65 6e3a 2062 3965 3130 3561 322d  Token:.b9e105a2-</span><br><span class="line">        0x00d0:  3432 3632 2d34 3430 392d 3935 3964 2d37  4262-4409-959d-7</span><br><span class="line">        0x00e0:  3937 3431 3038 6133 6363 620d 0a48 6f73  974108a3ccb..Hos</span><br><span class="line">        0x00f0:  743a 2031 3732 2e31 362e 3234 372e 3233  t:.172.16.247.23</span><br><span class="line">        0x0100:  303a 3138 3039 320d 0a41 6363 6570 742d  0:18092..Accept-</span><br><span class="line">        0x0110:  456e 636f 6469 6e67 3a20 677a 6970 2c20  Encoding:.gzip,.</span><br><span class="line">        0x0120:  6465 666c 6174 652c 2062 720d 0a43 6f6e  deflate,.br..Con</span><br><span class="line">        0x0130:  7465 6e74 2d54 7970 653a 2061 7070 6c69  tent-Type:.appli</span><br><span class="line">        0x0140:  6361 7469 6f6e 2f78 2d77 7777 2d66 6f72  cation/x-www-for</span><br><span class="line">        0x0150:  6d2d 7572 6c65 6e63 6f64 6564 0d0a 436f  m-urlencoded..Co</span><br><span class="line">        0x0160:  6e74 656e 742d 4c65 6e67 7468 3a20 3233  ntent-Length:.23</span><br><span class="line">        0x0170:  350d 0a0d 0a74 6172 6765 743d 4b45 5353  5....target=KESS</span><br><span class="line">        0x0180:  266d 6574 686f 644e 616d 653d 7175 6572  &amp;methodName=quer</span><br><span class="line">        0x0190:  7943 7573 7442 6173 6963 496e 666f 4c69  yCustBasicInfoLi</span><br><span class="line">        0x01a0:  7374 2669 6e50 6172 616d 733d 2537 4225  st&amp;inParams=%7B%</span><br><span class="line">        0x01b0:  3232 7265 7175 6573 7425 3232 2533 4125  22request%22%3A%</span><br><span class="line">        0x01c0:  3742 2532 3261 7574 6825 3232 2533 4125  7B%22auth%22%3A%</span><br><span class="line">        0x01d0:  3742 2532 326f 7065 7261 746f 7225 3232  7B%22operator%22</span><br><span class="line">        0x01e0:  2533 4138 3939 3030 3334 2537 4425 3243  %3A8990034%7D%2C</span><br><span class="line">        0x01f0:  2532 3264 6174 6125 3232 2533 4125 3742  %22data%22%3A%7B</span><br><span class="line">        0x0200:  2532 3255 5345 525f 524f 4c45 2532 3225  %22USER_ROLE%22%</span><br><span class="line">        0x0210:  3341 2532 3225 3232 2532 4325 3232 5553  3A%22%22%2C%22US</span><br><span class="line">        0x0220:  4552 5f43 4f44 4525 3232 2533 4125 3232  ER_CODE%22%3A%22</span><br><span class="line">        0x0230:  3831 3130 3635 3030 3036 3925 3232 2532  81106500069%22%2</span><br><span class="line">        0x0240:  4325 3232 4f50 5f54 5950 4525 3232 2533  C%22OP_TYPE%22%3</span><br><span class="line">        0x0250:  4125 3232 2532 3225 3744 2537 4425 3744  A%22%22%7D%7D%7D</span><br><span class="line">    12:40:33.668631 IP 172.16.247.230.18092 &gt; 172.16.160.12.50966: Flags [P.], seq 1:1661, ack 542, win 235, options [nop,nop,TS val 94697532 ecr 15683831], length 1660</span><br><span class="line">        0x0000:  1051 72f1 3f48 0022 d914 1734 0800 4500  .Qr.?H."...4..E.</span><br><span class="line">        0x0010:  06b0 1e8d 4000 4006 25a7 ac10 f7e6 ac10  ....@.@.%.......</span><br><span class="line">        0x0020:  a00c 46ac c716 3d9c 96b2 0bee 6423 8018  ..F...=.....d#..</span><br><span class="line">        0x0030:  00eb f6b6 0000 0101 080a 05a4 f83c 00ef  .............&lt;..</span><br><span class="line">        0x0040:  50f7 4854 5450 2f31 2e31 2032 3030 204f  P.HTTP/1.1.200.O</span><br><span class="line">        0x0050:  4b0d 0a43 6f6e 7465 6e74 2d54 7970 653a  K..Content-Type:</span><br><span class="line">        0x0060:  2061 7070 6c69 6361 7469 6f6e 2f6a 736f  .application/jso</span><br><span class="line">        0x0070:  6e3b 6368 6172 7365 743d 5554 462d 380d  n;charset=UTF-8.</span><br><span class="line">        0x0080:  0a43 6f6e 7465 6e74 2d4c 656e 6774 683a  .Content-Length:</span><br><span class="line">        0x0090:  2031 3537 330d 0a0d 0a7b 2272 6573 756c  .1573....&#123;"resul</span><br><span class="line">        0x00a0:  7422 3a7b 2266 6c61 6722 3a22 3122 2c22  t":&#123;"flag":"1","</span><br><span class="line">        0x00b0:  7072 6f6d 7074 223a 2273 7563 6365 7373  prompt":"success</span><br><span class="line">        0x00c0:  6675 6c22 2c22 6c65 6e67 7468 223a 2231  ful","length":"1</span><br><span class="line">        0x00d0:  227d 2c22 7265 636f 7264 223a 7b22 726f  "&#125;,"record":&#123;"ro</span><br><span class="line">        0x00e0:  7722 3a7b 2255 5345 525f 434f 4445 223a  w":&#123;"USER_CODE":</span><br><span class="line">        0x00f0:  2238 3131 3036 3530 3030 3639 222c 2255  "81106500069","U</span><br><span class="line">        0x0100:  5345 525f 524f 4c45 5322 3a22 3122 2c22  SER_ROLES":"1","</span><br><span class="line">        0x0110:  5553 4552 5f4e 414d 4522 3a22 e891 a3e5  USER_NAME":"....</span><br><span class="line">        0x0120:  bbba e5b9 b322 2c22 5553 4552 5f54 5950  .....","USER_TYP</span><br><span class="line">        0x0130:  4522 3a22 3022 2c22 494e 545f 4f52 4722  E":"0","INT_ORG"</span><br><span class="line">        0x0140:  3a22 3831 3122 2c22 4944 5f54 5950 4522  :"811","ID_TYPE"</span><br><span class="line">        0x0150:  3a22 3030 222c 2249 445f 434f 4445 223a  :"00","ID_CODE":</span><br><span class="line">        0x0160:  2236 3330 3130 3331 3936 3530 3831 3930  "630103196508190</span><br><span class="line">        0x0170:  3431 3522 2c22 4f50 454e 5f44 4154 4522  415","OPEN_DATE"</span><br><span class="line">        0x0180:  3a22 3230 3036 3132 3031 222c 2243 4c4f  :"20061201","CLO</span><br><span class="line">        0x0190:  5345 5f44 4154 4522 3a22 3022 2c22 5553  SE_DATE":"0","US</span><br><span class="line">        0x01a0:  4552 5f46 4e41 4d45 223a 22e8 91a3 e5bb  ER_FNAME":".....</span><br><span class="line">        0x01b0:  bae5 b9b3 222c 2249 445f 4953 535f 4147  ....","ID_ISS_AG</span><br><span class="line">        0x01c0:  4359 223a 22e4 b8ad e59b bd22 2c22 4944  CY":"......","ID</span><br><span class="line">        0x01d0:  5f45 5850 5f44 4154 4522 3a22 3230 3231  _EXP_DATE":"2021</span><br><span class="line">        0x01e0:  3036 3037 222c 2249 445f 5a49 505f 434f  0607","ID_ZIP_CO</span><br><span class="line">        0x01f0:  4445 223a 2238 3130 3030 3122 2c22 4944  DE":"810001","ID</span><br><span class="line">        0x0200:  5f41 4444 5222 3a22 e4b9 9de5 b79e e8af  _ADDR":"........</span><br><span class="line">        0x0210:  81e5 88b8 2022 2c22 5a49 505f 434f 4445  .....","ZIP_CODE</span><br><span class="line">        0x0220:  223a 2238 3130 3030 3122 2c22 4144 4452  ":"810001","ADDR</span><br><span class="line">        0x0230:  4553 5322 3a22 e4b9 9de5 b79e e8af 81e5  ESS":"..........</span><br><span class="line">        0x0240:  88b8 e4bb b0e5 b1b1 222c 2254 454c 223a  ........","TEL":</span><br><span class="line">        0x0250:  5b5d 2c22 4641 5822 3a5b 5d2c 2245 4d41  [],"FAX":[],"EMA</span><br><span class="line">        0x0260:  494c 223a 5b5d 2c22 4d4f 4249 4c45 5f54  IL":[],"MOBILE_T</span><br><span class="line">        0x0270:  454c 223a 2231 3334 3131 3131 3232 3232  EL":"13411112222</span><br><span class="line">        0x0280:  222c 2243 4954 495a 454e 5348 4950 223a  ","CITIZENSHIP":</span><br><span class="line">        0x0290:  2243 484e 222c 224e 4154 494f 4e41 4c49  "CHN","NATIONALI</span><br><span class="line">        0x02a0:  5459 223a 2230 3022 2c22 4544 5543 4154  TY":"00","EDUCAT</span><br><span class="line">        0x02b0:  494f 4e22 3a22 3322 2c22 4e41 5449 5645  ION":"3","NATIVE</span><br><span class="line">        0x02c0:  5f50 4c41 4345 223a 2230 222c 2253 4558  _PLACE":"0","SEX</span><br><span class="line">        0x02d0:  223a 2230 222c 2242 4952 5448 4441 5922  ":"0","BIRTHDAY"</span><br><span class="line">        0x02e0:  3a22 3139 3635 3038 3139 222c 2252 454d  :"19650819","REM</span><br><span class="line">        0x02f0:  4152 4b22 3a5b 5d2c 224d 4152 5259 223a  ARK":[],"MARRY":</span><br><span class="line">        0x0300:  2231 222c 2241 564f 4341 5449 4f4e 223a  "1","AVOCATION":</span><br><span class="line">        0x0310:  5b5d 2c22 5645 4849 434c 4522 3a5b 5d2c  [],"VEHICLE":[],</span><br><span class="line">        0x0320:  2248 4f55 5345 5f4f 574e 4552 223a 5b5d  "HOUSE_OWNER":[]</span><br><span class="line">        0x0330:  2c22 4f46 4649 4345 5f54 454c 223a 5b5d  ,"OFFICE_TEL":[]</span><br><span class="line">        0x0340:  2c22 5745 4c4c 5f54 454c 223a 5b5d 2c22  ,"WELL_TEL":[],"</span><br><span class="line">        0x0350:  4c49 4e4b 5445 4c5f 4f52 4445 5222 3a22  LINKTEL_ORDER":"</span><br><span class="line">        0x0360:  3122 2c22 4f46 4649 4345 5f41 4444 5222  1","OFFICE_ADDR"</span><br><span class="line">        0x0370:  3a5b 5d2c 2243 4f52 505f 4144 4452 223a  :[],"CORP_ADDR":</span><br><span class="line">        0x0380:  22e4 b99d e5b7 9ee8 af81 e588 b8e4 bbb0  "...............</span><br><span class="line">        0x0390:  e5b1 b122 2c22 4944 5f42 4547 5f44 4154  ...","ID_BEG_DAT</span><br><span class="line">        0x03a0:  4522 3a22 3230 3031 3036 3037 222c 224c  E":"20010607","L</span><br><span class="line">        0x03b0:  494e 4b41 4444 525f 4f52 4445 5222 3a22  INKADDR_ORDER":"</span><br><span class="line">        0x03c0:  3122 2c22 4f50 454e 5f53 4f55 5243 4522  1","OPEN_SOURCE"</span><br><span class="line">        0x03d0:  3a22 3022 2c22 5445 4c5f 4348 4b5f 464c  :"0","TEL_CHK_FL</span><br><span class="line">        0x03e0:  4147 223a 2230 222c 2245 4d41 494c 5f43  AG":"0","EMAIL_C</span><br><span class="line">        0x03f0:  484b 5f46 4c41 4722 3a5b 5d2c 2246 494e  HK_FLAG":[],"FIN</span><br><span class="line">        0x0400:  5f45 4455 5f46 4c41 4722 3a5b 5d2c 2243  _EDU_FLAG":[],"C</span><br><span class="line">        0x0410:  5553 545f 5354 4154 5553 223a 2230 222c  UST_STATUS":"0",</span><br><span class="line">        0x0420:  2253 5a4f 5247 5459 5045 223a 5b5d 2c22  "SZORGTYPE":[],"</span><br><span class="line">        0x0430:  4e41 5449 4f4e 414c 5f41 5454 5222 3a5b  NATIONAL_ATTR":[</span><br><span class="line">        0x0440:  5d2c 224c 4953 5445 445f 4154 5452 223a  ],"LISTED_ATTR":</span><br><span class="line">        0x0450:  5b5d 2c22 454e 5445 5250 5249 5345 5f4c  [],"ENTERPRISE_L</span><br><span class="line">        0x0460:  4556 454c 223a 5b5d 2c22 4355 5354 5f54  EVEL":[],"CUST_T</span><br><span class="line">        0x0470:  5950 4522 3a22 3022 2c22 4348 414e 4e45  YPE":"0","CHANNE</span><br><span class="line">        0x0480:  4c53 223a 2233 3234 3039 4775 7a22 2c22  LS":"32409Guz","</span><br><span class="line">        0x0490:  4355 5354 5f43 4c53 223a 2261 222c 2243  CUST_CLS":"a","C</span><br><span class="line">        0x04a0:  5553 545f 4558 545f 4154 5452 223a 2230  UST_EXT_ATTR":"0</span><br><span class="line">        0x04b0:  222c 2253 5045 4349 414c 5f53 5441 5455  ","SPECIAL_STATU</span><br><span class="line">        0x04c0:  5322 3a22 3022 2c22 494e 4f55 5453 4944  S":"0","INOUTSID</span><br><span class="line">        0x04d0:  455f 4944 454e 5449 5459 223a 2230 222c  E_IDENTITY":"0",</span><br><span class="line">        0x04e0:  2243 5249 5445 5249 4f4e 223a 227a 222c  "CRITERION":"z",</span><br><span class="line">        0x04f0:  2241 474d 545f 5249 534b 5f46 4143 544f  "AGMT_RISK_FACTO</span><br><span class="line">        0x0500:  5222 3a22 4d50 222c 224f 5045 4e5f 4143  R":"MP","OPEN_AC</span><br><span class="line">        0x0510:  4354 5f4d 4f4e 5448 223a 2230 222c 2249  CT_MONTH":"0","I</span><br><span class="line">        0x0520:  445f 4558 5022 3a22 3122 2c22 494e 434f  D_EXP":"1","INCO</span><br><span class="line">        0x0530:  4d45 223a 2230 222c 2254 5241 4445 223a  ME":"0","TRADE":</span><br><span class="line">        0x0540:  2232 222c 224f 4343 555f 5459 5045 223a  "2","OCCU_TYPE":</span><br><span class="line">        0x0550:  2239 3922 2c22 4649 4e5f 4d41 4e41 4745  "99","FIN_MANAGE</span><br><span class="line">        0x0560:  525f 464c 4147 223a 5b5d 2c22 4649 4e5f  R_FLAG":[],"FIN_</span><br><span class="line">        0x0570:  574f 524b 5f54 494d 4522 3a5b 5d2c 2246  WORK_TIME":[],"F</span><br><span class="line">        0x0580:  494e 5f51 5541 4c5f 4345 5254 223a 5b5d  IN_QUAL_CERT":[]</span><br><span class="line">        0x0590:  2c22 414e 4e55 414c 5f49 4e43 4f4d 4522  ,"ANNUAL_INCOME"</span><br><span class="line">        0x05a0:  3a5b 5d2c 2241 4e4e 5541 4c5f 494e 434f  :[],"ANNUAL_INCO</span><br><span class="line">        0x05b0:  4d45 5f43 484b 223a 5b5d 2c22 414e 5449  ME_CHK":[],"ANTI</span><br><span class="line">        0x05c0:  5f4d 4f4e 4559 4c41 554e 4452 595f 5459  _MONEYLAUNDRY_TY</span><br><span class="line">        0x05d0:  5045 223a 5b5d 2c22 564f 4341 5449 4f4e  PE":[],"VOCATION</span><br><span class="line">        0x05e0:  223a 2242 222c 2246 4953 4c5f 454d 4149  ":"B","FISL_EMAI</span><br><span class="line">        0x05f0:  4c22 3a5b 5d2c 224f 5054 5f45 4d41 494c  L":[],"OPT_EMAIL</span><br><span class="line">        0x0600:  223a 5b5d 2c22 574f 524b 504c 4143 4522  ":[],"WORKPLACE"</span><br><span class="line">        0x0610:  3a5b 5d2c 2250 5241 4354 4943 455f 4441  :[],"PRACTICE_DA</span><br><span class="line">        0x0620:  5445 223a 2230 2020 2020 2020 2022 2c22  TE":"0.......","</span><br><span class="line">        0x0630:  494e 4455 535f 5459 5045 223a 2239 3922  INDUS_TYPE":"99"</span><br><span class="line">        0x0640:  2c22 4253 425f 5553 4552 5f46 4e41 4d45  ,"BSB_USER_FNAME</span><br><span class="line">        0x0650:  223a 5b5d 2c22 4253 425f 4944 5f54 5950  ":[],"BSB_ID_TYP</span><br><span class="line">        0x0660:  4522 3a5b 5d2c 2242 5342 5f49 445f 434f  E":[],"BSB_ID_CO</span><br><span class="line">        0x0670:  4445 223a 5b5d 2c22 4253 425f 4944 5f45  DE":[],"BSB_ID_E</span><br><span class="line">        0x0680:  5850 5f44 4154 4522 3a22 3022 2c22 4944  XP_DATE":"0","ID</span><br><span class="line">        0x0690:  5f54 5950 4532 223a 5b5d 2c22 4944 5f43  _TYPE2":[],"ID_C</span><br><span class="line">        0x06a0:  4f44 4532 223a 5b5d 2c22 4944 5f45 5850  ODE2":[],"ID_EXP</span><br><span class="line">        0x06b0:  5f44 4154 4532 223a 2230 227d 7d7d       _DATE2":"0"&#125;&#125;&#125;</span><br><span class="line">12:40:33.678422 IP 172.16.247.230.18092 &gt; 172.16.160.12.50966: Flags [P.], seq 1449:1661, ack 542, win 235, options [nop,nop,TS val 94697542 ecr 15683831], length 212</span><br><span class="line">        0x0000:  1051 72f1 3f48 0022 d914 1734 0800 4500  .Qr.?H."...4..E.</span><br><span class="line">        0x0010:  0108 1e8f 4000 4006 2b4d ac10 f7e6 ac10  ....@.@.+M......</span><br><span class="line">        0x0020:  a00c 46ac c716 3d9c 9c5a 0bee 6423 8018  ..F...=..Z..d#..</span><br><span class="line">        0x0030:  00eb f10e 0000 0101 080a 05a4 f846 00ef  .............F..</span><br><span class="line">        0x0040:  50f7 4c5f 454d 4149 4c22 3a5b 5d2c 224f  P.L_EMAIL":[],"O</span><br><span class="line">        0x0050:  5054 5f45 4d41 494c 223a 5b5d 2c22 574f  PT_EMAIL":[],"WO</span><br><span class="line">        0x0060:  524b 504c 4143 4522 3a5b 5d2c 2250 5241  RKPLACE":[],"PRA</span><br><span class="line">        0x0070:  4354 4943 455f 4441 5445 223a 2230 2020  CTICE_DATE":"0..</span><br><span class="line">        0x0080:  2020 2020 2022 2c22 494e 4455 535f 5459  .....","INDUS_TY</span><br><span class="line">        0x0090:  5045 223a 2239 3922 2c22 4253 425f 5553  PE":"99","BSB_US</span><br><span class="line">        0x00a0:  4552 5f46 4e41 4d45 223a 5b5d 2c22 4253  ER_FNAME":[],"BS</span><br><span class="line">        0x00b0:  425f 4944 5f54 5950 4522 3a5b 5d2c 2242  B_ID_TYPE":[],"B</span><br><span class="line">        0x00c0:  5342 5f49 445f 434f 4445 223a 5b5d 2c22  SB_ID_CODE":[],"</span><br><span class="line">        0x00d0:  4253 425f 4944 5f45 5850 5f44 4154 4522  BSB_ID_EXP_DATE"</span><br><span class="line">        0x00e0:  3a22 3022 2c22 4944 5f54 5950 4532 223a  :"0","ID_TYPE2":</span><br><span class="line">        0x00f0:  5b5d 2c22 4944 5f43 4f44 4532 223a 5b5d  [],"ID_CODE2":[]</span><br><span class="line">        0x0100:  2c22 4944 5f45 5850 5f44 4154 4532 223a  ,"ID_EXP_DATE2":</span><br><span class="line">        0x0110:  2230 227d 7d7d                           "0"&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2、排除ipv4和ipv6双栈问题</p>
+<p>只抓ipv4包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -nv -i eth0 '((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) != 0' and host 172.16.160.12 and host 172.16.247.230 and port 18092  -XX</span><br></pre></td></tr></table></figure>
+
+<p>只抓ipv6包</p>
+<h3 id="2、-strace查看系统调用"><a href="#2、-strace查看系统调用" class="headerlink" title="2、 strace查看系统调用"></a>2、 strace查看系统调用</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> jps -ml</span></span><br><span class="line">23649 kess-hr-proxy-test-1.0.jar</span><br><span class="line">23586 kess-hr-proxy-dev-1.0.jar</span><br><span class="line">86133 sun.tools.jps.Jps -ml</span><br><span class="line">23126 kess-hr-proxy-uat-1.0.jar</span><br><span class="line">23695 kess-hr-proxy-sim-1.0.jar</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> strace -t -fp 23126 &gt; aaa.log 2&gt;&amp;1</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vi aaa.log</span></span><br></pre></td></tr></table></figure>
+
+<p>正常访问如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line">275 [pid 23135] 13:02:24 futex(0x7f87240f0854, FUTEX_WAIT_BITSET_PRIVATE, 1, &#123;tv_sec=96308, tv_nsec=293387689&#125;, 0xffffffff &lt;unfinished ...&gt;</span><br><span class="line">276 [pid 23128] 13:02:24 &lt;... futex resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">277 [pid 23128] 13:02:24 futex(0x7f8724094e28, FUTEX_WAKE_PRIVATE, 1 &lt;unfinished ...&gt;</span><br><span class="line">278 [pid 23147] 13:02:24 &lt;... epoll_wait resumed&gt;[&#123;EPOLLIN, &#123;u32=34, u64=34&#125;&#125;], 4096, -1) = 1</span><br><span class="line">279 [pid 23128] 13:02:24 &lt;... futex resumed&gt;) = 0</span><br><span class="line">280 [pid 23147] 13:02:24 accept4(34,  &lt;unfinished ...&gt;</span><br><span class="line">281 [pid 23128] 13:02:24 futex(0x7f8724094e54, FUTEX_WAIT_BITSET_PRIVATE, 1, &#123;tv_sec=96309, tv_nsec=287104147&#125;, 0xffffffff &lt;unfinished ...&gt;</span><br><span class="line">282 [pid 23147] 13:02:24 &lt;... accept4 resumed&gt;&#123;sa_family=AF_INET6, sin6_port=htons(55220), inet_pton(AF_INET6, "::ffff:172.16.160.12", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;,         [128-&gt;28], SOCK_CLOEXEC|SOCK_NONBLOCK) = 203</span><br><span class="line">283 [pid 23147] 13:02:24 getsockname(203, &#123;sa_family=AF_INET6, sin6_port=htons(18092), inet_pton(AF_INET6, "::ffff:172.16.247.230", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [1        28-&gt;28]) = 0</span><br><span class="line">284 [pid 23147] 13:02:24 getsockname(203, &#123;sa_family=AF_INET6, sin6_port=htons(18092), inet_pton(AF_INET6, "::ffff:172.16.247.230", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [1        28-&gt;28]) = 0</span><br><span class="line">285 [pid 23147] 13:02:24 setsockopt(203, SOL_TCP, TCP_NODELAY, [1], 4) = 0</span><br><span class="line">286 [pid 23147] 13:02:24 getsockopt(203, SOL_SOCKET, SO_SNDBUF, [87040], [4]) = 0</span><br><span class="line">287 [pid 23147] 13:02:24 getsockopt(203, SOL_SOCKET, SO_SNDBUF, [87040], [4]) = 0</span><br><span class="line">288 [pid 23147] 13:02:24 setsockopt(203, SOL_TCP, TCP_NODELAY, [1], 4) = 0</span><br><span class="line">289 [pid 23147] 13:02:24 write(29, "\1\0\0\0\0\0\0\0", 8 &lt;unfinished ...&gt;</span><br><span class="line">290 [pid 23167] 13:02:24 &lt;... epoll_wait resumed&gt;[&#123;EPOLLIN, &#123;u32=29, u64=29&#125;&#125;], 4096, -1) = 1</span><br><span class="line">291 [pid 23147] 13:02:24 &lt;... write resumed&gt;) = 8</span><br><span class="line">292 [pid 23167] 13:02:24 epoll_ctl(28, EPOLL_CTL_ADD, 203, &#123;EPOLLRDHUP|EPOLLET, &#123;u32=203, u64=203&#125;&#125; &lt;unfinished ...&gt;</span><br><span class="line">293 [pid 23147] 13:02:24 accept4(34,  &lt;unfinished ...&gt;</span><br><span class="line">294 [pid 23167] 13:02:24 &lt;... epoll_ctl resumed&gt;) = 0</span><br><span class="line">295 [pid 23147] 13:02:24 &lt;... accept4 resumed&gt;0x7f8714bfa220, [128], SOCK_CLOEXEC|SOCK_NONBLOCK) = -1 EAGAIN (Resource temporarily unavailable)</span><br><span class="line">296 [pid 23167] 13:02:24 epoll_ctl(28, EPOLL_CTL_MOD, 203, &#123;EPOLLIN|EPOLLRDHUP|EPOLLET, &#123;u32=203, u64=203&#125;&#125; &lt;unfinished ...&gt;</span><br><span class="line">297 [pid 23147] 13:02:24 epoll_wait(21,  &lt;unfinished ...&gt;</span><br><span class="line">298 [pid 23167] 13:02:24 &lt;... epoll_ctl resumed&gt;) = 0</span><br><span class="line">299 [pid 23167] 13:02:24 epoll_wait(28,  &lt;unfinished ...&gt;</span><br><span class="line">300 [pid 23135] 13:02:24 &lt;... futex resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">301 [pid 23135] 13:02:24 futex(0x7f87240f0828, FUTEX_WAKE_PRIVATE, 1) = 0</span><br><span class="line">302 [pid 23135] 13:02:24 futex(0x7f87240f0854, FUTEX_WAIT_BITSET_PRIVATE, 1, &#123;tv_sec=96308, tv_nsec=343817671&#125;, 0xffffffff &lt;unfinished ...&gt;</span><br><span class="line">303 [pid 23167] 13:02:24 &lt;... epoll_wait resumed&gt;[&#123;EPOLLIN, &#123;u32=203, u64=203&#125;&#125;], 4096, -1) = 1</span><br><span class="line">304 [pid 23167] 13:02:24 read(203, "POST /WebServiceProxy/ProxyServi"..., 1024) = 542</span><br><span class="line">305 [pid 23167] 13:02:24 write(1, "2020-09-02 13:02:24.464  INFO 23"..., 288) = 288</span><br><span class="line">306 [pid 23167] 13:02:24 write(7, "2020-09-02 13:02:24.464  INFO 23"..., 288) = 288</span><br><span class="line">307 [pid 23167] 13:02:24 read(12, "+\245\216\376\374/\306\30\214 \335\250\332\217Q\206\22\v9\30c\366\212(+\322]\311\322\0224\236", 32) = 32</span><br><span class="line">308 [pid 23167] 13:02:24 socket(AF_INET6, SOCK_STREAM, IPPROTO_IP) = 204</span><br><span class="line">309 [pid 23167] 13:02:24 setsockopt(204, SOL_IPV6, IPV6_V6ONLY, [0], 4) = 0</span><br><span class="line">310 [pid 23167] 13:02:24 fcntl(204, F_GETFL) = 0x2 (flags O_RDWR)</span><br><span class="line">311 [pid 23167] 13:02:24 fcntl(204, F_SETFL, O_RDWR|O_NONBLOCK) = 0</span><br><span class="line">312 [pid 23167] 13:02:24 connect(204, &#123;sa_family=AF_INET6, sin6_port=htons(8080), inet_pton(AF_INET6, "::ffff:10.198.197.71", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, 28) = -1         EINPROGRESS (Operation now in progress)</span><br><span class="line">313 [pid 23167] 13:02:24 poll([&#123;fd=204, events=POLLOUT&#125;], 1, 600000 &lt;unfinished ...&gt;</span><br><span class="line">314 [pid 23135] 13:02:24 &lt;... futex resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">315 [pid 23135] 13:02:24 futex(0x7f87240f0828, FUTEX_WAKE_PRIVATE, 1) = 0</span><br><span class="line">316 [pid 23135] 13:02:24 futex(0x7f87240f0854, FUTEX_WAIT_BITSET_PRIVATE, 1, &#123;tv_sec=96308, tv_nsec=394348286&#125;, 0xffffffff &lt;unfinished ...&gt;</span><br><span class="line">317 [pid 23167] 13:02:24 &lt;... poll resumed&gt;) = 1 ([&#123;fd=204, revents=POLLOUT&#125;])</span><br><span class="line">318 [pid 23167] 13:02:24 getsockopt(204, SOL_SOCKET, SO_ERROR, [0], [4]) = 0</span><br><span class="line">319 [pid 23167] 13:02:24 fcntl(204, F_GETFL) = 0x802 (flags O_RDWR|O_NONBLOCK)</span><br><span class="line">320 [pid 23167] 13:02:24 fcntl(204, F_SETFL, O_RDWR) = 0</span><br><span class="line">321 [pid 23167] 13:02:24 getsockname(204, &#123;sa_family=AF_INET6, sin6_port=htons(33814), inet_pton(AF_INET6, "::ffff:172.16.247.230", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [2        8]) = 0</span><br><span class="line">322 [pid 23167] 13:02:24 sendto(204, "POST /kess/services/KessService?"..., 1104, 0, NULL, 0) = 1104</span><br><span class="line">323 [pid 23167] 13:02:24 poll([&#123;fd=204, events=POLLIN|POLLERR&#125;], 1, 600000 &lt;unfinished ...&gt;</span><br><span class="line">324 [pid 23135] 13:02:24 &lt;... futex resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">325 [pid 23135] 13:02:24 futex(0x7f87240f0828, FUTEX_WAKE_PRIVATE, 1) = 0</span><br><span class="line">326 [pid 23135] 13:02:24 futex(0x7f87240f0854, FUTEX_WAIT_BITSET_PRIVATE, 1, &#123;tv_sec=96308, tv_nsec=444789879&#125;, 0xffffffff &lt;unfinished ...&gt;</span><br><span class="line">327 [pid 23167] 13:02:24 &lt;... poll resumed&gt;) = 1 ([&#123;fd=204, revents=POLLIN&#125;])</span><br><span class="line">328 [pid 23167] 13:02:24 recvfrom(204, "HTTP/1.1 200 OK\r\nServer: Apache-"..., 8192, 0, NULL, NULL) = 1368</span><br><span class="line">329 [pid 23167] 13:02:24 ioctl(204, FIONREAD, [0]) = 0</span><br><span class="line">330 [pid 23167] 13:02:24 poll([&#123;fd=204, events=POLLIN|POLLERR&#125;], 1, 600000) = 1 ([&#123;fd=204, revents=POLLIN&#125;])</span><br><span class="line">331 [pid 23167] 13:02:24 recvfrom(204, "0001&amp;lt;/ID_ZIP_CODE&amp;gt;&amp;lt;ID_A"..., 8192, 0, NULL, NULL) = 1368</span><br><span class="line">332 [pid 23167] 13:02:24 ioctl(204, FIONREAD, [0]) = 0</span><br><span class="line">333 [pid 23167] 13:02:24 poll([&#123;fd=204, events=POLLIN|POLLERR&#125;], 1, 600000) = 1 ([&#123;fd=204, revents=POLLIN&#125;])</span><br><span class="line">334 [pid 23167] 13:02:24 recvfrom(204, ";&amp;lt;ENTERPRISE_LEVEL&amp;gt;&amp;lt;/EN"..., 8192, 0, NULL, NULL) = 1368</span><br><span class="line">335 [pid 23167] 13:02:24 ioctl(204, FIONREAD, [139]) = 0</span><br><span class="line">336 [pid 23167] 13:02:24 poll([&#123;fd=204, events=POLLIN|POLLERR&#125;], 1, 600000) = 1 ([&#123;fd=204, revents=POLLIN&#125;])</span><br><span class="line">337 [pid 23167] 13:02:24 recvfrom(204, ";/row&amp;gt;&amp;lt;/record&amp;gt;&amp;lt;/res"..., 8192, 0, NULL, NULL) = 139</span><br><span class="line">338 [pid 23167] 13:02:24 ioctl(204, FIONREAD, [0]) = 0</span><br><span class="line">339 [pid 23167] 13:02:24 poll([&#123;fd=204, events=POLLIN|POLLERR&#125;], 1, 600000) = 1 ([&#123;fd=204, revents=POLLIN&#125;])</span><br><span class="line">340 [pid 23167] 13:02:24 recvfrom(204, "", 8192, 0, NULL, NULL) = 0</span><br><span class="line">341 [pid 23167] 13:02:24 dup2(36, 204)      = 204</span><br><span class="line">342 [pid 23167] 13:02:24 close(204)         = 0</span><br><span class="line">343 [pid 23167] 13:02:24 write(1, "2020-09-02 13:02:24.571  INFO 23"..., 127) = 127</span><br><span class="line">344 [pid 23167] 13:02:24 write(7, "2020-09-02 13:02:24.571  INFO 23"..., 127) = 127</span><br><span class="line">345 [pid 23167] 13:02:24 write(1, "2020-09-02 13:02:24.574  INFO 23"..., 1743) = 1743</span><br><span class="line">346 [pid 23167] 13:02:24 write(7, "2020-09-02 13:02:24.574  INFO 23"..., 1743) = 1743</span><br><span class="line">347 [pid 23167] 13:02:24 writev(203, [&#123;iov_base="HTTP/1.1 200 OK\r\nContent-Type: a"..., iov_len=87&#125;, &#123;iov_base="&#123;\"result\":&#123;\"flag\":\"1\",\"prompt\":\""..., iov_len=1573&#125;], 2) = 1660</span><br><span class="line">348 [pid 23167] 13:02:24 epoll_wait(28,  &lt;unfinished ...&gt;</span><br><span class="line">349 [pid 23135] 13:02:24 &lt;... futex resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">350 [pid 23135] 13:02:24 futex(0x7f87240f0828, FUTEX_WAKE_PRIVATE, 1) = 0</span><br><span class="line">351 [pid 23135] 13:02:24 futex(0x7f87240f0854, FUTEX_WAIT_BITSET_PRIVATE, 1, &#123;tv_sec=96308, tv_nsec=495260383&#125;, 0xffffffff &lt;unfinished ...&gt;</span><br><span class="line">352 [pid 23167] 13:02:24 &lt;... epoll_wait resumed&gt;[&#123;EPOLLIN|EPOLLRDHUP, &#123;u32=203, u64=203&#125;&#125;], 4096, -1) = 1</span><br><span class="line">353 [pid 23167] 13:02:24 read(203, "", 1024) = 0</span><br><span class="line">354 [pid 23167] 13:02:24 getsockopt(203, SOL_SOCKET, SO_LINGER, &#123;l_onoff=0, l_linger=0&#125;, [8]) = 0</span><br><span class="line">355 [pid 23167] 13:02:24 epoll_ctl(28, EPOLL_CTL_DEL, 203, 0x7f86ea5eac90) = 0</span><br><span class="line">356 [pid 23167] 13:02:24 close(203)         = 0</span><br><span class="line">357 [pid 23167] 13:02:24 epoll_wait(28,  &lt;unfinished ...&gt;</span><br><span class="line">358 [pid 23135] 13:02:24 &lt;... futex resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">359 [pid 23135] 13:02:24 futex(0x7f87240f0828, FUTEX_WAKE_PRIVATE, 1) = 0</span><br><span class="line">360 [pid 23135] 13:02:24 futex(0x7f87240f0854, FUTEX_WAIT_BITSET_PRIVATE, 1, &#123;tv_sec=96308, tv_nsec=545701725&#125;, 0xffffffff) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">361 [pid 23135] 13:02:24 futex(0x7f87240f0828, FUTEX_WAKE_PRIVATE, 1) = 0</span><br></pre></td></tr></table></figure>
+
+<p>访问超时调用如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">817 [pid 23147] 13:02:32 &lt;... epoll_wait resumed&gt;[&#123;EPOLLIN, &#123;u32=34, u64=34&#125;&#125;], 4096, -1) = 1</span><br><span class="line">818 [pid 23147] 13:02:32 accept4(34, &#123;sa_family=AF_INET6, sin6_port=htons(55235), inet_pton(AF_INET6, "::ffff:172.16.160.12", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [128-&gt;28        ], SOCK_CLOEXEC|SOCK_NONBLOCK) = 147</span><br><span class="line">819 [pid 23147] 13:02:32 getsockname(147, &#123;sa_family=AF_INET6, sin6_port=htons(18092), inet_pton(AF_INET6, "::ffff:172.16.247.230", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [1        28-&gt;28]) = 0</span><br><span class="line">820 [pid 23147] 13:02:32 getsockname(147, &#123;sa_family=AF_INET6, sin6_port=htons(18092), inet_pton(AF_INET6, "::ffff:172.16.247.230", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [1        28-&gt;28]) = 0</span><br><span class="line">821 [pid 23147] 13:02:32 setsockopt(147, SOL_TCP, TCP_NODELAY, [1], 4) = 0</span><br><span class="line">822 [pid 23147] 13:02:32 getsockopt(147, SOL_SOCKET, SO_SNDBUF, [87040], [4]) = 0</span><br><span class="line">823 [pid 23147] 13:02:32 getsockopt(147, SOL_SOCKET, SO_SNDBUF, [87040], [4]) = 0</span><br><span class="line">824 [pid 23147] 13:02:32 setsockopt(147, SOL_TCP, TCP_NODELAY, [1], 4) = 0</span><br><span class="line">825 [pid 23147] 13:02:32 accept4(34, 0x7f8714bfa220, [128], SOCK_CLOEXEC|SOCK_NONBLOCK) = -1 EAGAIN (Resource temporarily unavailable)</span><br><span class="line">826 [pid 23147] 13:02:32 epoll_wait(21,  &lt;unfinished ...&gt;</span><br><span class="line">827 [pid 23135] 13:02:32 &lt;... futex resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">828 [pid 23135] 13:02:32 futex(0x7f87240f0828, FUTEX_WAKE_PRIVATE, 1) = 0</span><br><span class="line">829 [pid 23135] 13:02:32 futex(0x7f87240f0854, FUTEX_WAIT_BITSET_PRIVATE, 1, &#123;tv_sec=96316, tv_nsec=820377335&#125;, 0xffffffff) = -1 ETIMEDOUT (Connection timed out)</span><br></pre></td></tr></table></figure>
+
+<p>涉及线程</p>
+<p>23135、23147、23167</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">printf</span> <span class="string">'%x %x %x \n'</span> 23135 23147 23167</span></span><br><span class="line">5a5f 5a6b 5a7f</span><br><span class="line"><span class="meta">$</span><span class="bash"> jstack 23126 | grep -A 50 5a5f</span></span><br><span class="line">"VM Periodic Task Thread" os_prio=0 tid=0x00007f87240ef800 nid=0x5a5f waiting on condition </span><br><span class="line"></span><br><span class="line">JNI global references: 1555</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> jstack 23126 | grep -A 50 5a6b</span></span><br><span class="line">"reactor-http-epoll-1" #11 daemon prio=5 os_prio=0 tid=0x00007f87251a0800 nid=0x5a6b runnable [0x00007f8714bfa000]</span><br><span class="line">   java.lang.Thread.State: RUNNABLE</span><br><span class="line">        at io.netty.channel.epoll.Native.epollWait(Native Method)</span><br><span class="line">        at io.netty.channel.epoll.Native.epollWait(Native.java:148)</span><br><span class="line">        at io.netty.channel.epoll.Native.epollWait(Native.java:141)</span><br><span class="line">        at io.netty.channel.epoll.EpollEventLoop.epollWaitNoTimerChange(EpollEventLoop.java:290)</span><br><span class="line">        at io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:347)</span><br><span class="line">        at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989)</span><br><span class="line">        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)</span><br><span class="line">        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)</span><br><span class="line">        at java.lang.Thread.run(Thread.java:748)</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> jstack 23126 | grep -A 50 5a7f</span></span><br><span class="line">"reactor-http-epoll-3" #16 daemon prio=5 os_prio=0 tid=0x00007f86e4555800 nid=0x5a7f runnable [0x00007f86ea5eb000]</span><br><span class="line">   java.lang.Thread.State: RUNNABLE</span><br><span class="line">        at io.netty.channel.epoll.Native.epollWait(Native Method)</span><br><span class="line">        at io.netty.channel.epoll.Native.epollWait(Native.java:148)</span><br><span class="line">        at io.netty.channel.epoll.Native.epollWait(Native.java:141)</span><br><span class="line">        at io.netty.channel.epoll.EpollEventLoop.epollWaitNoTimerChange(EpollEventLoop.java:290)</span><br><span class="line">        at io.netty.channel.epoll.EpollEventLoop.run(EpollEventLoop.java:347)</span><br><span class="line">        at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:989)</span><br><span class="line">        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)</span><br><span class="line">        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)</span><br><span class="line">        at java.lang.Thread.run(Thread.java:748)</span><br></pre></td></tr></table></figure>
+
+<h4 id="EAGAIN-Resource-temporarily-unavailable"><a href="#EAGAIN-Resource-temporarily-unavailable" class="headerlink" title="EAGAIN (Resource temporarily unavailable)"></a>EAGAIN (Resource temporarily unavailable)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">accept4(34, 0x7f8714bfa220, [128], SOCK_CLOEXEC|SOCK_NONBLOCK) = -1 EAGAIN (Resource temporarily unavailable)</span><br></pre></td></tr></table></figure>
+
+<p>在linux进行非阻塞的socket接收数据时经常出现Resource temporarily unavailable，errno代码为11(EAGAIN)，这是什么意思？</p>
+<p>这表明你在非阻塞模式下调用了阻塞操作，在该操作没有完成就返回这个错误，这个错误不会破坏socket的同步，不用管它，下次循环接着recv就可以。对非阻塞socket而言，EAGAIN不是一种错误。在VxWorks和Windows上，EAGAIN的名字叫做EWOULDBLOCK。</p>
+<p>另外，如果出现EINTR即errno为4，错误描述Interrupted system call，操作也应该继续。</p>
+<p>最后，如果recv的返回值为0，那表明连接已经断开，我们的接收操作也应该结束。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">strace -t -fp 23126 2&gt;&amp;1 | egrep 'accept|poll|read|write|connect|send|recv|ctl|sock'</span><br><span class="line">strace -t -fp 23126 2&gt;&amp;1 | grep -v 'futex'</span><br></pre></td></tr></table></figure>
+
+<p>正常</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">[root@appweb-docker-002 ~]# strace -t -fp 23126 2&gt;&amp;1 | grep -v 'futex'</span><br><span class="line">strace: Process 23126 attached with 28 threads</span><br><span class="line">[pid 87892] 10:37:34 epoll_wait(77,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 80941] 10:37:34 restart_syscall(&lt;... resuming interrupted restart_syscall ...&gt; &lt;unfinished ...&gt;</span><br><span class="line">[pid 80912] 10:37:34 epoll_wait(84,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 80911] 10:37:34 epoll_wait(71,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23167] 10:37:34 epoll_wait(28,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23164] 10:37:34 epoll_wait(25,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23147] 10:37:34 epoll_wait(21,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23169] 10:37:34 epoll_wait(31,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 80928] 10:37:34 epoll_wait(74,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 79173] 10:37:34 accept(40,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23135] 10:37:34 &lt;... restart_syscall resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">[pid 23128] 10:37:35 &lt;... restart_syscall resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">[pid 23132] 10:37:36 &lt;... restart_syscall resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">[pid 23133] 10:37:36 &lt;... restart_syscall resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">[pid 23147] 10:37:47 &lt;... epoll_wait resumed&gt;[&#123;EPOLLIN, &#123;u32=34, u64=34&#125;&#125;], 4096, -1) = 1</span><br><span class="line">[pid 23147] 10:37:47 accept4(34, &#123;sa_family=AF_INET6, sin6_port=htons(58662), inet_pton(AF_INET6, "::ffff:172.16.208.224", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [128-&gt;28], SOCK_CLOEXEC|SOCK_NONBLOCK) = 39</span><br><span class="line">[pid 23147] 10:37:47 getsockname(39, &#123;sa_family=AF_INET6, sin6_port=htons(18092), inet_pton(AF_INET6, "::ffff:172.16.247.230", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [128-&gt;28]) = 0</span><br><span class="line">[pid 23147] 10:37:47 getsockname(39, &#123;sa_family=AF_INET6, sin6_port=htons(18092), inet_pton(AF_INET6, "::ffff:172.16.247.230", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [128-&gt;28]) = 0</span><br><span class="line">[pid 23147] 10:37:47 setsockopt(39, SOL_TCP, TCP_NODELAY, [1], 4) = 0</span><br><span class="line">[pid 23147] 10:37:47 getsockopt(39, SOL_SOCKET, SO_SNDBUF, [87040], [4]) = 0</span><br><span class="line">[pid 23147] 10:37:47 getsockopt(39, SOL_SOCKET, SO_SNDBUF, [87040], [4]) = 0</span><br><span class="line">[pid 23147] 10:37:47 setsockopt(39, SOL_TCP, TCP_NODELAY, [1], 4) = 0</span><br><span class="line">[pid 23147] 10:37:47 write(26, "\1\0\0\0\0\0\0\0", 8 &lt;unfinished ...&gt;</span><br><span class="line">[pid 23164] 10:37:47 &lt;... epoll_wait resumed&gt;[&#123;EPOLLIN, &#123;u32=26, u64=26&#125;&#125;], 4096, -1) = 1</span><br><span class="line">[pid 23147] 10:37:47 &lt;... write resumed&gt;) = 8</span><br><span class="line">[pid 23164] 10:37:47 epoll_ctl(25, EPOLL_CTL_ADD, 39, &#123;EPOLLRDHUP|EPOLLET, &#123;u32=39, u64=39&#125;&#125; &lt;unfinished ...&gt;</span><br><span class="line">[pid 23147] 10:37:47 accept4(34,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23164] 10:37:47 &lt;... epoll_ctl resumed&gt;) = 0</span><br><span class="line">[pid 23147] 10:37:47 &lt;... accept4 resumed&gt;0x7f8714bfa220, [128], SOCK_CLOEXEC|SOCK_NONBLOCK) = -1 EAGAIN (Resource temporarily unavailable)</span><br><span class="line">[pid 23164] 10:37:47 epoll_ctl(25, EPOLL_CTL_MOD, 39, &#123;EPOLLIN|EPOLLRDHUP|EPOLLET, &#123;u32=39, u64=39&#125;&#125; &lt;unfinished ...&gt;</span><br><span class="line">[pid 23147] 10:37:47 epoll_wait(21,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23164] 10:37:47 &lt;... epoll_ctl resumed&gt;) = 0</span><br><span class="line">[pid 23164] 10:37:47 epoll_wait(25, [&#123;EPOLLIN, &#123;u32=39, u64=39&#125;&#125;], 4096, -1) = 1</span><br><span class="line">[pid 23164] 10:37:47 read(39, "POST /WebServiceProxy/ProxyServi"..., 1024) = 542</span><br><span class="line">[pid 23164] 10:37:47 write(1, "2020-09-03 10:37:47.572  INFO 23"..., 288) = 288</span><br><span class="line">[pid 23164] 10:37:47 write(7, "2020-09-03 10:37:47.572  INFO 23"..., 288) = 288</span><br><span class="line">[pid 23164] 10:37:47 read(12, "\216\245\275\331\315\27g8\327BW\17\202;\365E\20X`9\17\261&lt;\270\227\347\0167\2736\222a", 32) = 32</span><br><span class="line">[pid 23164] 10:37:47 socket(AF_INET6, SOCK_STREAM, IPPROTO_IP) = 41</span><br><span class="line">[pid 23164] 10:37:47 setsockopt(41, SOL_IPV6, IPV6_V6ONLY, [0], 4) = 0</span><br><span class="line">[pid 23164] 10:37:47 fcntl(41, F_GETFL) = 0x2 (flags O_RDWR)</span><br><span class="line">[pid 23164] 10:37:47 fcntl(41, F_SETFL, O_RDWR|O_NONBLOCK) = 0</span><br><span class="line">[pid 23164] 10:37:47 connect(41, &#123;sa_family=AF_INET6, sin6_port=htons(8080), inet_pton(AF_INET6, "::ffff:10.198.197.71", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, 28) = -1 EINPROGRESS (Operation now in progress)</span><br><span class="line">[pid 23164] 10:37:47 poll([&#123;fd=41, events=POLLOUT&#125;], 1, 600000 &lt;unfinished ...&gt;</span><br><span class="line">[pid 23164] 10:37:47 &lt;... poll resumed&gt;) = 1 ([&#123;fd=41, revents=POLLOUT&#125;])</span><br><span class="line">[pid 23164] 10:37:47 getsockopt(41, SOL_SOCKET, SO_ERROR, [0], [4]) = 0</span><br><span class="line">[pid 23164] 10:37:47 fcntl(41, F_GETFL) = 0x802 (flags O_RDWR|O_NONBLOCK)</span><br><span class="line">[pid 23164] 10:37:47 fcntl(41, F_SETFL, O_RDWR) = 0</span><br><span class="line">[pid 23164] 10:37:47 getsockname(41, &#123;sa_family=AF_INET6, sin6_port=htons(35318), inet_pton(AF_INET6, "::ffff:172.16.247.230", &amp;sin6_addr), sin6_flowinfo=htonl(0), sin6_scope_id=0&#125;, [28]) = 0</span><br><span class="line">[pid 23164] 10:37:47 sendto(41, "POST /kess/services/KessService?"..., 1104, 0, NULL, 0) = 1104</span><br><span class="line">[pid 23164] 10:37:47 poll([&#123;fd=41, events=POLLIN|POLLERR&#125;], 1, 600000 &lt;unfinished ...&gt;</span><br><span class="line">[pid 23164] 10:37:47 &lt;... poll resumed&gt;) = 1 ([&#123;fd=41, revents=POLLIN&#125;])</span><br><span class="line">[pid 23164] 10:37:47 recvfrom(41,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23164] 10:37:47 &lt;... recvfrom resumed&gt;"HTTP/1.1 200 OK\r\nServer: Apache-"..., 8192, 0, NULL, NULL) = 1368</span><br><span class="line">[pid 23164] 10:37:47 read(12, "\320\22c_\334-Q\222\237\214\202\267\300\2314\315\0_f\211\273\231\340\2571\362?\23\312T\214\323", 32) = 32</span><br><span class="line">[pid 23164] 10:37:47 ioctl(41, FIONREAD, [1368]) = 0</span><br><span class="line">[pid 23164] 10:37:47 poll([&#123;fd=41, events=POLLIN|POLLERR&#125;], 1, 600000) = 1 ([&#123;fd=41, revents=POLLIN&#125;])</span><br><span class="line">[pid 23164] 10:37:47 recvfrom(41, "0001&amp;lt;/ID_ZIP_CODE&amp;gt;&amp;lt;ID_A"..., 8192, 0, NULL, NULL) = 1368</span><br><span class="line">[pid 23164] 10:37:47 ioctl(41, FIONREAD, [1507]) = 0</span><br><span class="line">[pid 23164] 10:37:47 poll([&#123;fd=41, events=POLLIN|POLLERR&#125;], 1, 600000) = 1 ([&#123;fd=41, revents=POLLIN&#125;])</span><br><span class="line">[pid 23164] 10:37:47 recvfrom(41, ";&amp;lt;ENTERPRISE_LEVEL&amp;gt;&amp;lt;/EN"..., 8192, 0, NULL, NULL) = 1507</span><br><span class="line">[pid 23164] 10:37:47 ioctl(41, FIONREAD, [0]) = 0</span><br><span class="line">[pid 23164] 10:37:47 poll([&#123;fd=41, events=POLLIN|POLLERR&#125;], 1, 600000) = 1 ([&#123;fd=41, revents=POLLIN&#125;])</span><br><span class="line">[pid 23164] 10:37:47 recvfrom(41, "", 8192, 0, NULL, NULL) = 0</span><br><span class="line">[pid 23164] 10:37:47 dup2(36, 41)       = 41</span><br><span class="line">[pid 23164] 10:37:47 close(41)          = 0</span><br><span class="line">[pid 23164] 10:37:47 write(1, "2020-09-03 10:37:47.686  INFO 23"..., 127) = 127</span><br><span class="line">[pid 23164] 10:37:47 write(7, "2020-09-03 10:37:47.686  INFO 23"..., 127) = 127</span><br><span class="line">[pid 23164] 10:37:47 write(1, "2020-09-03 10:37:47.688  INFO 23"..., 1743) = 1743</span><br><span class="line">[pid 23164] 10:37:47 write(7, "2020-09-03 10:37:47.688  INFO 23"..., 1743) = 1743</span><br><span class="line">[pid 23164] 10:37:47 writev(39, [&#123;iov_base="HTTP/1.1 200 OK\r\nContent-Type: a"..., iov_len=87&#125;, &#123;iov_base="&#123;\"result\":&#123;\"flag\":\"1\",\"prompt\":\""..., iov_len=1573&#125;], 2) = 1660</span><br><span class="line">[pid 23164] 10:37:47 epoll_wait(25, [&#123;EPOLLIN|EPOLLRDHUP, &#123;u32=39, u64=39&#125;&#125;], 4096, -1) = 1</span><br><span class="line">[pid 23164] 10:37:47 read(39, "", 1024) = 0</span><br><span class="line">[pid 23164] 10:37:47 getsockopt(39, SOL_SOCKET, SO_LINGER, &#123;l_onoff=0, l_linger=0&#125;, [8]) = 0</span><br><span class="line">[pid 23164] 10:37:47 epoll_ctl(25, EPOLL_CTL_DEL, 39, 0x7f86ebaecd10) = 0</span><br><span class="line">[pid 23164] 10:37:47 close(39)          = 0</span><br><span class="line">[pid 23164] 10:37:47 epoll_wait(25,  &lt;unfinished ...&gt;</span><br><span class="line">[pid 23128] 10:37:48 mprotect(0x7f872bd70000, 4096, PROT_READ) = 0</span><br><span class="line">[pid 23128] 10:37:48 mprotect(0x7f872bd70000, 4096, PROT_READ|PROT_WRITE) = 0</span><br><span class="line">[pid 23128] 10:37:48 mprotect(0x7f872bd71000, 4096, PROT_NONE) = 0</span><br><span class="line">[pid 23128] 10:37:48 mprotect(0x7f872bd71000, 4096, PROT_READ) = 0</span><br><span class="line">[pid 80913] 10:38:21 &lt;... restart_syscall resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br><span class="line">[pid 80914] 10:38:21 &lt;... restart_syscall resumed&gt;) = -1 ETIMEDOUT (Connection timed out)</span><br></pre></td></tr></table></figure>
+
+<h1 id="基础知识扫盲"><a href="#基础知识扫盲" class="headerlink" title="基础知识扫盲"></a>基础知识扫盲</h1><h3 id="strace命令"><a href="#strace命令" class="headerlink" title="strace命令"></a>strace命令</h3><p><strong>strace命令</strong>是一个集诊断、调试、统计与一体的工具，我们可以使用strace对应用的系统调用和信号传递的跟踪结果来对应用进行分析，以达到解决问题或者是了解应用工作过程的目的。当然strace与专业的调试工具比如说<a href="http://man.linuxde.net/gdb" target="_blank" rel="noopener">gdb</a>之类的是没法相比的，因为它不是一个专业的调试器。</p>
+<p>strace的最简单的用法就是执行一个指定的命令，在指定的命令结束之后它也就退出了。在命令执行的过程中，strace会记录和解析命令进程的所有系统调用以及这个进程所接收到的所有的信号值。</p>
+<p><strong>语法</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">strace  [  -dffhiqrtttTvxx  ] [ -acolumn ] [ -eexpr ] ...</span><br><span class="line">    [ -ofile ] [-ppid ] ...  [ -sstrsize ] [ -uusername ]</span><br><span class="line">    [ -Evar=val ] ...  [ -Evar  ]...</span><br><span class="line">    [ command [ arg ...  ] ]</span><br><span class="line"></span><br><span class="line">strace  -c  [ -eexpr ] ...  [ -Ooverhead ] [ -Ssortby ]</span><br><span class="line">    [ command [ arg...  ] ]</span><br></pre></td></tr></table></figure>
+
+<p><strong>选项</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">-c 统计每一系统调用的所执行的时间,次数和出错的次数等.</span><br><span class="line">-d 输出strace关于标准错误的调试信息.</span><br><span class="line">-f 跟踪由fork调用所产生的子进程.</span><br><span class="line">-ff 如果提供-o filename,则所有进程的跟踪结果输出到相应的filename.pid中,pid是各进程的进程号.</span><br><span class="line">-F 尝试跟踪vfork调用.在-f时,vfork不被跟踪.</span><br><span class="line">-h 输出简要的帮助信息.</span><br><span class="line">-i 输出系统调用的入口指针.</span><br><span class="line">-q 禁止输出关于脱离的消息.</span><br><span class="line">-r 打印出相对时间关于,,每一个系统调用.</span><br><span class="line">-t 在输出中的每一行前加上时间信息.</span><br><span class="line">-tt 在输出中的每一行前加上时间信息,微秒级.</span><br><span class="line">-ttt 微秒级输出,以秒了表示时间.</span><br><span class="line">-T 显示每一调用所耗的时间.</span><br><span class="line">-v 输出所有的系统调用.一些调用关于环境变量,状态,输入输出等调用由于使用频繁,默认不输出.</span><br><span class="line">-V 输出strace的版本信息.</span><br><span class="line">-x 以十六进制形式输出非标准字符串</span><br><span class="line">-xx 所有字符串以十六进制形式输出.</span><br><span class="line">-a column 设置返回值的输出位置.默认 为40.</span><br><span class="line">-e expr 指定一个表达式,用来控制如何跟踪.格式：[qualifier=][!]value1[,value2]...</span><br><span class="line">qualifier只能是 trace,abbrev,verbose,raw,signal,read,write其中之一.value是用来限定的符号或数字.默认的 qualifier是 trace.感叹号是否定符号.例如:-eopen等价于 -e trace=open,表示只跟踪open调用.而-etrace!=open 表示跟踪除了open以外的其他调用.有两个特殊的符号 all 和 none. 注意有些shell使用!来执行历史记录里的命令,所以要使用\\.</span><br><span class="line">-e trace=set 只跟踪指定的系统 调用.例如:-e trace=open,close,rean,write表示只跟踪这四个系统调用.默认的为set=all.</span><br><span class="line">-e trace=file 只跟踪有关文件操作的系统调用.</span><br><span class="line">-e trace=process 只跟踪有关进程控制的系统调用.</span><br><span class="line">-e trace=network 跟踪与网络有关的所有系统调用.</span><br><span class="line">-e strace=signal 跟踪所有与系统信号有关的 系统调用</span><br><span class="line">-e trace=ipc 跟踪所有与进程通讯有关的系统调用</span><br><span class="line">-e abbrev=set 设定strace输出的系统调用的结果集.-v 等与 abbrev=none.默认为abbrev=all.</span><br><span class="line">-e raw=set 将指定的系统调用的参数以十六进制显示.</span><br><span class="line">-e signal=set 指定跟踪的系统信号.默认为all.如 signal=!SIGIO(或者signal=!io),表示不跟踪SIGIO信号.</span><br><span class="line">-e read=set 输出从指定文件中读出 的数据.例如: -e read=3,5</span><br><span class="line">-e write=set 输出写入到指定文件中的数据.</span><br><span class="line">-o filename 将strace的输出写入文件filename</span><br><span class="line">-p pid 跟踪指定的进程pid.</span><br><span class="line">-s strsize 指定输出的字符串的最大长度.默认为32.文件名一直全部输出.</span><br><span class="line">-u username 以username的UID和GID执行被跟踪的命令</span><br></pre></td></tr></table></figure>
+
+<h3 id="epoll使用详解"><a href="#epoll使用详解" class="headerlink" title="epoll使用详解"></a>epoll使用详解</h3><p>EPOLL 的API用来执行类似poll()的任务。能够用于检测在多个文件描述符中任何IO可用的情况。Epoll API可以用于边缘触发(edge-triggered)和水平触发(level-triggered), 同时epoll可以检测更多的文件描述符。以下的系统调用函数提供了创建和管理epoll实例：</p>
+<ul>
+<li>epoll_create() 可以创建一个epoll实例并返回相应的文件描述符(epoll_create1() 扩展了epoll_create() 的功能)。</li>
+<li>注册相关的文件描述符使用epoll_ctl()</li>
+<li>epoll_wait() 可以用于等待IO事件。如果当前没有可用的事件，这个函数会阻塞调用线程。</li>
+</ul>
+<h4 id="epoll-create-创建epoll"><a href="#epoll-create-创建epoll" class="headerlink" title="epoll_create 创建epoll"></a>epoll_create 创建epoll</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_create</span><span class="params">(<span class="keyword">int</span> size)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_create1</span><span class="params">(<span class="keyword">int</span> flags)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大。这个参数不同于select()中的第一个参数，给出最大监听的fd+1的值。需要注意的是，当创建好epoll句柄后，它就是会占用一个fd值，在linux下如果查看/proc/进程id/fd/，是能够看到这个fd的，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。</p>
+<h4 id="epoll-ctl-设置epoll事件"><a href="#epoll-ctl-设置epoll事件" class="headerlink" title="epoll_ctl 设置epoll事件"></a>epoll_ctl 设置epoll事件</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_ctl</span><span class="params">(<span class="keyword">int</span> epfd, <span class="keyword">int</span> op, <span class="keyword">int</span> fd, struct epoll_event *event)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>这个系统调用能够控制给定的文件描述符<strong><em>epfd\</em></strong>指向的epoll实例，<strong><em>op\</em></strong>是添加事件的类型，<strong><em>fd\</em></strong>是目标文件描述符。</p>
+<p>有效的op值有以下几种：</p>
+<ul>
+<li>EPOLL_CTL_ADD 在<strong><em>epfd\</em></strong>中注册指定的fd文件描述符并能把<strong><em>event\</em></strong>和<strong><em>fd\</em></strong>关联起来。</li>
+<li>EPOLL_CTL_MOD 改变<strong>* fd*</strong>和*<strong>evetn*</strong>之间的联系。</li>
+<li>EPOLL_CTL_DEL 从指定的<strong><em>epfd\</em></strong>中删除<strong><em>fd\</em></strong>文件描述符。在这种模式中<strong><em>event\</em></strong>是被忽略的，并且为可以等于NULL。</li>
+</ul>
+<p><strong><em>event\</em></strong>这个参数是用于关联制定的<strong><em>fd\</em></strong>文件描述符的。它的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef union epoll_data &#123;</span><br><span class="line">    void *ptr;</span><br><span class="line">    int fd;</span><br><span class="line">    __uint32_t u32;</span><br><span class="line">    __uint64_t u64;</span><br><span class="line">&#125; epoll_data_t;</span><br><span class="line"></span><br><span class="line">struct epoll_event &#123;</span><br><span class="line">    __uint32_t events; /* Epoll events */</span><br><span class="line">    epoll_data_t data; /* User data variable */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong><em>events\</em></strong>这个参数是一个字节的掩码构成的。下面是可以用的事件：</p>
+<ul>
+<li>EPOLLIN - 当关联的文件可以执行 read ()操作时。</li>
+<li>EPOLLOUT - 当关联的文件可以执行 write ()操作时。</li>
+<li>EPOLLRDHUP - (从 linux 2.6.17 开始)当socket关闭的时候，或者半关闭写段的(当使用边缘触发的时候，这个标识在写一些测试代码去检测关闭的时候特别好用)</li>
+<li>EPOLLPRI - 当 read ()能够读取紧急数据的时候。</li>
+<li>EPOLLERR - 当关联的文件发生错误的时候，epoll_wait() 总是会等待这个事件，并不是需要必须设置的标识。</li>
+<li>EPOLLHUP - 当指定的文件描述符被挂起的时候。epoll_wait() 总是会等待这个事件，并不是需要必须设置的标识。当socket从某一个地方读取数据的时候(管道或者socket),这个事件只是标识出这个已经读取到最后了(EOF)。所有的有效数据已经被读取完毕了，之后任何的读取都会返回0(EOF)。</li>
+<li>EPOLLET - 设置指定的文件描述符模式为边缘触发，默认的模式是水平触发。</li>
+<li>EPOLLONESHOT - (从 linux 2.6.17 开始)设置指定文件描述符为单次模式。这意味着，在设置后只会有一次从epoll_wait() 中捕获到事件，之后你必须要重新调用 epoll_ctl() 重新设置。</li>
+</ul>
+<p><strong><em>返回值：\</em></strong>如果成功，返回0。如果失败，会返回-1， <strong><em>errno\</em></strong>将会被设置</p>
+<p>有以下几种错误：</p>
+<ul>
+<li>EBADF - <strong><em>epfd\</em></strong> 或者 <strong><em>fd\</em></strong> 是无效的文件描述符。</li>
+<li>EEXIST - <strong><em>op\</em></strong>是EPOLL_CTL_ADD，同时 <strong><em>fd\</em></strong> 在之前，已经被注册到epoll中了。</li>
+<li>EINVAL - <strong><em>epfd\</em></strong>不是一个epoll描述符。或者<strong><em>fd\</em></strong>和<strong><em>epfd\</em></strong>相同，或者<strong><em>op\</em></strong>参数非法。</li>
+<li>ENOENT - <strong><em>op\</em></strong>是EPOLL_CTL_MOD或者EPOLL_CTL_DEL，但是<strong><em>fd\</em></strong>还没有被注册到epoll上。</li>
+<li>ENOMEM - 内存不足。</li>
+<li>EPERM - 目标的<strong><em>fd\</em></strong>不支持epoll。</li>
+</ul>
+<h4 id="epoll-wait-等待epoll事件"><a href="#epoll-wait-等待epoll事件" class="headerlink" title="epoll_wait 等待epoll事件"></a>epoll_wait 等待epoll事件</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_wait</span><span class="params">(<span class="keyword">int</span> epfd, struct epoll_event *events,</span></span></span><br><span class="line"><span class="function"><span class="params">                      <span class="keyword">int</span> maxevents, <span class="keyword">int</span> timeout)</span></span>;</span><br><span class="line">                      </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">epoll_pwait</span><span class="params">(<span class="keyword">int</span> epfd, struct epoll_event *events,</span></span></span><br><span class="line"><span class="function"><span class="params">                      <span class="keyword">int</span> maxevents, <span class="keyword">int</span> timeout,</span></span></span><br><span class="line"><span class="function"><span class="params">                      <span class="keyword">const</span> <span class="keyword">sigset_t</span> *sigmask)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>epoll_wait 这个系统调用是用来等待<strong><em>epfd\</em></strong>中的事件。<strong><em>events\</em></strong>指向调用者可以使用的事件的内存区域。<strong><em>maxevents\</em></strong>告知内核有多少个events，必须要大于0.</p>
+<p><strong><em>timeout\</em></strong>这个参数是用来制定epoll_wait 会阻塞多少毫秒，会一直阻塞到下面几种情况：</p>
+<ol>
+<li>一个文件描述符触发了事件。</li>
+<li>被一个信号处理函数打断，或者timeout超时。</li>
+</ol>
+<p>当<strong><em>timeout\</em></strong>等于-1的时候这个函数会无限期的阻塞下去，当<strong><em>timeout\</em></strong>等于0的时候，就算没有任何事件，也会立刻返回。</p>
+<p>struct epoll_event 如下定义:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">typedef union epoll_data &#123;</span><br><span class="line">    void    *ptr;</span><br><span class="line">    int      fd;</span><br><span class="line">    uint32_t u32;</span><br><span class="line">    uint64_t u64;</span><br><span class="line">&#125; epoll_data_t;</span><br><span class="line"></span><br><span class="line">struct epoll_event &#123;</span><br><span class="line">    uint32_t     events;    /* Epoll events */</span><br><span class="line">    epoll_data_t data;      /* User data variable */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>每次epoll_wait() 返回的时候，会包含用户在epoll_ctl中设置的events。</p>
+<p>还有一个系统调用epoll_pwait ()。epoll_pwait()和epoll_wait ()的关系就像select()和 pselect()的关系。和pselect()一样，epoll_pwait()可以让应用程序安全的等待知道某一个文件描述符就绪或者捕捉到信号。</p>
+<p>下面的 epoll_pwait () 调用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ready = epoll_pwait(epfd, &amp;events, maxevents, timeout, &amp;sigmask);</span><br></pre></td></tr></table></figure>
+
+<p>在内部等同于:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pthread_sigmask(SIG_SETMASK, &amp;sigmask, &amp;origmask);</span><br><span class="line">ready = epoll_wait(epfd, &amp;events, maxevents, timeout);</span><br><span class="line">pthread_sigmask(SIG_SETMASK, &amp;origmask, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+
+<p>如果 <strong><em>sigmask\</em></strong>为NULL,  epoll_pwait()等同于epoll_wait()。</p>
+<p><strong><em>返回值：\</em></strong>有多少个IO事件已经准备就绪。如果返回0说明没有IO事件就绪，而是timeout超时。遇到错误的时候，会返回-1，并设置 errno。</p>
+<p>有以下几种错误:</p>
+<ul>
+<li>EBADF - <strong><em>epfd\</em></strong>是无效的文件描述符</li>
+<li>EFAULT - 指针<strong><em>events\</em></strong>指向的内存没有访问权限</li>
+<li>EINTR - 这个调用被信号打断。</li>
+<li>EINVAL - <strong><em>epfd\</em></strong>不是一个epoll的文件描述符，或者<strong><em>maxevents\</em></strong>小于等于0</li>
+</ul>
+<h4 id="关于ET、LT两种工作模式"><a href="#关于ET、LT两种工作模式" class="headerlink" title="关于ET、LT两种工作模式"></a>关于ET、LT两种工作模式</h4><p><strong>边缘触发(edge-triggered 简称ET)和水平触发(level-triggered 简称LT)：</strong></p>
+<p>epoll的事件派发接口可以运行在两种模式下：边缘触发(edge-triggered)和水平触发(level-triggered)，两种模式的区别请看下面,我们先假设下面的情况：</p>
+<ol>
+<li>一个代表管道读取的文件描述符已经注册到epoll实例上了。</li>
+<li>在管道的写入端写入了2kb的数据。</li>
+<li>epoll_wait 返回一个可用的rfd文件描述符。</li>
+<li>从管道读取了1kb的数据。</li>
+<li>调用epoll_wait 完成。</li>
+</ol>
+<p>如果rfd被设置了ET，在调用完第五步的epool_wait 后会被挂起，尽管在缓冲区还有可以读取的数据，同时另外一段的管道还在等待发送完毕的反馈。这是因为ET模式下只有文件描述符发生改变的时候，才会派发事件。所以第五步操作，可能会去等待已经存在缓冲区的数据。在上面的例子中，一个事件在第二步被创建，再第三步中被消耗，由于第四步中没有读取完缓冲区，第五步中的epoll_wait可能会一直被阻塞下去。</p>
+<p>下面情况下推荐使用ET模式:</p>
+<ol>
+<li>使用非阻塞的IO。</li>
+<li>epoll_wait() 只需要在read或者write返回的时候。</li>
+</ol>
+<p>相比之下，当我们使用LT的时候（默认）,epoll会比poll更简单更快速，而且我们可以使用在任何一个地方。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/micro-service/spring-cloud/nacos-srcode/" rel="next" title="nacos源码阅读">
+                <i class="fa fa-chevron-left"></i> nacos源码阅读
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">250</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">102</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#现象"><span class="nav-text">现象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原因分析"><span class="nav-text">原因分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、排除网络问题"><span class="nav-text">1、排除网络问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、-strace查看系统调用"><span class="nav-text">2、 strace查看系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#EAGAIN-Resource-temporarily-unavailable"><span class="nav-text">EAGAIN (Resource temporarily unavailable)</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#基础知识扫盲"><span class="nav-text">基础知识扫盲</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#strace命令"><span class="nav-text">strace命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#epoll使用详解"><span class="nav-text">epoll使用详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#epoll-create-创建epoll"><span class="nav-text">epoll_create 创建epoll</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#epoll-ctl-设置epoll事件"><span class="nav-text">epoll_ctl 设置epoll事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#epoll-wait-等待epoll事件"><span class="nav-text">epoll_wait 等待epoll事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于ET、LT两种工作模式"><span class="nav-text">关于ET、LT两种工作模式</span></a></li></ol></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

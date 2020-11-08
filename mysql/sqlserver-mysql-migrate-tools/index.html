@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="四种工具分别是： ● SQLyog（https://www.webyog.com/product/sqlyog）● Navicat Premium（https://www.navicat.com/products/navicat-premium）● Mss2sql（http://www.convert-in.com/）● DB2DB（http://www.szmesoft.com/DB2DB）">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="各种主流 SQLServer 迁移到 MySQL 工具对比">
+<meta property="og:url" content="https://carlo-z.com/mysql/sqlserver-mysql-migrate-tools/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="四种工具分别是： ● SQLyog（https://www.webyog.com/product/sqlyog）● Navicat Premium（https://www.navicat.com/products/navicat-premium）● Mss2sql（http://www.convert-in.com/）● DB2DB（http://www.szmesoft.com/DB2DB）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201420964-1471216630-1000x719.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201443089-45230517.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201450323-1147194668.png">
+<meta property="og:image" content="file:///E:/%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0%E6%95%B0%E6%8D%AE/temp/59245f09-eab9-4d80-bf4b-8df84010d0a3_4_files/d3e75e48-9f5c-47d8-b2dc-4f9f2bfd2a8c.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201457964-1270315284.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201505105-25089836.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201516026-223573122.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201523026-1763148340.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201530167-558836484.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201536698-2075088592.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201546105-1005350006.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201552980-830484560.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201611964-1337456821.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201618026-1226073387.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201623980-436748096.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201629261-1319074770.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201636308-566187496.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201649761-1458638788.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201656776-50192047.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201703105-1920374288.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201726120-1435879033.png">
+<meta property="og:image" content="file:///E:/%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0%E6%95%B0%E6%8D%AE/temp/59245f09-eab9-4d80-bf4b-8df84010d0a3_4_files/b1d137d1-6ce3-4d4e-aed3-39a7173e3a88.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201759386-1443609950.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201815964-1392384812.png">
+<meta property="og:updated_time" content="2020-08-15T15:34:25.670Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="各种主流 SQLServer 迁移到 MySQL 工具对比">
+<meta name="twitter:description" content="四种工具分别是： ● SQLyog（https://www.webyog.com/product/sqlyog）● Navicat Premium（https://www.navicat.com/products/navicat-premium）● Mss2sql（http://www.convert-in.com/）● DB2DB（http://www.szmesoft.com/DB2DB）">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201420964-1471216630-1000x719.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/mysql/sqlserver-mysql-migrate-tools/">
+
+
+
+
+
+  <title>各种主流 SQLServer 迁移到 MySQL 工具对比 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/mysql/sqlserver-mysql-migrate-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">各种主流 SQLServer 迁移到 MySQL 工具对比</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-15T00:00:00+08:00">
+                2018-08-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<p>四种工具分别是：</p>
+<p>● SQLyog（<a href="https://www.webyog.com/product/sqlyog）" target="_blank" rel="noopener">https://www.webyog.com/product/sqlyog）</a><br>● Navicat Premium（<a href="https://www.navicat.com/products/navicat-premium）" target="_blank" rel="noopener">https://www.navicat.com/products/navicat-premium）</a><br>● Mss2sql（<a href="http://www.convert-in.com/）" target="_blank" rel="noopener">http://www.convert-in.com/）</a><br>● DB2DB（<a href="http://www.szmesoft.com/DB2DB）" target="_blank" rel="noopener">http://www.szmesoft.com/DB2DB）</a></p>
+<p>由于公司需要处理的是业务数据库，因此必须保证数据转换的准确率（不允许丢失数据，数据库字段、索引完整），并且需要保证数据库迁移后能立即使用。因 此在实施数据迁移前，对这几种 SQLServer 到 MySQL 的迁移工具进行一个全面测试。下面我们将基于以下需求为前提进行测试：</p>
+<p>● 软件易用性<br>● 处理速度和内存占用<br>● 数据完整性<br>● 试用版限制<br>● 其它功能</p>
+<h1 id="一、测试用的源数据库和系统"><a href="#一、测试用的源数据库和系统" class="headerlink" title="一、测试用的源数据库和系统"></a><strong>一、测试用的源数据库和系统</strong></h1><p>用于测试的源数据库名为 MesoftReportCenter。由于其中一个测试工具试用版限制只能处理两张数据表的原因，因此我们只选取了记录数最多的两张数据 表：HISOPChargeIntermediateResult 和 HISOPChargeItemIntermediateResult。两张数据表合计的记录数约为 328万，数据库不算大，但针对本次进行测试也基本上足够了。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201420964-1471216630-1000x719.png" alt="img">SQLServer 服务器和 MySQL 服务器分别运行在两台独立的虚拟机系统中，而所有的待测试程序都运行在 MySQL 所在的服务器上面。其中：</p>
+<p>SQLServer 服务配置：</p>
+<p>● 操作系统：Windows XP<br>● 内　　存：2GB<br>● 100MB 电信光纤</p>
+<p>MySQL 服务配置：</p>
+<p>● 操作系统：Windows XP<br>● 内　　存：1GB<br>● 100MB 电信光纤</p>
+<p>同时为了测试的公平性，除 Mss2SQL 外，所有软件都是直接从官网下载最新的版本。 Mss2SQL 由于试用版的限制原因没有参与测试，而使用了网上唯一能找到的 5.3 破解版进行测试。</p>
+<h1 id="二、软件易用性评测"><a href="#二、软件易用性评测" class="headerlink" title="二、软件易用性评测"></a><strong>二、软件易用性评测</strong></h1><p>软件易用性主要是指软件在导入前的配置是否容易。由于很多软件设计是面向程序员而非一般的数据库管理人员、甚至是普通的应用程序实施人员，而这一类人员很 多时候并没有数据源配置经验。因为一些使用 ODBC 或者 ADO 进行配置的程序往往会让这类用户造成困扰（主要是不知道应该选择什么类型的数据库驱动程序）。下面让我们看看四个工具的设计界面：</p>
+<p>１、SQLyog</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201443089-45230517.png" alt="img"><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201450323-1147194668.png" alt="img"></p>
+<p><img src="file:///E:/%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0%E6%95%B0%E6%8D%AE/temp/59245f09-eab9-4d80-bf4b-8df84010d0a3_4_files/d3e75e48-9f5c-47d8-b2dc-4f9f2bfd2a8c.png" alt="img">SQLyog 使用的是古老的 ODBC 连接，但对于新一代的程序来说，这种方式的非常的不熟悉并且不容易使用，并且必须要求本机安装好相应的数据库的 ODBC 驱动程序（SQL Server 一般自带好）。</p>
+<p>２、Navicat Premium</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201457964-1270315284.png" alt="img"><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201505105-25089836.png" alt="img"></p>
+<p>Navicat Premium 是四个应用工具中设计最不人性化的一个：从上图怎么也想像不到要点按那个小按钮来添加一个新的连接，并且这个连接设置不会保存，每次导入时都必须重新设 置。 Navicat Premium 使用的是比 ODBC 稍先进的 ADO 设置方式（199X年代的产物），但使用上依然是针对老一代的程序员。</p>
+<p>３、Mss2sql</p>
+<p>Mss2sql 是最容易在百度上搜索出来的工具，原因之一是它出现的时间较早。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201516026-223573122.png" alt="img"><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201523026-1763148340.png" alt="img"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201530167-558836484.png" alt="img"></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201536698-2075088592.png" alt="img"></p>
+<p>Mss2sql 由于是很有针对性的从 SQLServer 迁移到 MySQL，因为界面使用了操作向导设计，使用非常容易。同时在设置的过程中，有非常多的选项进行细节调整，可以感觉到软件经过了相当长一段时间的使用渐渐完善出来的。</p>
+<p>４、DB2DB</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201546105-1005350006.png" alt="img"><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201552980-830484560.png" alt="img"></p>
+<p>DB2DB 由于是由国人开发，因此无论是界面还是提示信息，都是全程汉字。另外，由于 DB2DB 在功能上很有针对性，因为界面设计一目了然和易使用。和 mss2sql 一样， DB2DB 提供了非常多的选项供用户进行选择和设置。</p>
+<h1 id="三、处理速度和内存占用评测"><a href="#三、处理速度和内存占用评测" class="headerlink" title="三、处理速度和内存占用评测"></a><strong>三、处理速度和内存占用评测</strong></h1><p>在本评测前，本人的一位资深同事曾经从网上下载了某款迁移软件，把一个大约2500万记录数的数据表转送到阿里云 MySQL，结果经过了三天三夜（好在其中两天是星期六和星期日两个休息日）都未能迁移过来。因此这一次需要对这四个工具的处理速度作一个详细的测试。</p>
+<p>考虑到从 SQL Server 迁移到 MySQL 会出现两种不同的场景：</p>
+<p>● 从 SQL Server 迁移到本地 MySQL 进行代码测试和修改；<br>● 从 SQL Server 迁移到云端 MySQL 数据库正式上线使用；</p>
+<p>因此我们的测试也会针对这两个场景分别进行评测，测试结果如下（记录数约为 328万）：</p>
+<table>
+<thead>
+<tr>
+<th><strong>工具名称</strong></th>
+<th><strong>迁移到本地耗时</strong></th>
+<th><strong>迁移到云端耗时</strong></th>
+<th><strong>最高CPU占用</strong></th>
+<th><strong>内存占用</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQLyog</td>
+<td>2806秒</td>
+<td>4438秒</td>
+<td>08%</td>
+<td>20MB</td>
+</tr>
+<tr>
+<td>Navicat Premium</td>
+<td>598秒</td>
+<td>3166秒</td>
+<td>52%</td>
+<td>32MB</td>
+</tr>
+<tr>
+<td>Mss2sql</td>
+<td>726秒</td>
+<td>1915秒</td>
+<td>30%</td>
+<td>12MB</td>
+</tr>
+<tr>
+<td>DB2DB</td>
+<td>164秒</td>
+<td>1282秒</td>
+<td>34%</td>
+<td>40MB</td>
+</tr>
+</tbody></table>
+<p>注：红色字体标识为胜出者。</p>
+<p>以下为测试过程中的截图：<br>１、SQLyog</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201611964-1337456821.png" alt="img"><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201618026-1226073387.png" alt="img"></p>
+<p>２、Navicat Premium</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201623980-436748096.png" alt="img"><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201629261-1319074770.png" alt="img"></p>
+<p>注意：我们在测试 Navicat Premium 迁移到 MySQL 时发现，对于 SQL Server 的 Money 类型支持不好（不排除还有其它的数据类型支持不好）。Money 类型字段默认的小数位长度为 255，使得无法创建数据表导致整个测试无法成功，需要我们逐张表进行表结构修改才能完成测试过程。</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201636308-566187496.png" alt="img">Navicat Premium 的处理速度属于中等，不算快也不算慢，但 CPU 占用还有内存占用都处于高位水平。不过以现在的电脑硬件水平来说，还是可以接受。但 CPU 占用率太高，将使得数据在导入的过程中，服务器不能用于其它用途。</p>
+<p>３、Mss2sql</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201649761-1458638788.png" alt="img">Mss2sql 并没有提供计时器，因此我们使用人工计时的方法，整个过程处理完毕大于是 726 秒。Mss2sql 的 CPU 占用率相对其它工具来说较高，但仍属于可以接受的范围之内。</p>
+<p>４、DB2DB</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201656776-50192047.png" alt="img"><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201703105-1920374288.png" alt="img"></p>
+<p>DB2DB 同样迁移 300万数据时，仅仅使用了 2 分 44 秒，这个速度相当惊人。不过最后的结果出现一个 BUG，就是提示了转换成功，但后面的进度条却没有走完（在后面的数据完整性评测中，我们验证了数据其实是已经全部处理完毕了）。</p>
+<h1 id="四、数据完整性评测"><a href="#四、数据完整性评测" class="headerlink" title="四、数据完整性评测"></a><strong>四、数据完整性评测</strong></h1><p>把数据准确无误地从 SQL Server 迁移到 MySQL 应该作为这些工具的一个基本要求，因此这里我们对四种工具转换之后的结果进行检查。<br><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201726120-1435879033.png" alt="img"><br><img src="file:///E:/%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6/%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0%E6%95%B0%E6%8D%AE/temp/59245f09-eab9-4d80-bf4b-8df84010d0a3_4_files/b1d137d1-6ce3-4d4e-aed3-39a7173e3a88.png" alt="img"><br>我们通过后台 SQL 对记录数进行检查，发现所有的工具都能把记录完整地迁移到新的数据库。如果仔细观察，可以发现上图中各个数据库的大小是不一致的，基本的判断是由于各种工 具在映射数据表字段时，字段长度取值可能不能而引起的。而 mesoftreportcenter2 数据库大小比起其它数据库差不多少了一半，这引起了我们的注意。通过分析，我们发现 Navicat Premium 在迁移数据库时，并不会为该数据库所有数据表创建索引和主键，缺少索引和主键的数据库大小显然比其它数据库要少得多。<br><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201759386-1443609950.png" alt="img"><br>为了解各工具迁移后的数据库能否立即应用于生产环境，我们对创建后的数据表进行了更深入的分析，发现各工具对字段默认值的支持程度也不尽相同。其中：</p>
+<p>● SQLyog：完整支持 SQL Server 的默认值；<br>● Navicat Premium：完全不支持默认值，所有迁移后的数据表都没有默认值；<br>● Mss2sql：支持默认值但有严重错误；<br>● DB2DB：完整支持 SQL Server 的默认值。</p>
+<p>Mss2sql 的默认值有一个严重的错误，在 SQL Server 中字段默认值为空字符串 ”，但迁移之后变成两个 ” 符号。Mss2sql 这个严重的错误会使得程序在正式环境运行后，数据库会产生错误的数据！<br><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/163208-20160822201815964-1392384812.png" alt="img"><br>在一些老旧的系统中，数据库还会存在 Text、二进制类型的字段数据，通过测试对比后，四种工具都完美支持 Text 和 二进制（Image）类型字段。</p>
+<p>小结：</p>
+<table>
+<thead>
+<tr>
+<th><strong>测试项目</strong></th>
+<th><strong>SQLyog</strong></th>
+<th><strong>Navicat Premium</strong></th>
+<th><strong>Mss2sql</strong></th>
+<th><strong>DB2DB</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>表结构</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>字段长度</td>
+<td>支持</td>
+<td>部分支持（对Money等支持不好）</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>数据</td>
+<td>完整</td>
+<td>完整</td>
+<td>完整</td>
+<td>完整</td>
+</tr>
+<tr>
+<td>索引</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>关键字</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>默认值</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持，但有严重错误</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>二进制数据</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+</tbody></table>
+<h1 id="五、各工具其它功能及试用版限制"><a href="#五、各工具其它功能及试用版限制" class="headerlink" title="五、各工具其它功能及试用版限制"></a><strong>五、各工具其它功能及试用版限制</strong></h1><p>估计由于数据库同步会存在一些技术难题的原因，4 款工具目前都是只是提供试用版本，最后我们来看看四个工具的试用版本各自的限制是什么：</p>
+<table>
+<thead>
+<tr>
+<th><strong>工具名</strong></th>
+<th><strong>价格</strong></th>
+<th><strong>试用限制</strong></th>
+<th><strong>其它功能</strong></th>
+<th><strong>备注</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQyog</td>
+<td>$199</td>
+<td>30天试用，并且只允许转换两张数据表</td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>Navicat Premium</td>
+<td>$799</td>
+<td></td>
+<td>无</td>
+<td></td>
+</tr>
+<tr>
+<td>Mss2sql</td>
+<td>$49</td>
+<td>每张数据表只允许有50秒处理时间</td>
+<td>支持导出为 SQL</td>
+<td></td>
+</tr>
+<tr>
+<td>DB2DB</td>
+<td>￥199</td>
+<td>10万记录限制</td>
+<td>支持导出为 SQL</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>四种工具中，由于 SQLyog 和 Navicat Premium 提供了额外的管理功能，所以价格相比其它两款工具的要高得多。特别是 Navicat，必须是 Premium 版本才提供数据转换的功能。而 Mss2sql 最新版本的试用版只提供了 50 秒处理时间，因为实用价值不大。而笔者与 DB2DB 作者联系时得知，DB2DB 设置 10万记录限制，主要是考虑国内很多小型软件记录数都是少于 10 万笔，而这一类人群一般都是小型创业团队。</p>
+<h1 id="六、评测总结"><a href="#六、评测总结" class="headerlink" title="六、评测总结"></a><strong>六、评测总结</strong></h1><p>最后，对四款软件的测试结果作一个整体的总结：</p>
+<table>
+<thead>
+<tr>
+<th><strong>工具名</strong></th>
+<th><strong>处理速度</strong></th>
+<th><strong>数据完整性</strong></th>
+<th><strong>价格</strong></th>
+<th><strong>推荐度</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQLyog</td>
+<td>★☆☆☆☆</td>
+<td>★★★★★</td>
+<td>★★☆☆☆</td>
+<td>★★☆☆☆</td>
+</tr>
+<tr>
+<td>Navicat Premium</td>
+<td>★★★☆☆</td>
+<td>★☆☆☆☆</td>
+<td>★☆☆☆☆</td>
+<td>★☆☆☆☆</td>
+</tr>
+<tr>
+<td>Mss2sql</td>
+<td>★★☆☆☆</td>
+<td>★★★☆☆</td>
+<td>★★★★☆</td>
+<td>★★★☆☆</td>
+</tr>
+<tr>
+<td>DB2DB</td>
+<td>★★★★★</td>
+<td>★★★★★</td>
+<td>★★★★★</td>
+<td>★★★★★</td>
+</tr>
+</tbody></table>
+<p>以上四款软件中，最不推荐使用的是 Navicat Premium，主要原因是数据的完整性表现较差，转换后的数据不能立即用于生产环境，需要程序员仔细自行查找原因和分析。而 SQLyog 有较好的数据完整性，但整体处理速度非常的慢，如果数据较大的情况下，需要浪费非常多宝贵的时间。比较推荐的是 DB2DB，软件整体表现较好，对我来说最重要的是在不购买的情况下也够用了，而且全中文的傻瓜式界面操作起来实在方便。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/java/concurrent-program/4-3-线程间通信/" rel="next" title="4.3、线程间通信">
+                <i class="fa fa-chevron-left"></i> 4.3、线程间通信
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/distribution/distributed-current-limiting/" rel="prev" title="高并发 —— 限流算法">
+                高并发 —— 限流算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">250</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">102</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、测试用的源数据库和系统"><span class="nav-text">一、测试用的源数据库和系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、软件易用性评测"><span class="nav-text">二、软件易用性评测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、处理速度和内存占用评测"><span class="nav-text">三、处理速度和内存占用评测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、数据完整性评测"><span class="nav-text">四、数据完整性评测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、各工具其它功能及试用版限制"><span class="nav-text">五、各工具其它功能及试用版限制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、评测总结"><span class="nav-text">六、评测总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

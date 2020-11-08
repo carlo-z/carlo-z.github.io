@@ -111,13 +111,13 @@
 
 
 
-<meta name="description" content="开启tcpdump抓包centos7 下 ，只抓有数据的包： 1tcpdump -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX   示例（1）输入">
+<meta name="description" content="开启tcpdump抓包centos7 下 ，只抓有数据的包： 1tcpdump -n -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX   示例（1">
 <meta name="keywords" content="tcpdump,tcp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="tcpdump 捕获中文传输数据包，并手动解析">
 <meta property="og:url" content="https://carlo-z.com/computer-network/tcpdump-manual-analysis-network-package/index.html">
 <meta property="og:site_name" content="Focus-1">
-<meta property="og:description" content="开启tcpdump抓包centos7 下 ，只抓有数据的包： 1tcpdump -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX   示例（1）输入">
+<meta property="og:description" content="开启tcpdump抓包centos7 下 ，只抓有数据的包： 1tcpdump -n -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX   示例（1">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824201628.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824201929.png">
@@ -131,10 +131,10 @@
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202532.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202544.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824202624.png">
-<meta property="og:updated_time" content="2019-12-13T12:26:21.041Z">
+<meta property="og:updated_time" content="2020-09-06T12:36:55.931Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tcpdump 捕获中文传输数据包，并手动解析">
-<meta name="twitter:description" content="开启tcpdump抓包centos7 下 ，只抓有数据的包： 1tcpdump -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX   示例（1）输入">
+<meta name="twitter:description" content="开启tcpdump抓包centos7 下 ，只抓有数据的包： 1tcpdump -n -i eth0 &apos;((ip[2:2] - ((ip[0]&amp;amp;0xf)&amp;lt;&amp;lt;2)) - ((tcp[12]&amp;amp;0xf0)&amp;gt;&amp;gt;2)) != 0&apos; and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX   示例（1">
 <meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20190824201628.png">
 
 
@@ -399,7 +399,7 @@
       
         <hr>
 <h1 id="开启tcpdump抓包"><a href="#开启tcpdump抓包" class="headerlink" title="开启tcpdump抓包"></a>开启tcpdump抓包</h1><p>centos7 下 ，只抓有数据的包：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -i eth0 '((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) != 0' and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tcpdump -n -i eth0 '((ip[2:2] - ((ip[0]&amp;0xf)&lt;&lt;2)) - ((tcp[12]&amp;0xf0)&gt;&gt;2)) != 0' and src 10.10.139.42 and dst 10.10.128.57 and port 21000  -XX</span><br></pre></td></tr></table></figure>
 
 <p><br><br></p>
 <h1 id="示例（1）输入“中国a”"><a href="#示例（1）输入“中国a”" class="headerlink" title="示例（1）输入“中国a”"></a>示例（1）输入“中国a”</h1><p>centos7 下 netcat 输入：</p>
@@ -559,7 +559,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">236</span>
+                  <span class="site-state-item-count">250</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -570,7 +570,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">59</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -581,7 +581,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-count">102</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

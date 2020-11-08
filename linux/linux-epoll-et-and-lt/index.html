@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux,epoll,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="参考：   epoll、accept触发模式及阻塞方式的选择ET or LTselect(),poll()模型都是水平触发模式，信号驱动IO是边缘触发模式，epoll()模型即支持水平触发，也支持边缘触发，默认是水平触发从表象看epoll的性能最好，但是在连接数少，并且连接都十分活跃的情况下，select和poll的性能可能比epoll好，毕竟epoll的通知机制需要很多回调函数来完成。 ep">
+<meta name="keywords" content="linux,epoll">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux epoll 水平触发LT和边缘出发ET">
+<meta property="og:url" content="https://carlo-z.com/linux/linux-epoll-et-and-lt/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="参考：   epoll、accept触发模式及阻塞方式的选择ET or LTselect(),poll()模型都是水平触发模式，信号驱动IO是边缘触发模式，epoll()模型即支持水平触发，也支持边缘触发，默认是水平触发从表象看epoll的性能最好，但是在连接数少，并且连接都十分活跃的情况下，select和poll的性能可能比epoll好，毕竟epoll的通知机制需要很多回调函数来完成。 ep">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-09-02T17:15:33.016Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux epoll 水平触发LT和边缘出发ET">
+<meta name="twitter:description" content="参考：   epoll、accept触发模式及阻塞方式的选择ET or LTselect(),poll()模型都是水平触发模式，信号驱动IO是边缘触发模式，epoll()模型即支持水平触发，也支持边缘触发，默认是水平触发从表象看epoll的性能最好，但是在连接数少，并且连接都十分活跃的情况下，select和poll的性能可能比epoll好，毕竟epoll的通知机制需要很多回调函数来完成。 ep">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/linux/linux-epoll-et-and-lt/">
+
+
+
+
+
+  <title>linux epoll 水平触发LT和边缘出发ET | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/linux/linux-epoll-et-and-lt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">linux epoll 水平触发LT和边缘出发ET</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-30T00:00:00+08:00">
+                2016-11-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+<p>参考：</p>
+<blockquote>
+</blockquote>
+<h1 id="epoll、accept触发模式及阻塞方式的选择"><a href="#epoll、accept触发模式及阻塞方式的选择" class="headerlink" title="epoll、accept触发模式及阻塞方式的选择"></a>epoll、accept触发模式及阻塞方式的选择</h1><h3 id="ET-or-LT"><a href="#ET-or-LT" class="headerlink" title="ET or LT"></a>ET or LT</h3><p>select(),poll()模型都是水平触发模式，信号驱动IO是边缘触发模式，epoll()模型即支持水平触发，也支持边缘触发，默认是水平触发<br>从表象看epoll的性能最好，但是在连接数少，并且连接都十分活跃的情况下，select和poll的性能可能比epoll好，毕竟epoll的通知机制需要很多回调函数来完成。</p>
+<p>epoll工作在两种触发模式下：<br><strong>Level_triggered(水平触发)：</strong> 这是epoll默认的触发方式，既支持阻塞模式，也支持非阻塞模式，当被监控的文件描述符上有可读写事件发生时，epoll_wait()会通知处理程序去读写。如果这次没有把数据一次性全部读写完(如读写缓冲区太小)，那么下次调用 epoll_wait()时，它还会通知你在上次没读写完的文件描述符上继续读写</p>
+<p><strong>Edge_triggered(边缘触发)：</strong> <strong>这种模式下，epoll只支持非阻塞模式</strong>，当被监控的文件描述符上有可读写事件发生时，epoll_wait()会通知处理程序去读写。如果这次没有把数据全部读写完(如读写缓冲区太小)，那么下次调用epoll_wait()时，它不会通知你，也就是它只会通知你一次，直到该文件描述符上出现第二次可读写事件才会通知你。<strong>Nginx默认采用ET模式来使用epoll。</strong></p>
+<p>二者的差异在于level-trigger模式下只要某个socket处于readable/writable状态，无论什么时候进行epoll_wait都会返回该socket；而edge-trigger模式下只要监测描述符上<strong>有数据</strong>，epoll_wait就会返回该socket。<br>所以，在<strong>epoll的ET模式</strong>下，正确的读写方式为:</p>
+<p><strong>读：只要可读，就一直读，直到返回0，或者 errno = EAGAIN</strong><br><strong>写:只要可写，就一直写，直到数据发送完，或者 errno = EAGAIN</strong></p>
+<p>这里的错误码是指：<br>在一个非阻塞的socket上调用read/write函数, 返回的errno为EAGAIN或者EWOULDBLOCK<br>这个错误表示资源暂时不够，read时，读缓冲区没有数据，或者write时，写缓冲区满了。遇到这种情况，如果是阻塞socket，read/write就要阻塞掉。而如果是非阻塞socket，read/write立即返回-1， 同时errno设置为EAGAIN。<br>简单代码示例如下：<br>读：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> ((nread = read(fd, buf + n, BUFSIZ - <span class="number">1</span>)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    n += nread;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (nread == <span class="number">-1</span> &amp;&amp; errno != EAGAIN) &#123;</span><br><span class="line">    perror(<span class="string">"read error"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> nwrite,</span><br><span class="line">data_size = <span class="built_in">strlen</span>(buf);</span><br><span class="line">n = data_size;</span><br><span class="line"><span class="keyword">while</span> (n &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    nwrite = write(fd, buf + data_size - n, n);</span><br><span class="line">    <span class="keyword">if</span> (nwrite &lt; n) &#123;</span><br><span class="line">        <span class="keyword">if</span> (nwrite == <span class="number">-1</span> &amp;&amp; errno != EAGAIN) &#123;</span><br><span class="line">            perror(<span class="string">"write error"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    n -= nwrite;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从以上我们就看出来了为何 <strong>epoll在ET模式下使用的是非阻塞fd</strong> ，由于边缘触发的模式，每次epoll_wait返回就绪的fd，必须读完读取缓冲区里的所有数据（直至接收数据返回EAGAIN），<strong>必须套上while循环</strong>，<strong>此时若使用阻塞的fd，当读取完缓冲区里的数据后，接受数据过程会阻塞</strong>，从而无法接受新的连接。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">**//////////////////////割割割割///////////////////////////////割割割割////////////////////////**</span><br></pre></td></tr></table></figure>
+
+<p>上面介绍完了epoll的两种触发模式以及两种阻塞方式的使用，下面分析一下网络编程中accept函数使用fd时要如何选择触发方式以及阻塞方式。</p>
+<h3 id="listenfd阻塞还是非阻塞？"><a href="#listenfd阻塞还是非阻塞？" class="headerlink" title="listenfd阻塞还是非阻塞？"></a>listenfd阻塞还是非阻塞？</h3><p>如果TCP连接被客户端夭折，即在服务器调用accept之前，客户端主动发送RST终止连接，导致刚刚建立的连接从就绪队列中移出，如果套接口被设置成阻塞模式，服务器就会一直阻塞在accept调用上，直到其他某个客户建立一个新的连接为止。但是在此期间，服务器单纯地阻塞在accept调用上，就绪队列中的其他描述符都得不到处理。<br>解决办法是<strong>把监听套接口listenfd设置为非阻塞</strong>，当客户在服务器调用accept之前中止某个连接时，accept调用可以立即返回-1，这时源自Berkeley的实现会在内核中处理该事件，并不会将该事件通知给epool，而其他实现把errno设置为ECONNABORTED或者EPROTO错误，我们应该忽略这两个错误。<br><strong>ET还是LT？</strong><br>ET：如果多个连接同时到达，服务器的TCP就绪队列瞬间积累多个就绪连接，由于是边缘触发模式，epoll只会通知一次，accept只处理一个连接，导致TCP就绪队列中剩下的连接都得不到处理。<br>解决办法是用while循环包住accept调用，处理完TCP就绪队列中的所有连接后再退出循环。如何知道是否处理完就绪队列中的所有连接呢？accept返回-1并且errno设置为EAGAIN就表示所有连接都处理完。</p>
+<p>LT：在nigix的实现中，accept函数调用使用水平触发的fd，就是出于对丢失连接的考虑（边缘触发时，accept只会执行一次接收一个连接，内核不会再去通知有连接就绪），所以使用水平触发的fd就不存在丢失连接的问题。但是如果系统中有大量你不需要读写的就绪文件描述符，而它们每次都会返回，这样会大大降低处理程序检索自己关心的就绪文件描述符的效率。<br>所以服务器应该使用非阻塞的accept，并且在使用ET模式代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> ((conn_sock = accept(listenfd, (struct sockaddr * ) &amp; remote, (<span class="keyword">size_t</span> * ) &amp; addrlen)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    handle_client(conn_sock);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (conn_sock == <span class="number">-1</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (errno != EAGAIN &amp;&amp; errno != ECONNABORTED &amp;&amp; errno != EPROTO &amp;&amp; errno != EINTR) perror(<span class="string">"accept"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一道腾讯后台开发的面试题：<br>使用Linuxepoll模型，水平触发模式；当socket可写时，会不停的触发socket可写的事件，如何处理？<br>解答：正如我们上面说的，LT模式下不需要读写的文件描述符仍会不停地返回就绪，这样就会影响我们监测需要关心的文件描述符的效率。<br>所以这题的解决方法就是：平时不要把该描述符放进eventpoll结构体中，当需要写该fd的时候，调用epoll_ctl把fd加入eventpoll里监听，可写的时候就往里写，写完再次调用epoll_ctl把fd移出eventpoll，这种方法在发送很少数据的时候仍要执行两次epoll_ctl操作，有一定的操作代价<br>改进一下就是：平时不要把该描述符放进eventpoll结构体中，需要写的时候调用write或者send写数据，如果返回值是EAGAIN（写缓冲区满了），那么这时候才执行第一种方法的步骤。<br><strong>归纳如下：</strong><br>1.对于监听的sockfd要设置成非阻塞类型，触发模式最好使用水平触发模式，边缘触发模式会导致高并发情况下，有的客户端会连接不上。如果非要使用边缘触发，网上有的方案是用while来循环accept()。<br>2.对于读写的connfd，水平触发模式下，阻塞和非阻塞效果都一样，不过为了防止特殊情况，还是建议设置非阻塞。<br>3.对于读写的connfd，边缘触发模式下，必须使用非阻塞IO，并要一次性全部读写完数据。、<br>下面看一个在边沿触发模式下使用epoll的http服务器代码，必要的讲解都在注释里。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/socket.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/in.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;netinet/tcp.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/sendfile.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;strings.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt; </span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_EVENTS 10</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PORT 8080</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//设置socket连接为非阻塞模式</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setnonblocking</span><span class="params">(<span class="keyword">int</span> sockfd)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> opts;</span><br><span class="line"></span><br><span class="line">    opts = fcntl(sockfd, F_GETFL);</span><br><span class="line">    <span class="keyword">if</span>(opts &lt; <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">"fcntl(F_GETFL)\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    opts = (opts | O_NONBLOCK);</span><br><span class="line">    <span class="keyword">if</span>(fcntl(sockfd, F_SETFL, opts) &lt; <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">"fcntl(F_SETFL)\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">ev</span>, <span class="title">events</span>[<span class="title">MAX_EVENTS</span>];</span></span><br><span class="line">    <span class="keyword">int</span> addrlen, listenfd, conn_sock, nfds, epfd, fd, i, nread, n;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">local</span>, <span class="title">remote</span>;</span></span><br><span class="line">    <span class="keyword">char</span> buf[BUFSIZ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建listen socket</span></span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">"sockfd\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    setnonblocking(listenfd);</span><br><span class="line">    bzero(&amp;local, <span class="keyword">sizeof</span>(local));</span><br><span class="line">    local.sin_family = AF_INET;</span><br><span class="line">    local.sin_addr.s_addr = htonl(INADDR_ANY);;</span><br><span class="line">    local.sin_port = htons(PORT);</span><br><span class="line">    <span class="keyword">if</span>( bind(listenfd, (struct sockaddr *) &amp;local, <span class="keyword">sizeof</span>(local)) &lt; <span class="number">0</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">"bind\n"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    listen(listenfd, <span class="number">20</span>);<span class="comment">//设置为监听套接字</span></span><br><span class="line"></span><br><span class="line">    epfd = epoll_create(MAX_EVENTS);</span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">"epoll_create"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ev.events = EPOLLIN;</span><br><span class="line">    ev.data.fd = listenfd;</span><br><span class="line">    <span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_ADD, listenfd, &amp;ev) == <span class="number">-1</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        perror(<span class="string">"epoll_ctl: listen_sock"</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;;) </span><br><span class="line">    &#123;</span><br><span class="line">        nfds = epoll_wait(epfd, events, MAX_EVENTS, <span class="number">-1</span>);<span class="comment">//超时时间-1，永久阻塞直到有事件发生</span></span><br><span class="line">        <span class="keyword">if</span> (nfds == <span class="number">-1</span>) </span><br><span class="line">        &#123;</span><br><span class="line">            perror(<span class="string">"epoll_pwait"</span>);</span><br><span class="line">            <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nfds; ++i) </span><br><span class="line">        &#123;</span><br><span class="line">            fd = events[i].data.fd;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (fd == listenfd) <span class="comment">//如果是监听的listenfd，那就是连接来了，保存来的所有连接</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//每次处理一个连接，while循环直到处理完所有的连接</span></span><br><span class="line">                <span class="keyword">while</span> ((conn_sock = accept(listenfd,(struct sockaddr *) &amp;remote, </span><br><span class="line">                                (<span class="keyword">size_t</span> *)&amp;addrlen)) &gt; <span class="number">0</span>) </span><br><span class="line">                &#123;</span><br><span class="line">                    setnonblocking(conn_sock);</span><br><span class="line">                    ev.events = EPOLLIN | EPOLLET;<span class="comment">//边沿触发非阻塞模式</span></span><br><span class="line">                    ev.data.fd = conn_sock;</span><br><span class="line">                    <span class="comment">//把连接socket加入监听结构体</span></span><br><span class="line">                    <span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_ADD, conn_sock,</span><br><span class="line">                                &amp;ev) == <span class="number">-1</span>) &#123;</span><br><span class="line">                        perror(<span class="string">"epoll_ctl: add"</span>);</span><br><span class="line">                        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//已经处理完所有的连：accept返回-1，errno为EAGAIN</span></span><br><span class="line">                <span class="comment">//出错：返回-1，errno另有其值</span></span><br><span class="line">                <span class="keyword">if</span> (conn_sock == <span class="number">-1</span>) </span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span> (errno != EAGAIN &amp;&amp; errno != ECONNABORTED </span><br><span class="line">                            &amp;&amp; errno != EPROTO &amp;&amp; errno != EINTR) </span><br><span class="line">                        perror(<span class="string">"accept"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">continue</span>;<span class="comment">//直接开始下一次循环，也就是不执行这次循环后面的部分了</span></span><br><span class="line">            &#125;  </span><br><span class="line">            <span class="keyword">if</span> (events[i].events &amp; EPOLLIN) <span class="comment">//可读事件</span></span><br><span class="line">            &#123;</span><br><span class="line">                n = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span> ((nread = read(fd, buf + n, BUFSIZ<span class="number">-1</span>)) &gt; <span class="number">0</span>) </span><br><span class="line">                &#123;</span><br><span class="line">                    n += nread;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (nread == <span class="number">-1</span> &amp;&amp; errno != EAGAIN) </span><br><span class="line">                &#123;</span><br><span class="line">                    perror(<span class="string">"read error"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                ev.data.fd = fd;</span><br><span class="line">                ev.events = events[i].events | EPOLLOUT;</span><br><span class="line">                <span class="comment">//修改该fd监听事件类型，监测是否可写</span></span><br><span class="line">                <span class="keyword">if</span> (epoll_ctl(epfd, EPOLL_CTL_MOD, fd, &amp;ev) == <span class="number">-1</span>) </span><br><span class="line">                &#123;</span><br><span class="line">                    perror(<span class="string">"epoll_ctl: mod"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (events[i].events &amp; EPOLLOUT) <span class="comment">//可写事件</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">sprintf</span>(buf, <span class="string">"HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\nHello World"</span>, <span class="number">11</span>);</span><br><span class="line">                <span class="keyword">int</span> nwrite, data_size = <span class="built_in">strlen</span>(buf);</span><br><span class="line">                n = data_size;</span><br><span class="line">                <span class="keyword">while</span> (n &gt; <span class="number">0</span>) </span><br><span class="line">                &#123;</span><br><span class="line">                    nwrite = write(fd, buf + data_size - n, n);</span><br><span class="line">                    <span class="keyword">if</span> (nwrite &lt; n) </span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span> (nwrite == <span class="number">-1</span> &amp;&amp; errno != EAGAIN) </span><br><span class="line">                        &#123;</span><br><span class="line">                            perror(<span class="string">"write error"</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    n -= nwrite;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//写完就关闭该连接socket</span></span><br><span class="line">                close(fd);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="epoll-LT-ET-深入剖析"><a href="#epoll-LT-ET-深入剖析" class="headerlink" title="epoll LT/ET 深入剖析"></a>epoll LT/ET 深入剖析</h1><p>EPOLL事件有两种模型：</p>
+<p>Level Triggered (LT) 水平触发<br>.socket接收缓冲区不为空 有数据可读 读事件一直触发<br>.socket发送缓冲区不满 可以继续写入数据 写事件一直触发<br>符合思维习惯，epoll_wait返回的事件就是socket的状态</p>
+<p>Edge Triggered (ET) 边沿触发<br>.socket的接收缓冲区状态变化时触发读事件，即空的接收缓冲区刚接收到数据时触发读事件<br>.socket的发送缓冲区状态变化时触发写事件，即满的缓冲区刚空出空间时触发读事件<br>仅在状态变化时触发事件</p>
+<p>ET还是LT?</p>
+<p>LT的处理过程：<br>. accept一个连接，添加到epoll中监听EPOLLIN事件<br>. 当EPOLLIN事件到达时，read fd中的数据并处理<br>. 当需要写出数据时，把数据write到fd中；如果数据较大，无法一次性写出，那么在epoll中监听EPOLLOUT事件<br>. 当EPOLLOUT事件到达时，继续把数据write到fd中；如果数据写出完毕，那么在epoll中关闭EPOLLOUT事件</p>
+<p>ET的处理过程：<br>. accept一个一个连接，添加到epoll中监听EPOLLIN|EPOLLOUT事件<br>. 当EPOLLIN事件到达时，read fd中的数据并处理，read需要一直读，直到返回EAGAIN为止<br>. 当需要写出数据时，把数据write到fd中，直到数据全部写完，或者write返回EAGAIN<br>. 当EPOLLOUT事件到达时，继续把数据write到fd中，直到数据全部写完，或者write返回EAGAIN</p>
+<p>从ET的处理过程中可以看到，ET的要求是需要一直读写，直到返回EAGAIN，否则就会遗漏事件。而LT的处理过程中，直到返回EAGAIN不是硬性要求，但通常的处理过程都会读写直到返回EAGAIN，但LT比ET多了一个开关EPOLLOUT事件的步骤</p>
+<p>LT的编程与poll/select接近，符合一直以来的习惯，不易出错<br>ET的编程可以做到更加简洁，某些场景下更加高效，但另一方面容易遗漏事件，容易产生bug</p>
+<p>这里有两个简单的例子演示了LT与ET的用法(其中epoll-et的代码比epoll要少10行)：<br><a href="https://github.com/yedf/handy/blob/master/raw-examples/epoll.cc" target="_blank" rel="noopener">https://github.com/yedf/handy/blob/master/raw-examples/epoll.cc</a><br><a href="https://github.com/yedf/handy/blob/master/raw-examples/epoll-et.cc" target="_blank" rel="noopener">https://github.com/yedf/handy/blob/master/raw-examples/epoll-et.cc</a></p>
+<p>针对容易触发LT开关EPOLLOUT事件的情景（让服务器返回1M大小的数据），我用ab做了性能测试<br>测试的结果显示ET的性能稍好，详情如下：<br>LT 启动命令 ./epoll a<br>ET 启动命令 ./epoll-et a<br>ab 命令：ab -n 1000 -k 127.0.0.1/<br>LT 结果：Requests per second:   42.56 [#/sec] (mean)<br>ET 结果：Requests per second:   48.55 [#/sec] (mean)</p>
+<p>当我把服务器返回的数据大小改为48576时，开关EPOLLOUT更加频繁，性能的差异更大<br>ab 命令：ab -n 5000 -k 127.0.0.1/<br>LT 结果：Requests per second:   745.30 [#/sec] (mean)<br>ET 结果：Requests per second:   927.56 [#/sec] (mean)</p>
+<p>对于nginx这种高性能服务器，ET模式是很好的，而其他的通用网络库，更多是使用LT，避免使用的过程中出现bug</p>
+<h1 id="epoll的LT和ET的区别"><a href="#epoll的LT和ET的区别" class="headerlink" title="epoll的LT和ET的区别"></a>epoll的LT和ET的区别</h1><p>LT：水平触发，效率会低于ET触发，尤其在大并发，大流量的情况下。但是LT对代码编写要求比较低，不容易出现问题。LT模式服务编写上的表现是：只要有数据没有被获取，内核就不断通知你，因此不用担心事件丢失的情况。</p>
+<p>ET：边缘触发，效率非常高，在并发，大流量的情况下，会比LT少很多epoll的系统调用，因此效率高。但是对编程要求高，需要细致的处理每个请求，否则容易发生丢失事件的情况。</p>
+<p>下面举一个列子来说明LT和ET的区别（都是非阻塞模式，阻塞就不说了，效率太低）：<br>采用LT模式下， 如果accept调用有返回就可以马上建立当前这个连接了，再epoll_wait等待下次通知，和select一样。</p>
+<p>但是对于ET而言，如果accpet调用有返回，除了建立当前这个连接外，不能马上就epoll_wait还需要继续循环accpet，直到返回-1，且errno==EAGAIN</p>
+<h1 id="epoll模型accept并发问题"><a href="#epoll模型accept并发问题" class="headerlink" title="epoll模型accept并发问题"></a>epoll模型accept并发问题</h1><p>服务端使用的是epoll网络模型。在<a href="http://lib.csdn.net/base/softwaretest" target="_blank" rel="noopener">测试</a>的时候发现，单用户的情况下客户端和服务器通信正常。但是在多用户并发的情况下，客户端和服务端通信不正常。此时，客户端能正常的链接，发送数据，但是一直卡在接收数据部分</p>
+<p>出现这种问题，是因为不正确的使用了epoll中的ET（edge-trigger）模式。代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">函数名：acceptConn</span></span><br><span class="line"><span class="comment">功能：接受客户端的链接</span></span><br><span class="line"><span class="comment">参数：srvfd：监听SOCKET</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">acceptConn</span><span class="params">(<span class="keyword">int</span> srvfd)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">sin</span>;</span></span><br><span class="line">    <span class="keyword">socklen_t</span> len = <span class="keyword">sizeof</span>(struct sockaddr_in);</span><br><span class="line">    bzero( &amp; <span class="built_in">sin</span>, len);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> confd = accept(srvfd, (struct sockaddr * ) &amp; <span class="built_in">sin</span>, &amp;len);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (confd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s: bad accept\n"</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Accept Connection: %d"</span>, confd);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    setNonblocking(confd);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//将新建立的连接添加到EPOLL的监听中</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">event</span>;</span></span><br><span class="line">    event.data.fd = confd;</span><br><span class="line">    event.events = EPOLLIN | EPOLLET;</span><br><span class="line">    epoll_ctl(epollfd, EPOLL_CTL_ADD, confd, &amp;event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意倒数第二行：event.events = EPOLLIN|EPOLLET; 采用的是ET模式。下面我们来具体说下，问题出在那里。</p>
+<p>在epoll中有两种模式：level-trigger模式，简称LT模式，和edge-trigger模式，简称ET模式。其中，LT是默认的工作模式。</p>
+<p>这两种模式的工作方式有些不同。在level-trigger模式下只要某个socket处于readable/writable状态，无论什么时候进行epoll_wait都会返回该socket；而edge-trigger模式下只有某个socket从unreadable变为readable或从unwritable变为writable时，epoll_wait才会返回该socket。</p>
+<p>在ET模式socket非阻塞的情况下（上面代码中就是这种情况），多个连接同时到达，服务器的TCP就绪队列瞬间积累多个就绪连接，由于是边缘触发模式，epoll只会通知一次，accept只处理一个连接，导致TCP就绪队列中剩下的连接都得不到处理。因此，就出现了上面所提及的问题。</p>
+<p>解决办法是用while循环抱住accept调用，处理完TCP就绪队列中的所有连接后再退出循环。如何知道是否处理完就绪队列中的所有连接呢？accept返回-1并且errno设置为EAGAIN就表示所有连接都处理完。</p>
+<p>修改后的代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**************************************************</span></span><br><span class="line"><span class="comment">函数名：acceptConn</span></span><br><span class="line"><span class="comment">功能：接受客户端的链接</span></span><br><span class="line"><span class="comment">参数：srvfd：监听SOCKET</span></span><br><span class="line"><span class="comment">***************************************************/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">acceptConn</span><span class="params">(<span class="keyword">int</span> srvfd)</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_in</span> <span class="title">sin</span>;</span></span><br><span class="line">    <span class="keyword">socklen_t</span> len = <span class="keyword">sizeof</span>(struct sockaddr_in);</span><br><span class="line">    bzero( &amp; <span class="built_in">sin</span>, len);</span><br><span class="line">    <span class="keyword">int</span> confd = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> ((confd = accept(srvfd, (struct sockaddr * ) &amp; <span class="built_in">sin</span>, &amp;len)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Accept Connection: %d"</span>, confd);</span><br><span class="line"></span><br><span class="line">        setNonblocking(confd);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//将新建立的连接添加到EPOLL的监听中</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">event</span>;</span></span><br><span class="line">        event.data.fd = confd;</span><br><span class="line">        event.events = EPOLLIN | EPOLLET;</span><br><span class="line">        epoll_ctl(epollfd, EPOLL_CTL_ADD, confd, &amp;event);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (confd == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (errno != EAGAIN &amp;&amp; errno != ECONNABORTED &amp;&amp; errno != EPROTO &amp;&amp; errno != EINTR) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%s: bad accept\n"</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同理，接收数据和发送数据时如果是ET模式，且非阻塞，也得用循环。</p>
+<p>读：只要可读，就一直读，直到返回0，或者 errno = EAGAIN</p>
+<p>写:只要可写，就一直写，直到数据发送完，或者 errno = EAGAIN</p>
+<p>正确的读：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> ((nread = read(fd, buf + n, BUFSIZ - <span class="number">1</span>)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    n += nread;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (nread == <span class="number">-1</span> &amp;&amp; errno != EAGAIN) &#123;</span><br><span class="line">    perror(<span class="string">"read error"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确的写：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> nwrite,</span><br><span class="line">data_size = <span class="built_in">strlen</span>(buf);</span><br><span class="line">n = data_size;</span><br><span class="line"><span class="keyword">while</span> (n &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    nwrite = write(fd, buf + data_size - n, n);</span><br><span class="line">    <span class="keyword">if</span> (nwrite &lt; n) &#123;</span><br><span class="line">        <span class="keyword">if</span> (nwrite == <span class="number">-1</span> &amp;&amp; errno != EAGAIN) &#123;</span><br><span class="line">            perror(<span class="string">"write error"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    n -= nwrite;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="epoll中accept的使用细节"><a href="#epoll中accept的使用细节" class="headerlink" title="epoll中accept的使用细节"></a>epoll中accept的使用细节</h1><p>accept 要考虑 2 个问题<br>(1) 阻塞模式 accept 存在的问题<br>考虑这种情况：TCP连接被客户端夭折，即在服务器调用accept之前，客户端主动发送RST终止连接，导致刚刚建立的连接从就绪队列中移出，如果套接口被设置成阻塞模式，服务器就会一直阻塞在accept调用上，<br>直到其他某个客户建立一个新的连接为止。但是在此期间，服务器单纯地阻塞在accept调用上，就绪队列中的其他描述符都得不到处理。</p>
+<p>解决办法: 把监听套接口设置为非阻塞，当客户在服务器调用accept之前中止某个连接时，accept调用可以立即返回-1，这时源自Berkeley的实现会在内核中处理该事件，并不会将该事件通知给epoll，而其他实现把errno设置为ECONNABORTED或者EPROTO错误，我们应该忽略这两个错误。</p>
+<p>(2)ET模式下accept存在的问题<br>考虑这种情况：多个连接同时到达，服务器的TCP就绪队列瞬间积累多个就绪连接，由于是边缘触发模式，epoll只会通知一次，accept只处理一个连接，导致TCP就绪队列中剩下的连接都得不到处理。</p>
+<p>解决办法: 用while循环抱住accept调用，处理完TCP就绪队列中的所有连接后再退出循环。如何知道是否处理完就绪队列中的所有连接呢？accept返回-1并且errno设置为EAGAIN就表示所有连接都处理完。综合以上两种情况，服务器应该使用非阻塞地accept，accept在ET模式下的正确使用方式为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> ((conn_sock = accept(listenfd,(struct sockaddr *) &amp;remote, (<span class="keyword">size_t</span> *)&amp;addrlen)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    handle_client(conn_sock);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (conn_sock == <span class="number">-1</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (errno != EAGAIN &amp;&amp; errno != ECONNABORTED &amp;&amp; errno != EPROTO &amp;&amp; errno != EINTR)</span><br><span class="line">            perror(<span class="string">"accept"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="netty为什么选择使用LT"><a href="#netty为什么选择使用LT" class="headerlink" title="netty为什么选择使用LT"></a>netty为什么选择使用LT</h1><p>epoll对文件描述符有两种操作模式–LT（level trigger水平模式）和ET（edge trigger边缘模式）</p>
+<p>简单来讲，LT是epoll的默认操作模式，当epoll_wait函数检测到有事件发生并将通知应用程序，而应用程序不一定必须立即进行处理，这样epoll_wait函数再次检测到此事件的时候还会通知应用程序，直到事件被处理。</p>
+<p>而ET模式，只要epoll_wait函数检测到事件发生，通知应用程序立即进行处理，后续的epoll_wait函数将不再检测此事件。因此ET模式在很大程度上降低了同一个事件被epoll触发的次数，因此效率比LT模式高。</p>
+<p>解释为什么epoll默认是LT的原因（超哥解释，个人觉得还是非常不错的）LT(level triggered)：LT是缺省的工作方式，并且同时支持block和no-block socket。在这种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的fd进行IO操作。如果你不作任何操作，内核还是会继续通知你的，所以，<strong>这种模式编程出错误可能性要小一点</strong>。传统的select/poll都是这种模型的代表。</p>
+<p><code>io.netty:netty-transport-native-epoll:linux-x86_64:4.1.49.Final</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> EpollMode &#123;</span><br><span class="line">    <span class="comment">// Use &#123;@code EPOLLET&#125; (edge-triggered).</span></span><br><span class="line">    EDGE_TRIGGERED,</span><br><span class="line">    <span class="comment">// Do not use &#123;@code EPOLLET&#125; (level-triggered).</span></span><br><span class="line">    LEVEL_TRIGGERED</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">NativeStaticallyReferencedJniMethods</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">epollin</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">epollout</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">epollrdhup</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">epollet</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">epollerr</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">long</span> <span class="title">ssizeMax</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">tcpMd5SigMaxKeyLen</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">iovMax</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">uioMaxIov</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">isSupportingSendmmsg</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">isSupportingRecvmmsg</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">boolean</span> <span class="title">isSupportingTcpFastopen</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">native</span> String <span class="title">kernelVersion</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Native</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EPOLLET = epollet();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EpollChannelConfig</span> <span class="keyword">extends</span> <span class="title">DefaultChannelConfig</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> EpollMode <span class="title">getEpollMode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ((AbstractEpollChannel) channel).isFlagSet(Native.EPOLLET)</span><br><span class="line">                ? EpollMode.EDGE_TRIGGERED : EpollMode.LEVEL_TRIGGERED;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> EpollChannelConfig <span class="title">setEpollMode</span><span class="params">(EpollMode mode)</span> </span>&#123;</span><br><span class="line">        ObjectUtil.checkNotNull(mode, <span class="string">"mode"</span>);</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">switch</span> (mode) &#123;</span><br><span class="line">            <span class="keyword">case</span> EDGE_TRIGGERED:</span><br><span class="line">                checkChannelNotRegistered();</span><br><span class="line">                ((AbstractEpollChannel) channel).setFlag(Native.EPOLLET);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> LEVEL_TRIGGERED:</span><br><span class="line">                checkChannelNotRegistered();</span><br><span class="line">                ((AbstractEpollChannel) channel).clearFlag(Native.EPOLLET);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> Error();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ChannelException(e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EpollEventLoop</span> <span class="keyword">extends</span> <span class="title">SingleThreadEventLoop</span> </span>&#123;</span><br><span class="line">        EpollEventLoop(EventLoopGroup parent, Executor executor, <span class="keyword">int</span> maxEvents,</span><br><span class="line">                   SelectStrategy strategy, RejectedExecutionHandler rejectedExecutionHandler,</span><br><span class="line">                   EventLoopTaskQueueFactory queueFactory) &#123;</span><br><span class="line">        <span class="keyword">super</span>(parent, executor, <span class="keyword">false</span>, newTaskQueue(queueFactory), newTaskQueue(queueFactory),</span><br><span class="line">                rejectedExecutionHandler);</span><br><span class="line">        selectStrategy = ObjectUtil.checkNotNull(strategy, <span class="string">"strategy"</span>);</span><br><span class="line">        <span class="keyword">if</span> (maxEvents == <span class="number">0</span>) &#123;</span><br><span class="line">            allowGrowing = <span class="keyword">true</span>;</span><br><span class="line">            events = <span class="keyword">new</span> EpollEventArray(<span class="number">4096</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            allowGrowing = <span class="keyword">false</span>;</span><br><span class="line">            events = <span class="keyword">new</span> EpollEventArray(maxEvents);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">boolean</span> success = <span class="keyword">false</span>;</span><br><span class="line">        FileDescriptor epollFd = <span class="keyword">null</span>;</span><br><span class="line">        FileDescriptor eventFd = <span class="keyword">null</span>;</span><br><span class="line">        FileDescriptor timerFd = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">this</span>.epollFd = epollFd = Native.newEpollCreate();</span><br><span class="line">            <span class="keyword">this</span>.eventFd = eventFd = Native.newEventFd();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// It is important to use EPOLLET here as we only want to get the notification once per</span></span><br><span class="line">                <span class="comment">// wakeup and don't call eventfd_read(...).</span></span><br><span class="line">                Native.epollCtlAdd(epollFd.intValue(), eventFd.intValue(), Native.EPOLLIN | Native.EPOLLET);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Unable to add eventFd filedescriptor to epoll"</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">this</span>.timerFd = timerFd = Native.newTimerFd();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// It is important to use EPOLLET here as we only want to get the notification once per</span></span><br><span class="line">                <span class="comment">// wakeup and don't call read(...).</span></span><br><span class="line">                Native.epollCtlAdd(epollFd.intValue(), timerFd.intValue(), Native.EPOLLIN | Native.EPOLLET);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"Unable to add timerFd filedescriptor to epoll"</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line">            success = <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!success) &#123;</span><br><span class="line">                <span class="keyword">if</span> (epollFd != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        epollFd.close();</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        <span class="comment">// ignore</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (eventFd != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        eventFd.close();</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        <span class="comment">// ignore</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (timerFd != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        timerFd.close();</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        <span class="comment">// ignore</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/epoll/" rel="tag"># epoll</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/linux/linux-network-traffic-monitor/" rel="next" title="linux网络流量监控">
+                <i class="fa fa-chevron-left"></i> linux网络流量监控
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/java/spring/spring-transaction/" rel="prev" title="Spring 事务">
+                Spring 事务 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">250</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">102</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#epoll、accept触发模式及阻塞方式的选择"><span class="nav-text">epoll、accept触发模式及阻塞方式的选择</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ET-or-LT"><span class="nav-text">ET or LT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#listenfd阻塞还是非阻塞？"><span class="nav-text">listenfd阻塞还是非阻塞？</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#epoll-LT-ET-深入剖析"><span class="nav-text">epoll LT/ET 深入剖析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#epoll的LT和ET的区别"><span class="nav-text">epoll的LT和ET的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#epoll模型accept并发问题"><span class="nav-text">epoll模型accept并发问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#epoll中accept的使用细节"><span class="nav-text">epoll中accept的使用细节</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#netty为什么选择使用LT"><span class="nav-text">netty为什么选择使用LT</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

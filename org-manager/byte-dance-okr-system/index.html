@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=consolas:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="别跟字节跳动讲管理虎嗅注：3月12日，字节跳动发布公开信宣布组织升级。张一鸣在信中表示，字节跳动人员数量的激增带来了员工敬业度和满意度的下降。他声称未来将更专注于全球组织管理研究，改进字节跳动的管理。 虎嗅Pro在去年10月份发布了一篇剖析字节跳动组织管理的深案例文章，我们详细研究了字节跳动组织架构、工作文化、业务发展这三者间的关联和因果关系，并得出一个出乎意料的结论，而此次字节跳动和张一">
+<meta name="keywords" content="Java Kafka Docker JVM NIO Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字节跳动的OKR管理与企业文化">
+<meta property="og:url" content="https://carlo-z.com/org-manager/byte-dance-okr-system/index.html">
+<meta property="og:site_name" content="Focus-1">
+<meta property="og:description" content="别跟字节跳动讲管理虎嗅注：3月12日，字节跳动发布公开信宣布组织升级。张一鸣在信中表示，字节跳动人员数量的激增带来了员工敬业度和满意度的下降。他声称未来将更专注于全球组织管理研究，改进字节跳动的管理。 虎嗅Pro在去年10月份发布了一篇剖析字节跳动组织管理的深案例文章，我们详细研究了字节跳动组织架构、工作文化、业务发展这三者间的关联和因果关系，并得出一个出乎意料的结论，而此次字节跳动和张一">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135658266.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135721532.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135740101.png">
+<meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135807335.png">
+<meta property="og:updated_time" content="2020-08-15T16:53:47.143Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="字节跳动的OKR管理与企业文化">
+<meta name="twitter:description" content="别跟字节跳动讲管理虎嗅注：3月12日，字节跳动发布公开信宣布组织升级。张一鸣在信中表示，字节跳动人员数量的激增带来了员工敬业度和满意度的下降。他声称未来将更专注于全球组织管理研究，改进字节跳动的管理。 虎嗅Pro在去年10月份发布了一篇剖析字节跳动组织管理的深案例文章，我们详细研究了字节跳动组织架构、工作文化、业务发展这三者间的关联和因果关系，并得出一个出乎意料的结论，而此次字节跳动和张一">
+<meta name="twitter:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135658266.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://carlo-z.com/org-manager/byte-dance-okr-system/">
+
+
+
+
+
+  <title>字节跳动的OKR管理与企业文化 | Focus-1</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Focus-1</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://carlo-z.com/org-manager/byte-dance-okr-system/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Focus-1">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Focus-1">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">字节跳动的OKR管理与企业文化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-02T00:00:00+08:00">
+                2019-02-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/org-manager/" itemprop="url" rel="index">
+                    <span itemprop="name">org-manager</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <br>
+
+
+
+<h1 id="别跟字节跳动讲管理"><a href="#别跟字节跳动讲管理" class="headerlink" title="别跟字节跳动讲管理"></a>别跟字节跳动讲管理</h1><p>虎嗅注：3月12日，字节跳动发布公开信宣布组织升级。张一鸣在信中表示，字节跳动人员数量的激增带来了员工敬业度和满意度的下降。他声称未来将更专注于全球组织管理研究，改进字节跳动的管理。</p>
+<p>虎嗅Pro在去年10月份发布了一篇剖析字节跳动组织管理的深案例文章，<strong>我们详细研究了字节跳动组织架构、工作文化、业务发展这三者间的关联和因果关系</strong>，并得出一个出乎意料的结论，而此次字节跳动和张一鸣的变化也多少印证了我们当时的判断。这个判断究竟是什么，请读者移步正文查看：</p>
+<p>流行观点相信字节跳动（下称“字节”）精于管理的判断可能并不准确。</p>
+<p>作为过去十年间最成功的科技新贵之一，字节走向壮大可被归结为任意一种主义的胜利，唯独与管理无关——是他们的管理很糟糕吗？</p>
+<p>其实，他们根本没有“管理”。</p>
+<p>我们必须明确何谓管理，或者在什么语境下来理解管理。可以肯定的是，在国内语境下的绝大多数管理，都更像管控，它们遵循“管理者发号施令，执行者落实”模式。其中一部分施令因为高度重复性，逐渐固化成流程、制度，并不断优化以供复制。</p>
+<p>在绝大多数人力密集型产业中——餐饮、快递物流、零售——都能见到上述管理方式。而这些产业里，越是规模庞大的公司，其流程、制度的复杂程度就越高，管理难度就越大。</p>
+<p>中通快递有30万员工，这家公司的研究院院长金任群认为人类具备普遍的潜在破坏冲动，而管理者能做的就是，“不断优化流程制度，并祈祷少出问题。”他接受虎嗅pro采访时说。</p>
+<p>2017年~2019年，字节的员工数量翻了10倍不止（万，年底有望到达10万），这是被外界误认为字节善于管理的重要原因之一——瞧，他们不仅没失控，还做成了抖音。</p>
+<p>但事实可能恰恰相反，正是因为没怎么在管理上花功夫，尤其是避免那些让员工循规蹈矩（）的管理，才让字节取得了重要的商业进展。里德·霍夫曼在《闪电式扩张》写道，<strong>只有那些满足于每年增长15%的公司才会不慌不忙地招募理想员工并沉迷于企业文化。</strong></p>
+<p><strong>字节完全是另一种公司，这家公司的创业史就是一部战争史。过去几年里，字节是最善于发动闪电战的标志性公司，一个在各领域神出鬼没的刺客（尽管并不总能得手）。不久前，他们又突袭了“优爱腾”阵营和快手，顺带捉弄了院线公司一把。据说那场行动从谋划到实施完毕只用了36小时。</strong></p>
+<p>让这样一家公司停止扩张有违其生存信条，他们那句“始终创业”口号背后所反映的经营理念，与“打江山易，守江山难”的朝代更迭规律不谋而合。</p>
+<p><strong>对字节来说，倒在路上的几率要远小于什么都不做，证据是他们在绝大多数项目未达预期后还生龙活虎。他们没时间管理，因为旧经验的参考价值不大，所有人要么正在战斗，要么正准备战斗。</strong></p>
+<p>所以，如果说字节成立至今真有什么管理秘诀，那只能是一张张令员工为之奋进、名为高速增长的“空头支票”，幸运的是，最关键的几张支票都被兑现了。竞技体育里有一种说法，大意是胜利能掩盖一切更衣室矛盾——是的，谁知道字节的管理究竟好不好呢？他们从未真正展示过（强管理换效益），因为还没必要。</p>
+<p>（编者注：字节无管理模型建立在持续的高效扩张之上，一旦这种势头停滞，就会陷入管理陷阱。比如抖音诞生的两年多来，字节鲜有现象级产品出现，直接造成员工满意度和敬业度下滑。挽救这种颓势的办法正是在全球范围内寻找新引擎）</p>
+<p>事实上字节唯一需要管理的，是如何让员工更快速高效地达成目标。曾任今日头条副总裁的谢欣（现为飞书负责人）在几年前的公开活动中提及管理根本，他的观点是，<strong>管理的最终目的是为了达成公司的高绩效目标，只有人可以做到这点，而不是规章制度。</strong></p>
+<p>正因如此，字节在创办伊始就采用了最大限度解放员工创造力的OKR管理工具，此管理非彼管理，<strong>正如字节内部一名参与企业文化建设的负责人向我们表达的，他认为与其说OKR是管理手段，不如说OKR是达成目标前的工作方式。</strong>这些工作方式旨在减少沟通成本，强化协同能力、调动个人积极性，从而向集体目标快速突进。</p>
+<p>#本文为字节跳动OKR应用解析深案例删减版，约1.1万字，于2019年10月29日刊发在虎嗅Pro会员-深案例，即刻加入<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fm.huxiu.com%2FvipColumn%2Fvip%2F1.html" target="_blank" rel="noopener">虎嗅Pro会员</a>，解锁全文#</p>
+<h1 id="字节跳动为什么，以及如何使用OKR？"><a href="#字节跳动为什么，以及如何使用OKR？" class="headerlink" title="字节跳动为什么，以及如何使用OKR？"></a>字节跳动为什么，以及如何使用OKR？</h1><p>“现代科学管理之父”弗雷德里克·温斯洛·泰勒（下称“泰勒”）在《科学管理原理》一书中主张将管理者与非管理者区分开来：</p>
+<p>管理者需要预先制定任务计划并实施计划，要告诉员工每项任务要做什么、如何做以及何时完成。</p>
+<p>非管理者则要消除一切虚假的、慢的和无用的动作，按部就班地完成任务。</p>
+<p>将泰勒理论变得具有实质意义的举动发生在福特汽车生产线上，福特T型车的生产过程被分解为84个步骤，并将底盘配装流程从12个小时30分钟的时间减少到2个小时40分钟。</p>
+<p>泰勒理论影响至今，但这套管理思路的运转以“剥夺”员工思考能力、主观能动性为前提。反过来讲，员工的无能，要求管理者必须全知全能。</p>
+<p>显然，任何管理者也做不到。除非市场环境极度友好，几乎不存在竞争。福特汽车就是那个特定时间点下的幸运儿。</p>
+<p>早期的管理者做决策通常与真实市场需求无关（事实上今天同样如此），比如福特在1913~1918年期间卖出了全美数量最多的黑色款T型车，却不是因为车主喜欢，而是黑色漆干得快，可以第一时间上市。随着市场竞争加剧，福特风光不再。</p>
+<p>失去市场信任的福特随后在员工工资上做文章，他们把计件工资的单件工资调低，或是延长工作时长，引得工人闹罢工。这大概可算作历史上第一次由KPI引起的罢工。</p>
+<p><strong>在对OKR的描述中，KPI是常常被拿来说事的负面教材。在字节也不例外，他们认为KPI往往建立在对固定指标和强制结果的追求上，并且与员工绩效强行挂钩。最令人懊恼的是，一旦管理者制定了违背市场规律的决策，员工不仅没办法发挥专长，还要为错误的决策买单。</strong></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135658266.png" alt="image-20200812135658266"></p>
+<p>（图片来源：字节跳动）</p>
+<p><strong>事实上，在那些不依赖员工创造性，或是交互较差的岗位之上，KPI往往能发挥最大效果——比如餐饮业的后厨岗位，只需要保证出品速率和稳定。前厅服务岗位由于长期和顾客打交道，随机性较大，就不完全适合KPI考核。</strong></p>
+<p>字节成立至今通过不断拓展新业务来扩大市场规模，这就是我们为什么说字节没时间管理的原因，字节并不是一家停留在单一业务上的公司，他们自然也没有什么固有经验可以照搬然后执行。这构成了字节使用OKR的第一个前提。</p>
+<p>字节使用OKR的第二个前提是业务属性。<strong>字节的所有业务几乎都直接面向C端用户，即便是2B向的飞书，其功能设计也充分考虑了C端使用体验。2B生意往往标准化程度高，2C生意则面临各式各样的不确定性</strong>，一款产品上市之前，需反复内测打磨，收集用户意见，上市后还要不断迭代版本。可以说，一款2C类产品的运营周期内的所有业务决策，都不可能完全由管理者制订，更合理的办法是把一部分决策权交给能听到炮火声的一线员工手里。</p>
+<p>这是字节天然适用OKR的一个关键，他们在过去几年中开辟了如此之多的C端产品航道，对精通所有这些产品的本领要求已经远远超出了张一鸣和字节管理团队的能力范围之外，因此他们在业务决策上要更为仰仗中、基层员工。</p>
+<p>“不要雇用聪明人，然后告诉他们去做什么；而是要让他们告诉我们，应该做什么。”——史蒂夫·乔布斯</p>
+<p>“与组织中心相比，创新通常更容易发生在组织的边缘。”——保罗•格雷厄姆</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135721532.png" alt="image-20200812135721532"></p>
+<p>（图片来源：字节跳动）</p>
+<p><strong>事实上，在那些不依赖员工创造性，或是交互较差的岗位之上，KPI往往能发挥最大效果——比如餐饮业的后厨岗位，只需要保证出品速率和稳定。前厅服务岗位由于长期和顾客打交道，随机性较大，就不完全适合KPI考核。</strong></p>
+<p>字节成立至今通过不断拓展新业务来扩大市场规模，这就是我们为什么说字节没时间管理的原因，字节并不是一家停留在单一业务上的公司，他们自然也没有什么固有经验可以照搬然后执行。这构成了字节使用OKR的第一个前提。</p>
+<p>字节使用OKR的第二个前提是业务属性。<strong>字节的所有业务几乎都直接面向C端用户，即便是2B向的飞书，其功能设计也充分考虑了C端使用体验。2B生意往往标准化程度高，2C生意则面临各式各样的不确定性</strong>，一款产品上市之前，需反复内测打磨，收集用户意见，上市后还要不断迭代版本。可以说，一款2C类产品的运营周期内的所有业务决策，都不可能完全由管理者制订，更合理的办法是把一部分决策权交给能听到炮火声的一线员工手里。</p>
+<p>这是字节天然适用OKR的一个关键，他们在过去几年中开辟了如此之多的C端产品航道，对精通所有这些产品的本领要求已经远远超出了张一鸣和字节管理团队的能力范围之外，因此他们在业务决策上要更为仰仗中、基层员工。</p>
+<p>“不要雇用聪明人，然后告诉他们去做什么；而是要让他们告诉我们，应该做什么。”——史蒂夫·乔布斯</p>
+<p>“与组织中心相比，创新通常更容易发生在组织的边缘。”——保罗•格雷厄姆</p>
+<p>（图片来源：字节跳动）</p>
+<p>尽管在承担责任的重要程度上，字节的普通员工无法与管理层相比，但双方在各自位置上发挥才干的权利是平等的。OKR正是构建平等的基础（如上图所示）。<strong>OKR在蓝图和现实中找到了中间地带，一个由公司确定大方向、调动资源，员工自主行动、获得相应回报的中间地带。</strong></p>
+<p>因此，在字节内部，制定OKR遵循“自上而下”、“自下而上”两种方式（事实上这也是OKR基本规则）。</p>
+<p>“自上而下”适用于宏观类型的O（objective，即目标）——比如字节2017年决定布局短视频领域（此为公司战略类O），今日头条孵化抖音火山版，或者抖音孵化剪映（此为团队业务发展类O）。“自上而下”途径下，公司和业务团队成员可以就总O进行逐级理解和承接，形成各自小O。</p>
+<p>“自下而上”适用于微观类型的O，假设抖音决定提高日活和用户时长（此为具体业务策略O）。那么“自下而上“途径下，业务团队一般成员可发起向上发起O的制定，之后由部门负责人统一对下属的O进行选择、认定和总结，形成自身的O。</p>
+<p>值得注意的是，字节遵循了OKR基本规则，即“在自下而上途径里，上级OKR不能单纯为下属OKR的汇总，且上级应确保团队重要且最关注的事项出现在自己的OKR中。”<strong>这说明字节比较看重腰部管理层的能力培养。通常而言，腰部管理层的质量决定了一家公司的长远发展。</strong></p>
+<p>当一项公司战略被公布后，字节对总O的承接方式分为三种，顺序如下：</p>
+<p>第一种是分解式承接，此时上级的O往往涉及多个维度的描述，例如上级O为“提高XX产品的市场竞争力和份额”，需要产品、市场、销售、人力同时提供支撑。此时对应的业务/职能部门负责人即可将上级的O按照自己对应的职责范围进行分解，形成自己部门的O；</p>
+<p>第二种是转换式承接，若上级的KR（Key Results，即“关键结果”）与下级的职责范围直接对应，则下级的O可从上级的KR出发进行转换，再根据自己的O定义相应KR（）；</p>
+<p>第三种是直接承接，该方式适用于上级的O与下级职责范围重合，下级填写O时可以直接引用上级的O</p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135740101.png" alt="image-20200812135740101"></p>
+<p>（内容来源：字节跳动虚拟案例展示）</p>
+<p>一般来说，第二种和第三种转换方式多发生在微观类型O，描述方式较为精确单一，例如上图展示的“<strong>加快产品反馈收集和迭代速度</strong>”。第一种转换方式以宏观类型O为主。</p>
+<p>OKR在对目标追踪上，一改KPI的结果导向至上。当然，并非结果不重要，但结果往往是包含市场环境、对手竞争、资源投入在内的多方面因素的复杂产物。因此在效益之外，要重视多个关键结果（），对员工的工作状态形成全方位评估。</p>
+<p>关键结果的引入，扭转了KPI对员工创新扼杀的弊端，另一方面也使下一次制订目标更加科学（字节允许员工根据实际反馈随时调整O的设定，前提是合情合理）。</p>
+<p>那既然如此，如何准确公允地衡量员工的KR完成情况，又不纵容员工有意降低KR实现难度，就成了避免OKR沦为形式主义的重中之重。</p>
+<p>【字节怎么给员工的工作结果打分？想知道更多有关字节跳动的OKR细节研究，可查看会员专享的1.1万字<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fwww.huxiu.com%2Farticle%2F323534.html%3Ff%3Dmember_article" target="_blank" rel="noopener">原文</a>】</p>
+<h1 id="企业文化和OKR的关系"><a href="#企业文化和OKR的关系" class="headerlink" title="企业文化和OKR的关系"></a>企业文化和OKR的关系</h1><p>在去年虎嗅Pro对字节内部员工的采访中，他们承认了字节的企业文化先于OKR诞生的事实。一个在2017年之前就入职的员工表示，他刚进字节时根本不知道什么是OKR，但他的适应速度很快。</p>
+<p>字节的企业文化与OKR所倡导的行为高度一致，下面是两者的对比关系，左为字节文化——他们称之为“字节范儿”，右为OKR倡导行为：</p>
+<p>追求极致——追求困难目标</p>
+<p>务实敢为——自下而上设定目标</p>
+<p>开放谦逊——与他人协同合作</p>
+<p>坦诚清晰——保持信息快速流动，互相透明</p>
+<p>始终创业——不设边界，自主思考</p>
+<p>（编者注：3月11日，字节基于全球化布局增添了名为“多元兼容“新一项企业文化，此项不在本文讨论范围内）</p>
+<p>任何企业文化都来自企业自身对过往一致的良好行动的提炼、总结、概括。正如英国哲学家约翰·洛克所说，“我认为人类的行为是思想的最佳译员。”</p>
+<p>反过来，企业文化又将进一步强化或者暗示企业上下的行为准则。“基因论”是最近几年企业经营领域的一个热门说法，恐怕和企业文化也不无关系。</p>
+<p>字节在过去几年吸纳了大量来自各领域、各岗位的人员。因此，字节需要采取措施保证原有文化不被破坏的同时，让新员工快速融入这种文化。因此字节做的第一件事就是取消工号，这么做是为了避免排资轮辈氛围的滋生。他们喜欢用一个案例对此说明，那就是在内部跨部门合作中，往往到结束，有一方都不知道对接工作的另一方是实习生（字节要求所有人直呼其名）。</p>
+<p>除此之外，他们也取消了职级和等级概念——起码在工作中是很难被察觉到的。淡化甚至闭口不谈头衔是最常见的做法，那些出现在新闻稿上的职位头衔，据说是为出席活动的人临时准备的，一旦活动结束，这些人又将恢复到没有头衔的状态。谢欣2015年出席QCon大会时也说过这点，“其实公司没有人知道互相是什么头衔，我们觉得这个不重要，知道了反而会耽误事。”</p>
+<p><strong>调整组织结构是字节强化平等的另一个补充，当然这个设计也在兼顾信息和创意流动的流畅性。字节跳动没有采用事业部编制，而是基于用户增长、技术和商业化等部门搭建中台，形成“你中有我、我中有你”的网状架构。这个表述可能更像是介于谷歌与脸书的组织结构之间的某种形态（）。</strong></p>
+<p><img src="https://imagehome.oss-cn-beijing.aliyuncs.com/image-20200812135807335.png" alt="img"></p>
+<p>（图片作者：Manu Cornet）</p>
+<p>在字节的办公区域、休闲区域都有他们称之为“字节范儿”的宣传，员工在食堂吃饭时可以听到、茶水间抬头可以看到、总结工作时（逢双月优化/点评OKR）可以用到……让员工成为企业文化的忠实拥趸没有取巧的办法，必须不厌其烦地反复讲述。</p>
+<p><strong>字节非常喜欢启用年轻人，他们5万人的平均年龄只有28岁，抖音、多闪的项目主管都是90后。年轻人更容易被塑形，他们或许在业务素养上还需要培养，但初入社会的那份干净更被看重。</strong></p>
+<h1 id="创始人气质与OKR理念高度契合"><a href="#创始人气质与OKR理念高度契合" class="headerlink" title="创始人气质与OKR理念高度契合"></a>创始人气质与OKR理念高度契合</h1><p>张一鸣的主要成果在于确立了“字节范儿”的基调并以此广纳人才。这一说法能从字节企业文化的管理团队处得到印证，“在内部，先于OKR诞生的企业文化正是由参与创办字节的成员们总结的。” 对方表示。</p>
+<p>2005年，大学毕业的张一鸣加入酷讯后，仅用一年就从普通工程师升为管理全部后端技术、以及部分产品工作的主管。许多年后，当他评价起这段经历，张一鸣认为自己做对了几件事：</p>
+<p>我工作时，不分哪些是我该做的、哪些不是我该做的。我做完自己的工作后，对于大部分同事的问题，只要能帮助解决，我都去做。</p>
+<p>工作前两年，我基本上每天都是十二点一点回家，回家以后也编程到挺晚。确实是因为有兴趣，而不是公司有要求。</p>
+<p>我负责技术，但遇到产品上有问题，也会积极地参与讨论、想产品的方案（包括与销售一起出去跑单）。很多人说这个不是我该做的事情。但我想说：希望把事情做好的动力，会驱动你做更多事情。</p>
+<p>在上述描述中，基本每一条都能找到1~2处与OKR所主张的相似点。张一鸣离开酷讯后的几次创业公司/创业经历，让他有足够的阅历去沉淀这些特质，这些特质反过来又在帮张一鸣辨认志同道合者。例如，<strong>他在酷讯时期以产品主管身份主动请缨与销售总监见客户的经历，被他认为是“为今日头条招销售人才奠定了基础”。</strong></p>
+<p>“大力出奇迹”、“延迟满足感”这两句“鸣言鸣语”翻译过来即为OKR倡导的“追求困难目标”，三者没有本质区别。</p>
+<p>源码资本曹毅说，张一鸣会对自己必须拿下的东西，全力以赴投入所有资源，所有精力，大力出奇迹。（来源：人物杂志）</p>
+<p>张一鸣的天使投资人刘峻说，张一鸣心里想的是100，对投资人只会报个80，但实际上最后做出来的往往是120甚至150。（来源：捕手志）</p>
+<p>今日头条早期产品负责人黄河说，张一鸣敢于定很高的目标，头条每年的营收目标都很高，而且在基数已经很大的情况下，还敢去制定几倍的高目标。张一鸣的愿景和目标非常大，所以也推着每个人都极致地努力工作。（来源：左林右狸）</p>
+<p>一旦认准“高目标”，字节往往会全力进攻，字节内部人士对虎嗅表示，“我们不是说（）不够就不做，我们一定要尽力满足，招人进来做，这个阶段不干别的，直到招满合适的人。”</p>
+<p>【参照字节跳动成长轨迹，都有哪些业务适合在开创初期运用OKR进行推动？张一鸣还有哪些关键特质值得注意？加入虎嗅pro查看会员专享的1.1万字<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fwww.huxiu.com%2Farticle%2F323534.html%3Ff%3Dmember_article" target="_blank" rel="noopener">原文</a>】</p>
+<h1 id="价值观、高增长、争议"><a href="#价值观、高增长、争议" class="headerlink" title="价值观、高增长、争议"></a>价值观、高增长、争议</h1><p>张一鸣在过往绝大多数采访中都表现出一种价值倾向，类似于“我做好事与我是好人之间没有必然联系”。</p>
+<p>他不认为字节是一家擅于给用户带去鲜明主张的公司。相较于明确字节价值观这件事，张一鸣更愿意说，字节的远景是“信息更多更快地抵达用户”（2014年，来源：腾讯科技），或者真有价值观的话，是“提高分发效率、满足用户的信息需求”（2016年，来源：财经杂志）。</p>
+<p>如果你观察上一段时间，就会发现在字节官方对外的传播口径中，也基本不提“价值观”这三个字。他们在微信上的字节跳动文化官方账号“字节范儿”上比较常用的是“工作方式”、“工作文化”——甚至不是我们在前文里频繁提起的“企业文化”。</p>
+<p><strong>这种“重个体，轻集体”的表述，**</strong>让字节和大部分规模到了这个量级的中国公司都不太一样，后者一般都相当强调集体性和执行力，带给人无形压力。但字节的员工看上去很轻松，也很个人。**</p>
+<p>价值观和企业管理有什么关系？如果按照彼得·德鲁克的定义，管理就是“界定组织使命，然后激励和组织人力资源来实现使命” 的过程。</p>
+<p>德鲁克还在《经济人的末日》一书中引用纳粹政府作为管理的负面教材，以此说明管理向善的必要性。他认为，“管理只能行善，不能作恶”。也就是说，管理需要价值观。</p>
+<p>价值观是企业面临抉择时的指南针。</p>
+<p><strong>虎嗅Pro认为，字节创办至今在价值观上的微妙状态，是这家公司能够持续高速增长，却多少在产品上受到舆论困扰的根本原因。</strong></p>
+<p> “让信息流动更高效”具有相当深的延展性，其肉眼可见的正面意义正如今日头条天使投资人刘峻接受捕手志采访时所说，把印刷机和电视机创造出来，让信息得到自由的流通，本身就是一种价值观。</p>
+<p><strong>可再往下深入，或者再往上拔高呢？张一鸣却没有明示字节这么做的意义（使命、why），而是让这句话始终停留在愿景（），以及更低维的战略（）上，最终演变成一种工作方式——还记得我们在上文介绍与张一鸣乃至字节上下的工作方式相契合的OKR理念吗？那并不是偶然。</strong></p>
+<p><strong>“让信息高效流动”，以此原则来指导一切企业行为，则会带来隐患</strong>。</p>
+<p>当年字节拿了新浪微博的投资，然后抓取微博的公共内容作为今日头条的算法饲料，以实现让信息更高效流动的愿景。从法律上讲好像没啥大问题，可是道德层面呢？</p>
+<p>过去八年间，字节固然在推动信息高效流动上取得了瞩目成就，却也因此给自己制造了一道道枷锁，比如媒体状告今日头条侵权、内容低俗……这些看起来都像是外界主动施加给字节的价值判断、道德审判，仔细想想也不尽然。<strong>一切问题的根源其实在字节手里，如果张一鸣不行使界定价值观的权力，那么就会有人帮他行使。</strong></p>
+<p>张一鸣最终会行使权力吗？或许比这个问题更重要的是，怎样行使权力才不会影响字节的高速增长。</p>
+<p>作者：unsakei<br>链接：<a href="https://www.jianshu.com/p/3395815ad66b" target="_blank" rel="noopener">https://www.jianshu.com/p/3395815ad66b</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/distribution/snowflake/" rel="next" title="分布式唯一ID —— 雪花算法（snowflake）">
+                <i class="fa fa-chevron-left"></i> 分布式唯一ID —— 雪花算法（snowflake）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/linux/linux-tcp-optimizing/" rel="prev" title="centos7 tcp内核参数优化">
+                centos7 tcp内核参数优化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjI1OC8yMjc2OQ=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Focus-1</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">250</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">63</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">102</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://gitee.com/carloz" title="repository - https://gitee.com/carloz" target="_blank">repository - https://gitee.com/carloz</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#别跟字节跳动讲管理"><span class="nav-text">别跟字节跳动讲管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字节跳动为什么，以及如何使用OKR？"><span class="nav-text">字节跳动为什么，以及如何使用OKR？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#企业文化和OKR的关系"><span class="nav-text">企业文化和OKR的关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创始人气质与OKR理念高度契合"><span class="nav-text">创始人气质与OKR理念高度契合</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#价值观、高增长、争议"><span class="nav-text">价值观、高增长、争议</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Focus-1</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+  <div class="footer-custom">Hosted by <a target="_blank" href="https://gitee.com/carloz">Gitee Repo</a></div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -123,7 +123,7 @@
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215403.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215526.png">
 <meta property="og:image" content="https://imagehome.oss-cn-beijing.aliyuncs.com/20191225215203.png">
-<meta property="og:updated_time" content="2020-01-05T12:05:06.270Z">
+<meta property="og:updated_time" content="2020-08-15T16:53:47.140Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="shardingsphere-proxy 安装">
 <meta name="twitter:description" content="1、官网文档源码1234# 文档https://shardingsphere.apache.org/document/current/cn/quick-start/sharding-proxy-quick-start/# 源码https://github.com/apache/incubator-shardingsphere  2、快速入门2.1、规则配置编辑%SHARDING_PROXY_">
@@ -452,6 +452,8 @@
 <h3 id="Zookeeper"><a href="#Zookeeper" class="headerlink" title="Zookeeper"></a>Zookeeper</h3><ol>
 <li>Sharding-Proxy默认提供了Zookeeper的注册中心解决方案。您只需按照<a href="https://shardingsphere.apache.org/document/current/cn/manual/sharding-proxy/configuration/" target="_blank" rel="noopener">配置规则</a>进行注册中心的配置，即可使用。</li>
 </ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -e TZ="Asia/Shanghai" -p 2181:2181 --name zookeeper --restart always zookeeper</span><br></pre></td></tr></table></figure>
+
 <h3 id="其他第三方注册中心"><a href="#其他第三方注册中心" class="headerlink" title="其他第三方注册中心"></a>其他第三方注册中心</h3><ol>
 <li>将Sharding-Proxy的lib目录下的<code>sharding-orchestration-reg-zookeeper-curator-${sharding-sphere.version}.jar</code>文件删除。</li>
 <li>使用SPI方式实现相关逻辑编码，并将生成的jar包放到Sharding-Proxy的lib目录下。</li>
@@ -668,7 +670,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">236</span>
+                  <span class="site-state-item-count">250</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -679,7 +681,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">59</span>
+                  <span class="site-state-item-count">63</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -690,7 +692,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">100</span>
+                  <span class="site-state-item-count">102</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
